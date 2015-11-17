@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Odette ROLL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="result">How manny odettes you will be need</div>
+        <button onclick="roll()">Roll</button>
+        <div id="avg">Avarage</div>
+        <div><span id="min">LOW</span>&nbsp;|&nbsp;<span id="max">MAX</span></div>
+        <div><span>Clicks:</span>&nbsp;<span id="click">0</span></div>
+        <script>
+            var count = 0;
+            var sum = 0;
+            var max = 0;
+            var low = 9999;
+            var clicks = 0;
+            function roll() {
+                var Q = [1, 2, 3, 4];
+                var H = [1, 2];
+                var F = [1];
+                var table = [F, H, Q, Q, Q];
+                var lvl = 0;
+                var message = 'over 50 ;_;';
+                var add = 50;
+                for (var i = 1; i <= 100; i++) {
+                    var currTable = table[lvl];
+                    var roll = Math.floor((Math.random() * currTable.length));
+                    if (currTable[roll] === 1) {
+                        lvl++;
+                    }
+                    if (lvl === 5) {
+                        message = 'after combide ' + i + ' odettes max CRd';
+                        add = i;
+                        break;
+                    }
+                }
+                sum = sum + add;
+                count++;
+                if(add < low){
+                    low = add;
+                }
+                if(add > max){
+                    max = add;
+                }
+                clicks++;
+                document.getElementById('result').innerHTML = message;
+                document.getElementById('avg').innerHTML = sum/count;
+                document.getElementById('min').innerHTML = low;
+                document.getElementById('max').innerHTML = max;
+                document.getElementById('click').innerHTML = clicks;
+            }
+        </script>
+    </body>
+</html>
