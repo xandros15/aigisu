@@ -102,14 +102,18 @@ function findUnits()
 {
     $start = MAX_ROWS * max(getCurrentPage() - 1, 0);
     $sort  = getCurrentSort();
-    $sql   = $sort . ' LIMIT :start,:limit';
 
     $bindings = [
         ':start' => min($start, getMaxResults() - MAX_ROWS),
-        ':limit' => min(30, MAX_ROWS)
+        ':limit' => MAX_ROWS
     ];
-    $search   = search($sort);
-    return ($search !== false) ? $search : R::findAll(TB_NAME, $sql, $bindings);
+    $search   = search($sort, $bindings);
+    return ($search !== false) ? $search : getAllUnits($sort, $bindings);
+}
+
+function getAllUnits($sort, $bindings)
+{
+    return R::findAll(TB_NAME, $sort . ' LIMIT :start,:limit', $bindings);
 }
 
 function getMaxResults($query = '', array $bindings = [])
@@ -181,7 +185,7 @@ function getMaxPages()
     return ceil($maxResults / MAX_ROWS);
 }
 
-function search($order = '')
+function search($order = '', array $bindings = [])
 {
     global $query;
     global $colNames;
@@ -193,6 +197,12 @@ function search($order = '')
         foreach ($search as $colName => $result) {
             if (!in_array($colName, $colNames) || !is_array($result)) {
                 unset($search[$colName]);
+            }
+        }
+        if (count($bindings) == 2) {
+            $order = $order . ' LIMIT :start,:limit ';
+            foreach($bindings as $bind => $value){
+                $order = str_replace($bind, $value, $order);
             }
         }
         $bean = R::findLike(TB_NAME, $search, $order);
