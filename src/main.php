@@ -200,18 +200,24 @@ function search($order = '', array $bindings = [])
                 unset($search[$colName]);
             }
         }
-        if (count($bindings) == 2) {
-            $order = $order . ' LIMIT :start,:limit ';
-            foreach($bindings as $bind => $value){
-                $order = str_replace($bind, $value, $order);
-            }
-        }
-        $bean = R::findLike(TB_NAME, $search, $order);
+        $order = bindLimit($order, $bindings);
+        $bean  = R::findLike(TB_NAME, $search, $order);
     } catch (RedBeanPHP\RedException $exc) {
         var_dump($exc->getMessage(), $exc->getTrace());
         return false;
     }
     return $bean;
+}
+
+function bindLimit($sql, array $bindings)
+{
+    if (count($bindings) == 2) {
+        $sql = $sql . ' LIMIT :start,:limit ';
+        foreach ($bindings as $bind => $value) {
+            $sql = str_replace($bind, abs((int) $value), $sql);
+        }
+    }
+    return $sql;
 }
 
 /**
