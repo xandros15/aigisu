@@ -12,6 +12,7 @@ function dbconnect()
 
 function editUnit($unitPost)
 {
+    R::debug(false);
     if (preg_match('/^[\d]+$/', $unitPost['id'])) {
         $unit = R::load(TB_NAME, $unitPost['id']);
         if (preg_match('/^[\w]+$/', $unitPost['name'])) {
