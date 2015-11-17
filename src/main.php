@@ -183,7 +183,7 @@ function getMaxPages()
 {
     $search     = search();
     $maxResults = ($search !== false) ? count(search()) : R::count(TB_NAME);
-    return ceil($maxResults / MAX_ROWS);
+    return (int) ceil($maxResults / MAX_ROWS);
 }
 
 function search($order = '', array $bindings = [])
