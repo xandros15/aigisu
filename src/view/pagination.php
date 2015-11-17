@@ -1,4 +1,5 @@
-<?php $maxPages = getMaxPages(); ?>
+<?php global $maxPages;?>
+<?php $maxPages = (!empty($maxPages)) ? $maxPages : getMaxPages(); ?>
 <?php if ($maxPages > 0): ?>
     <nav class="text-center">
         <ul class="pagination">

@@ -101,25 +101,22 @@ function configuration()
 
 function findUnits()
 {
-    $start = MAX_ROWS * max(getCurrentPage() - 1, 0);
-    $sort  = getCurrentSort();
 
+    $sort = getCurrentSort();
+
+
+    $search = search($sort);
+    return ($search !== false) ? $search : getAllUnits($sort);
+}
+
+function getAllUnits($sort)
+{
+    $start    = MAX_ROWS * max(getCurrentPage() - 1, 0);
     $bindings = [
-        ':start' => min($start, getMaxResults() - MAX_ROWS),
+        ':start' => $start,
         ':limit' => MAX_ROWS
     ];
-    $search   = search($sort, $bindings);
-    return ($search !== false) ? $search : getAllUnits($sort, $bindings);
-}
-
-function getAllUnits($sort, $bindings)
-{
     return R::findAll(TB_NAME, $sort . ' LIMIT :start,:limit', $bindings);
-}
-
-function getMaxResults($query = '', array $bindings = [])
-{
-    return R::count(TB_NAME, $query, $bindings);
 }
 
 function getCurrentSort()
@@ -186,7 +183,7 @@ function getMaxPages()
     return (int) ceil($maxResults / MAX_ROWS);
 }
 
-function search($order = '', array $bindings = [])
+function search($order = '')
 {
     global $query;
     global $colNames;
@@ -200,8 +197,10 @@ function search($order = '', array $bindings = [])
                 unset($search[$colName]);
             }
         }
-        $order = bindLimit($order, $bindings);
-        $bean  = R::findLike(TB_NAME, $search, $order);
+        if ($order) {
+            $order = bindLimit($order);
+        }
+        $bean = R::findLike(TB_NAME, $search, $order);
     } catch (RedBeanPHP\RedException $exc) {
         var_dump($exc->getMessage(), $exc->getTrace());
         return false;
@@ -209,8 +208,13 @@ function search($order = '', array $bindings = [])
     return $bean;
 }
 
-function bindLimit($sql, array $bindings)
+function bindLimit($sql)
 {
+    $start    = MAX_ROWS * max(getCurrentPage() - 1, 0);
+    $bindings = [
+        ':start' => $start,
+        ':limit' => MAX_ROWS
+    ];
     if (count($bindings) == 2) {
         $sql = $sql . ' LIMIT :start,:limit ';
         foreach ($bindings as $bind => $value) {
