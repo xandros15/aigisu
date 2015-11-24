@@ -13,7 +13,7 @@ function dbconnect()
 function editUnit($unitPost)
 {
     R::debug(false);
-    if (preg_match('/^[\d]+$/', $unitPost['id'])) {
+    if (isset($unitPost['id']) && preg_match('/^[\d]+$/', $unitPost['id'])) {
         $unit = R::load(TB_NAME, $unitPost['id']);
         if (preg_match('/^[\w]+$/', $unitPost['name'])) {
             $unit->name                 = $unitPost['name'];
@@ -23,15 +23,6 @@ function editUnit($unitPost)
             $_POST['valid'][0]['value'] = false;
             $_POST['valid'][0]['name']  = 'unit-name';
         }
-//        if (preg_match('/^[\d]+$/', $unitPost['class'])) {
-//            $class                      = R::load('class', $unitPost['class']);
-//            $unit->class                = $class;
-//            $_POST['valid'][1]['value'] = true;
-//            $_POST['valid'][1]['name']  = 'unit-class';
-//        } else {
-//            $_POST['valid'][1]['value'] = false;
-//            $_POST['valid'][1]['name']  = 'unit-class';
-//        }
         if (!empty($unitPost['rarity'])) {
             $unit->rarity               = $unitPost['rarity'];
             $_POST['valid'][2]['value'] = true;
