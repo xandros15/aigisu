@@ -11,26 +11,48 @@
                             <img style="height: 100px" alt="" src="<?= $unit->icon ?>">
                         </a>
                     </div>
-                    <div class="form-group col-xs-9 col-sm-3">
-                        <input class="form-control unit-name" name="unit[name]" type="text" <?=
-                        ($unit->name) ? 'value="' . $unit->name . '"' : ''
-                        ?>>
+                    <div class="col-xs-9 col-sm-10">
+                        <div class="form-group col-xs-9 col-sm-4">
+                            <input class="form-control unit-name" name="unit[name]" type="text" <?=
+                            ($unit->name) ? 'value="' . $unit->name . '"' : ''
+                            ?>>
+                        </div>
+
+                        <div class="form-group col-xs-9 col-sm-4">
+                            <input class="form-control" type="text" value="<?= $unit->orginal ?>" readonly>
+                        </div>
+                        <div class="form-group col-xs-9 col-sm-4">
+                            <select class="form-control unit-rarity" name="unit[rarity]">
+                                <?php foreach (enumRarity() as $rarity): ?><?php
+                                    $selected = ($rarity == $unit->rarity) ? 'selected' : ''
+                                    ?>
+                                    <option value="<?= $rarity ?>" <?= $selected ?>><?= $rarity ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group col-xs-9 col-sm-3">
-                        <input class="form-control" type="text" value="<?= $unit->orginal ?>" readonly>
-                    </div>
-                    <div class="form-group col-xs-9 col-sm-2">
-                        <select class="form-control unit-rarity" name="unit[rarity]">
-                            <?php foreach (enumRarity() as $rarity): ?><?php
-                                $selected = ($rarity == $unit->rarity) ? 'selected' : ''
-                                ?>
-                                <option value="<?= $rarity ?>" <?= $selected ?>><?= $rarity ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group col-xs-12 col-sm-2">
-                        <div class="" style="text-align: center">
-                            <button class="btn btn-default" type="button" onclick="update(this)">update</button>
+                    <div class="col-xs-9 col-sm-10">
+                        <div class="col-xs-9">
+                            <div class="form-group col-xs-6" style="text-align: center">
+                                <span  class="btn-file btn btn-default disabled" type="button">DMM #1<input type="file"></span>
+                            </div>
+                            <div class="form-group col-xs-6" style="text-align: center">
+                                <span class="btn-file btn btn-default" type="button">Nutaku #1<input type="file"></span>
+                            </div>
+                            <div class="form-group col-xs-6" style="text-align: center">
+                                <span  class="btn-file btn btn-default" type="button">DMM #2<input type="file"></span>
+                            </div>
+                            <div class="form-group col-xs-6" style="text-align: center">
+                                <span  class="btn-file btn btn-default" type="button">Nutaku #2<input type="file"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="form-group col-xs-12" style="text-align: center">
+                                <button class="btn btn-default" type="button" onclick="update(this)">update</button>
+                            </div>
+                            <div class="form-group col-xs-12" style="text-align: center">
+                                <button class="btn btn-default" type="submit">upload images</button>
+                            </div>
                         </div>
                     </div>
                 </div>

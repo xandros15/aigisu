@@ -4,3 +4,7 @@ $('.pagination .disabled a').click(function (e) {
 $('.pagination .active a').click(function (e) {
     e.preventDefault();
 });
+
+$('.disabled *').click(function (e) {
+    e.preventDefault();
+});
