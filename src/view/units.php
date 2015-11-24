@@ -4,7 +4,7 @@
         <?= renderPhpFile('pagination') ?>
         <?= renderPhpFile('sort') ?>
         <?php foreach ($units as $unit): ?>
-            <form id="<?= $unit->id ?>" method="post" role="form" style="margin-top: 5px">
+            <form id="<?= $unit->id ?>" method="post" role="form" style="margin-top: 5px" enctype="multipart/form-data">
                 <div class="row">
                     <div class="form-group col-xs-3 col-sm-2">
                         <a target="_blank" href="<?= $unit->linkgc ?>">
@@ -34,16 +34,16 @@
                     <div class="col-xs-9 col-sm-10">
                         <div class="col-xs-9">
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default disabled" type="button">DMM #1<input type="file"></span>
+                                <span  class="btn-file btn btn-default disabled" type="button">DMM #1<input name="dmm1" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span class="btn-file btn btn-default" type="button">Nutaku #1<input type="file"></span>
+                                <span class="btn-file btn btn-default" type="button">Nutaku #1<input name="nutaku1" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default" type="button">DMM #2<input type="file"></span>
+                                <span  class="btn-file btn btn-default" type="button">DMM #2<input name="dmm2" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default" type="button">Nutaku #2<input type="file"></span>
+                                <span  class="btn-file btn btn-default" type="button">Nutaku #2<input name="nutaku2" type="file"></span>
                             </div>
                         </div>
                         <div class="col-xs-3">
