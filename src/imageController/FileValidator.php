@@ -17,8 +17,8 @@ use RedBeanPHP\Facade as R;
  */
 class FileValidator
 {
-    const MAX_WIDTH  = 960;
-    const MAX_HEIGHT = 640;
+    const MAX_WIDTH  = 961;
+    const MAX_HEIGHT = 641;
 
     public function haveCorrectSize(Upload $object)
     {
