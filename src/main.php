@@ -93,7 +93,7 @@ function configuration()
 {
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view');
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
-    defined('DEBUG') || define('DEBUG', 1);
+    defined('DEBUG') || define('DEBUG', 0);
 }
 
 function findUnits()
@@ -289,8 +289,30 @@ function uploadImages()
 
 function isDisabledUpload(RedBeanPHP\OODBBean $object, $name)
 {
-    return ($object->{$name . '_id'});
+    return ($object->{$name . '_id'}) || in_array($object->rarity, ['iron', 'bronze']);
 }
+
+function isImageQuery()
+{
+    global $query;
+    return (!empty($query->get->image));
+}
+
+function getImageFile($id){
+    return "http://{$_SERVER['HTTP_HOST']}/images/{$id}.png";
+}
+
+function getImagesFromDb()
+{
+    global $query;
+    $id   = $query->get->image;
+    $unit = R::load(TB_NAME, $id);
+    if(!$unit){
+        return [];
+    }
+    return ['dmm1' => $unit->dmm1_id, 'dmm2' => $unit->dmm2_id, 'nutaku1' => $unit->nutaku1_id, 'nutaku2' => $unit->nutaku2_id];
+}
+
 
 function addImageToDatabase(array $results, $input)
 {
@@ -312,7 +334,9 @@ function addImageToDatabase(array $results, $input)
         }
         $unit->{$input} = $image;
         R::storeAll([$unit, $image]);
-        if (!rename($results['full_path'], $newDir . DIRECTORY_SEPARATOR . $image->getID())) {
+        if (!rename($results['full_path'],
+                $newDir . DIRECTORY_SEPARATOR . $image->getID() . '.' . pathinfo($results['full_path'],
+                    PATHINFO_EXTENSION))) {
             throw new Exception('Can\t rename file');
         }
         if (is_file($results['full_path']) && is_executable($results['full_path'])) {
@@ -344,7 +368,7 @@ class FileValidator
     public function isInDatabase(Upload $object)
     {
         $md5Temp = md5_file($object->file['tmp_name']);
-        if(R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])){
+        if (R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])) {
             $object->set_error('Image ' . $object->file['original_filename'] . ' exists in Database');
         }
     }
