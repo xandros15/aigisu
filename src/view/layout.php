@@ -7,15 +7,6 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?= "http://$_SERVER[HTTP_HOST]" ?>/src/css/niceFileUpload.css" rel="stylesheet">
         <style>
-            ul.images{
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-            .images > li {
-                margin: 0;
-                padding: 0;
-            }
             .list li{
                 display: inline-block;
             }
