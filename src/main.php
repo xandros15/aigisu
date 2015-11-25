@@ -1,11 +1,17 @@
 <?php
-$query    = (object) ['get' => (object) $_GET];
+$query    = (object) [
+        'get' => (object) $_GET,
+        'post' => (object) $_POST,
+        'files' => (object) $_FILES,
+];
 $colNames = ['id', 'name', 'orginal', 'rarity'];
 
 function dbconnect()
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.config.php';
     require __DIR__ . DIRECTORY_SEPARATOR . 'rb.php';
+    defined('TB_NAME') || define('TB_NAME', 'units');
+    defined('TB_IMAGES') || define('TB_IMAGES', 'images');
     R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
     R::debug(DEBUG);
 }
@@ -141,8 +147,13 @@ function getCurrentPage()
 
 function urlQueryToGlobal()
 {
+    global $query;
     if (!empty($_POST['unit'])) {
-        editUnit($_POST['unit']);
+        if (!empty($query->files)) {
+            uploadImages();
+        } else {
+            editUnit($_POST['unit']);
+        }
     } elseif (!empty($_POST['class'])) {
         createClass($_POST['class']);
     }
@@ -248,4 +259,93 @@ function getSearchQuery()
         return '';
     }
     return $query->get->q;
+}
+
+function uploadImages()
+{
+    global $query;
+    require_once 'upload.php';
+    if (!empty($query->files)) {
+        $upload = Upload::factory('tmp');
+        foreach ($query->files as $input => $file) {
+            if ($file['error']) {
+                continue;
+            }
+            $upload->file($file);
+            $validation = new FileValidator();
+            $upload->callbacks($validation, ['haveCorrectSize', 'isInDatabase']);
+            $upload->set_max_file_size(1);
+            $upload->set_allowed_mime_types(['image/png']);
+            $results    = $upload->upload();
+            $errors     = $upload->get_errors();
+            if ($errors) {
+                var_dump($errors);
+            } else {
+                addImageToDatabase($results, $input);
+            }
+        }
+    }
+}
+
+function isDisabledUpload(RedBeanPHP\OODBBean $object, $name)
+{
+    return ($object->{$name . '_id'});
+}
+
+function addImageToDatabase(array $results, $input)
+{
+    global $query;
+    $newDir = ROOT_DIR . DIRECTORY_SEPARATOR . 'images';
+    if (!is_dir($newDir)) {
+        mkdir($newDir, 755);
+    }
+    R::begin();
+    try {
+        $image      = R::dispense(TB_IMAGES);
+        $image->md5 = md5_file($results['full_path']);
+        $unit       = R::load(TB_NAME, (int) $query->post->id);
+        if (!is_string($input)) {
+            throw new Exception('input isn\'t string');
+        }
+        if (!$unit) {
+            throw new Exception('wrong id');
+        }
+        $unit->{$input} = $image;
+        R::storeAll([$unit, $image]);
+        if (!rename($results['full_path'], $newDir . DIRECTORY_SEPARATOR . $image->getID())) {
+            throw new Exception('Can\t rename file');
+        }
+        if (is_file($results['full_path']) && is_executable($results['full_path'])) {
+            unlink($results['full_path']);
+        }
+        R::commit();
+    } catch (Exception $exc) {
+        var_dump($exc->getMessage());
+        R::rollback();
+    }
+}
+
+class FileValidator
+{
+    const MAX_WIDTH  = 960;
+    const MAX_HEIGHT = 640;
+
+    public function haveCorrectSize(Upload $object)
+    {
+        $imageSize = getimagesize($object->file['tmp_name']);
+        if ($imageSize[0] > self::MAX_WIDTH) {
+            $object->set_error('Image ' . $object->file['original_filename'] . ' has too much width');
+        }
+        if ($imageSize[1] > self::MAX_HEIGHT) {
+            $object->set_error('Image ' . $object->file['original_filename'] . ' has too much heigh');
+        }
+    }
+
+    public function isInDatabase(Upload $object)
+    {
+        $md5Temp = md5_file($object->file['tmp_name']);
+        if(R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])){
+            $object->set_error('Image ' . $object->file['original_filename'] . ' exists in Database');
+        }
+    }
 }
