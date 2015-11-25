@@ -316,7 +316,7 @@ function getImagesFromDb()
     $images = [];
     foreach (array_keys($alliases) as $name) {
         if ($unit->{$name}) {
-            $images[$name] = $unit->{$name};
+            $images[trim($name,'0...9')][] = $unit->{$name};
         }
     }
 
