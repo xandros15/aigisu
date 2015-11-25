@@ -1,6 +1,9 @@
 <?php
 
+namespace app;
 
+use Exception;
+use finfo;
 /**
  * Simple PHP upload class
  *
