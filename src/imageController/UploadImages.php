@@ -10,6 +10,7 @@ namespace app;
 use app\validators\FileValidator;
 use RedBeanPHP\Facade as R;
 use stdClass;
+use Exception;
 
 /**
  * Description of UploadImages
@@ -76,6 +77,9 @@ class UploadImages extends Upload
 
         if (!$unit) {
             throw new Exception('wrong id');
+        }
+        if($unit->{$input}){
+            throw new Exception('Image exists');
         }
         $unit->{$input} = $image;
         R::storeAll([$unit, $image]);
