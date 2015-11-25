@@ -1,0 +1,11 @@
+{
+    "name": "user/aigisu",
+    "authors": [
+        {
+            "name": "xandros15",
+            "email": "xandros@xandros.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
