@@ -1,4 +1,4 @@
-<div id="units">
+<div id="units" class="col-xs-12">
     <?php $units = findUnits(); ?>
     <?php if (count($units) > 0): ?>
         <?= renderPhpFile('pagination') ?>

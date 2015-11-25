@@ -27,7 +27,7 @@
                 <?php if (isImageQuery()): ?>
                     <?= renderPhpFile('images') ?>
                 <?php else: ?>
-                    <div class="search-form">
+                    <div class="search-form col-xs-12">
                         <?= renderPhpFile('searchForm') ?>
                     </div>
                     <?= renderPhpFile('units'); ?>
