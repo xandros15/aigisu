@@ -298,21 +298,27 @@ function isImageQuery()
     return (!empty($query->get->image));
 }
 
-function getImageFile($id){
-    return "http://{$_SERVER['HTTP_HOST']}/images/{$id}.png";
+function getImageFile(RedBeanPHP\OODBBean $image)
+{
+    return "http://{$_SERVER['HTTP_HOST']}/images/{$image->id}.png";
 }
 
 function getImagesFromDb()
 {
     global $query;
     $id   = $query->get->image;
-    $unit = R::load(TB_NAME, $id);
-    if(!$unit){
+    $unit = R::load(TB_NAME, (int) $id);
+    R::aliases([
+        'nutaku1' => 'images',
+        'nutaku2' => 'images',
+        'dmm1' => 'images',
+        'dmm2' => 'images'
+    ]);
+    if (!$unit) {
         return [];
     }
-    return ['dmm1' => $unit->dmm1_id, 'dmm2' => $unit->dmm2_id, 'nutaku1' => $unit->nutaku1_id, 'nutaku2' => $unit->nutaku2_id];
+    return ['dmm1' => $unit->dmm1, 'dmm2' => $unit->dmm2, 'nutaku1' => $unit->nutaku1, 'nutaku2' => $unit->nutaku2];
 }
-
 
 function addImageToDatabase(array $results, $input)
 {
@@ -335,7 +341,7 @@ function addImageToDatabase(array $results, $input)
         $unit->{$input} = $image;
         R::storeAll([$unit, $image]);
         if (!rename($results['full_path'],
-                $newDir . DIRECTORY_SEPARATOR . $image->getID() . '.' . pathinfo($results['full_path'],
+                $newDir . DIRECTORY_SEPARATOR . $image->getID() . '.' . pathinfo($results['original_filename'],
                     PATHINFO_EXTENSION))) {
             throw new Exception('Can\t rename file');
         }
