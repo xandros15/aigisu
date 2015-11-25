@@ -5,11 +5,11 @@ $query    = (object) [
         'files' => (object) $_FILES,
 ];
 $colNames = ['id', 'name', 'orginal', 'rarity'];
+use RedBeanPHP\Facade as R;
 
 function dbconnect()
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.config.php';
-    require __DIR__ . DIRECTORY_SEPARATOR . 'rb.php';
     defined('TB_NAME') || define('TB_NAME', 'units');
     defined('TB_IMAGES') || define('TB_IMAGES', 'images');
     R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
@@ -75,9 +75,19 @@ function createClass($class)
 function bootstrap()
 {
     configuration();
+    setAutoloader();
     dbconnect();
     urlQueryToGlobal();
     echo renderPhpFile('layout');
+}
+
+function setAutoloader()
+{
+    /* @var $autoloader Composer\Autoload\ClassLoader */
+    $autoloader = require_once ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    $autoloader->addPsr4('app\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
+    $autoloader->addPsr4('app\\validators\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
+    $autoloader->addPsr4('RedBeanPHP\\Facade\\', __DIR__);
 }
 
 function renderPhpFile($_file_, $_params_ = [])
