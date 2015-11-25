@@ -8,8 +8,8 @@
 namespace app;
 
 use app\validators\FileValidator;
+use app\UrlFiles;
 use RedBeanPHP\Facade as R;
-use stdClass;
 use Exception;
 
 /**
@@ -20,36 +20,60 @@ use Exception;
 class UploadImages extends Upload
 {
     public $files;
+    public $post;
     public $newDir;
+    protected $errors           = [];
     protected $defaultExtention = 'png';
     protected $validators;
     protected $destination;
 
-    public function __construct(stdClass $files, $destination)
+    public function __construct($destination)
     {
+        global $query;
         parent::__construct('tmp');
         $this->destination = $destination;
-        $this->files       = $files;
+        $this->files       = $query->files;
+        $this->post        = $query->post;
     }
 
     public function uploadFiles()
     {
         foreach ($this->files as $input => $file) {
-            if ($file['error']) {
-                continue;
+            if ($this->post->{$input}) {
+                $results = $this->uploadFromServer($this->post->{$input});
+            } else {
+                if ($file['error']) {
+                    continue;
+                }
+                $results = $this->uploadFromClient($file);
             }
-            $this->file($file);
-            $this->createValidator();
-            $this->setValidators();
-
-            $results = $this->upload();
-            $errors  = $this->get_errors();
-            if ($errors) {
-                var_dump($errors);
+            if ($this->errors) {
+                var_dump($this->errors);
             } else {
                 $this->addImageToDatabase($results, $input);
             }
         }
+    }
+
+    private function uploadFromServer($url)
+    {
+        $file = new UrlFiles('tmp');
+        $file->setMimeTypes(['image/png']);
+        $file->loadFile($url);
+
+        $this->errors = array_merge($this->errors, $file->getErrors());
+        return $file->getFile();
+    }
+
+    private function uploadFromClient(array $file)
+    {
+        $this->file($file);
+        $this->createValidator();
+        $this->setValidators();
+
+        $results      = $this->upload();
+        $this->errors = array_merge($this->errors, $this->get_errors());
+        return $results;
     }
 
     private function addImageToDatabase(array $results, $input)
@@ -71,20 +95,19 @@ class UploadImages extends Upload
         if (!is_string($input)) {
             throw new Exception('input isn\'t string');
         }
-        global $query;
         $image = $this->createImage($results['full_path']);
-        $unit  = R::load(TB_NAME, (int) $query->post->id);
+        $unit  = R::load(TB_NAME, (int) $this->post->id);
 
         if (!$unit) {
             throw new Exception('wrong id');
         }
-        if($unit->{$input}){
+        if ($unit->{$input}) {
             throw new Exception('Image exists');
         }
         $unit->{$input} = $image;
         R::storeAll([$unit, $image]);
         if (!rename($results['full_path'], $this->getNewName($image->getID()))) {
-            throw new Exception('Can\t rename file');
+            throw new Exception('Can\'t rename file');
         }
         if (is_file($results['full_path']) && is_executable($results['full_path'])) {
             unlink($results['full_path']);
