@@ -5,6 +5,7 @@
         <?= renderPhpFile('sort') ?>
         <?php foreach ($units as $unit): ?>
             <form id="<?= $unit->id ?>" method="post" role="form" style="margin-top: 5px" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?= $unit->id ?>">
                 <div class="row">
                     <div class="form-group col-xs-3 col-sm-2">
                         <a target="_blank" href="<?= $unit->linkgc ?>">
