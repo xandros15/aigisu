@@ -35,16 +35,16 @@
                     <div class="col-xs-9 col-sm-10">
                         <div class="col-xs-9">
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default disabled" type="button">DMM #1<input name="dmm1" type="file"></span>
+                                <span  class="btn-file btn btn-default<?= isDisabledUpload($unit, 'dmm1') ? ' disabled' : '' ?>" type="button">DMM #1<input name="dmm1" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span class="btn-file btn btn-default" type="button">Nutaku #1<input name="nutaku1" type="file"></span>
+                                <span class="btn-file btn btn-default<?= isDisabledUpload($unit, 'nutaku1') ? ' disabled' : '' ?>" type="button">Nutaku #1<input name="nutaku1" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default" type="button">DMM #2<input name="dmm2" type="file"></span>
+                                <span  class="btn-file btn btn-default<?= isDisabledUpload($unit, 'dmm2') ? ' disabled' : '' ?>" type="button">DMM #2<input name="dmm2" type="file"></span>
                             </div>
                             <div class="form-group col-xs-6" style="text-align: center">
-                                <span  class="btn-file btn btn-default" type="button">Nutaku #2<input name="nutaku2" type="file"></span>
+                                <span  class="btn-file btn btn-default<?= isDisabledUpload($unit, 'nutaku2') ? ' disabled' : '' ?>" type="button">Nutaku #2<input name="nutaku2" type="file"></span>
                             </div>
                         </div>
                         <div class="col-xs-3">
