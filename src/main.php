@@ -5,6 +5,7 @@ $query    = (object) [
         'files' => (object) $_FILES,
 ];
 $colNames = ['id', 'name', 'orginal', 'rarity'];
+
 use RedBeanPHP\Facade as R;
 use app\UploadImages;
 
@@ -300,16 +301,24 @@ function getImageFile(RedBeanPHP\OODBBean $image)
 function getImagesFromDb()
 {
     global $query;
-    $id   = $query->get->image;
-    $unit = R::load(TB_NAME, (int) $id);
-    R::aliases([
+    $id       = $query->get->image;
+    $unit     = R::load(TB_NAME, (int) $id);
+    $alliases = [
         'nutaku1' => 'images',
         'nutaku2' => 'images',
         'dmm1' => 'images',
         'dmm2' => 'images'
-    ]);
+    ];
+    R::aliases($alliases);
     if (!$unit) {
         return [];
     }
-    return ['dmm1' => $unit->dmm1, 'dmm2' => $unit->dmm2, 'nutaku1' => $unit->nutaku1, 'nutaku2' => $unit->nutaku2];
+    $images = [];
+    foreach (array_keys($alliases) as $name) {
+        if ($unit->{$name}) {
+            $images[$name] = $unit->{$name};
+        }
+    }
+
+    return $images;
 }
