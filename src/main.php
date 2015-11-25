@@ -277,7 +277,7 @@ function uploadImages()
 {
     global $query;
     if (!empty($query->files)) {
-        $upload = new UploadImages($query->files, 'images');
+        $upload = new UploadImages('images');
         $upload->uploadFiles();
     }
 }
