@@ -14,23 +14,22 @@ namespace app;
  * @author user
  */
 use Exception;
+use app\validators\FileValidator;
 
 class UrlFiles
 {
-    const REGEX_ERROR = '~^HTTP/[12]\.[0-9] [54][0-9]{2}.*$~i';
-    const REGEX_URL   = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS';
-    const MAX_WIDTH   = 961;
-    const MAX_HEIGHT  = 641;
+    const REGEX_URL  = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS';
+    const MAX_WIDTH  = 961;
+    const MAX_HEIGHT = 641;
 
-    public $file = [];
-    public $tempFilePath;
+    public $file      = [];
     public $filename;
-    public $mimeTypes;
+    public $mimeTypes = [];
     private $url;
     private $fileResource;
     private $headers;
     private $ctx;
-    private $errors = [];
+    private $errors   = [];
     private $root;
     private $destination;
 
@@ -54,27 +53,20 @@ class UrlFiles
         $ctx = ($opts !== false) ? stream_context_create($opts) : $this->ctx;
         try {
             $this->setUrl($url);
-            $this->fileResource = @fopen($this->url, 'r', false, $ctx);
-            if (empty($this->fileResource)) {
-                throw new Exception('Can\'t download file');
-            }
-            if (empty($http_response_header)) {
-                throw new Exception('Target server no response');
-            }
-            $this->headers = self::httpParseHeaders($http_response_header);
-            $this->validate();
+            $this->setHeaders($this->url);
+            $this->beforeValidate();
             $this->saveFile();
         } catch (Exception $exc) {
-            if (is_resource($this->fileResource)) {
-                fclose($this->fileResource);
+            if (isset($this->file['full_path']) && is_writable($this->file['full_path'])) {
+                unlink($this->file['full_path']);
             }
             $this->errors[] = ['address' => $url, 'message' => $exc->getMessage()];
         }
     }
 
-    public function setMimeTypes($mimeTypes)
+    public function setMimeTypes(array $mimeTypes)
     {
-        $this->mimeTypes = $mimeTypes;
+        $this->mimeTypes = array_merge($this->mimeTypes, $mimeTypes);
     }
 
     public function getErrors()
@@ -89,9 +81,14 @@ class UrlFiles
 
     public function setDestination($destination)
     {
-        $this->destinatio = $destination . DIRECTORY_SEPARATOR;
+        $this->destination = $destination . DIRECTORY_SEPARATOR;
 
         return $this->isDestinationExist() ? true : $this->createDestination();
+    }
+
+    public function setHeaders($url)
+    {
+        $this->headers = self::httpParseHeaders(get_headers($url));
     }
 
     public function setCtx($login = [])
@@ -141,13 +138,17 @@ class UrlFiles
         //set full path
         $this->file['full_path'] = $this->root . $this->destination . $this->filename;
         $this->file['path']      = $this->destination . $this->filename;
-
-        $status = copy($this->url,  $this->file['full_path'], $this->ctx);
-
-        //checks whether upload successful
+        $file                    = @fopen($this->url, 'r', false, $this->ctx);
+        if (!$file) {
+            throw new Exception('Can\'t open file from url');
+        }
+        $content = $this->contentEncode(stream_get_contents($file), $this->headers['content-encoding']);
+        fclose($file);
+        $status  = file_put_contents($this->file['full_path'], $content);
         if (!$status) {
             throw new Exception('Upload: Can\'t upload file.');
         }
+        $this->validate();
 
         //done
         $this->file['status'] = true;
@@ -155,9 +156,16 @@ class UrlFiles
 
     private function validate()
     {
-        $this->checkResponse($this->headers);
-        $this->checkMimeType($this->headers);
-        $this->checkFileSize($this->fileResource);
+        $validator = new FileValidator();
+        $validator->checkResolution($this->file['full_path']);
+    }
+
+    private function beforeValidate()
+    {
+        $validator = new FileValidator();
+        $validator->checkHttpResponse($this->headers);
+        $validator->checkMimeType($this->headers['content-type'], $this->mimeTypes);
+        $validator->checkFileSize($this->headers['content-length']);
     }
 
     private function isDestinationExist()
@@ -168,33 +176,6 @@ class UrlFiles
     private function createDestination()
     {
         return mkdir($this->root . $this->destination, 755, true);
-    }
-
-    private function checkMimeType(array $headers)
-    {
-        if (!isset($headers['content-type'])) {
-            throw new Exception('Target server no response mimeType');
-        }
-        if ($this->mimeTypes && !in_array($headers['content-type'], $this->mimeTypes)) {
-            throw new Exception('Wrong mime types');
-        }
-    }
-
-    private function checkResponse(array $headers)
-    {
-        if (!$headers) {
-            throw new Exception('Target server no response');
-        }
-        foreach ($headers as $key => $option) {
-            if (is_array($option) || !is_int($key)) {
-                continue;
-            }
-            if (preg_match(self::REGEX_ERROR, $option)) {
-                throw new Exception('Target server no response');
-            }
-        }
-
-        return true;
     }
 
     private static function httpParseHeaders(array $header)
@@ -212,19 +193,6 @@ class UrlFiles
         return $parse;
     }
 
-    private function checkFileSize($file)
-    {
-        $stream = stream_get_contents($file, 1024 * 1024 * 1);
-        list($width, $height) = getimagesize('data://application/octet-stream;base64,' . base64_encode($stream));
-        if ($width > self::MAX_WIDTH) {
-            throw new Exception("Wrong image width");
-        }
-        if ($height > self::MAX_HEIGHT) {
-            var_dump($width, $height);
-            throw new Exception("Wrong image height");
-        }
-    }
-
     private function generateFilename()
     {
         $this->filename = sha1(mt_rand(1, 9999) . $this->destination . uniqid()) . time();
@@ -236,5 +204,19 @@ class UrlFiles
             throw new Exception('This isn\'t url adress');
         }
         $this->url = $url;
+    }
+
+    private function contentEncode($content, $type)
+    {
+        switch (trim($type)) {
+            case 'gzip' :
+                return gzdecode($content);
+            case 'deflate':
+                return gzinflate($content);
+            case 'compress':
+                return gzuncompress($content);
+            case 'identity':
+                return $content;
+        }
     }
 }

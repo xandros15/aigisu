@@ -19,10 +19,13 @@ use Exception;
  */
 class FileValidator
 {
-    const MAX_WIDTH  = 961;
-    const MAX_HEIGHT = 641;
-    const MIN_WIDTH  = 959;
-    const MIN_HEIGHT = 639;
+    const MAX_WIDTH    = 961;
+    const MAX_HEIGHT   = 641;
+    const MIN_WIDTH    = 959;
+    const MIN_HEIGHT   = 639;
+    const MIN_FILESIZE = 90 * 1024;
+    const MAX_FILESIZE = 512 * 1024;
+    const HTTP_ERROR   = '~^HTTP/[12]\.[0-9] [54][0-9]{2}.*$~i';
 
     public function uploadValidator(Upload $object)
     {
@@ -38,10 +41,20 @@ class FileValidator
     {
         list($width, $height) = getimagesize($file);
         if ($width > self::MAX_WIDTH) {
-            throw new Exception("Wrong image width");
+            throw new Exception(
+            sprintf('Image width is to large. Your image has %dpx. Max is %dpx', $width, self::MAX_WIDTH));
         }
         if ($height > self::MAX_HEIGHT) {
-            throw new Exception("Wrong image height");
+            throw new Exception(
+            sprintf('Image height is to large. Your image has %dpx. Max is %dpx'), $height, self::MAX_HEIGHT);
+        }
+        if ($width < self::MIN_WIDTH) {
+            throw new Exception(
+            sprintf('Image width is to low. Your image has %dpx. Min is %dpx', $width, self::MIN_WIDTH));
+        }
+        if ($height < self::MIN_HEIGHT) {
+            throw new Exception(
+            sprintf('Image height is to low. Your image has %dpx. Min is %dpx'), $height, self::MIN_HEIGHT);
         }
     }
 
@@ -51,5 +64,42 @@ class FileValidator
         if (R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])) {
             throw new Exception('Image exists in Database');
         }
+    }
+
+    public function checkMimeType($contentType, array $mimeTypes)
+    {
+        if (!isset($contentType)) {
+            throw new Exception('Target file have no mimeType');
+        }
+        if ($mimeTypes && !in_array($contentType, $mimeTypes)) {
+            throw new Exception('Wrong mime types');
+        }
+    }
+
+    public function checkFileSize($filesize)
+    {
+        if ($filesize < self::MIN_FILESIZE) {
+            throw new Exception('File is too small');
+        }
+        if ($filesize > self::MAX_FILESIZE) {
+            throw new Exception('File is too large');
+        }
+    }
+
+    public function checkHttpResponse(array $headers)
+    {
+        if (!$headers) {
+            throw new Exception('Target server no response');
+        }
+        foreach ($headers as $key => $option) {
+            if (is_array($option) || !is_int($key)) {
+                continue;
+            }
+            if (preg_match(self::HTTP_ERROR, $option)) {
+                throw new Exception('Target server no response');
+            }
+        }
+
+        return true;
     }
 }
