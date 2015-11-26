@@ -18,29 +18,32 @@ function dbconnect()
     R::debug(DEBUG);
 }
 
-function editUnit($unitPost)
+function editUnit()
 {
     R::debug(false);
-    if (isset($unitPost['id']) && preg_match('/^[\d]+$/', $unitPost['id'])) {
-        $unit = R::load(TB_NAME, $unitPost['id']);
-        if (preg_match('/^[\w]+$/', $unitPost['name'])) {
-            $unit->name                 = $unitPost['name'];
-            $_POST['valid'][0]['value'] = true;
-            $_POST['valid'][0]['name']  = 'unit-name';
+    global $query;
+    $unitPost = (object) $query->post->unit;
+    if (isset($unitPost->id) && preg_match('/^\d+$/', $unitPost->id)) {
+        $response = ['valid' => []];
+        $unit     = R::load(TB_NAME, $unitPost->id);
+        if (preg_match('/^[\w]+$/', $unitPost->name)) {
+            $unit->name                    = $unitPost->name;
+            $response['valid'][0]['value'] = true;
+            $response['valid'][0]['name']  = 'unit-name';
         } else {
-            $_POST['valid'][0]['value'] = false;
-            $_POST['valid'][0]['name']  = 'unit-name';
+            $response['valid'][0]['value'] = false;
+            $response['valid'][0]['name']  = 'unit-name';
         }
-        if (!empty($unitPost['rarity'])) {
-            $unit->rarity               = $unitPost['rarity'];
-            $_POST['valid'][2]['value'] = true;
-            $_POST['valid'][2]['name']  = 'unit-rarity';
+        if (!empty($unitPost->rarity) && in_array($unitPost->rarity, getEnumRarity())) {
+            $unit->rarity                  = $unitPost->rarity;
+            $response['valid'][2]['value'] = true;
+            $response['valid'][2]['name']  = 'unit-rarity';
         } else {
-            $_POST['valid'][2]['value'] = false;
-            $_POST['valid'][2]['name']  = 'unit-rarity';
+            $response['valid'][2]['value'] = false;
+            $response['valid'][2]['name']  = 'unit-rarity';
         }
         R::store($unit);
-        die(json_encode($_POST));
+        die(json_encode($response));
     }
     $_POST['valid'] = false;
     die(json_encode($_POST));
@@ -50,7 +53,7 @@ function editUnit($unitPost)
  *
  * @return Array
  */
-function enumRarity()
+function getEnumRarity()
 {
     $enumRow = R::getRow("SHOW COLUMNS FROM units LIKE 'rarity'");
     $enum    = $enumRow['Type'];
@@ -160,11 +163,11 @@ function getCurrentPage()
 function urlQueryToGlobal()
 {
     global $query;
-    if (!empty($_POST['unit'])) {
-        if (!empty($query->files)) {
+    if (!empty($query->post->unit)) {
+        if (isset($query->post->json) && $query->post->json) {
+            editUnit();
+        } elseif (!empty($query->files)) {
             uploadImages();
-        } else {
-            editUnit($_POST['unit']);
         }
     } elseif (!empty($_POST['class'])) {
         createClass($_POST['class']);
@@ -273,6 +276,11 @@ function getSearchQuery()
     return $query->get->q;
 }
 
+function getImageColumsNames()
+{
+    return ['DMM #1' => 'dmm1', 'DMM #2' => 'dmm2', 'Nutaku #1' => 'nutaku1', 'Nutaku #2' => 'nutaku2'];
+}
+
 function uploadImages()
 {
     global $query;
@@ -282,9 +290,34 @@ function uploadImages()
     }
 }
 
-function isDisabledUpload(RedBeanPHP\OODBBean $object, $name)
+function isDisabledUpload(RedBeanPHP\OODBBean $object, $name = false)
 {
-    return ($object->{$name . '_id'}) || in_array($object->rarity, ['iron', 'bronze']);
+    if ($name) {
+        $response = (bool) (in_array($object->rarity, ['iron', 'bronze']) || $object->isMale ||
+            ($object->isOnlyDmm && trim($name, '0...9') == 'nutaku'));
+    } else {
+        $response = (bool) (in_array($object->rarity, ['iron', 'bronze']) || $object->isMale);
+    }
+    return $response;
+}
+
+function isCompletedUpload(RedBeanPHP\OODBBean $object, $name = false)
+{
+    if ($name) {
+        $response = (bool) ($object->{$name . '_id'});
+    } else {
+        $response = true;
+        foreach (getImageColumsNames() as $colName) {
+            if ($object->isOnlyDmm && trim($colName, '0...9') == 'nutaku') {
+                continue;
+            }
+            if (!($object->{$colName . '_id'})) {
+                $response = false;
+                break;
+            }
+        }
+    }
+    return $response;
 }
 
 function isImageQuery()
@@ -316,7 +349,7 @@ function getImagesFromDb()
     $images = [];
     foreach (array_keys($alliases) as $name) {
         if ($unit->{$name}) {
-            $images[trim($name,'0...9')][] = $unit->{$name};
+            $images[trim($name, '0...9')][] = $unit->{$name};
         }
     }
 
