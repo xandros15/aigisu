@@ -140,9 +140,7 @@ class UploadImages extends Upload
         foreach ($this->validators as $validator) {
             $this->callbacks($validator['validator'], $validator['methods']);
         }
-        $this->set_max_file_size(1);
         $this->set_allowed_mime_types(['image/png']);
-        $this->defaultExtention = 'png';
     }
 
     private function createDestination()

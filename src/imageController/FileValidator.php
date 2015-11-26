@@ -32,6 +32,7 @@ class FileValidator
         try {
             $this->checkResolution($object->file['tmp_name']);
             $this->isInDatabase($object->file['tmp_name']);
+            $this->checkFileSize(filesize($object->file['tmp_name']));
         } catch (Exception $exc) {
             $object->set_error('file: ' . $object->file['original_filename'] . ' error: ' . $exc->getMessage());
         }
