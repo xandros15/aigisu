@@ -63,20 +63,6 @@ function getEnumRarity()
     return $enum    = explode(',', $enum);
 }
 
-function createClass($class)
-{
-    foreach ($class as $id => $valid) {
-        if (!preg_match('/^\w+(?:\s{1}\w+)?(?:\s{1}\w+)?$/', $valid)) {
-            return;
-        }
-        $class[$id] = ucwords($valid);
-    }
-    $className   = implode('/', $class);
-    $class       = R::dispense('class');
-    $class->name = $className;
-    R::store($class);
-}
-
 function bootstrap()
 {
     configuration();
@@ -163,14 +149,11 @@ function getCurrentPage()
 function urlQueryToGlobal()
 {
     global $query;
-    if (!empty($query->post->unit)) {
-        if (isset($query->post->json) && $query->post->json) {
-            editUnit();
-        } elseif (!empty($query->files)) {
-            uploadImages();
-        }
-    } elseif (!empty($_POST['class'])) {
-        createClass($_POST['class']);
+    if (!empty($query->post->uploadImages) && !empty($query->files)) {
+        uploadImages();
+    }
+    if (!empty($query->post->unit) && !empty($query->post->json)) {
+        editUnit();
     }
 }
 
@@ -281,8 +264,9 @@ function getImageColumsNames()
     return ['DMM #1' => 'dmm1', 'DMM #2' => 'dmm2', 'Nutaku #1' => 'nutaku1', 'Nutaku #2' => 'nutaku2'];
 }
 
-function imageNumberToHuman($string){
-    return str_replace(['#1', '#2'], ['first scene', 'second scene'] , $string);
+function imageNumberToHuman($string)
+{
+    return str_replace(['#1', '#2'], ['first scene', 'second scene'], $string);
 }
 
 function uploadImages()
@@ -294,9 +278,10 @@ function uploadImages()
     }
 }
 
-function isAnyImageUploaded(RedBeanPHP\OODBBean $object){
+function isAnyImageUploaded(RedBeanPHP\OODBBean $object)
+{
     foreach (getImageColumsNames() as $colName) {
-        if($object->{$colName . '_id'}){
+        if ($object->{$colName . '_id'}) {
             return true;
         }
     }

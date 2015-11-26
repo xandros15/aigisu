@@ -26,6 +26,8 @@
     <div class="modal fade" id="unit-image-upload-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <form enctype="multipart/form-data" method="post" role="form">
+                <input type="hidden" name="id" value="<?= $unit->id ?>">
+                <input type="hidden" name="uploadImages" value="1">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
