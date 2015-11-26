@@ -55,7 +55,7 @@
                                             <label>Source URL:</label>
                                         </div>
                                         <div class="col-xs-9">
-                                            <input class="form-control" name="<?= $name ?>" type="text"  placeholder="http://">
+                                            <input class="form-control" name="<?= $name ?>" autocomplete="off" type="text"  placeholder="http://">
                                         </div>
                                     </div>
                                 </div>
