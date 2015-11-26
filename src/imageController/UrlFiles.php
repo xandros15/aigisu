@@ -142,9 +142,12 @@ class UrlFiles
         if (!$file) {
             throw new Exception('Can\'t open file from url');
         }
-        $content = $this->contentEncode(stream_get_contents($file), $this->headers['content-encoding']);
+        $content = stream_get_contents($file);
+        if (isset($this->headers['content-encoding'])) {
+            $content = $this->contentEncode($content, $this->headers['content-encoding']);
+        }
         fclose($file);
-        $status  = file_put_contents($this->file['full_path'], $content);
+        $status = file_put_contents($this->file['full_path'], $content);
         if (!$status) {
             throw new Exception('Upload: Can\'t upload file.');
         }
