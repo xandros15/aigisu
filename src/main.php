@@ -281,6 +281,10 @@ function getImageColumsNames()
     return ['DMM #1' => 'dmm1', 'DMM #2' => 'dmm2', 'Nutaku #1' => 'nutaku1', 'Nutaku #2' => 'nutaku2'];
 }
 
+function imageNumberToHuman($string){
+    return str_replace(['#1', '#2'], ['first scene', 'second scene'] , $string);
+}
+
 function uploadImages()
 {
     global $query;
@@ -288,6 +292,15 @@ function uploadImages()
         $upload = new UploadImages('images');
         $upload->uploadFiles();
     }
+}
+
+function isAnyImageUploaded(RedBeanPHP\OODBBean $object){
+    foreach (getImageColumsNames() as $colName) {
+        if($object->{$colName . '_id'}){
+            return true;
+        }
+    }
+    return false;
 }
 
 function isDisabledUpload(RedBeanPHP\OODBBean $object, $name = false)

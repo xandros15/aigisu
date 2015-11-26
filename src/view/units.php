@@ -10,7 +10,9 @@
                     <input type="hidden" name="id" value="<?= $unit->id ?>">
                     <div class="form-group pull-left">
                         <a target="_blank" href="<?= $unit->linkgc ?>">
-                            <img style="width: 100px" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
+                            <img <?=
+                            (isAnyImageUploaded($unit)) ? 'class="hscene"' : ''
+                            ?> style="width: 100px" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
                         </a>
                     </div>
                     <div class="col-xs-9 col-sm-10">

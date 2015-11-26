@@ -6,9 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?= "http://$_SERVER[HTTP_HOST]" ?>/src/css/niceFileUpload.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="/src/js/bootstrap.js"></script>
         <style>
             .list li{
                 display: inline-block;
@@ -44,6 +41,8 @@
                 <p>&copy; xandros. Images and media relating to Millennium War Aigis are property of Nutaku.net and DMM.com</p>
             </footer>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="/src/js/bootstrap.js"></script>
         <script>globalUrl = '<?= "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>';</script>
         <script src="/src/js/updateAjax.js"></script>
         <script src="/src/js/blockDisabledLinks.js"></script>
