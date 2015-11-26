@@ -131,7 +131,7 @@ class UploadImages extends Upload
         require_once 'FileValidator.php';
         $this->validators[] = [
             'validator' => new FileValidator(),
-            'methods' => ['haveCorrectSize', 'isInDatabase']
+            'methods' => ['uploadValidator']
         ];
     }
 

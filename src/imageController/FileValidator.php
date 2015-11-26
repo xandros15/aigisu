@@ -10,6 +10,8 @@ namespace app\validators;
 use app\Upload;
 use app\UploadImages;
 use RedBeanPHP\Facade as R;
+use Exception;
+
 /**
  * Description of FileValidator
  *
@@ -19,23 +21,35 @@ class FileValidator
 {
     const MAX_WIDTH  = 961;
     const MAX_HEIGHT = 641;
+    const MIN_WIDTH  = 959;
+    const MIN_HEIGHT = 639;
 
-    public function haveCorrectSize(Upload $object)
+    public function uploadValidator(Upload $object)
     {
-        $imageSize = getimagesize($object->file['tmp_name']);
-        if ($imageSize[0] > self::MAX_WIDTH) {
-            $object->set_error('Image ' . $object->file['original_filename'] . ' has too much width');
-        }
-        if ($imageSize[1] > self::MAX_HEIGHT) {
-            $object->set_error('Image ' . $object->file['original_filename'] . ' has too much heigh');
+        try {
+            $this->checkResolution($object->file['tmp_name']);
+            $this->isInDatabase($object->file['tmp_name']);
+        } catch (Exception $exc) {
+            $object->set_error('file: ' . $object->file['original_filename'] . ' error: ' . $exc->getMessage());
         }
     }
 
-    public function isInDatabase(Upload $object)
+    public function checkResolution($file)
     {
-        $md5Temp = md5_file($object->file['tmp_name']);
+        list($width, $height) = getimagesize($file);
+        if ($width > self::MAX_WIDTH) {
+            throw new Exception("Wrong image width");
+        }
+        if ($height > self::MAX_HEIGHT) {
+            throw new Exception("Wrong image height");
+        }
+    }
+
+    public function isInDatabase($file)
+    {
+        $md5Temp = md5_file($file);
         if (R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])) {
-            $object->set_error('Image ' . $object->file['original_filename'] . ' exists in Database');
+            throw new Exception('Image exists in Database');
         }
     }
 }
