@@ -1,6 +1,7 @@
 <div id="units" class="col-xs-12">
     <?php $units = findUnits(); ?>
     <?php if (count($units) > 0): ?>
+        <div class="col-xs-12"><?= renderPhpFile('uploadHelp') ?></div>
         <?= renderPhpFile('pagination') ?>
         <?= renderPhpFile('sort') ?>
         <?php $raritis = getEnumRarity() ?>
