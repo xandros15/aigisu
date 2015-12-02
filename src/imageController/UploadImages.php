@@ -152,7 +152,7 @@ class UploadImages extends Upload
 
     private function getNewName($id)
     {
-        return $this->newDir . DIRECTORY_SEPARATOR . $id . '.' . $this->defaultExtention;
+        return $this->newDir . $id . '.' . $this->defaultExtention;
     }
 
     private function createImage($fullPatch)
@@ -181,11 +181,11 @@ class UploadImages extends Upload
 
     private function createDestination()
     {
-        $newDir = ROOT_DIR . DIRECTORY_SEPARATOR . $this->destination;
+        $newDir = ROOT_DIR . $this->destination;
         if (!is_dir($newDir)) {
             mkdir($newDir, 755);
         }
 
-        $this->newDir = $newDir;
+        $this->newDir = $newDir . DIRECTORY_SEPARATOR;
     }
 }

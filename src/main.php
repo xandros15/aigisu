@@ -81,7 +81,7 @@ function bootstrap()
 function setAutoloader()
 {
     /* @var $autoloader Composer\Autoload\ClassLoader */
-    $autoloader = require_once ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    $autoloader = require_once ROOT_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
     $autoloader->addPsr4('app\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
     $autoloader->addPsr4('app\\validators\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
     $autoloader->addPsr4('app\\google\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
