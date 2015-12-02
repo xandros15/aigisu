@@ -99,6 +99,7 @@ function renderPhpFile($_file_, $_params_ = [])
 
 function configuration()
 {
+    defined('SITE_URL') || define('SITE_URL', 'http://aigisu.pl/');
     defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
@@ -334,7 +335,7 @@ function isImageQuery()
 
 function getImageFile(RedBeanPHP\OODBBean $image)
 {
-    return "http://{$_SERVER['HTTP_HOST']}/images/{$image->id}.png";
+    return SITE_URL . "images/{$image->id}.png";
 }
 
 function getImagesFromDb()
@@ -345,7 +346,7 @@ function getImagesFromDb()
     if (!$unit) {
         return [];
     }
-    $images = [];
+    $images   = [];
     $alliases = [
         'nutaku1' => 'images',
         'nutaku2' => 'images',
