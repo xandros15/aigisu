@@ -11,10 +11,16 @@ use app\UploadImages;
 
 function dbconnect()
 {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.config.php';
+    require CONFIG_DIR . 'db.config.php';
     defined('TB_NAME') || define('TB_NAME', 'units');
     defined('TB_IMAGES') || define('TB_IMAGES', 'images');
     R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+    R::aliases([
+        'nutaku1' => 'images',
+        'nutaku2' => 'images',
+        'dmm1' => 'images',
+        'dmm2' => 'images'
+    ]);
     R::debug(DEBUG);
 }
 
@@ -78,6 +84,7 @@ function setAutoloader()
     $autoloader = require_once ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
     $autoloader->addPsr4('app\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
     $autoloader->addPsr4('app\\validators\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
+    $autoloader->addPsr4('app\\google\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
     $autoloader->addPsr4('RedBeanPHP\\Facade\\', __DIR__);
 }
 
@@ -86,13 +93,14 @@ function renderPhpFile($_file_, $_params_ = [])
     ob_start();
     ob_implicit_flush(false);
     extract($_params_, EXTR_OVERWRITE);
-    require (VIEW_DIR . DIRECTORY_SEPARATOR . $_file_ . '.php');
+    require (VIEW_DIR . $_file_ . '.php');
     return ob_get_clean();
 }
 
 function configuration()
 {
-    defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view');
+    defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
+    defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
     defined('DEBUG') || define('DEBUG', 0);
 }
@@ -332,15 +340,8 @@ function getImageFile(RedBeanPHP\OODBBean $image)
 function getImagesFromDb()
 {
     global $query;
-    $id       = $query->get->image;
-    $unit     = R::load(TB_NAME, (int) $id);
-    $alliases = [
-        'nutaku1' => 'images',
-        'nutaku2' => 'images',
-        'dmm1' => 'images',
-        'dmm2' => 'images'
-    ];
-    R::aliases($alliases);
+    $id   = $query->get->image;
+    $unit = R::load(TB_NAME, (int) $id);
     if (!$unit) {
         return [];
     }
