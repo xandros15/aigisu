@@ -346,6 +346,12 @@ function getImagesFromDb()
         return [];
     }
     $images = [];
+    $alliases = [
+        'nutaku1' => 'images',
+        'nutaku2' => 'images',
+        'dmm1' => 'images',
+        'dmm2' => 'images'
+    ];
     foreach (array_keys($alliases) as $name) {
         if ($unit->{$name}) {
             $images[trim($name, '0...9')][] = $unit->{$name};
