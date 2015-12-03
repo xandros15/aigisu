@@ -27,7 +27,6 @@ class GoogleServer
     /** @var Google_Service_Drive_Permission */
     public $resultOfPermission;
 
-
     /** @var Google_Service_Drive */
     protected $service;
 
@@ -53,14 +52,14 @@ class GoogleServer
     {
         $folderName = self::MAIN_FOLDER_NAME;
         $mimeType   = self::FOLDER_MIME_TYPE;
-        $query      = "title = '{$folderName}' and mimeType = '{$mimeType}'";
+        $query      = "title = '{$folderName}' and mimeType = '{$mimeType}' and trashed = false";
         $files      = $service->files->listFiles(['q' => $query])->getItems();
         if ($files) {
             $this->mainFolder = reset($files);
             return;
         } else {
-            $this->mainFolder = $this->createNewFolder($this->folderName, 'R18 images for aigisu');
-            $this->createPermissionForFile($this->folder->id);
+            $this->mainFolder = $this->createNewFolder($folderName, 'R18 images for aigisu');
+            $this->createPermissionForFile($this->mainFolder->id);
         }
     }
 
