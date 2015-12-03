@@ -5,11 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<?= "http://$_SERVER[HTTP_HOST]" ?>/src/css/niceFileUpload.css" rel="stylesheet">
         <style>
-            .list li{
-                display: inline-block;
-            }
             img{
                 max-width: 100%;
             }
@@ -19,9 +15,6 @@
             body > .container{
                 min-width: 480px;
                 max-width: 960px;
-            }
-            footer{
-                text-align: center;
             }
         </style>
     </head>
@@ -37,7 +30,7 @@
                     <?= renderPhpFile('units'); ?>
                 <?php endif; ?>
             </main>
-            <footer class="row">
+            <footer class="row text-center">
                 <p>&copy; xandros. Images and media relating to Millennium War Aigis are property of Nutaku.net and DMM.com</p>
             </footer>
         </div>
