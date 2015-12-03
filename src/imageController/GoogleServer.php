@@ -77,7 +77,7 @@ class GoogleServer
             return;
         } else {
             $this->mainFolder = $this->createNewFolder($folderName, 'R18 images for aigisu');
-            $this->createPermissionForFile($this->mainFolder->id);
+            $this->createPermissionForFile($this->mainFolder->id, true);
         }
     }
 
@@ -114,12 +114,13 @@ class GoogleServer
         return $newParent;
     }
 
-    protected function createPermissionForFile($id)
+    protected function createPermissionForFile($id, $onlyLink = false)
     {
         $permission = new Google_Service_Drive_Permission();
         $permission->setValue('');
         $permission->setType('anyone');
         $permission->setRole('reader');
+        $permission->setWithLink($onlyLink);
         return $this->service->permissions->insert($id, $permission);
     }
 
