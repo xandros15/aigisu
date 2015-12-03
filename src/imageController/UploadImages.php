@@ -128,21 +128,21 @@ class UploadImages extends Upload
 
     private function uploadOnExtendedServer($name)
     {
-        $otherServer = new GoogleFile();
-        $otherServer->setMimeType($this->defaultMimeType);
-        $otherServer->setExtension($this->defaultExtention);
-        $otherServer->setDescription('R18');
-        $otherServer->setName($name);
-        $otherServer->setFolderName($this->image->units->name);
-        $otherServer->setFilename($this->getNewName($this->image->id));
         R::begin();
         try {
+            $otherServer = new GoogleFile();
+            $otherServer->setMimeType($this->defaultMimeType);
+            $otherServer->setExtension($this->defaultExtention);
+            $otherServer->setDescription('R18');
+            $otherServer->setName($name);
+            $otherServer->setFolderName($this->image->units->name);
+            $otherServer->setFilename($this->getNewName($this->image->id));
             $this->image->google = $otherServer->upload()->resultOfUpload->id;
             R::store($this->image);
             R::commit();
         } catch (Exception $exc) {
             R::rollback();
-            var_dump($exc->getMessage());
+            error_log($exc->getMessage());
         }
     }
 

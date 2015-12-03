@@ -52,14 +52,10 @@ class GoogleFile extends GoogleServer
 
     public function upload()
     {
-        try {
-            $this->validate();
-            $this->setFolder();
-            $this->resultOfUpload     = $this->uploadFile($this);
-            $this->resultOfPermission = $this->createPermissionForFile($this->resultOfUpload->id);
-        } catch (Exception $e) {
-            var_dump($e);
-        }
+        $this->validate();
+        $this->setFolder();
+        $this->resultOfUpload     = $this->uploadFile($this);
+        $this->resultOfPermission = $this->createPermissionForFile($this->resultOfUpload->id);
         return $this;
     }
 
@@ -106,7 +102,7 @@ class GoogleFile extends GoogleServer
     {
         $mimeType = self::FOLDER_MIME_TYPE;
         $parentId = $this->mainFolder->id;
-        $query    = "title = '{$this->folderName}' and mimeType = '{$mimeType}' and '{$parentId}' in parents";
+        $query    = "title = '{$this->folderName}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
         $files    = $this->service->files->listFiles(['q' => $query])->getItems();
         if ($files) {
             $this->folder = reset($files);
