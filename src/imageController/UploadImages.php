@@ -9,9 +9,9 @@ namespace app;
 
 use app\validators\FileValidator;
 use app\UrlFiles;
+use app\Images;
 use app\google\GoogleFile;
 use RedBeanPHP\Facade as R;
-use RedBeanPHP\OODBBean;
 use Exception;
 
 /**
@@ -30,6 +30,9 @@ class UploadImages extends Upload
     protected $validators;
     protected $destination;
 
+    /** @var RedBeanPHP\OODBBean */
+    private $image;
+
     public function __construct($destination)
     {
         global $query;
@@ -41,7 +44,11 @@ class UploadImages extends Upload
 
     public function uploadFiles()
     {
+        $avaibleImagesFields = Images::getTypeNames();
         foreach ($this->files as $input => $file) {
+            if (!in_array($input, $avaibleImagesFields)) {
+                continue;
+            }
             if ($this->post->{$input}) {
                 $results = $this->uploadFromServer($this->post->{$input});
             } else {
@@ -53,12 +60,10 @@ class UploadImages extends Upload
             if ($this->errors) {
                 var_dump($this->errors);
             } else {
-                $unit = $this->addImageToDatabase($results, $input);
-                (!$unit) || $this->uploadOnExtendedServer($unit, $input);
+                $this->addImageToDatabase($results, $input);
+                (!$this->image) || $this->uploadOnExtendedServer($input);
             }
-            if (is_file($results['full_path']) && is_executable($results['full_path'])) {
-                unlink($results['full_path']);
-            }
+            (!isset($results['full_patch'])) || $this->deteleFile($results['full_patch']);
         }
     }
 
@@ -89,14 +94,14 @@ class UploadImages extends Upload
 
         R::begin();
         try {
-            $unit = $this->transaction($results, $input);
+            $this->transaction($results, $input);
+            $newName = $this->getNewName($this->image->id);
+            $this->moveFile($results['full_path'], $newName);
             R::commit();
-            $this->moveFile($results['full_path'], $this->getNewName($unit->{$input}->getID()));
         } catch (Exception $exc) {
             var_dump($exc->getMessage());
             R::rollback();
         }
-        return isset($unit) ? $unit : false;
     }
 
     private function transaction(array $results, $input)
@@ -115,32 +120,30 @@ class UploadImages extends Upload
         if (!$unit->name) {
             throw new Exception('Unit name is null');
         }
-        $image          = $this->createImage($results['full_path']);
-        $unit->{$input} = $image;
-        R::storeAll([$unit, $image]);
-        return $unit;
+        $this->setImage($results['full_path']);
+        $this->image->type     = $input;
+        $unit->ownImagesList[] = $this->image;
+        R::store($unit);
     }
 
-    private function uploadOnExtendedServer(OODBBean $unit, $name)
+    private function uploadOnExtendedServer($name)
     {
         $otherServer = new GoogleFile();
         $otherServer->setMimeType($this->defaultMimeType);
         $otherServer->setExtension($this->defaultExtention);
         $otherServer->setDescription('R18');
         $otherServer->setName($name);
-        $otherServer->setFolderName($unit->name);
-        $otherServer->setFilename($this->getNewName($unit->{$name}->id));
+        $otherServer->setFolderName($this->image->units->name);
+        $otherServer->setFilename($this->getNewName($this->image->id));
         R::begin();
         try {
-            $unit->{$name}->google = $otherServer->upload()->resultOfUpload->id;
-            R::store($unit);
+            $this->image->google = $otherServer->upload()->resultOfUpload->id;
+            R::store($this->image);
             R::commit();
         } catch (Exception $exc) {
             R::rollback();
             var_dump($exc->getMessage());
         }
-
-        return;
     }
 
     private function moveFile($current, $destiny)
@@ -155,11 +158,10 @@ class UploadImages extends Upload
         return $this->newDir . $id . '.' . $this->defaultExtention;
     }
 
-    private function createImage($fullPatch)
+    private function setImage($fullPatch)
     {
-        $image      = R::dispense(TB_IMAGES);
-        $image->md5 = md5_file($fullPatch);
-        return $image;
+        $this->image      = R::dispense(TB_IMAGES);
+        $this->image->md5 = md5_file($fullPatch);
     }
 
     private function createValidator()
@@ -187,5 +189,13 @@ class UploadImages extends Upload
         }
 
         $this->newDir = $newDir . DIRECTORY_SEPARATOR;
+    }
+
+    private function deteleFile($filename)
+    {
+        if (is_file($filename) && is_executable($filename)) {
+            return unlink($filename);
+        }
+        return false;
     }
 }

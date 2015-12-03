@@ -8,6 +8,7 @@ $colNames = ['id', 'name', 'orginal', 'rarity'];
 
 use RedBeanPHP\Facade as R;
 use app\UploadImages;
+use app\Images;
 
 function dbconnect()
 {
@@ -15,13 +16,8 @@ function dbconnect()
     defined('TB_NAME') || define('TB_NAME', 'units');
     defined('TB_IMAGES') || define('TB_IMAGES', 'images');
     R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
-    R::aliases([
-        'nutaku1' => 'images',
-        'nutaku2' => 'images',
-        'dmm1' => 'images',
-        'dmm2' => 'images'
-    ]);
     R::debug(DEBUG);
+    R::freeze();
 }
 
 function editUnit()
@@ -103,7 +99,7 @@ function configuration()
     defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
-    defined('DEBUG') || define('DEBUG', 0);
+    defined('DEBUG') || define('DEBUG', 1);
 }
 
 function findUnits()
@@ -268,96 +264,18 @@ function getSearchQuery()
     return $query->get->q;
 }
 
-function getImageColumsNames()
-{
-    return ['DMM #1' => 'dmm1', 'DMM #2' => 'dmm2', 'Nutaku #1' => 'nutaku1', 'Nutaku #2' => 'nutaku2'];
-}
-
-function imageNumberToHuman($string)
-{
-    return str_replace(['#1', '#2'], ['first scene', 'second scene'], $string);
-}
-
 function uploadImages()
 {
     global $query;
     if (!empty($query->files)) {
-        $upload = new UploadImages('images');
+        $upload = new UploadImages(Images::IMAGE_DIRECTORY);
         $upload->uploadFiles();
     }
 }
 
-function isAnyImageUploaded(RedBeanPHP\OODBBean $object)
-{
-    foreach (getImageColumsNames() as $colName) {
-        if ($object->{$colName . '_id'}) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function isDisabledUpload(RedBeanPHP\OODBBean $object, $name = false)
-{
-    if ($name) {
-        $response = (bool) (in_array($object->rarity, ['iron', 'bronze']) || $object->isMale ||
-            ($object->isOnlyDmm && trim($name, '0...9') == 'nutaku'));
-    } else {
-        $response = (bool) (in_array($object->rarity, ['iron', 'bronze']) || $object->isMale);
-    }
-    return $response;
-}
-
-function isCompletedUpload(RedBeanPHP\OODBBean $object, $name = false)
-{
-    if ($name) {
-        $response = (bool) ($object->{$name . '_id'});
-    } else {
-        $response = true;
-        foreach (getImageColumsNames() as $colName) {
-            if ($object->isOnlyDmm && trim($colName, '0...9') == 'nutaku') {
-                continue;
-            }
-            if (!($object->{$colName . '_id'})) {
-                $response = false;
-                break;
-            }
-        }
-    }
-    return $response;
-}
-
+// TODO create routing in other system
 function isImageQuery()
 {
     global $query;
     return (!empty($query->get->image));
-}
-
-function getImageFile(RedBeanPHP\OODBBean $image)
-{
-    return SITE_URL . "images/{$image->id}.png";
-}
-
-function getImagesFromDb()
-{
-    global $query;
-    $id   = $query->get->image;
-    $unit = R::load(TB_NAME, (int) $id);
-    if (!$unit) {
-        return [];
-    }
-    $images   = [];
-    $alliases = [
-        'nutaku1' => 'images',
-        'nutaku2' => 'images',
-        'dmm1' => 'images',
-        'dmm2' => 'images'
-    ];
-    foreach (array_keys($alliases) as $name) {
-        if ($unit->{$name}) {
-            $images[trim($name, '0...9')][] = $unit->{$name};
-        }
-    }
-
-    return $images;
 }
