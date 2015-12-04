@@ -18,13 +18,13 @@
                     <li>Press <kbd>f12</kbd></li>
                     <li>Run game</li>
                     <li>Chose network tab and filter images</li>
-                    <img alt="image" src="/src/images/1.png">
+                    <img alt="image" src="/src/images/1.jpg">
                     <li>Go to "Reministre" and chose what event you want to upload</li>
-                    <img alt="image" src="/src/images/2.png">
+                    <img alt="image" src="/src/images/2.jpg">
                     <li>Check if load correctly</li>
-                    <img alt="image" src="/src/images/3.png">
+                    <img alt="image" src="/src/images/3.jpg">
                     <li>Them copy url address or open in new tab</li>
-                    <img alt="image" src="/src/images/4.png">
+                    <img alt="image" src="/src/images/4.jpg">
                 </ol>
                 <p>Other browsers can have simlary options</p>
             </div>
