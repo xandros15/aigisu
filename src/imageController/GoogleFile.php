@@ -55,7 +55,7 @@ class GoogleFile extends GoogleServer
         $this->validate();
         $this->setFolder();
         $this->resultOfUpload     = $this->uploadFile($this);
-        $this->resultOfPermission = $this->createPermissionForFile($this->resultOfUpload->id);
+        $this->resultOfPermission = $this->createPermissionForFile($this->resultOfUpload->id, true);
         return $this;
     }
 
@@ -108,7 +108,7 @@ class GoogleFile extends GoogleServer
             $this->folder = reset($files);
         } else {
             $this->folder = $this->createNewFolder($this->folderName, false, $parentId);
-            $this->createPermissionForFile($this->folder->id);
+            $this->createPermissionForFile($this->folder->id, true);
         }
     }
 

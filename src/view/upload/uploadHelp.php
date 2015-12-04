@@ -14,16 +14,16 @@
                 <p>Uploaded: <span  class="glyphicon glyphicon-ok-sign" style="color:green;" aria-hidden="true"></span></p>
                 <p>Required: <span  class="glyphicon glyphicon-question-sign" style="color:blue;" aria-hidden="true"></span></p>
                 <ol>
-                    <li>Run browser</li>
-                    <li>Press <kbd>f12</kbd></li>
-                    <li>Run game</li>
-                    <li>Chose network tab and filter images</li>
+                    <li><h4>Run browser</h4></li>
+                    <li><h4>Press <kbd>f12</kbd></h4></li>
+                    <li><h4>Run game</h4></li>
+                    <li><h4>Chose network tab and filter images</h4></li>
                     <img alt="image" src="/src/images/1.jpg">
-                    <li>Go to "Reministre" and chose what event you want to upload</li>
+                    <li><h4>Go to "Reministre" and chose what event you want to upload</h4></li>
                     <img alt="image" src="/src/images/2.jpg">
-                    <li>Check if load correctly</li>
+                    <li><h4>Check if load correctly</h4></li>
                     <img alt="image" src="/src/images/3.jpg">
-                    <li>Them copy url address or open in new tab</li>
+                    <li><h4>Them copy url address or open in new tab</h4></li>
                     <img alt="image" src="/src/images/4.jpg">
                 </ol>
                 <p>Other browsers can have simlary options</p>
