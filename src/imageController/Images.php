@@ -15,9 +15,17 @@ class Images
     public $isOnlyDmm;
     public $isMale;
     public $rarity;
+
+    /** @var OODBBean */
     public $dmm1;
+
+    /** @var OODBBean */
     public $dmm2;
+
+    /** @var OODBBean */
     public $nutaku1;
+
+    /** @var OODBBean */
     public $nutaku2;
 
     public static function load(OODBBean $unit)
