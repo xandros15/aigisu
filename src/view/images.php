@@ -1,7 +1,6 @@
 <?php
 
 use app\Images;
-use RedBeanPHP\Facade as R;
 
 global $query;
 $imageSet = Images::setImagesFromUnitId($query->get->image);
@@ -18,6 +17,3 @@ $labels   = $imageSet->getAllImages();
     <?php endforeach; ?>
     </ul>
 <?php endforeach; ?>
-<?php
-$image = R::load(TB_IMAGES, 275);
-var_dump($image->units);
