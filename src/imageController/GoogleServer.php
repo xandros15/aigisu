@@ -7,9 +7,7 @@ use Google_Auth_Exception;
 use Google_Client;
 use Google_Service_Drive;
 use Google_Service_Drive_DriveFile;
-use Google_Service_Drive_DriveFileLabels;
 use Google_Service_Drive_Permission;
-use Google_Service_Drive_Property;
 use Google_Service_Drive_ParentReference;
 
 class GoogleServer
