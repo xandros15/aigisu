@@ -35,7 +35,7 @@
             </footer>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script src="/src/js/bootstrap.js"></script>
+        <script src="/src/js/bootstrap.min.js"></script>
         <script>globalUrl = '<?= "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>';</script>
         <script src="/src/js/updateAjax.js"></script>
         <script src="/src/js/blockDisabledLinks.js"></script>
