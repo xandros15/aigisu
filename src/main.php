@@ -82,10 +82,11 @@ function setAutoloader()
 
 function renderPhpFile($_file_, $_params_ = [])
 {
+    $filename = str_replace('/', DIRECTORY_SEPARATOR, $_file_);
     ob_start();
     ob_implicit_flush(false);
     extract($_params_, EXTR_OVERWRITE);
-    require (VIEW_DIR . $_file_ . '.php');
+    require (VIEW_DIR . $filename . '.php');
     return ob_get_clean();
 }
 
