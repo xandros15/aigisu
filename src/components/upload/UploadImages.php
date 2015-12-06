@@ -183,7 +183,7 @@ class UploadImages extends Upload
         /* @var $imgur Imgur */
         $imgur = $this->getExtentionServer('imgur');
         $imgur->setFilename($this->getNewName($this->image->id));
-        $imgur->setName($this->image->units->name);
+        $imgur->setName(rtrim($this->image->type, '12') . ': ' . $this->image->units->name);
         $imgur->setDescription('R18');
         $imgur->setCatalog(rtrim($this->image->type, '12'));
         $response = $imgur->uploadFile();
