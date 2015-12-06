@@ -124,6 +124,18 @@ class Units
                 $namespace = $matches[1];
                 $argument  = $matches[2];
             }
+            if($argument == 'male'){
+                $namespace = 'is_male';
+                $argument = 1;
+            }
+            if($argument == 'dmm'){
+                $namespace = 'is_only_dmm';
+                $argument = 1;
+            }
+            if($argument == 'nutaku'){
+                $namespace = 'is_only_dmm';
+                $argument = 0;
+            }
             if (strpos($argument, '*') === 0) {
                 $argument = substr_replace($argument, '%', 0, 1);
             }
