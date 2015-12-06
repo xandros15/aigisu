@@ -1,14 +1,8 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace app\upload\validators;
 
 use app\upload\Upload;
-use app\upload\UploadImages;
 use RedBeanPHP\Facade as R;
 use Exception;
 

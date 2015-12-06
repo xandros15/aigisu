@@ -15,7 +15,6 @@ class UrlFiles
     public $filename;
     public $mimeTypes = [];
     private $url;
-    private $fileResource;
     private $headers;
     private $ctx;
     private $errors   = [];
@@ -39,7 +38,6 @@ class UrlFiles
 
     public function loadFile($url, $opts = false)
     {
-        $ctx = ($opts !== false) ? stream_context_create($opts) : $this->ctx;
         try {
             $this->setUrl($url);
             $this->setHeaders($this->url);

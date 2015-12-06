@@ -9,6 +9,7 @@ $colNames = ['id', 'name', 'orginal', 'rarity'];
 use RedBeanPHP\Facade as R;
 use app\upload\UploadImages;
 use models\Images;
+use models\Units;
 
 function dbconnect()
 {
@@ -36,7 +37,7 @@ function editUnit()
             $response['valid'][0]['value'] = false;
             $response['valid'][0]['name']  = 'unit-name';
         }
-        if (!empty($unitPost->rarity) && in_array($unitPost->rarity, getEnumRarity())) {
+        if (!empty($unitPost->rarity) && in_array($unitPost->rarity, Units::getRarities())) {
             $unit->rarity                  = $unitPost->rarity;
             $response['valid'][2]['value'] = true;
             $response['valid'][2]['name']  = 'unit-rarity';

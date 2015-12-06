@@ -1,9 +1,4 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace app\imgur;
 
@@ -12,11 +7,6 @@ use Imgur\Authorize;
 use Exception;
 use app\ArrayException;
 
-/**
- * Description of Imgur
- *
- * @author user
- */
 class Imgur extends Base
 {
     const KEY_PATH         = CONFIG_DIR . 'imgur.key.json';
@@ -62,7 +52,7 @@ class Imgur extends Base
     /**
      * @param string $key
      * @param string $secret
-     * @return type
+     * @return object JSON
      */
     public static function createKeyToken($key, $secret)
     {

@@ -1,27 +1,17 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace app\upload;
 
-use app\upload\validators\FileValidator;
-use app\upload\UrlFiles;
-use app\upload\Upload;
-use models\Images;
-use app\imgur\Imgur;
 use app\google\GoogleFile;
+use app\imgur\Imgur;
+use app\upload\Upload;
+use app\upload\UrlFiles;
+use app\upload\validators\FileValidator;
+use Exception;
+use models\Images;
 use RedBeanPHP\Facade as R;
 use RedBeanPHP\OODBBean;
-use Exception;
 
-/**
- * Description of UploadImages
- *
- * @author user
- */
 class UploadImages extends Upload
 {
     public $files;
