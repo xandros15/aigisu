@@ -24,7 +24,7 @@ class ArrayException extends Exception
         $return = '';
         array_walk_recursive(
             $array, function ($a) use (&$return) {
-            $return .= $a . '<br>';
+            $return .= $a . PHP_EOL;
         }
         );
         return $return;
