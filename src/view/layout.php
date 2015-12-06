@@ -36,7 +36,7 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="./js/bootstrap.min.js"></script>
-        <script>globalUrl = '<?= "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>';</script>
+        <script>globalUrl = '<?= SITE_URL ?>';</script>
         <script src="./js/updateAjax.js"></script>
         <script src="./js/blockDisabledLinks.js"></script>
         <script src="./js/openImages.js"></script>
