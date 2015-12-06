@@ -33,6 +33,16 @@ class Images
         return new Images($unit);
     }
 
+    public static function tableName()
+    {
+        return 'images';
+    }
+
+    public static function getColumnNames()
+    {
+        return ['id', 'md5', 'google', 'units_id', 'type', 'imgur', 'delhash'];
+    }
+
     public static function imageNumberToHuman($string)
     {
         return str_replace(['#1', '#2'], ['first scene', 'second scene'], $string);
