@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-namespace app;
+namespace app\imgur;
 
 use Imgur\Imgur as Base;
 use Imgur\Authorize;
@@ -42,7 +42,7 @@ class Imgur extends Base
     }
 
     /**
-     * @return \app\Imgur
+     * @return \app\imgur\Imgur
      * @throws Exception if token file no exist
      */
     public static function facade()

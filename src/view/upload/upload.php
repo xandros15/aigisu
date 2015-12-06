@@ -1,6 +1,6 @@
 <?php
 
-use app\Images;
+use models\Images;
 
 $images = Images::load($unit);
 $types  = Images::getTypeNames();
@@ -30,7 +30,7 @@ $labels = Images::getImageLabels();
     </div>
 </div>
 <?php if (!$images->isDisabledUpload() && !$images->isCompletedUpload()): ?>
-    <?= renderPhpFile('upload/uploadModal', ['images' => $images]); ?>
+    <?= renderPhpFile('upload/modal', ['images' => $images]); ?>
 <?php endif; ?>
 <?php if ($images->isAnyImagesUploaded()): ?>
     <input class="is-any-images-uploaded" type="hidden" value="<?= $images->unitId ?>">

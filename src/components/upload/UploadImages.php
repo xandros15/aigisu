@@ -5,12 +5,13 @@
  * and open the template in the editor.
  */
 
-namespace app;
+namespace app\upload;
 
-use app\validators\FileValidator;
-use app\UrlFiles;
-use app\Images;
-use app\Imgur;
+use app\upload\validators\FileValidator;
+use app\upload\UrlFiles;
+use app\upload\Upload;
+use models\Images;
+use app\imgur\Imgur;
 use app\google\GoogleFile;
 use RedBeanPHP\Facade as R;
 use RedBeanPHP\OODBBean;

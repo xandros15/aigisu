@@ -1,20 +1,9 @@
 <?php
 
-namespace app;
+namespace app\upload;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of UrlFiles
- *
- * @author user
- */
+use app\upload\validators\FileValidator;
 use Exception;
-use app\validators\FileValidator;
 
 class UrlFiles
 {

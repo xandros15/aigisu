@@ -5,10 +5,10 @@
  * and open the template in the editor.
  */
 
-namespace app\validators;
+namespace app\upload\validators;
 
-use app\Upload;
-use app\UploadImages;
+use app\upload\Upload;
+use app\upload\UploadImages;
 use RedBeanPHP\Facade as R;
 use Exception;
 

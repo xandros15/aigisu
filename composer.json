@@ -14,7 +14,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Imgur\\": "vendor/imgur-php-wrapper"
+            "Imgur\\": "vendor/imgur-php-wrapper",
+            "app\\exception\\": "src/components/exception",
+            "app\\google\\": "src/components/google",
+            "app\\imgur\\": "src/components/imgur",
+            "app\\upload\\": "src/components/upload",
+            "app\\upload\\validators\\": "src/components/upload",
+            "models\\": "src/models"
         }
     }
 }

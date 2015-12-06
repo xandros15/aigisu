@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace models;
 
 use RedBeanPHP\OODBBean;
 use RedBeanPHP\Facade as R;

@@ -1,6 +1,6 @@
 <?php
 
-use app\Images;
+use models\Images;
 
 /** @var $type */
 $labels = Images::getImageLabels();

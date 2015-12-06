@@ -1,7 +1,7 @@
 <?php
 
-use app\Images;
-/* @var $images app\Images */
+use models\Images;
+/* @var $images models\Images */
 $types = Images::getTypeNames();
 ?>
 
@@ -18,7 +18,7 @@ $types = Images::getTypeNames();
                 <div class="modal-body">
                     <?php foreach ($types as $type): ?>
                         <?php if (!$images->isDisabledUpload($type) && !$images->isCompletedUpload($type)): ?>
-                            <?= renderPhpFile('upload/uploadModalBody', ['type' => $type]); ?>
+                            <?= renderPhpFile('upload/modal-body', ['type' => $type]); ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>

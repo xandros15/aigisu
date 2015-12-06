@@ -7,8 +7,8 @@ $query    = (object) [
 $colNames = ['id', 'name', 'orginal', 'rarity'];
 
 use RedBeanPHP\Facade as R;
-use app\UploadImages;
-use app\Images;
+use app\upload\UploadImages;
+use models\Images;
 
 function dbconnect()
 {
@@ -76,12 +76,7 @@ function bootstrap()
 
 function setAutoloader()
 {
-    /* @var $autoloader Composer\Autoload\ClassLoader */
-    $autoloader = require_once ROOT_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-    $autoloader->addPsr4('app\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
-    $autoloader->addPsr4('app\\validators\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
-    $autoloader->addPsr4('app\\google\\', __DIR__ . DIRECTORY_SEPARATOR . 'imageController');
-    $autoloader->addPsr4('RedBeanPHP\\Facade\\', __DIR__);
+    require_once ROOT_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 }
 
 function renderPhpFile($_file_, $_params_ = [])
@@ -173,7 +168,7 @@ function generateLink(array $options)
             $get->{$name} = reverseGet($get, $name, $value);
         }
     }
-    return "http://{$_SERVER['HTTP_HOST']}/?" . http_build_query($get);
+    return SITE_URL . '?' . http_build_query($get);
 }
 
 function reverseGet(stdClass $get, $name, $value)
