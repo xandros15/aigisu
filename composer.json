@@ -8,8 +8,13 @@
     ],
     "minimum-stability": "dev",
     "require": {
-		"gabordemooij/redbean": "4.2",
+        "gabordemooij/redbean": "4.2",
         "symfony/http-foundation": "^2.7",
         "google/apiclient": "1.*"
-	}
+    },
+    "autoload": {
+        "psr-4": {
+            "Imgur\\": "vendor/imgur-php-wrapper"
+        }
+    }
 }
