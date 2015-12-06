@@ -3,16 +3,17 @@
 namespace app\google;
 
 use app\google\GoogleServer;
+use app\upload\ExtedndetServer;
 use Exception;
 
-class GoogleFile extends GoogleServer
+class GoogleFile extends GoogleServer implements ExtedndetServer
 {
     public $filename    = '';
     public $name        = '';
     public $extension   = '';
     public $description = '';
     public $mimeType    = '';
-    public $folderName  = '';
+    public $catalog     = '';
 
     /** @var Google_Service_Drive_DriveFile */
     protected $folder;
@@ -29,9 +30,9 @@ class GoogleFile extends GoogleServer
         return $this;
     }
 
-    public function setFolderName($folderName)
+    public function setCatalog($folderName)
     {
-        $this->folderName = $folderName;
+        $this->catalog = $folderName;
         return $this;
     }
 
@@ -50,11 +51,11 @@ class GoogleFile extends GoogleServer
         $this->filename = $filename;
     }
 
-    public function upload()
+    public function uploadFile()
     {
         $this->validate();
         $this->setFolder();
-        $this->resultOfUpload     = $this->uploadFile($this);
+        $this->resultOfUpload     = $this->upload($this);
         $this->resultOfPermission = $this->createPermissionForFile($this->resultOfUpload->id, true);
         return $this;
     }
@@ -76,7 +77,7 @@ class GoogleFile extends GoogleServer
         if (!is_file($this->filename)) {
             throw new Exception("File '{$this->filename}' no exist");
         }
-        if (!$this->folderName || !is_string($this->folderName)) {
+        if (!$this->catalog || !is_string($this->catalog)) {
             throw new Exception('Folder name is not set or no string.');
         }
     }
@@ -102,12 +103,12 @@ class GoogleFile extends GoogleServer
     {
         $mimeType = self::FOLDER_MIME_TYPE;
         $parentId = $this->mainFolder->id;
-        $query    = "title = '{$this->folderName}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
+        $query    = "title = '{$this->catalog}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
         $files    = $this->service->files->listFiles(['q' => $query])->getItems();
         if ($files) {
             $this->folder = reset($files);
         } else {
-            $this->folder = $this->createNewFolder($this->folderName, false, $parentId);
+            $this->folder = $this->createNewFolder($this->catalog, false, $parentId);
             $this->createPermissionForFile($this->folder->id, true);
         }
     }

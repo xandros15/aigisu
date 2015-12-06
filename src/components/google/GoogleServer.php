@@ -89,7 +89,7 @@ class GoogleServer
         return $this->service->files->insert($file);
     }
 
-    protected function uploadFile(GoogleFile $googleFile)
+    protected function upload(GoogleFile $googleFile)
     {
         $this->file = new Google_Service_Drive_DriveFile();
         $this->file->setTitle("{$googleFile->name}.{$googleFile->extension}");

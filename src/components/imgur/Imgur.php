@@ -2,22 +2,23 @@
 
 namespace app\imgur;
 
+use app\exception\ArrayException;
+use app\upload\ExtedndetServer;
+use Exception;
 use Imgur\Imgur as Base;
 use Imgur\Authorize;
-use Exception;
-use app\ArrayException;
 
-class Imgur extends Base
+class Imgur extends Base implements ExtedndetServer
 {
     const KEY_PATH         = CONFIG_DIR . 'imgur.key.json';
     const CREDENTIALS_PATH = CONFIG_DIR . 'imgur.credentials.json';
     const ALBUM_PATH       = CONFIG_DIR . 'imgur.albums.json';
 
-    public $description;
-    public $title;
-    public $album;
-    public $filename;
-    public $credentials;
+    public $description      = '';
+    public $name             = '';
+    public $catalog          = '';
+    public $filename         = '';
+    protected $credentials;
     protected static $albums = [];
 
     /**
@@ -81,17 +82,17 @@ class Imgur extends Base
     public function uploadFile()
     {
         $options = ['type' => 'file'];
-        if ($this->title) {
-            $options['title'] = $this->title;
+        if ($this->name) {
+            $options['title'] = $this->name;
         }
-        if ($this->album) {
-            $options['album'] = $this->album;
+        if ($this->catalog) {
+            $options['album'] = $this->catalog;
         }
         if ($this->description) {
             $options['description'] = $this->description;
         }
         $response = $this->upload()->file($this->filename, $options);
-        if (!$response || !empty($response['success'])) {
+        if (!$response || empty($response['success'])) {
             throw new ArrayException($response);
         }
         return $response;
@@ -102,17 +103,17 @@ class Imgur extends Base
         $this->description = (is_array($description)) ? self::parseDiscription($description) : $description;
     }
 
-    public function setTitle($title)
+    public function setName($title)
     {
-        $this->title = $title;
+        $this->name = $title;
     }
 
-    public function setAlbum($album)
+    public function setCatalog($album)
     {
         if (!isset(self::$albums[$album])) {
             throw new Exception("The album: '{$album}' no exists");
         }
-        $this->album = $album;
+        $this->catalog = self::$albums[$album]['deletehash'];
     }
 
     public function setFilename($filename)
@@ -125,7 +126,7 @@ class Imgur extends Base
 
     private static function setAlbums()
     {
-        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH));
+        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH), true);
     }
 
     private function setAccessData()

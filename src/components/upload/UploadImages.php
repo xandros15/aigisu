@@ -4,6 +4,7 @@ namespace app\upload;
 
 use app\google\GoogleFile;
 use app\imgur\Imgur;
+use app\upload\ExtedndetServer;
 use app\upload\Upload;
 use app\upload\UrlFiles;
 use app\upload\validators\FileValidator;
@@ -22,6 +23,7 @@ class UploadImages extends Upload
     protected $defaultExtention = 'png';
     protected $validators;
     protected $destination;
+    protected $extentionServers = [];
 
     /** @var OODBBean */
     private $image;
@@ -119,6 +121,25 @@ class UploadImages extends Upload
         R::store($unit);
     }
 
+    public function setExtentionServers()
+    {
+        $this->setExtentionServer('google', new GoogleFile());
+        $this->setExtentionServer('imgur', Imgur::facade());
+    }
+
+    public function setExtentionServer($name, ExtedndetServer $extentionServer)
+    {
+        $this->extentionServers[$name] = $extentionServer;
+    }
+    public function getExtentionServer($name)
+    {
+        if(!isset($this->extentionServers[$name])){
+            throw new Exception("Server: '{$name}' is no implemented");
+        }
+        return $this->extentionServers[$name];
+    }
+
+
     private function uploadOnExtendedServers()
     {
 
@@ -142,14 +163,15 @@ class UploadImages extends Upload
 
     private function uploadOnGoogleDrive()
     {
-        $google   = new GoogleFile();
+        /* @var $google GoogleFile */
+        $google = $this->getExtentionServer('google');
         $google->setMimeType($this->defaultMimeType);
         $google->setExtension($this->defaultExtention);
         $google->setDescription('R18');
         $google->setName($this->image->type);
-        $google->setFolderName($this->image->units->name);
+        $google->setCatalog($this->image->units->name);
         $google->setFilename($this->getNewName($this->image->id));
-        $response = $google->upload()->resultOfUpload;
+        $response = $google->uploadFile()->resultOfUpload;
         if ($response) {
             $this->image->google = $response->id;
             R::store($this->image);
@@ -158,11 +180,12 @@ class UploadImages extends Upload
 
     private function uploadOnImgur()
     {
-        $imgur    = Imgur::facade();
+        /* @var $imgur Imgur */
+        $imgur = $this->getExtentionServer('imgur');
         $imgur->setFilename($this->getNewName($this->image->id));
-        $imgur->setTitle($this->image->units->name);
+        $imgur->setName($this->image->units->name);
         $imgur->setDescription('R18');
-        $imgur->setAlbum(rtrim($this->image->type, '12'));
+        $imgur->setCatalog(rtrim($this->image->type, '12'));
         $response = $imgur->uploadFile();
         if (isset($response['data']['id']) && isset($response['data']['deletehash'])) {
             $this->image->imgur   = $response['data']['id'];
