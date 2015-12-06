@@ -10,8 +10,10 @@ namespace app;
 use app\validators\FileValidator;
 use app\UrlFiles;
 use app\Images;
+use app\Imgur;
 use app\google\GoogleFile;
 use RedBeanPHP\Facade as R;
+use RedBeanPHP\OODBBean;
 use Exception;
 
 /**
@@ -30,7 +32,7 @@ class UploadImages extends Upload
     protected $validators;
     protected $destination;
 
-    /** @var RedBeanPHP\OODBBean */
+    /** @var OODBBean */
     private $image;
 
     public function __construct($destination)
@@ -61,7 +63,7 @@ class UploadImages extends Upload
                 var_dump($this->errors);
             } else {
                 $this->addImageToDatabase($results, $input);
-                (!$this->image) || $this->uploadOnExtendedServer($input);
+                (!$this->image) || $this->uploadOnExtendedServers();
             }
             (!isset($results['full_patch'])) || $this->deteleFile($results['full_patch']);
         }
@@ -126,23 +128,55 @@ class UploadImages extends Upload
         R::store($unit);
     }
 
-    private function uploadOnExtendedServer($name)
+    private function uploadOnExtendedServers()
     {
+
         R::begin();
         try {
-            $otherServer = new GoogleFile();
-            $otherServer->setMimeType($this->defaultMimeType);
-            $otherServer->setExtension($this->defaultExtention);
-            $otherServer->setDescription('R18');
-            $otherServer->setName($name);
-            $otherServer->setFolderName($this->image->units->name);
-            $otherServer->setFilename($this->getNewName($this->image->id));
-            $this->image->google = $otherServer->upload()->resultOfUpload->id;
-            R::store($this->image);
+            $this->uploadOnGoogleDrive();
             R::commit();
         } catch (Exception $exc) {
             R::rollback();
             error_log($exc->getMessage());
+        }
+        R::begin();
+        try {
+            $this->uploadOnImgur();
+            R::commit();
+        } catch (Exception $exc) {
+            R::rollback();
+            error_log($exc->getMessage());
+        }
+    }
+
+    private function uploadOnGoogleDrive()
+    {
+        $google   = new GoogleFile();
+        $google->setMimeType($this->defaultMimeType);
+        $google->setExtension($this->defaultExtention);
+        $google->setDescription('R18');
+        $google->setName($this->image->type);
+        $google->setFolderName($this->image->units->name);
+        $google->setFilename($this->getNewName($this->image->id));
+        $response = $google->upload()->resultOfUpload;
+        if ($response) {
+            $this->image->google = $response->id;
+            R::store($this->image);
+        }
+    }
+
+    private function uploadOnImgur()
+    {
+        $imgur    = Imgur::facade();
+        $imgur->setFilename($this->getNewName($this->image->id));
+        $imgur->setTitle($this->image->units->name);
+        $imgur->setDescription('R18');
+        $imgur->setAlbum(rtrim($this->image->type, '12'));
+        $response = $imgur->uploadFile();
+        if (isset($response['data']['id']) && isset($response['data']['deletehash'])) {
+            $this->image->imgur   = $response['data']['id'];
+            $this->image->delhash = $response['data']['deletehash'];
+            R::store($this->image);
         }
     }
 
