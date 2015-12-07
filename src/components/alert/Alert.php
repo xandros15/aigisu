@@ -65,7 +65,6 @@ class Alert
 
     public static function display()
     {
-        var_dump(static::$flashes);
         return static::$flashes->display();
     }
 }
