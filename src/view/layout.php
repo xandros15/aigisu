@@ -12,9 +12,9 @@ use app\alert\Alert; ?>
         <link href="./css/main.css" rel="stylesheet">
     </head>
     <body>
-        <div class="<?= (isImageQuery()) ? 'container-fluid' : 'container' ?>">
-            <?= Alert::display(); ?>
-            <main class="row">
+        <div class="wrap">
+            <main class="<?= (isImageQuery()) ? 'container-fluid' : 'container' ?>">
+                <?= Alert::display(); ?>
                 <?php if (isImageQuery()): ?>
                     <?= renderPhpFile('image/images') ?>
                 <?php elseif (isLoginQuery()): ?>
