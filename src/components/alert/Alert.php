@@ -6,7 +6,7 @@ use Plasticbrain\FlashMessages\FlashMessages;
 
 class Alert
 {
-    const CSS_CLASS = 'alert';
+    const CSS_CLASS = 'alert fade in';
     const INFO      = 'i';
     const SUCCESS   = 's';
     const WARNING   = 'w';
