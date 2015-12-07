@@ -31,9 +31,12 @@ function bootstrap()
 }
 
 use models\Oauth;
+use app\alert\Alert;
 
 function createSessions()
 {
+    $alert = new Alert();
+    $alert->init();
     $oauth = new Oauth();
     $oauth->run();
 }
