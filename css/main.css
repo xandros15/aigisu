@@ -1,7 +1,7 @@
 img{
     max-width: 100%;
 }
-body > .container-fluid{
+.wrap > .container-fluid{
     min-width: 480px;
 }
 .wrap > .container{
