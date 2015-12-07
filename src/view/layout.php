@@ -27,7 +27,7 @@ use app\alert\Alert; ?>
                 <?php endif; ?>
             </main>
         </div>
-        <footer class="text-center">
+        <footer class="footer text-center">
             <p>&copy; xandros. Images and media relating to Millennium War Aigis are property of Nutaku.net and DMM.com</p>
         </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
