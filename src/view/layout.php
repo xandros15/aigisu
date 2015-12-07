@@ -26,10 +26,10 @@ use app\alert\Alert; ?>
                     <?= renderPhpFile('unit/units'); ?>
                 <?php endif; ?>
             </main>
-            <footer class="row text-center">
-                <p>&copy; xandros. Images and media relating to Millennium War Aigis are property of Nutaku.net and DMM.com</p>
-            </footer>
         </div>
+        <footer class="text-center">
+            <p>&copy; xandros. Images and media relating to Millennium War Aigis are property of Nutaku.net and DMM.com</p>
+        </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="./js/bootstrap.min.js"></script>
         <script>globalUrl = '<?= SITE_URL ?>';</script>
