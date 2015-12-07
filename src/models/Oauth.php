@@ -4,6 +4,7 @@ namespace models;
 
 use RedBeanPHP\R;
 use RedBeanPHP\OODBBean;
+use app\alert\Alert;
 
 class Oauth
 {
@@ -19,7 +20,7 @@ class Oauth
 
     public static function isLogged()
     {
-        return (isset($_SESSION[self::SESSION_NAME]) && $_SESSION[self::SESSION_NAME]);
+        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
     }
 
     public static function load()
@@ -31,10 +32,11 @@ class Oauth
 
     public function run()
     {
-        if ($this->startSession() && $this->validatePin()) {
+        $this->startSession();
+        if ($this->validatePin()) {
             $this->login();
             header('location: ' . SITE_URL);
-        }elseif($this->isLogout()){
+        } elseif ($this->isLogout()) {
             $this->logout();
         }
     }
@@ -46,7 +48,7 @@ class Oauth
 
     private function startSession()
     {
-        return (session_status() == PHP_SESSION_NONE) ? session_start() : false;
+        return (session_status() == PHP_SESSION_NONE && !session_id()) ? session_start() : false;
     }
 
     private function isLogout()
@@ -57,14 +59,14 @@ class Oauth
 
     private function logout()
     {
-        $_SESSION = [];
+        $_SESSION[self::SESSION_NAME] = [];
         return session_destroy();
     }
 
     private function login()
     {
-        $_SESSION[self::SESSION_NAME] = true;
-        $_SESSION['token']            = $this->token;
+        $_SESSION[self::SESSION_NAME]['run']   = true;
+        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
     }
 
     private function validatePin()
