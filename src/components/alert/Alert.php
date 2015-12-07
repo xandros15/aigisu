@@ -6,14 +6,18 @@ use Plasticbrain\FlashMessages\FlashMessages;
 
 class Alert
 {
-    const CSS_CLASS = 'alert fade in';
-    const INFO      = FlashMessages::INFO;
-    const SUCCESS   = FlashMessages::SUCCESS;
-    const WARNING   = FlashMessages::WARNING;
-    const ERROR     = FlashMessages::ERROR;
+    const INFO    = FlashMessages::INFO;
+    const SUCCESS = FlashMessages::SUCCESS;
+    const WARNING = FlashMessages::WARNING;
+    const ERROR   = FlashMessages::ERROR;
 
     /** @var FlashMessages */
     private static $flashes;
+
+    public static function getCssClasses()
+    {
+        return 'alert fade in';
+    }
 
     public function init()
     {
@@ -30,7 +34,7 @@ class Alert
             self::WARNING => 'alert-warning',
             self::ERROR => 'alert-danger',
         ]);
-        $flashes->setMsgCssClass(self::CSS_CLASS);
+        $flashes->setMsgCssClass(self::getCssClasses());
         $flashes->setMsgWrapper("<div class='%s'>%s</div>");
         static::$flashes = $flashes;
     }
