@@ -16,6 +16,7 @@
     "autoload": {
         "psr-4": {
             "Imgur\\": "vendor/imgur-php-wrapper",
+            "app\\alert\\": "src/components/alert",
             "app\\exception\\": "src/components/exception",
             "app\\google\\": "src/components/google",
             "app\\imgur\\": "src/components/imgur",
