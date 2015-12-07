@@ -23,13 +23,6 @@ class Oauth
         return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
     }
 
-    public static function load()
-    {
-        $oauth = new Oauth;
-        $oauth->run();
-        return $oauth;
-    }
-
     public function run()
     {
         $this->startSession();
@@ -80,13 +73,13 @@ class Oauth
             /* @var $result OODBBean */
             $result = reset($results);
             if ($this->isTimeout($result->time)) {
-                $this->errorLog[] = 'Pin is outdated';
+                Alert::add('Pin is outdated', Alert::ERROR);
                 return false;
             }
             $this->token = $result->token;
             return true;
         }
-        $this->errorLog[] = 'Wrong pin';
+        Alert::add('Wrong pin', Alert::ERROR);
         return false;
     }
 
