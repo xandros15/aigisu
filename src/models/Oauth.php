@@ -77,7 +77,7 @@ class Oauth
         if (($results = R::find(self::tableName(), ' pin = ? ', [$pin]))) {
             /* @var $result OODBBean */
             $result = reset($results);
-            if ($this->isTimeout($result->timeout)) {
+            if ($this->isTimeout($result->time)) {
                 $this->errorLog[] = 'Pin is outdated';
                 R::trash($result);
                 return false;
@@ -91,6 +91,6 @@ class Oauth
 
     private function isTimeout($time)
     {
-        return (time() - $time < 0);
+        return (time() - $time > 0);
     }
 }
