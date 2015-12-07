@@ -7,7 +7,7 @@ $imageSet = Images::setImagesFromUnitId($query->get->image);
 $labels   = $imageSet->getAllImages();
 ?>
 <?php foreach ($labels as $label => $images): ?>
-    <ul class="list-unstyled <?= $label ?> col-xs-12 col-sm-6">
+    <ul class="list-unstyled <?= $label ?> col-xs-12 col-sm-6 <?= count($labels) > 1 ? : 'col-sm-offset-3' ?>">
         <h2>#<?= $label ?></h2>
         <?php foreach ($images as $i => $image): ?>
             <li style="display: inline-block; position: relative;">
