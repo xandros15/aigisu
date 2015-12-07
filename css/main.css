@@ -1,0 +1,10 @@
+img{
+    max-width: 100%;
+}
+body > .container-fluid{
+    min-width: 480px;
+}
+body > .container{
+    min-width: 480px;
+    max-width: 960px;
+}

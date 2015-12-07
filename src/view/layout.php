@@ -9,18 +9,6 @@ use app\alert\Alert; ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <link href="./css/main.css" rel="stylesheet">
-        <style>
-            img{
-                max-width: 100%;
-            }
-            body > .container-fluid{
-                min-width: 480px;
-            }
-            body > .container{
-                min-width: 480px;
-                max-width: 960px;
-            }
-        </style>
     </head>
     <body>
         <div class="<?= (isImageQuery()) ? 'container-fluid' : 'container' ?>">
