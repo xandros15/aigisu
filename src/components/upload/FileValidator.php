@@ -53,14 +53,6 @@ class FileValidator
         }
     }
 
-    public function isInDatabase($file)
-    {
-        $md5Temp = md5_file($file);
-        if (R::find(TB_IMAGES, 'md5 = :md5', [':md5' => $md5Temp])) {
-            throw new Exception('Image exists in Database');
-        }
-    }
-
     public function checkMimeType($contentType, array $mimeTypes)
     {
         if (!isset($contentType)) {

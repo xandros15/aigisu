@@ -101,24 +101,30 @@ class UploadImages extends Upload
 
     private function transaction(array $results, $input)
     {
+        $unit                  = R::load(TB_NAME, (int) $this->post->id);
+        $this->validateBeforeCommit($unit, $input);
+        $this->setImage($results['full_path']);
+        $this->image->type     = $input;
+        $unit->ownImagesList[] = $this->image;
+        R::store($unit);
+    }
+
+    public function validateBeforeCommit(OODBBean $unit, $input)
+    {
         if (!is_string($input)) {
             throw new Exception('input isn\'t string');
         }
-        $unit = R::load(TB_NAME, (int) $this->post->id);
-
         if (!$unit) {
             throw new Exception('wrong id');
         }
-        if ($unit->{$input}) {
+        $images = R::find(Images::tableName(), ' units_id = :id and type = :type ',
+                [ ':id' => $unit->id, ':type' => $input]);
+        if ($images) {
             throw new Exception('Image exists');
         }
         if (!$unit->name) {
             throw new Exception('Unit name is null');
         }
-        $this->setImage($results['full_path']);
-        $this->image->type     = $input;
-        $unit->ownImagesList[] = $this->image;
-        R::store($unit);
     }
 
     public function setExtentionServers()
@@ -131,14 +137,14 @@ class UploadImages extends Upload
     {
         $this->extentionServers[$name] = $extentionServer;
     }
+
     public function getExtentionServer($name)
     {
-        if(!isset($this->extentionServers[$name])){
+        if (!isset($this->extentionServers[$name])) {
             throw new Exception("Server: '{$name}' is no implemented");
         }
         return $this->extentionServers[$name];
     }
-
 
     private function uploadOnExtendedServers()
     {
@@ -164,7 +170,7 @@ class UploadImages extends Upload
     private function uploadOnGoogleDrive()
     {
         /* @var $google GoogleFile */
-        $google = $this->getExtentionServer('google');
+        $google   = $this->getExtentionServer('google');
         $google->setMimeType($this->defaultMimeType);
         $google->setExtension($this->defaultExtention);
         $google->setDescription('R18');
@@ -181,7 +187,7 @@ class UploadImages extends Upload
     private function uploadOnImgur()
     {
         /* @var $imgur Imgur */
-        $imgur = $this->getExtentionServer('imgur');
+        $imgur    = $this->getExtentionServer('imgur');
         $imgur->setFilename($this->getNewName($this->image->id));
         $imgur->setName(rtrim($this->image->type, '12') . ': ' . $this->image->units->name);
         $imgur->setDescription('R18');
