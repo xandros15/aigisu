@@ -79,7 +79,6 @@ class Oauth
             $result = reset($results);
             if ($this->isTimeout($result->time)) {
                 $this->errorLog[] = 'Pin is outdated';
-                R::trash($result);
                 return false;
             }
             $this->token = $result->token;
