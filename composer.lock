@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "035bfe62bd48fed96b439929847c3b43",
-    "content-hash": "e5ee49f8707db891d9d175afb21e2767",
+    "hash": "3c03a1ea3ba7544ce4ce2cf1379fd951",
+    "content-hash": "ad850bd98df070d2ba6c8bdd33a96485",
     "packages": [
         {
             "name": "gabordemooij/redbean",
@@ -92,6 +92,48 @@
             "time": "2015-10-16 22:11:08"
         },
         {
+            "name": "plasticbrain/php-flash-messages",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plasticbrain/PhpFlashMessages.git",
+                "reference": "50c3084b319ce229a1a9e922698cc12cfd00d093"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plasticbrain/PhpFlashMessages/zipball/50c3084b319ce229a1a9e922698cc12cfd00d093",
+                "reference": "50c3084b319ce229a1a9e922698cc12cfd00d093",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Plasticbrain\\FlashMessages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Everhart",
+                    "email": "mike@plasticbrain.net"
+                }
+            ],
+            "description": "A modern take on PHP session-based flash messages",
+            "keywords": [
+                "flash",
+                "messages",
+                "php",
+                "session"
+            ],
+            "time": "2015-10-28 19:45:37"
+        },
+        {
             "name": "symfony/http-foundation",
             "version": "2.8.x-dev",
             "source": {
@@ -101,7 +143,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/5ed0ec39ef684bec84d1fd9f2a55104e403b7e49",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/2c45496b228b3d04b838d7b3095bbd37cc80b930",
                 "reference": "5ed0ec39ef684bec84d1fd9f2a55104e403b7e49",
                 "shasum": ""
             },
