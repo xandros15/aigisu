@@ -25,8 +25,17 @@ function bootstrap()
     configuration();
     setAutoloader();
     dbconnect();
+    createSessions();
     urlQueryToGlobal();
     echo renderPhpFile('layout');
+}
+
+use models\Oauth;
+
+function createSessions()
+{
+    $oauth = new Oauth();
+    $oauth->run();
 }
 
 function setAutoloader()
