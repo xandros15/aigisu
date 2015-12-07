@@ -37,20 +37,7 @@ class Alert
 
     public static function add($message, $type = self::SUCCESS)
     {
-        switch ($type) {
-            case self::ERROR:
-                static::$flashes->adderror($message);
-                break;
-            case self::INFO:
-                static::$flashes->info($message);
-                break;
-            case self::SUCCESS:
-                static::$flashes->success($message);
-                break;
-            case self::WARNING:
-                static::$flashes->warning($message);
-                break;
-        }
+        static::$flashes->add($message, $type);
     }
 
     public static function hasErrors()
