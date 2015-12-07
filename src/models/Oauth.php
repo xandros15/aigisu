@@ -22,11 +22,20 @@ class Oauth
         return (isset($_SESSION[self::SESSION_NAME]) && $_SESSION[self::SESSION_NAME]);
     }
 
+    public static function load()
+    {
+        $oauth = new Oauth;
+        $oauth->run();
+        return $oauth;
+    }
+
     public function run()
     {
         if ($this->startSession() && $this->validatePin()) {
             $this->login();
             header('location: ' . SITE_URL);
+        }elseif($this->isLogout()){
+            $this->logout();
         }
     }
 
@@ -40,7 +49,13 @@ class Oauth
         return (session_status() == PHP_SESSION_NONE) ? session_start() : false;
     }
 
-    public static function logout()
+    private function isLogout()
+    {
+        global $query;
+        return (!empty($query->post->logout));
+    }
+
+    private function logout()
     {
         $_SESSION = [];
         return session_destroy();
