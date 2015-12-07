@@ -26,6 +26,7 @@ class oauth
     {
         if ($this->startSession() && $this->validatePin()) {
             $this->login();
+            header('location: ' . SITE_URL);
         }
     }
 
