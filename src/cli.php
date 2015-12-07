@@ -1,93 +1,41 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
 
-define('APPLICATION_NAME', 'aigisu');
-define('CREDENTIALS_PATH', __DIR__ . '/config/credentials.json');
-define('CLIENT_SECRET_PATH', __DIR__ . '/config/key.json');
-define('SCOPES', implode(' ', [
-    Google_Service_Drive::DRIVE_FILE,
-    Google_Service_Drive::DRIVE_METADATA]
-));
+use RedBeanPHP\R;
+use RedBeanPHP\OODBBean;
+use app\google\GoogleFile;
+use app\imgur\Imgur;
+use models\Images;
+
+defined('ROOT_DIR') || define('ROOT_DIR', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+require_once 'main.php';
+configuration();
+setAutoloader();
+dbconnect();
 
 if (php_sapi_name() != 'cli') {
     throw new Exception('This application must be run on the command line.');
 }
+$images = R::find(Images::tableName(), ' `imgur` IS NULL ');
 
-/**
- * Returns an authorized API client.
- * @return Google_Client the authorized client object
- */
-function getClient()
-{
-    $client          = new Google_Client();
-    $client->setApplicationName(APPLICATION_NAME);
-    $client->setScopes(SCOPES);
-    $client->setAuthConfigFile(CLIENT_SECRET_PATH);
-    $client->setAccessType('offline');
-    // Load previously authorized credentials from a file.
-    $credentialsPath = expandHomeDirectory(CREDENTIALS_PATH);
-    if (file_exists($credentialsPath)) {
-        $accessToken = file_get_contents($credentialsPath);
-    } else {
-        // Request authorization from the user.
-        $authUrl  = $client->createAuthUrl();
-        printf("Open the following link in your browser:\n%s\n", $authUrl);
-        print 'Enter verification code: ';
-        $authCode = trim(fgets(STDIN));
-
-        // Exchange authorization code for an access token.
-        $accessToken = $client->authenticate($authCode);
-
-        // Store the credentials to disk.
-        if (!file_exists(dirname($credentialsPath))) {
-            mkdir(dirname($credentialsPath), 0700, true);
+foreach ($images as $image) {
+    R::begin();
+    try {
+        $imgur    = Imgur::facade();
+        $imgur->setCatalog(trim($image->type, '12'));
+        $imgur->setFilename(ROOT_DIR . Images::IMAGE_DIRECTORY . DIRECTORY_SEPARATOR . $image->id . '.png');
+        $imgur->setDescription('R18');
+        $imgur->setName($image->units->name);
+        $response = $imgur->uploadFile();
+        if (isset($response['data']['id']) && isset($response['data']['deletehash'])) {
+            $image->imgur   = $response['data']['id'];
+            $image->delhash = $response['data']['deletehash'];
+            R::store($image);
+            R::commit();
         }
-        file_put_contents($credentialsPath, $accessToken);
-        printf("Credentials saved to %s\n", $credentialsPath);
+    } catch (Exception $ex) {
+        var_dump($ex);
+        R::rollback();
     }
-    $client->setAccessToken($accessToken);
-
-    // Refresh the token if it's expired.
-    if ($client->isAccessTokenExpired()) {
-        $client->refreshToken($client->getRefreshToken());
-        file_put_contents($credentialsPath, $client->getAccessToken());
-    }
-    return $client;
+    var_dump($response);
+    sleep(1);
 }
-
-/**
- * Expands the home directory alias '~' to the full path.
- * @param string $path the path to expand.
- * @return string the expanded path.
- */
-function expandHomeDirectory($path)
-{
-    $homeDirectory = getenv('HOME');
-    if (empty($homeDirectory)) {
-        $homeDirectory = getenv("HOMEDRIVE") . getenv("HOMEPATH");
-    }
-    return str_replace('~', realpath($homeDirectory), $path);
-}
-// Get the API client and construct the service object.
-$client = getClient();
-
-$service   = new Google_Service_Drive($client);
-// Print the names and IDs for up to 10 files.
-$optParams = array(
-    'maxResults' => 10,
-);
-$results   = $service->files->listFiles($optParams);
-
-if (count($results->getItems()) == 0) {
-    print "No files found.\n";
-} else {
-    print "Files:\n";
-    foreach ($results->getItems() as $file) {
-        /* @var $file Google_Service_Drive_DriveFile */
-        printf("%s (%s)\n", $file->getTitle(), $file->getId());
-    }
-}
-//require_once 'main.php';
-//configuration();
-//setAutoloader();
-//dbconnect();
