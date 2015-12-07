@@ -7,10 +7,10 @@ use Plasticbrain\FlashMessages\FlashMessages;
 class Alert
 {
     const CSS_CLASS = 'alert fade in';
-    const INFO      = 'i';
-    const SUCCESS   = 's';
-    const WARNING   = 'w';
-    const ERROR     = 'e';
+    const INFO      = FlashMessages::INFO;
+    const SUCCESS   = FlashMessages::SUCCESS;
+    const WARNING   = FlashMessages::WARNING;
+    const ERROR     = FlashMessages::ERROR;
 
     /** @var FlashMessages */
     private static $flashes;
@@ -25,10 +25,10 @@ class Alert
                         <span aria-hidden="true">&times;</span>
                     </button>');
         $flashes->setCssClassMap([
-            FlashMessages::INFO => 'alert-info',
-            FlashMessages::SUCCESS => 'alert-success',
-            FlashMessages::WARNING => 'alert-warning',
-            FlashMessages::ERROR => 'alert-danger',
+            self::INFO => 'alert-info',
+            self::SUCCESS => 'alert-success',
+            self::WARNING => 'alert-warning',
+            self::ERROR => 'alert-danger',
         ]);
         $flashes->setMsgCssClass(self::CSS_CLASS);
         $flashes->setMsgWrapper("<div class='%s'>%s</div>");
@@ -39,7 +39,7 @@ class Alert
     {
         switch ($type) {
             case self::ERROR:
-                static::$flashes->error($message);
+                static::$flashes->adderror($message);
                 break;
             case self::INFO:
                 static::$flashes->info($message);
