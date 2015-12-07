@@ -1,3 +1,6 @@
+<?php
+
+use app\alert\Alert; ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,6 +23,7 @@
     </head>
     <body>
         <div class="<?= (isImageQuery()) ? 'container-fluid' : 'container' ?>">
+            <?= Alert::display(); ?>
             <main class="row">
                 <?php if (isImageQuery()): ?>
                     <?= renderPhpFile('image/images') ?>
