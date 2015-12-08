@@ -2,7 +2,7 @@
 
 use models\Units;
 $model = Units::load();
-$units = $model->getAllUnits();
+$units = $model->getUnits();
 ?>
 <div id="units" class="col-xs-12">
     <?php if (count($units) > 0): ?>
@@ -14,7 +14,7 @@ $units = $model->getAllUnits();
                 <?= renderPhpFile('unit/unit', ['unit' => $unit]) ?>
             </div>
             <div class="row col-xs-12">
-                <?= renderPhpFile('upload/upload', ['unit' => $unit]); ?>
+                <?= renderPhpFile('upload/upload', ['model' => $model, 'unit' => $unit]); ?>
             </div>
         <?php endforeach; ?>
         <?= renderPhpFile('unit/pagination', ['model' => $model]) ?>

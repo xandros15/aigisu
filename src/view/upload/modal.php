@@ -1,14 +1,15 @@
 <?php
 
 use models\Images;
-/* @var $images models\Images */
-$types = Images::getTypeNames();
+
+/* @var $imagesSet Images */
+$images = $imagesSet->getAllImages(Images::IMAGE_REQIRED);
 ?>
 
-<div class="modal fade" id="unit-image-upload-modal-<?= $images->unitId ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="unit-image-upload-modal-<?= $imagesSet->unitId ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <form enctype="multipart/form-data" method="post" role="form">
-            <input type="hidden" name="id" value="<?= $images->unitId ?>">
+            <input type="hidden" name="id" value="<?= $imagesSet->unitId ?>">
             <input type="hidden" name="uploadImages" value="1">
             <div class="modal-content">
                 <div class="modal-header">
@@ -16,10 +17,8 @@ $types = Images::getTypeNames();
                     <h4 class="modal-title" id="myModalLabel">Upload images</h4>
                 </div>
                 <div class="modal-body">
-                    <?php foreach ($types as $type): ?>
-                        <?php if (!$images->isDisabledUpload($type) && !$images->isCompletedUpload($type)): ?>
-                            <?= renderPhpFile('upload/modal-body', ['type' => $type]); ?>
-                        <?php endif; ?>
+                    <?php foreach ($images as $image): ?>
+                        <?= renderPhpFile('upload/modal-body', ['image' => $image]); ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="modal-footer">

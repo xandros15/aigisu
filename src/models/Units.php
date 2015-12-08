@@ -10,6 +10,8 @@ class Units
     const MAX_UNITS_DISPLAY = 30;
 
     public $maxUnits  = 0;
+    public $units     = [];
+    public $images    = [];
     protected $sort   = '';
     protected $search = [];
 
@@ -28,31 +30,22 @@ class Units
         return ['id', 'name', 'orginal', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm'];
     }
 
-    public static function load()
-    {
-        $model = new Units();
-        $model->setSort();
-        $model->setSearch();
-        return $model;
-    }
-
     public static function getCurrentPage()
     {
         global $query;
         return (isset($query->get->page) && preg_match('/^\d+$/', $query->get->page)) ? $query->get->page : 1;
     }
 
-    public function getMaxPages()
+    public static function load()
     {
-        return (int) ceil(max($this->maxUnits, 1) / self::MAX_UNITS_DISPLAY);
+        $model = new Units();
+        $model->setSort();
+        $model->setSearch();
+        $model->findAll();
+        return $model;
     }
 
-    public function getMaxUnits()
-    {
-        return $this->maxUnits;
-    }
-
-    public function getAllUnits()
+    public function findAll()
     {
         $start = (int) self::MAX_UNITS_DISPLAY * max($this->getCurrentPage() - 1, 0);
         $limit = (int) self::MAX_UNITS_DISPLAY;
@@ -65,11 +58,60 @@ class Units
                 $results = R::findAll(self::tableName(), $this->sort);
                 $this->setMaxUnits($results);
             }
+            $results = array_slice($results, $start, $limit, true);
+            $this->setImages(array_keys($results));
         } catch (RedException $exc) {
             var_dump($exc->getMessage(), $exc->getTrace());
             $results = [];
         }
-        return array_slice($results, $start, $limit);
+        return $this->units = $results;
+    }
+
+    public static function loadOne($id)
+    {
+        $model = new Units();
+        $model->findOne($id);
+        return $model;
+    }
+
+    public function findOne($id)
+    {
+        try {
+            $result = R::load(self::tableName(), $id);
+            if ($result) {
+                $this->setImages([$result->id]);
+                $this->units[$result->id] = $result;
+            }
+        } catch (RedException $exc) {
+            var_dump($exc->getMessage(), $exc->getTrace());
+        }
+        $this->setMaxUnits($this->units);
+        return $this->units;
+    }
+
+    public function getMaxPages()
+    {
+        return (int) ceil(max($this->maxUnits, 1) / self::MAX_UNITS_DISPLAY);
+    }
+
+    public function getMaxUnits()
+    {
+        return $this->maxUnits;
+    }
+
+    public function getUnitById($id)
+    {
+        return isset($this->units[$id]) ? $this->units[$id] : null;
+    }
+
+    public function getUnits()
+    {
+        return $this->units;
+    }
+
+    public function getUnitImages($unitId)
+    {
+        return isset($this->images[$unitId]) ? $this->images[$unitId] : [];
     }
 
     protected function setSort()
@@ -104,7 +146,17 @@ class Units
         $this->maxUnits = count($units);
     }
 
-    private function searchUnits(array $query)
+    protected function setImages(array $unitsId)
+    {
+        $images       = R::findLike(Images::tableName(), ['units_id' => $unitsId]);
+        $newImageList = [];
+        foreach ($images as $image) {
+            $newImageList[$image->units_id][] = $image;
+        }
+        $this->images = $newImageList;
+    }
+
+    protected function searchUnits(array $query)
     {
         foreach ($query as $type => $value) {
             if (!in_array($type, Units::getColumnNames()) || !is_array($value)) {
@@ -124,17 +176,17 @@ class Units
                 $namespace = $matches[1];
                 $argument  = $matches[2];
             }
-            if($argument == 'male'){
+            if ($argument == 'male') {
                 $namespace = 'is_male';
-                $argument = 1;
+                $argument  = 1;
             }
-            if($argument == 'dmm'){
+            if ($argument == 'dmm') {
                 $namespace = 'is_only_dmm';
-                $argument = 1;
+                $argument  = 1;
             }
-            if($argument == 'nutaku'){
+            if ($argument == 'nutaku') {
                 $namespace = 'is_only_dmm';
-                $argument = 0;
+                $argument  = 0;
             }
             if (strpos($argument, '*') === 0) {
                 $argument = substr_replace($argument, '%', 0, 1);
