@@ -2,6 +2,8 @@
 
 namespace app\upload;
 
+use app\google\GoogleFile;
+use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
 use app\upload\DirectFiles;
 use app\upload\UrlFiles;
@@ -63,65 +65,35 @@ class Rely
         $this->extentionServers[$name] = $extentionServer;
     }
 
-    public function getExtentionServer($name)
+    public function uploadOnGoogleDrive(OODBBean $image, $ext)
+    {
+        /* @var $google GoogleFile */
+        $google = $this->getExtentionServer('google');
+        $google->setMimeType($this->mimeType);
+        $google->setExtension($ext);
+        $google->setDescription('R18');
+        $google->setName($image->type);
+        $google->setCatalog($image->units->name);
+        $google->setFilename($this->getNewName($image->id));
+        return $google->uploadFile()->resultOfUpload;
+    }
+
+    public function uploadOnImgur(OODBBean $image)
+    {
+        /* @var $imgur Imgur */
+        $imgur = $this->getExtentionServer('imgur');
+        $imgur->setFilename($this->getNewName($image->id));
+        $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
+        $imgur->setDescription('R18');
+        $imgur->setCatalog(rtrim($image->type, '12'));
+        return $imgur->uploadFile();
+    }
+
+    protected function getExtentionServer($name)
     {
         if (!isset($this->extentionServers[$name])) {
             throw new Exception("Server: '{$name}' is no implemented");
         }
         return $this->extentionServers[$name];
-    }
-
-    private function uploadOnExtendedServers()
-    {
-
-        R::begin();
-        try {
-            $this->uploadOnGoogleDrive();
-            R::commit();
-        } catch (Exception $exc) {
-            R::rollback();
-            error_log($exc->getMessage());
-        }
-        R::begin();
-        try {
-            $this->uploadOnImgur();
-            R::commit();
-        } catch (Exception $exc) {
-            R::rollback();
-            error_log($exc->getMessage());
-        }
-    }
-
-    private function uploadOnGoogleDrive()
-    {
-        /* @var $google GoogleFile */
-        $google   = $this->getExtentionServer('google');
-        $google->setMimeType($this->mimeType);
-        $google->setExtension($this->extention);
-        $google->setDescription('R18');
-        $google->setName($this->image->type);
-        $google->setCatalog($this->image->units->name);
-        $google->setFilename($this->getNewName($this->image->id));
-        $response = $google->uploadFile()->resultOfUpload;
-        if ($response) {
-            $this->image->google = $response->id;
-            R::store($this->image);
-        }
-    }
-
-    private function uploadOnImgur()
-    {
-        /* @var $imgur Imgur */
-        $imgur    = $this->getExtentionServer('imgur');
-        $imgur->setFilename($this->getNewName($this->image->id));
-        $imgur->setName(rtrim($this->image->type, '12') . ': ' . $this->image->units->name);
-        $imgur->setDescription('R18');
-        $imgur->setCatalog(rtrim($this->image->type, '12'));
-        $response = $imgur->uploadFile();
-        if (isset($response['data']['id']) && isset($response['data']['deletehash'])) {
-            $this->image->imgur   = $response['data']['id'];
-            $this->image->delhash = $response['data']['deletehash'];
-            R::store($this->image);
-        }
     }
 }
