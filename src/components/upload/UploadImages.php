@@ -5,7 +5,7 @@ namespace app\upload;
 use app\google\GoogleFile;
 use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
-use app\upload\Upload;
+use app\upload\DirectFiles;
 use app\upload\UrlFiles;
 use app\upload\validators\FileValidator;
 use Exception;
@@ -13,39 +13,33 @@ use models\Images;
 use RedBeanPHP\Facade as R;
 use RedBeanPHP\OODBBean;
 
-class UploadImages extends Upload
+class UploadImages
 {
-    public $files;
-    public $post;
+    const TEMPORARY_FOLDER = 'tmp';
+
     public $newDir;
-    protected $defaultMimeType  = 'image/png';
+    protected $mimeType         = 'image/png';
     protected $errors           = [];
-    protected $defaultExtention = 'png';
-    protected $validators;
+    protected $extention        = 'png';
     protected $destination;
     protected $extentionServers = [];
 
     /** @var OODBBean */
     private $image;
 
-    public function __construct($destination)
-    {
-        global $query;
-        parent::__construct('tmp');
-        $this->destination = $destination;
-        $this->files       = $query->files;
-        $this->post        = $query->post;
-    }
-
     public function uploadFiles()
     {
-        $avaibleImagesFields = Images::getTypeNames();
-        foreach ($this->files as $input => $file) {
+        global $query;
+        $post                = $query->post;
+        $files               = $query->files;
+        $avaibleImagesFields = ['dmm1', 'dmm2'];
+        //die();
+        foreach ($files as $input => $file) {
             if (!in_array($input, $avaibleImagesFields)) {
                 continue;
             }
-            if ($this->post->{$input}) {
-                $results = $this->uploadFromServer($this->post->{$input});
+            if ($post->{$input}) {
+                $results = $this->uploadFromServer($post->{$input});
             } else {
                 if ($file['error']) {
                     continue;
@@ -55,8 +49,8 @@ class UploadImages extends Upload
             if ($this->errors) {
                 var_dump($this->errors);
             } else {
-                $this->addImageToDatabase($results, $input);
-                (!$this->image) || $this->uploadOnExtendedServers();
+                //$this->addImageToDatabase($results, $input);
+                //(!$this->image) || $this->uploadOnExtendedServers();
             }
             (!isset($results['full_patch'])) || $this->deteleFile($results['full_patch']);
         }
@@ -64,22 +58,41 @@ class UploadImages extends Upload
 
     private function uploadFromServer($url)
     {
-        $file = new UrlFiles('tmp');
-        $file->setMimeTypes([$this->defaultMimeType]);
-        $file->loadFile($url);
+        $upload = new UrlFiles();
+        $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
+        $upload->setMimeTypes([$this->mimeType]);
+        $upload->file($url);
 
-        $this->errors = array_merge($this->errors, $file->getErrors());
-        return $file->getFile();
+        $validator = new FileValidator();
+        $upload->setValidator([$validator, 'checkFileSize']);
+        $upload->setValidator([$validator, 'checkMimeType']);
+        $upload->setValidator([$validator, 'checkResolution']);
+
+        $results = $upload->upload();
+
+        if (($errors = $upload->getErrors())) {
+            $this->errors = array_merge($this->errors, $errors);
+        }
+
+        return $results;
     }
 
     private function uploadFromClient(array $file)
     {
-        $this->file($file);
-        $this->createValidator();
-        $this->setValidators();
+        $upload = new DirectFiles();
+        $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
+        $upload->setMimeTypes([$this->mimeType]);
+        $upload->file($file);
 
-        $results      = $this->upload();
-        $this->errors = array_merge($this->errors, $this->get_errors());
+        $validator = new FileValidator();
+        $upload->setValidator([$validator, 'checkFileSize']);
+        $upload->setValidator([$validator, 'checkResolution']);
+
+        $results = $upload->upload();
+        if (($errors  = $upload->getErrors())) {
+            $this->errors = array_merge($this->errors, $errors);
+        }
+
         return $results;
     }
 
@@ -171,8 +184,8 @@ class UploadImages extends Upload
     {
         /* @var $google GoogleFile */
         $google   = $this->getExtentionServer('google');
-        $google->setMimeType($this->defaultMimeType);
-        $google->setExtension($this->defaultExtention);
+        $google->setMimeType($this->mimeType);
+        $google->setExtension($this->extention);
         $google->setDescription('R18');
         $google->setName($this->image->type);
         $google->setCatalog($this->image->units->name);
@@ -209,30 +222,13 @@ class UploadImages extends Upload
 
     private function getNewName($id)
     {
-        return $this->newDir . $id . '.' . $this->defaultExtention;
+        return $this->newDir . $id . '.' . $this->extention;
     }
 
     private function setImage($fullPatch)
     {
         $this->image      = R::dispense(TB_IMAGES);
         $this->image->md5 = md5_file($fullPatch);
-    }
-
-    private function createValidator()
-    {
-        require_once 'FileValidator.php';
-        $this->validators[] = [
-            'validator' => new FileValidator(),
-            'methods' => ['uploadValidator']
-        ];
-    }
-
-    private function setValidators()
-    {
-        foreach ($this->validators as $validator) {
-            $this->callbacks($validator['validator'], $validator['methods']);
-        }
-        $this->set_allowed_mime_types(['image/png']);
     }
 
     private function createDestination()
@@ -247,9 +243,6 @@ class UploadImages extends Upload
 
     private function deteleFile($filename)
     {
-        if (is_file($filename) && is_executable($filename)) {
-            return unlink($filename);
-        }
-        return false;
+        return (is_file($filename) && is_executable($filename)) ? unlink($filename) : false;
     }
 }

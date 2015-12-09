@@ -2,9 +2,8 @@
 
 namespace app\upload\validators;
 
-use app\upload\Upload;
-use RedBeanPHP\Facade as R;
-use Exception;
+use app\upload\UrlFiles;
+use app\upload\DirectServer;
 
 /**
  * Description of FileValidator
@@ -19,74 +18,58 @@ class FileValidator
     const MIN_HEIGHT   = 639;
     const MIN_FILESIZE = 90 * 1024;
     const MAX_FILESIZE = 512 * 1024;
-    const HTTP_ERROR   = '~^HTTP/[12]\.[0-9] [54][0-9]{2}.*$~i';
 
-    public function uploadValidator(Upload $object)
+    public function checkResolution(DirectServer $object)
     {
-        try {
-            $this->checkResolution($object->file['tmp_name']);
-            $this->isInDatabase($object->file['tmp_name']);
-            $this->checkFileSize(filesize($object->file['tmp_name']));
-        } catch (Exception $exc) {
-            $object->set_error('file: ' . $object->file['original_filename'] . ' error: ' . $exc->getMessage());
-        }
-    }
-
-    public function checkResolution($file)
-    {
-        list($width, $height) = getimagesize($file);
+        list($width, $height) = getimagesize($object->file['tmp_name']);
         if ($width > self::MAX_WIDTH) {
-            throw new Exception(
-            sprintf('Image width is to large. Your image has %dpx. Max is %dpx', $width, self::MAX_WIDTH));
+            $object->set_error(sprintf('Image width is to large. Your image has %dpx. Max is %dpx', $width,
+                    self::MAX_WIDTH));
         }
         if ($height > self::MAX_HEIGHT) {
-            throw new Exception(
-            sprintf('Image height is to large. Your image has %dpx. Max is %dpx'), $height, self::MAX_HEIGHT);
+            $object->set_error(
+                sprintf('Image height is to large. Your image has %dpx. Max is %dpx'), $height, self::MAX_HEIGHT);
         }
         if ($width < self::MIN_WIDTH) {
-            throw new Exception(
-            sprintf('Image width is to low. Your image has %dpx. Min is %dpx', $width, self::MIN_WIDTH));
+            $object->set_error(
+                sprintf('Image width is to low. Your image has %dpx. Min is %dpx', $width, self::MIN_WIDTH));
         }
         if ($height < self::MIN_HEIGHT) {
-            throw new Exception(
-            sprintf('Image height is to low. Your image has %dpx. Min is %dpx'), $height, self::MIN_HEIGHT);
+            $object->set_error(
+                sprintf('Image height is to low. Your image has %dpx. Min is %dpx'), $height, self::MIN_HEIGHT);
         }
     }
 
-    public function checkMimeType($contentType, array $mimeTypes)
+    public function checkMimeType(DirectServer $object)
     {
-        if (!isset($contentType)) {
-            throw new Exception('Target file have no mimeType');
+        if (!isset($object->file['mime'])) {
+            $object->set_error('Target file have no mimeType');
         }
-        if ($mimeTypes && !in_array($contentType, $mimeTypes)) {
-            throw new Exception('Wrong mime types');
+        if (!in_array($object->file['mime'], $object->mimes)) {
+            $object->set_error('Wrong mime types');
         }
     }
 
-    public function checkFileSize($filesize)
+    public function checkFileSize(DirectServer $object)
     {
-        if ($filesize < self::MIN_FILESIZE) {
-            throw new Exception('File is too small');
+        if ($object->file['size_in_bytes'] < self::MIN_FILESIZE) {
+            $object->set_error('File is too small');
         }
-        if ($filesize > self::MAX_FILESIZE) {
-            throw new Exception('File is too large');
+        if ($object->file['size_in_bytes'] > self::MAX_FILESIZE) {
+            $object->set_error('File is too large');
         }
     }
 
-    public function checkHttpResponse(array $headers)
+    public function validateUrl(UrlFiles $object)
     {
-        if (!$headers) {
-            throw new Exception('Target server no response');
+        $urlRegex = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})'
+            . '(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3})'
+            . '{2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
+            . '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))'
+            . '|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)'
+            . '*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS';
+        if (!preg_match($urlRegex, $object->url)) {
+            $object->set_error("This isn't url adress");
         }
-        foreach ($headers as $key => $option) {
-            if (is_array($option) || !is_int($key)) {
-                continue;
-            }
-            if (preg_match(self::HTTP_ERROR, $option)) {
-                throw new Exception('Target server no response');
-            }
-        }
-
-        return true;
     }
 }
