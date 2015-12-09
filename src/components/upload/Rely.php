@@ -9,6 +9,7 @@ use app\upload\DirectFiles;
 use app\upload\UrlFiles;
 use app\upload\validators\FileValidator;
 use RedBeanPHP\OODBBean;
+use Symfony\Component\HttpFoundation\File\File;
 
 class Rely
 {
@@ -66,24 +67,24 @@ class Rely
         $this->extentionServers[$name] = $extentionServer;
     }
 
-    public function uploadOnGoogleDrive(OODBBean $image, $ext)
+    public function uploadOnGoogleDrive(OODBBean $image, File $file)
     {
         /* @var $google GoogleFile */
         $google = $this->getExtentionServer('google');
-        $google->setMimeType($this->mimeType);
-        $google->setExtension($ext);
+        $google->setMimeType($file->getMimeType());
+        $google->setExtension($file->guessExtension());
         $google->setDescription('R18');
         $google->setName($image->type);
         $google->setCatalog($image->units->name);
-        $google->setFilename($this->getNewName($image->id));
+        $google->setFilename($file->getFilename());
         return $google->uploadFile()->resultOfUpload;
     }
 
-    public function uploadOnImgur(OODBBean $image)
+    public function uploadOnImgur(OODBBean $image, File $file)
     {
         /* @var $imgur Imgur */
         $imgur = $this->getExtentionServer('imgur');
-        $imgur->setFilename($this->getNewName($image->id));
+        $imgur->setFilename($file->getFilename());
         $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
         $imgur->setDescription('R18');
         $imgur->setCatalog(rtrim($image->type, '12'));
