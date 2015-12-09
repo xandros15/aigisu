@@ -15,7 +15,7 @@ class Rely
 {
     const TEMPORARY_FOLDER = 'tmp';
 
-    protected $mimeType = 'image/png';
+    protected $mimeType        = 'image/png';
     protected $extendedServers = [];
 
     public function setMimeType($mimeType)
@@ -71,26 +71,34 @@ class Rely
 
     public function uploadOnGoogleDrive(OODBBean $image, File $file)
     {
-        /* @var $google GoogleFile */
-        $google = $this->getExtendednServer('google');
-        $google->setMimeType($file->getMimeType());
-        $google->setExtension($file->guessExtension());
-        $google->setDescription('R18');
-        $google->setName($image->type);
-        $google->setCatalog($image->units->name);
-        $google->setFilename($file->getFilename());
-        return $google->uploadFile()->resultOfUpload;
+        try {
+            /* @var $google GoogleFile */
+            $google = $this->getExtendednServer('google');
+            $google->setMimeType($file->getMimeType());
+            $google->setExtension($file->guessExtension());
+            $google->setDescription('R18');
+            $google->setName($image->type);
+            $google->setCatalog($image->units->name);
+            $google->setFilename($file->getFilename());
+            return $google->uploadFile()->resultOfUpload;
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     public function uploadOnImgur(OODBBean $image, File $file)
     {
-        /* @var $imgur Imgur */
-        $imgur = $this->getExtendednServer('imgur');
-        $imgur->setFilename($file->getFilename());
-        $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
-        $imgur->setDescription('R18');
-        $imgur->setCatalog(rtrim($image->type, '12'));
-        return $imgur->uploadFile();
+        try {
+            /* @var $imgur Imgur */
+            $imgur = $this->getExtendednServer('imgur');
+            $imgur->setFilename($file->getFilename());
+            $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
+            $imgur->setDescription('R18');
+            $imgur->setCatalog(rtrim($image->type, '12'));
+            return $imgur->uploadFile();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     protected function getExtendednServer($name)
