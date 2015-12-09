@@ -2,13 +2,20 @@
 
 namespace app\upload;
 
+use app\upload\ExtedndetServer;
+use app\upload\DirectFiles;
+use app\upload\UrlFiles;
+use app\upload\validators\FileValidator;
+use RedBeanPHP\OODBBean;
+
 class Rely
 {
-    protected $mimeType = 'image/png';
+    protected $mimeType         = 'image/png';
+    protected $extentionServers = [];
 
     public function setMimeType($mimeType)
     {
-            $this->mimeType = $mimeType;
+        $this->mimeType = $mimeType;
     }
 
     private function uploadFromServer($url)
@@ -49,12 +56,6 @@ class Rely
         }
 
         return $results;
-    }
-
-    public function setExtentionServers()
-    {
-        $this->setExtentionServer('google', new GoogleFile());
-        $this->setExtentionServer('imgur', Imgur::facade());
     }
 
     public function setExtentionServer($name, ExtedndetServer $extentionServer)
