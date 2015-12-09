@@ -16,7 +16,7 @@ class Rely
     const TEMPORARY_FOLDER = 'tmp';
 
     protected $mimeType = 'image/png';
-    protected $extentionServers = [];
+    protected $extendedServers = [];
 
     public function setMimeType($mimeType)
     {
@@ -64,15 +64,15 @@ class Rely
         return $results;
     }
 
-    public function setExtentionServer($name, ExtedndetServer $extentionServer)
+    public function setExtendedServer($name, ExtedndetServer $extentionServer)
     {
-        $this->extentionServers[$name] = $extentionServer;
+        $this->extendedServers[$name] = $extentionServer;
     }
 
     public function uploadOnGoogleDrive(OODBBean $image, File $file)
     {
         /* @var $google GoogleFile */
-        $google = $this->getExtentionServer('google');
+        $google = $this->getExtendednServer('google');
         $google->setMimeType($file->getMimeType());
         $google->setExtension($file->guessExtension());
         $google->setDescription('R18');
@@ -85,7 +85,7 @@ class Rely
     public function uploadOnImgur(OODBBean $image, File $file)
     {
         /* @var $imgur Imgur */
-        $imgur = $this->getExtentionServer('imgur');
+        $imgur = $this->getExtendednServer('imgur');
         $imgur->setFilename($file->getFilename());
         $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
         $imgur->setDescription('R18');
@@ -93,11 +93,11 @@ class Rely
         return $imgur->uploadFile();
     }
 
-    protected function getExtentionServer($name)
+    protected function getExtendednServer($name)
     {
-        if (!isset($this->extentionServers[$name])) {
+        if (!isset($this->extendedServers[$name])) {
             throw new Exception("Server: '{$name}' is no implemented");
         }
-        return $this->extentionServers[$name];
+        return $this->extendedServers[$name];
     }
 }
