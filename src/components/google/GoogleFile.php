@@ -69,7 +69,7 @@ class GoogleFile extends GoogleServer implements ExtedndetServer
             throw new Exception('Name type is not set or no string');
         }
         if (!$this->extension || !is_string($this->extension)) {
-            throw new Exception('Extention type is not set or no string');
+            throw new Exception('Extention is not set or no string');
         }
         if (!$this->filename || !is_string($this->filename)) {
             throw new Exception('Filename is not set or no string');
