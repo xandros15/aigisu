@@ -21,7 +21,7 @@ class Rely
         $this->mimeType = $mimeType;
     }
 
-    public function uploadFromServer($url, &$errors)
+    public function uploadFromServer($url, array &$errors)
     {
         $upload = new UrlFiles();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
@@ -42,7 +42,7 @@ class Rely
         return $results;
     }
 
-    public function uploadFromClient(array $file, &$errors)
+    public function uploadFromClient(array $file, array &$errors)
     {
         $upload = new DirectFiles();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
