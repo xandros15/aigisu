@@ -7,9 +7,6 @@ use Exception;
 
 class UrlFiles implements DirectServer
 {
-    const MAX_WIDTH  = 961;
-    const MAX_HEIGHT = 641;
-
     public $file          = [];
     public $url;
     public $filename;
@@ -64,7 +61,7 @@ class UrlFiles implements DirectServer
 
     public function upload()
     {
-        if($this->getErrors()){
+        if ($this->getErrors()) {
             return $this->file;
         }
         try {
