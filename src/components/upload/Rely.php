@@ -4,6 +4,12 @@ namespace app\upload;
 
 class Rely
 {
+    protected $mimeType = 'image/png';
+
+    public function setMimeType($mimeType)
+    {
+            $this->mimeType = $mimeType;
+    }
 
     private function uploadFromServer($url)
     {
