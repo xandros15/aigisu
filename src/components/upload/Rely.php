@@ -10,6 +10,7 @@ use app\upload\UrlFiles;
 use app\upload\validators\FileValidator;
 use RedBeanPHP\OODBBean;
 use Symfony\Component\HttpFoundation\File\File;
+use Exception;
 
 class Rely
 {
@@ -77,7 +78,7 @@ class Rely
             $google->setMimeType($file->getMimeType());
             $google->setExtension($file->guessExtension());
             $google->setDescription('R18');
-            $google->setName($image->type);
+            $google->setName($image->server . $image->scene);
             $google->setCatalog($image->units->name);
             $google->setFilename($file->getFilename());
             return $google->uploadFile()->resultOfUpload;
@@ -92,9 +93,9 @@ class Rely
             /* @var $imgur Imgur */
             $imgur = $this->getExtendednServer('imgur');
             $imgur->setFilename($file->getFilename());
-            $imgur->setName(rtrim($image->type, '12') . ': ' . $image->units->name);
+            $imgur->setName($image->server . ': ' . $image->units->name);
             $imgur->setDescription('R18');
-            $imgur->setCatalog(rtrim($image->type, '12'));
+            $imgur->setCatalog($image->server);
             return $imgur->uploadFile();
         } catch (Exception $e) {
             return $e;
