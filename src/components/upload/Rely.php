@@ -13,7 +13,9 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class Rely
 {
-    protected $mimeType         = 'image/png';
+    const TEMPORARY_FOLDER = 'tmp';
+
+    protected $mimeType = 'image/png';
     protected $extentionServers = [];
 
     public function setMimeType($mimeType)
