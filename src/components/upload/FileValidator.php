@@ -22,6 +22,9 @@ class FileValidator
     public function checkResolution(DirectServer $object)
     {
         list($width, $height) = getimagesize($object->file['tmp_name']);
+        if(empty($width)|| empty($height)){
+            return $object->set_error('Image has no width or height');
+        }
         if ($width > self::MAX_WIDTH) {
             $object->set_error(sprintf('Image width is to large. Your image has %dpx. Max is %dpx', $width,
                     self::MAX_WIDTH));
@@ -46,7 +49,7 @@ class FileValidator
             $object->set_error('Target file have no mimeType');
         }
         if (!in_array($object->file['mime'], $object->mimes)) {
-            $object->set_error('Wrong mime types');
+            $object->set_error("File don't have correct type. Avaiable are: " . implode('|', $object->mimes));
         }
     }
 

@@ -64,6 +64,9 @@ class UrlFiles implements DirectServer
 
     public function upload()
     {
+        if($this->getErrors()){
+            return $this->file;
+        }
         try {
             $this->validate();
             if ($this->getErrors()) {
@@ -143,7 +146,7 @@ class UrlFiles implements DirectServer
         if (!$file) {
             throw new Exception("Can't open file from url");
         }
-        $content = stream_get_contents($file);
+        $content = stream_get_contents($file, FileValidator::MAX_FILESIZE + 1);
         $headers = self::httpParseHeaders($http_response_header);
         if (isset($headers['content-encoding'])) {
             $content = $this->contentEncode($content, $headers['content-encoding']);
