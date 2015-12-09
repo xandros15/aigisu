@@ -20,7 +20,7 @@ class Rely
         $this->mimeType = $mimeType;
     }
 
-    private function uploadFromServer($url)
+    public function uploadFromServer($url, &$errors)
     {
         $upload = new UrlFiles();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
@@ -34,14 +34,14 @@ class Rely
 
         $results = $upload->upload();
 
-        if (($errors = $upload->getErrors())) {
-            $this->errors = $errors;
+        if ($upload->getErrors()) {
+            $errors = $upload->getErrors();
         }
 
         return $results;
     }
 
-    private function uploadFromClient(array $file)
+    public function uploadFromClient(array $file, &$errors)
     {
         $upload = new DirectFiles();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
@@ -53,8 +53,9 @@ class Rely
         $upload->setValidator([$validator, 'checkResolution']);
 
         $results = $upload->upload();
-        if (($errors  = $upload->getErrors())) {
-            $this->errors = $errors;
+
+        if ($upload->getErrors()) {
+            $errors = $upload->getErrors();
         }
 
         return $results;
