@@ -80,7 +80,7 @@ class Rely
             $google->setDescription('R18');
             $google->setName($image->server . $image->scene);
             $google->setCatalog($image->units->name);
-            $google->setFilename($file->getFilename());
+            $google->setFilename($file->getPathname());
             return $google->uploadFile()->resultOfUpload;
         } catch (Exception $e) {
             return $e;
@@ -92,7 +92,7 @@ class Rely
         try {
             /* @var $imgur Imgur */
             $imgur = $this->getExtendednServer('imgur');
-            $imgur->setFilename($file->getFilename());
+            $imgur->setFilename($file->getPathname());
             $imgur->setName($image->server . ': ' . $image->units->name);
             $imgur->setDescription('R18');
             $imgur->setCatalog($image->server);
