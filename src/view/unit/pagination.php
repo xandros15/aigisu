@@ -5,7 +5,7 @@ use models\Units;
 /* @var $model models\Units */
 ?>
 <?php if ($model->getMaxUnits() > 0): ?>
-    <nav class="text-center">
+    <nav class="text-center row col-xs-12">
         <ul class="pagination">
             <li<?= (1 == Units::getCurrentPage()) ? ' class="disabled"' : '' ?>>
                 <a href="<?= generateLink(['page' => 1]) ?>" aria-label="first">

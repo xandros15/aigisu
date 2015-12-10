@@ -1,6 +1,8 @@
 <?php
 
 use models\Units;
+use models\Oauth;
+
 $model = Units::load();
 $units = $model->getUnits();
 ?>
@@ -8,15 +10,24 @@ $units = $model->getUnits();
     <?php if (count($units) > 0): ?>
         <div class="col-xs-12"><?= renderPhpFile('upload/help') ?></div>
         <?= renderPhpFile('unit/pagination', ['model' => $model]) ?>
-        <?= renderPhpFile('unit/sort') ?>
-        <?php foreach ($units as $unit): ?>
-            <div class="row col-xs-12">
-                <?= renderPhpFile('unit/unit', ['unit' => $unit]) ?>
-            </div>
-            <div class="row col-xs-12">
-                <?= renderPhpFile('upload/upload', ['model' => $model, 'unit' => $unit]); ?>
-            </div>
-        <?php endforeach; ?>
+        <div class="unit-list col-xs-12 col-xs-offset-0 col-sm-10  col-sm-offset-2">
+            <?= renderPhpFile('unit/sort') ?>
+            <?php foreach ($units as $unit): ?>
+                <div class="single-unit row col-xs-12">
+                    <div class="row">
+                        <?= renderPhpFile('unit/unit', ['unit' => $unit]) ?>
+                    </div>
+                    <?php if (Oauth::isLogged()): ?>
+                        <div class="row">
+                            <?= renderPhpFile('unit/form/modal', ['unit' => $unit]) ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="row">
+                        <?= renderPhpFile('upload/upload', ['model' => $model, 'unit' => $unit]); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
         <?= renderPhpFile('unit/pagination', ['model' => $model]) ?>
     <?php else: ?>
         <h3 class="text-center">Nothing found</h3>

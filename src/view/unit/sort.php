@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-xs-12">
         <label>Order by:</label>
         <label><a href="<?= generateLink(['sort' => 'name']) ?> ">Name</a></label>
         <span style="margin: 0 3px;">|</span>
