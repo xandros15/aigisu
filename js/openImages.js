@@ -2,15 +2,15 @@ var images = {
     onReady: function () {
         images.findAllUnits();
         images.addClassToUnit(images.unitList);
-        $('form img.icon.hscene').mouseup(images.openImages);
-        $('form img.hscene').on('contextmenu', images.blockContextMenu);
+        $('img.icon.hscene').mouseup(images.openImages);
+        $('img.hscene').on('contextmenu', images.blockContextMenu);
     },
     addClassToUnit: function (list) {
         if (typeof list === 'undefined') {
             return false;
         }
         for (var i = 0; i < list.length; i++) {
-            $('#' + list[i] + ' img.icon').addClass('hscene');
+            $('#unit-' + list[i] + ' img.icon').addClass('hscene');
         }
     },
     blockContextMenu: function () {
