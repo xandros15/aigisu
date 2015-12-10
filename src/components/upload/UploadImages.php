@@ -26,8 +26,9 @@ class UploadImages
     /** @var OODBBean */
     private $image;
 
-    public function __construct()
+    public function __construct($destination)
     {
+        $this->destination = $destination;
         $this->rely = new Rely();
         $this->rely->setMimeType('image/png');
         $this->rely->setExtendedServer('google', new GoogleFile());
@@ -150,7 +151,7 @@ class UploadImages
 
     private function createDestination()
     {
-        $newDir = ROOT_DIR . Images::IMAGE_DIRECTORY;
+        $newDir = ROOT_DIR . $this->destination;
         if (!is_dir($newDir)) {
             mkdir($newDir, 755);
         }
