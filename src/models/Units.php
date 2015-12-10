@@ -4,6 +4,7 @@ namespace models;
 
 use RedBeanPHP\R;
 use RedBeanPHP\RedException;
+use app\alert\Alert;
 
 class Units
 {
@@ -199,34 +200,42 @@ class Units
         return $newArguments;
     }
 
-    public static function editUnit()
+    public static function editUnit($post)
     {
-        R::debug(false);
-        global $query;
-        $unitPost = (object) $query->post->unit;
-        if (isset($unitPost->id) && preg_match('/^\d+$/', $unitPost->id)) {
-            $response = ['valid' => []];
-            $unit     = R::load(TB_NAME, $unitPost->id);
-            if (preg_match('/^[\w]+$/', $unitPost->name)) {
-                $unit->name                    = $unitPost->name;
-                $response['valid'][0]['value'] = true;
-                $response['valid'][0]['name']  = 'unit-name';
-            } else {
-                $response['valid'][0]['value'] = false;
-                $response['valid'][0]['name']  = 'unit-name';
+        $unitPost = (object) $post->unit;
+        if (($errors   = self::validate($unitPost))) {
+            foreach ($errors as $error) {
+                Alert::add($error, Alert::ERROR);
             }
-            if (!empty($unitPost->rarity) && in_array($unitPost->rarity, Units::getRarities())) {
-                $unit->rarity                  = $unitPost->rarity;
-                $response['valid'][2]['value'] = true;
-                $response['valid'][2]['name']  = 'unit-rarity';
-            } else {
-                $response['valid'][2]['value'] = false;
-                $response['valid'][2]['name']  = 'unit-rarity';
-            }
-            R::store($unit);
-            die(json_encode($response));
+            return false;
         }
-        $_POST['valid'] = false;
-        die(json_encode($_POST));
+        R::freeze();
+        $unit = R::load(self::tableName(), $unitPost->id);
+        if ($unit->isEmpty()) {
+            return Alert::add("Unit not found", Alert::ERROR);
+        }
+        $unit->name      = $unitPost->name;
+        $unit->rarity    = $unitPost->rarity;
+        $unit->isOnlyDmm = (bool) isset($unitPost->isOnlyDmm) && $unitPost->isOnlyDmm;
+        $unit->isMale    = (bool) isset($unitPost->isMale) && $unitPost->isMale;
+        R::store($unit);
+        Alert::add("Unit {$unit->original} successful updated.");
+    }
+
+    public static function validate($unit)
+    {
+        $errors = [];
+        if (!isset($unit->id) || !preg_match('/^\d+$/', $unit->id)) {
+            $errors[] = "Unit not found";
+        }
+
+        if (!preg_match('/^[\w]+$/', $unit->name)) {
+            $errors[] = "Wrong name for unit.";
+        }
+        if (!in_array($unit->rarity, Units::getRarities())) {
+            $errors[] = "Wrong rarity name for unit.";
+        }
+
+        return $errors;
     }
 }

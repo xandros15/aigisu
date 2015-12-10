@@ -72,8 +72,8 @@ function urlQueryToGlobal()
         $upload = new UploadImages(Images::IMAGE_DIRECTORY);
         $upload->upload();
     }
-    if (!empty($query->post->unit) && !empty($query->post->json)) {
-        Units::editUnit();
+    if (!empty($query->post->updateUnit)) {
+        Units::editUnit($query->post);
     }
 }
 

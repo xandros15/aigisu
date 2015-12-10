@@ -14,7 +14,7 @@ $rarities = Units::getRarities();
 <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <form id="<?= $unit->id ?>" method="post" role="form" style="margin-top: 5px">
-            <input type="hidden" name="id" value="<?= $unit->id ?>">
+            <input type="hidden" name="unit[id]" value="<?= $unit->id ?>">
             <input type="hidden" name="updateUnit" value="1">
             <div class="modal-content">
                 <div class="modal-header">
