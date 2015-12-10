@@ -68,8 +68,9 @@ function configuration()
 function urlQueryToGlobal()
 {
     global $query;
-    if (!empty($query->post->uploadImages) && !empty($query->files)) {
-        uploadImages();
+    if (!empty($query->post->uploadImages)) {
+        $upload = new UploadImages(Images::IMAGE_DIRECTORY);
+        $upload->upload();
     }
     if (!empty($query->post->unit) && !empty($query->post->json)) {
         Units::editUnit();
@@ -102,15 +103,6 @@ function getSearchQuery()
         return '';
     }
     return $query->get->q;
-}
-
-function uploadImages()
-{
-    global $query;
-    if (!empty($query->files)) {
-        $upload = new UploadImages(Images::IMAGE_DIRECTORY);
-        $upload->upload();
-    }
 }
 
 // TODO create routing in other system
