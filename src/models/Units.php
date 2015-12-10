@@ -77,6 +77,9 @@ class Units
 
     public function findOne($id)
     {
+        if (isset($this->units[$id])) {
+            return $this->units[$id];
+        }
         try {
             $result = R::load(self::tableName(), $id);
             if ($result) {
@@ -87,7 +90,7 @@ class Units
             var_dump($exc->getMessage(), $exc->getTrace());
         }
         $this->setMaxUnits($this->units);
-        return $this->units;
+        return $this->units[$id];
     }
 
     public function getMaxPages()
