@@ -62,7 +62,7 @@ function configuration()
     defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
-    defined('DEBUG') || define('DEBUG', 0);
+    defined('DEBUG') || define('DEBUG', 1);
 }
 
 function urlQueryToGlobal()
@@ -109,8 +109,7 @@ function uploadImages()
     global $query;
     if (!empty($query->files)) {
         $upload = new UploadImages(Images::IMAGE_DIRECTORY);
-        $upload->setExtentionServers();
-        $upload->uploadFiles();
+        $upload->upload();
     }
 }
 

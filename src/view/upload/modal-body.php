@@ -4,6 +4,7 @@ use models\Images;
 use RedBeanPHP\OODBBean;
 
 /* @var $image OODBBean */
+$name = $image->server . $image->scene;
 ?>
 <div class="row">
     <h4 class="text-center"><?= $image->server ?> <?= Images::imageSceneToHuman($image->scene) ?></h4>
@@ -12,7 +13,7 @@ use RedBeanPHP\OODBBean;
             <label>File:</label>
         </div>
         <div class="col-xs-9">
-            <input name="<?= $image->server . $image->scene ?>" type="file">
+            <input name="<?= $name ?>" type="file">
         </div>
     </div>
     <div class="col-xs-12">
@@ -23,7 +24,9 @@ use RedBeanPHP\OODBBean;
             <label>Source URL:</label>
         </div>
         <div class="col-xs-9">
-            <input class="form-control" name="<?= $image->server . $image->scene ?>" autocomplete="off" type="text"  placeholder="http://">
+            <input class="form-control" name="<?= $name ?>[url]" autocomplete="off" type="text"  placeholder="http://">
         </div>
     </div>
+    <input type="hidden" name="<?= $name ?>[server]" value="<?= $image->server ?>">
+    <input type="hidden" name="<?= $name ?>[scene]" value="<?= $image->scene ?>">
 </div>
