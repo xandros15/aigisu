@@ -13,8 +13,6 @@ use models\Units;
 function dbconnect()
 {
     require CONFIG_DIR . 'db.config.php';
-    defined('TB_NAME') || define('TB_NAME', 'units');
-    defined('TB_IMAGES') || define('TB_IMAGES', 'images');
     R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
     R::debug(DEBUG);
     R::freeze();

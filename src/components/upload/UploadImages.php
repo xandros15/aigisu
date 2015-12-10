@@ -141,7 +141,7 @@ class UploadImages
         if ($isRecordExist) {
             throw new Exception("File: '{$file->name}' Image exist");
         }
-        $this->image           = R::dispense(TB_IMAGES);
+        $this->image           = R::dispense(Images::tableName());
         $this->image->md5      = md5_file($file->full_path);
         $this->image->server   = $file->server;
         $this->image->scene    = $file->scene;
