@@ -23,7 +23,7 @@ $rarities = Units::getRarities();
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Romanji name:</label>
+                        <label>Romaji name:</label>
                         <input class="form-control unit-name" name="unit[name]" type="text" value="<?=
                         ($unit->name) ? $unit->name : ''
                         ?>">
