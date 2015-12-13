@@ -85,6 +85,6 @@ class Oauth
 
     private function isTimeout($time)
     {
-        return (time() - $time > 0);
+        return ($time - time() > 0);
     }
 }
