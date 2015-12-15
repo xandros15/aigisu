@@ -86,7 +86,7 @@ function generateLink(array $options)
             $get->{$name} = reverseGet($get, $name, $value);
         }
     }
-    return SITE_URL . '?' . http_build_query($get);
+    return '?' . http_build_query($get);
 }
 
 function reverseGet(stdClass $get, $name, $value)
