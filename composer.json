@@ -8,6 +8,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "slim/slim": "^3.0",
+        "illuminate/database": "^5.1",
         "gabordemooij/redbean": "4.2",
         "symfony/http-foundation": "^2.7",
         "google/apiclient": "1.*",
