@@ -7,7 +7,7 @@ use Slim\Http\Response;
 use Slim\Http\Request;
 use models\Images;
 
-class ImageController extends Controller
+class ImagesController extends Controller
 {
 
     public function actionIndex(Request $request, Response $response)
