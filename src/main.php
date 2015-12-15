@@ -25,7 +25,7 @@ function bootstrap()
     dbconnect();
     createSessions();
     urlQueryToGlobal();
-    echo renderPhpFile('layout');
+    goSlimRoute();
 }
 
 use models\Oauth;
@@ -103,15 +103,31 @@ function getSearchQuery()
     return $query->get->q;
 }
 
-// TODO create routing in other system
-function isImageQuery()
-{
-    global $query;
-    return (!empty($query->get->image));
-}
+use Slim\App as Slim;
+use Slim\Container;
+use controller\ImagesController;
+use controller\UnitsController;
+use controller\OauthController;
 
-function isLoginQuery()
+function goSlimRoute()
 {
-    global $query;
-    return (!empty($query->get->login));
+    $controllers                = [
+        ImagesController::class => function () {
+            return new ImagesController();
+        },
+        UnitsController::class => function () {
+            return new UnitsController();
+        },
+        OauthController::class => function () {
+            return new OauthController();
+        }
+    ];
+
+    $container = new Container($controllers);
+    $slim      = new Slim($container);
+
+    $slim->get('/image/{id}', ImagesController::class . ':actionIndex');
+    $slim->get('/', UnitsController::class . ':actionIndex');
+    $slim->get('/login', OauthController::class . ':actionIndex');
+    $slim->run();
 }
