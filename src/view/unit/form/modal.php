@@ -17,7 +17,7 @@ $rarities = Unit::getRarities();
     <div class="modal-dialog" role="document">
         <form id="<?= $unit->id ?>" method="post" role="form" action="<?=
         Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
-        ?>" style="margin-top: 5px">
+        ?>">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -51,7 +51,7 @@ $rarities = Unit::getRarities();
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" onclick="update(this)">update</button>
+                    <button type="submit" class="btn btn-primary">update</button>
                 </div>
             </div>
         </form>
