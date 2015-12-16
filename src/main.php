@@ -24,7 +24,6 @@ function bootstrap()
     setAutoloader();
     dbconnect();
     createSessions();
-    urlQueryToGlobal();
     goSlimRoute();
 }
 
