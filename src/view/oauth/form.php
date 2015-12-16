@@ -1,6 +1,10 @@
 <?php
 
-use models\Oauth; ?>
+use models\Oauth;
+use app\core\View;
+
+/* @var $this View */
+?>
 <?php if (!Oauth::isLogged()): ?>
     <form class="form" method="POST" role="form" action="/oauth/login">
         <div class="form-group text-center">
@@ -17,4 +21,4 @@ use models\Oauth; ?>
             <button class="btn btn-default" type="submit">logout</button>
         </div>
     </form>
-<?php endif; ?>
+<?php endif;
