@@ -18,6 +18,7 @@ use app\alert\Alert;
 class Main
 {
     static $app;
+
     /** @var Slim */
     public $slim;
 
@@ -29,6 +30,10 @@ class Main
         $this->dbconnect();
         $this->createSessions();
         $this->setSlim();
+    }
+
+    public function run()
+    {
         $this->slim->run();
     }
 

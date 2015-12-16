@@ -6,4 +6,4 @@ require_once ROOT_DIR . 'src' . DIRECTORY_SEPARATOR . 'main.php';
 $main = new Main;
 
 $main->bootstrap();
-//$main->run();
+$main->run();
