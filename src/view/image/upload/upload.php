@@ -31,7 +31,7 @@ $imagesSet = Images::imagesByUnit($unit->id, $model);
         <?php endforeach; ?>
     </div>
     <?php if (!$imagesSet->isCompletedUpload()): ?>
-        <?= $this->render('upload/modal', ['imagesSet' => $imagesSet]); ?>
+        <?= $this->render('image/upload/modal', ['imagesSet' => $imagesSet]); ?>
     <?php endif; ?>
     <?php if ($imagesSet->isAnyImagesUploaded()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">

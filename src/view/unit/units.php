@@ -11,7 +11,7 @@ $this->setTitle('Units');
 ?>
 <div id="units" class="col-xs-12">
     <?php if (count($units) > 0): ?>
-        <div class="col-xs-12"><?= $this->render('upload/help') ?></div>
+        <div class="col-xs-12"><?= $this->render('image/upload/help') ?></div>
         <?= $this->render('unit/pagination', ['model' => $model]) ?>
         <div class="unit-list col-xs-12 col-xs-offset-0 col-sm-10  col-sm-offset-2">
             <?= $this->render('unit/sort') ?>
@@ -26,7 +26,7 @@ $this->setTitle('Units');
                         </div>
                     <?php endif; ?>
                     <div class="row">
-                        <?= $this->render('upload/upload', ['model' => $model, 'unit' => $unit]); ?>
+                        <?= $this->render('image/upload/upload', ['model' => $model, 'unit' => $unit]); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
