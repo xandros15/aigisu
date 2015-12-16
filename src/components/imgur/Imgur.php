@@ -64,7 +64,7 @@ class Imgur extends Base implements ExtedndetServer
         return (file_put_contents(self::KEY_PATH, $token));
     }
 
-    public function authorize()
+    public function authorize($refresh_token = false, $auth_code = false)
     {
         $this->auth = new Authorize($this->conn, $this->api_key, $this->api_secret);
         if (!is_file(self::CREDENTIALS_PATH)) {
