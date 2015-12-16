@@ -56,7 +56,7 @@ function renderPhpFile($_file_, $_params_ = [])
 
 function configuration()
 {
-    defined('SITE_URL') || define('SITE_URL', 'http://aigisu.pl/');
+    defined('SITE_URL') || define('SITE_URL', 'http://aigis.pl/');
     defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
@@ -111,28 +111,29 @@ use controller\OauthController;
 
 function goSlimRoute()
 {
-    $controllers                = [
-        ImagesController::class => function () {
-            return new ImagesController();
+    $controllers           = [
+        ImagesController::class => function ($c) {
+            return new ImagesController($c);
         },
-        UnitsController::class => function () {
-            return new UnitsController();
+        UnitsController::class => function ($c) {
+            return new UnitsController($c);
         },
-        OauthController::class => function () {
-            return new OauthController();
+        OauthController::class => function ($c) {
+            return new OauthController($c);
         }
     ];
 
     $container = new Container($controllers);
     $slim      = new Slim($container);
 
-    $slim->get('/image/{id}', ImagesController::class . ':actionIndex');
-    $slim->get('/', UnitsController::class . ':actionIndex');
+    $slim->get('/image/{id}', ImagesController::class . ':actionIndex')->setName('images');
+    $slim->get('/', UnitsController::class . ':actionIndex')->setName('home');
+    $slim->get('/units', UnitsController::class . ':actionIndex')->setName('units');
     $slim->group('/oauth',
         function () {
-        $this->get('', OauthController::class . ':actionIndex');
-        $this->post('/login', OauthController::class . ':actionLogin');
-        $this->post('/logout', OauthController::class . ':actionLogout');
+        $this->get('', OauthController::class . ':actionIndex')->setName('oauth');
+        $this->post('/login', OauthController::class . ':actionLogin')->setName('login');
+        $this->post('/logout', OauthController::class . ':actionLogout')->setName('logout');
     });
 
     $slim->run();
