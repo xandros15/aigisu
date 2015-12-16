@@ -6,7 +6,7 @@ use app\core\View;
 /* @var $this View */
 ?>
 <?php if (!Oauth::isLogged()): ?>
-    <form class="form" method="POST" role="form" action="/oauth/login">
+<form class="form" method="POST" role="form" action="<?= $this->getRouter()->pathFor('login') ?>">
         <div class="form-group text-center">
             <label>PIN</label>
             <input style="max-width: 200px; margin: auto;" type="text" class="form-control" placeholder="pin" name="pin" value="">
@@ -16,7 +16,7 @@ use app\core\View;
         </div>
     </form>
 <?php else: ?>
-    <form class="form" method="POST" fole="form" action="/oauth/logout">
+    <form class="form" method="POST" fole="form" action="<?= $this->getRouter()->pathFor('logout') ?>">
         <div class="col-xs-12 text-center">
             <button class="btn btn-default" type="submit">logout</button>
         </div>
