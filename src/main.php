@@ -138,7 +138,7 @@ function goSlimRoute()
     });
     $slim->group('/oauth',
         function () {
-        $this->get('', OauthController::class . ':actionIndex')->setName('oauth');
+        $this->get('[/]', OauthController::class . ':actionIndex')->setName('oauth');
         $this->post('/login', OauthController::class . ':actionLogin')->setName('login');
         $this->post('/logout', OauthController::class . ':actionLogout')->setName('logout');
     });
