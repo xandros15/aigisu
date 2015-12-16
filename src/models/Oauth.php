@@ -10,6 +10,7 @@ class Oauth
 {
     const SESSION_NAME = 'oauth';
 
+    public $pin;
     public $errorLog = [];
     private $token;
 
@@ -26,12 +27,6 @@ class Oauth
     public function run()
     {
         $this->startSession();
-        if ($this->validatePin()) {
-            $this->login();
-            header('location: ' . SITE_URL);
-        } elseif ($this->isLogout()) {
-            $this->logout();
-        }
     }
 
     public function getErrorLog()
@@ -44,47 +39,32 @@ class Oauth
         return (session_status() == PHP_SESSION_NONE && !session_id()) ? session_start() : false;
     }
 
-    private function isLogout()
-    {
-        global $query;
-        return (!empty($query->post->logout));
-    }
-
-    private function logout()
+    public function logout()
     {
         $_SESSION[self::SESSION_NAME] = [];
         return session_destroy();
     }
 
-    private function login()
+    public function login()
     {
         $_SESSION[self::SESSION_NAME]['run']   = true;
         $_SESSION[self::SESSION_NAME]['token'] = $this->token;
     }
 
-    private function validatePin()
+    public function validate()
     {
-        global $query;
-        if (empty($query->post->pin) || strlen($query->post->pin) > 32) {
+        if (empty($this->pin)) {
             return false;
         }
-        $pin     = $query->post->pin;
-        if (($results = R::find(self::tableName(), ' pin = ? ', [$pin]))) {
-            /* @var $result OODBBean */
-            $result = reset($results);
-            if ($this->isTimeout($result->time)) {
-                Alert::add('Pin is outdated', Alert::ERROR);
-                return false;
-            }
-            $this->token = $result->token;
-            return true;
+
+        if (strlen($this->pin) != 8) {
+            return false;
         }
-        Alert::add('Wrong pin', Alert::ERROR);
-        return false;
+        return true;
     }
 
-    private function isTimeout($time)
+    public function isTimeout($time)
     {
-        return ($time - time() > 0);
+        return ($time - time() < 0);
     }
 }

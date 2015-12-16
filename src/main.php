@@ -30,11 +30,14 @@ function bootstrap()
 
 use models\Oauth;
 use app\alert\Alert;
+// @todo create better sesion holder
+$oauth;
 
 function createSessions()
 {
     $alert = new Alert();
     $alert->init();
+    global $oauth;
     $oauth = new Oauth();
     $oauth->run();
 }
@@ -128,6 +131,12 @@ function goSlimRoute()
 
     $slim->get('/image/{id}', ImagesController::class . ':actionIndex');
     $slim->get('/', UnitsController::class . ':actionIndex');
-    $slim->get('/login', OauthController::class . ':actionIndex');
+    $slim->group('/oauth',
+        function () {
+        $this->get('', OauthController::class . ':actionIndex');
+        $this->post('/login', OauthController::class . ':actionLogin');
+        $this->post('/logout', OauthController::class . ':actionLogout');
+    });
+
     $slim->run();
 }
