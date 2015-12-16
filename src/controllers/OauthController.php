@@ -32,13 +32,12 @@ class OauthController extends Controller
         } elseif (($results = R::find(Oauth::tableName(), ' pin = ? ', [$oauth->pin]))) {
             /* @var $result OODBBean */
             $result = reset($results);
-            if ($oauth->isTimeout($result->time)) {
-                Alert::add('Pin is outdated', Alert::ERROR);
-                return $response;
+            if (!$oauth->isTimeout($result->time)) {
+                $response->token = $result->token;
+                $oauth->login();
+                return $response->withRedirect('/');
             }
-            $response->token = $result->token;
-            $oauth->login();
-            return $response->withRedirect('/');
+            Alert::add('Pin is outdated', Alert::ERROR);
         } else {
             Alert::add('Wrong pin', Alert::ERROR);
         }
