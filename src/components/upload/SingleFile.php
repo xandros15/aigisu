@@ -3,7 +3,7 @@
 namespace app\upload;
 
 use Symfony\Component\HttpFoundation\File\File;
-use models\Images;
+use models\Image;
 
 class SingleFile
 {
@@ -46,7 +46,7 @@ class SingleFile
 
     public function setInfo($info)
     {
-        $servers = Images::getServers();
+        $servers = Image::getServers();
         if (!isset($info['server'])) {
             throw new Exception('No server name in post request');
         }

@@ -1,10 +1,10 @@
 <?php
 
-use models\Images;
+use models\Image;
 use app\core\View;
 
 /* @var $this View */
-/* @var $imageSet Images */
+/* @var $imageSet Image */
 $this->setTitle('images');
 $this->setContainerClass('container-fluid');
 ?>
@@ -14,7 +14,7 @@ $this->setContainerClass('container-fluid');
     <?php foreach ($server as $scene => $image): ?>
             <li style="display: inline-block; position: relative;">
                 <span style="position: absolute; top: 10px; left: 10px; font-size: 20px;">#<?= $image->id ?></span>
-                <img id="<?= $image->id ?>" alt="<?= $serverName . $scene ?>" style="max-width: 100%;" src="<?= Images::createImagelink($image->id) ?>">
+                <img id="<?= $image->id ?>" alt="<?= $serverName . $scene ?>" style="max-width: 100%;" src="<?= Image::createImagelink($image->id) ?>">
             </li>
     <?php endforeach; ?>
     </ul>

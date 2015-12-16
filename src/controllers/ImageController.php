@@ -5,15 +5,15 @@ namespace controller;
 use app\core\Controller;
 use Slim\Http\Response;
 use Slim\Http\Request;
-use models\Images;
+use models\Image;
 
-class ImagesController extends Controller
+class ImageController extends Controller
 {
 
     public function actionIndex(Request $request, Response $response)
     {
         $id       = $request->getAttribute('id');
-        $imageSet = Images::imagesByUnit($id);
+        $imageSet = Image::imagesByUnit($id);
         $images   = $imageSet->getSortedImages();
         $response->write($this->render('image/index', ['images' => $images]));
         return $response;

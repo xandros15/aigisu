@@ -1,6 +1,6 @@
 <?php
 
-use models\Images;
+use models\Image;
 use RedBeanPHP\OODBBean;
 use app\core\View;
 
@@ -9,7 +9,7 @@ use app\core\View;
 $name = $image->server . $image->scene;
 ?>
 <div class="row">
-    <h4 class="text-center"><?= $image->server ?> <?= Images::imageSceneToHuman($image->scene) ?></h4>
+    <h4 class="text-center"><?= $image->server ?> <?= Image::imageSceneToHuman($image->scene) ?></h4>
     <div class="col-xs-12 form-group">
         <div class="col-xs-3">
             <label>File:</label>

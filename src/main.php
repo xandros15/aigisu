@@ -7,8 +7,8 @@ $query = (object) [
 
 use RedBeanPHP\Facade as R;
 use app\upload\UploadImages;
-use models\Images;
-use models\Units;
+use models\Image;
+use models\Unit;
 
 function dbconnect()
 {
@@ -55,7 +55,7 @@ function renderPhpFile($_file_, $_params_ = [])
 
 function configuration()
 {
-    defined('SITE_URL') || define('SITE_URL', 'http://aigis.pl/');
+    defined('SITE_URL') || define('SITE_URL', 'http://aigisu.pl/');
     defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
     defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
     defined('MAX_ROWS') || define('MAX_ROWS', 30);
@@ -92,22 +92,22 @@ function getSearchQuery()
 
 use Slim\App as Slim;
 use Slim\Container;
-use controller\ImagesController;
+use controller\ImageController;
 use controller\ImageFileController;
-use controller\UnitsController;
+use controller\UnitController;
 use controller\OauthController;
 
 function goSlimRoute()
 {
     $controllers           = [
-        ImagesController::class => function ($c) {
-            return new ImagesController($c);
+        ImageController::class => function ($c) {
+            return new ImageController($c);
         },
         ImageFileController::class => function ($c) {
             return new ImageFileController($c);
         },
-        UnitsController::class => function ($c) {
-            return new UnitsController($c);
+        UnitController::class => function ($c) {
+            return new UnitController($c);
         },
         OauthController::class => function ($c) {
             return new OauthController($c);
@@ -120,16 +120,16 @@ function goSlimRoute()
     $container = new Container($controllers);
     $slim      = new Slim($container);
 
-    $slim->get('/', UnitsController::class . ':actionIndex')->setName('home');
+    $slim->get('/', UnitController::class . ':actionIndex')->setName('home');
     $slim->group('/image',
         function() {
-        $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imagesUpload');
-        $this->get('/{id}', ImagesController::class . ':actionIndex')->setName('images');
+        $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imageUpload');
+        $this->get('/{id}', ImageController::class . ':actionIndex')->setName('image');
     });
-    $slim->group('/units',
+    $slim->group('/unit',
         function() {
-        $this->get('[/]', UnitsController::class . ':actionIndex')->setName('units');
-        $this->post('/update/{id:\d+}', UnitsController::class . ':actionUpdate')->setName('unitsUpdate');
+        $this->get('[/]', UnitController::class . ':actionIndex')->setName('unit');
+        $this->post('/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
     });
     $slim->group('/oauth',
         function () {

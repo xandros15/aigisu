@@ -2,8 +2,8 @@
 
 namespace controller;
 
-use models\Units;
-use models\Images;
+use models\Unit;
+use models\Image;
 use app\core\Controller;
 use app\alert\Alert;
 use app\google\GoogleFile;
@@ -31,7 +31,7 @@ class ImageFileController extends Controller
 
     public function actionCreate(Request $request, Response $response)
     {
-        $this->setRely(Images::IMAGE_DIRECTORY);
+        $this->setRely(Image::IMAGE_DIRECTORY);
         $this->upload();
         return $response->withRedirect('/');
     }
@@ -141,17 +141,17 @@ class ImageFileController extends Controller
 
     private function transaction(SingleFile $file)
     {
-        $unit = R::load(Units::tableName(), $this->unitId);
+        $unit = R::load(Unit::tableName(), $this->unitId);
         if (!$unit->name) {
             throw new Exception("File: '{$file->name}' Unit name is null");
         }
-        $isRecordExist = (bool) R::find(Images::tableName(),
+        $isRecordExist = (bool) R::find(Image::tableName(),
                 ' `units_id` = :id and `scene` = :scene and `server` = :server ',
                 [':id' => $unit->id, ':scene' => $file->scene, ':server' => $file->server]);
         if ($isRecordExist) {
             throw new Exception("File: '{$file->name}' Image exist");
         }
-        $this->image           = R::dispense(Images::tableName());
+        $this->image           = R::dispense(Image::tableName());
         $this->image->md5      = md5_file($file->full_path);
         $this->image->server   = $file->server;
         $this->image->scene    = $file->scene;

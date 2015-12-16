@@ -6,7 +6,7 @@ use RedBeanPHP\R;
 use RedBeanPHP\RedException;
 use app\alert\Alert;
 
-class Units
+class Unit
 {
     const MAX_UNITS_DISPLAY = 30;
 
@@ -39,7 +39,7 @@ class Units
 
     public static function load()
     {
-        $model = new Units();
+        $model = new Unit();
         $model->setSort();
         $model->setSearch();
         $model->findAll();
@@ -70,7 +70,7 @@ class Units
 
     public static function loadOne($id)
     {
-        $model = new Units();
+        $model = new Unit();
         $model->findOne($id);
         return $model;
     }
@@ -152,7 +152,7 @@ class Units
 
     protected function setImages(array $unitsId)
     {
-        $images       = R::findLike(Images::tableName(), ['units_id' => $unitsId]);
+        $images       = R::findLike(Image::tableName(), ['units_id' => $unitsId]);
         $newImageList = [];
         foreach ($images as $image) {
             $newImageList[$image->units_id][] = $image;
@@ -163,7 +163,7 @@ class Units
     protected function searchUnits(array $query)
     {
         foreach ($query as $type => $value) {
-            if (!in_array($type, Units::getColumnNames()) || !is_array($value)) {
+            if (!in_array($type, Unit::getColumnNames()) || !is_array($value)) {
                 unset($query[$type]);
             }
         }
@@ -232,7 +232,7 @@ class Units
         if (!preg_match('/^[\w]+$/', $unit->name)) {
             $errors[] = "Wrong name for unit.";
         }
-        if (!in_array($unit->rarity, Units::getRarities())) {
+        if (!in_array($unit->rarity, Unit::getRarities())) {
             $errors[] = "Wrong rarity name for unit.";
         }
 

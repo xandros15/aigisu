@@ -1,11 +1,11 @@
 <?php
 
-use models\Units;
+use models\Unit;
 use models\Oauth;
 use app\core\View;
 
 /* @var $this View */
-/* @var $model Units */
+/* @var $model Unit */
 /* @var $units array */
 $this->setTitle('Units');
 ?>

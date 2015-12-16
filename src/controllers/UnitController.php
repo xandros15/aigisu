@@ -2,19 +2,19 @@
 
 namespace controller;
 
-use models\Units;
+use models\Unit;
 use app\core\Controller;
 use Slim\Http\Response;
 use Slim\Http\Request;
 use RedBeanPHP\R;
 use app\alert\Alert;
 
-class UnitsController extends Controller
+class UnitController extends Controller
 {
 
     public function actionIndex(Request $request, Response $response)
     {
-        $model = Units::load();
+        $model = Unit::load();
         $units = $model->getUnits();
         $response->write($this->render('unit/index', ['model' => $model, 'units' => $units]));
         return $response;
@@ -25,9 +25,9 @@ class UnitsController extends Controller
 
         $unitPost = (object) $request->getParam('unit');
         $id       = (int) $request->getAttribute('id');
-        if (!($errors   = Units::validate($unitPost))) {
+        if (!($errors   = Unit::validate($unitPost))) {
             R::freeze();
-            $unit = R::load(Units::tableName(), $id);
+            $unit = R::load(Unit::tableName(), $id);
             if (!$unit->isEmpty()) {
                 $unit->name      = $unitPost->name;
                 $unit->rarity    = $unitPost->rarity;

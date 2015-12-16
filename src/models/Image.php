@@ -7,7 +7,7 @@ use RedBeanPHP\Facade as R;
 use Exception;
 use stdClass;
 
-class Images
+class Image
 {
     const IMAGE_DIRECTORY = 'images';
     const SERVER_NUTAKU   = 'nutaku';
@@ -70,18 +70,18 @@ class Images
         return SITE_URL . self::IMAGE_DIRECTORY . DIRECTORY_SEPARATOR . $id . '.png';
     }
 
-    public static function imagesByUnit($unitId, Units $modelUnits = null)
+    public static function imagesByUnit($unitId, Unit $modelUnits = null)
     {
         if (!$modelUnits) {
-            $modelUnits = Units::loadOne($unitId);
+            $modelUnits = Unit::loadOne($unitId);
         }
         if (!$modelUnits->getUnits()) {
             return false;
         }
-        return new Images($modelUnits, $unitId);
+        return new Image($modelUnits, $unitId);
     }
 
-    public function __construct(Units $modelUnits, $unitId)
+    public function __construct(Unit $modelUnits, $unitId)
     {
         $unit = $modelUnits->getUnitById($unitId);
         if (!$unit) {

@@ -1,11 +1,11 @@
 <?php
 
-use models\Images;
+use models\Image;
 use app\core\View;
 
 /* @var $this View */
-/* @var $imagesSet Images */
-$images = $imagesSet->getAllImages(Images::IMAGE_REQIRED);
+/* @var $imagesSet Image */
+$images = $imagesSet->getAllImages(Image::IMAGE_REQIRED);
 ?>
 
 <div class="modal fade" id="unit-image-upload-modal-<?= $imagesSet->unitId ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
