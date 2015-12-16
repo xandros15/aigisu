@@ -2,22 +2,12 @@
 
 namespace app\core;
 
-use Slim\Router;
-
 class View
 {
     const VIEW_DIR = VIEW_DIR;
 
     public $title;
     public $containerClass = 'container';
-
-    /** @var Router */
-    private $router;
-
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
 
     public function render($view, $params = [])
     {

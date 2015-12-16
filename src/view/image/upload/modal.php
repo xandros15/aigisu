@@ -10,7 +10,7 @@ $images = $imagesSet->getAllImages(Image::IMAGE_REQIRED);
 
 <div class="modal fade" id="unit-image-upload-modal-<?= $imagesSet->unitId ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
-        <form enctype="multipart/form-data" method="post" role="form" action=<?= '/image/upload/' . $imagesSet->unitId ?>>
+        <form enctype="multipart/form-data" method="post" role="form" action=<?= Main::$app->router->pathFor('imageUpload', ['id' => $imagesSet->unitId]) ?>>
             <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
             <input type="hidden" name="id" value="<?= $imagesSet->unitId ?>">
             <input type="hidden" name="uploadImages" value="1">

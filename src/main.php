@@ -8,6 +8,7 @@ $query = (object) [
 use RedBeanPHP\Facade as R;
 use Slim\App as Slim;
 use Slim\Container;
+use Slim\Router;
 use controller\ImageController;
 use controller\ImageFileController;
 use controller\UnitController;
@@ -17,10 +18,14 @@ use app\alert\Alert;
 
 class Main
 {
+    /** @var Main */
     static $app;
 
     /** @var Slim */
     public $slim;
+
+    /** @var Router */
+    public $router;
 
     public function bootstrap()
     {
@@ -98,17 +103,17 @@ class Main
     private function setSlim()
     {
         $controllers               = [
-            ImageController::class => function ($c) {
-                return new ImageController($c);
+            ImageController::class => function () {
+                return new ImageController();
             },
-            ImageFileController::class => function ($c) {
-                return new ImageFileController($c);
+            ImageFileController::class => function () {
+                return new ImageFileController();
             },
-            UnitController::class => function ($c) {
-                return new UnitController($c);
+            UnitController::class => function () {
+                return new UnitController();
             },
-            OauthController::class => function ($c) {
-                return new OauthController($c);
+            OauthController::class => function () {
+                return new OauthController();
             },
             'settings' => [
                 'displayErrorDetails' => true,
@@ -136,6 +141,7 @@ class Main
             $this->post('/logout', OauthController::class . ':actionLogout')->setName('logout');
         });
 
-        $this->slim = $slim;
+        $this->slim   = $slim;
+        $this->router = $container->router;
     }
 }

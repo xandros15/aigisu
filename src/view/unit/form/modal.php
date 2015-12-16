@@ -16,7 +16,7 @@ $rarities = Unit::getRarities();
 <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <form id="<?= $unit->id ?>" method="post" role="form" action="<?=
-        $this->getRouter()->pathFor('unitUpdate', ['id' => $unit->id])
+        Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
         ?>" style="margin-top: 5px">
             <div class="modal-content">
                 <div class="modal-header">

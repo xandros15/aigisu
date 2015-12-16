@@ -12,9 +12,9 @@ class Controller
     /** @var View */
     private $view;
 
-    public function __construct(Container $c)
+    public function __construct()
     {
-        $this->view = new View($c->router);
+        $this->view = new View();
     }
 
     public function render($view, $params = [])
