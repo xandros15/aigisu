@@ -3,8 +3,8 @@
 use models\Units;
 use models\Oauth;
 
-$model = Units::load();
-$units = $model->getUnits();
+/* @var $model Units */
+/* @var $units array */
 ?>
 <div id="units" class="col-xs-12">
     <?php if (count($units) > 0): ?>
