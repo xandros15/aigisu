@@ -93,6 +93,7 @@ function getSearchQuery()
 use Slim\App as Slim;
 use Slim\Container;
 use controller\ImagesController;
+use controller\ImageFileController;
 use controller\UnitsController;
 use controller\OauthController;
 
@@ -101,6 +102,9 @@ function goSlimRoute()
     $controllers           = [
         ImagesController::class => function ($c) {
             return new ImagesController($c);
+        },
+        ImageFileController::class => function ($c) {
+            return new ImageFileController($c);
         },
         UnitsController::class => function ($c) {
             return new UnitsController($c);
@@ -119,9 +123,9 @@ function goSlimRoute()
     $slim->get('/', UnitsController::class . ':actionIndex')->setName('home');
     $slim->group('/image',
         function() {
-            $this->get('/upload', ImagesController::class . ':actionCreate')->setName('imagesUpload');
-            $this->get('/{id}', ImagesController::class . ':actionIndex')->setName('images');
-        });
+        $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imagesUpload');
+        $this->get('/{id}', ImagesController::class . ':actionIndex')->setName('images');
+    });
     $slim->group('/units',
         function() {
         $this->get('[/]', UnitsController::class . ':actionIndex')->setName('units');
