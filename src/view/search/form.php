@@ -1,7 +1,7 @@
 <form class="navbar-form" role="search">
     <div class="col-xs-12">
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" name="q" value="<?= getSearchQuery() ?>">
+        <input type="text" class="form-control" placeholder="Search" name="q" value="<?= Main::$app->getSearchQuery() ?>">
         <div class="input-group-btn">
             <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
         </div>
