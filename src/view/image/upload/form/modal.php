@@ -21,7 +21,7 @@ $images = $imagesSet->getAllImages(Image::IMAGE_REQIRED);
                 </div>
                 <div class="modal-body">
                     <?php foreach ($images as $image): ?>
-                        <?= $this->render('image/upload/modal-body', ['image' => $image]); ?>
+                        <?= $this->render('image/upload/form/modal-body', ['image' => $image]); ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="modal-footer">
