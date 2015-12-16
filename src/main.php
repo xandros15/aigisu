@@ -120,7 +120,10 @@ function goSlimRoute()
         },
         OauthController::class => function ($c) {
             return new OauthController($c);
-        }
+        },
+        'settings' => [
+            'displayErrorDetails' => true,
+        ],
     ];
 
     $container = new Container($controllers);
