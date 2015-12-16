@@ -18,7 +18,7 @@ use app\core\View;
             <input class="form-control unit-name" value="<?= ($unit->name) ? $unit->name : '' ?>" readonly>
         </div>
         <div class="form-group col-xs-12">
-            <input class="form-control" type="text" value="<?= $unit->orginal ?>" readonly>
+            <input class="form-control" type="text" value="<?= $unit->original ?>" readonly>
         </div>
     </div>
 </div>

@@ -10,7 +10,7 @@
     <div class="col-xs-6">
         <p class="help-block">
             You can use in search form: <code>&lt;namespace&gt;:&lt;value&gt;</code><br>
-            avaible namespaces: <code>name, rarity, orginal</code><br>
+            avaible namespaces: <code>name, rarity, original</code><br>
             example: <code>iris rarity:gold</code><br>
         </p>
     </div>

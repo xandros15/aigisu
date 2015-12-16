@@ -28,7 +28,7 @@ class Units
 
     public static function getColumnNames()
     {
-        return ['id', 'name', 'orginal', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm'];
+        return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm'];
     }
 
     public static function getCurrentPage()
