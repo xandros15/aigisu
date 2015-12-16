@@ -4,7 +4,6 @@ use models\Image;
 use models\Unit;
 use app\core\View;
 
-
 /* @var $this View */
 /* @var $imagesSet Image */
 /* @var $model Unit */
@@ -37,5 +36,6 @@ $imagesSet = Image::imagesByUnit($unit->id, $model);
     <?php endif; ?>
     <?php if ($imagesSet->isAnyImagesUploaded()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
+        <input class="image-route" type="hidden" value="<?= Main::$app->router->pathFor('image', ['id' => $unit->id])?>">
     <?php endif; ?>
 </div>
