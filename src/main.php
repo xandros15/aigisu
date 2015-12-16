@@ -7,15 +7,11 @@ $query = (object) [
 
 use RedBeanPHP\Facade as R;
 use Slim\App as Slim;
-use Slim\Container;
 use Slim\Router;
-use controller\ImageController;
-use controller\ImageFileController;
-use controller\UnitController;
-use controller\OauthController;
 use models\Oauth;
 use app\alert\Alert;
 use app\core\Configuration;
+use app\slim\SlimConfig;
 
 class Main
 {
@@ -102,46 +98,9 @@ class Main
 
     private function setSlim()
     {
-        $controllers               = [
-            ImageController::class => function () {
-                return new ImageController();
-            },
-            ImageFileController::class => function () {
-                return new ImageFileController();
-            },
-            UnitController::class => function () {
-                return new UnitController();
-            },
-            OauthController::class => function () {
-                return new OauthController();
-            },
-            'settings' => [
-                'displayErrorDetails' => true,
-            ],
-        ];
+        $config = new SlimConfig($this->web->slim);
 
-        $container = new Container($controllers);
-        $slim      = new Slim($container);
-
-        $slim->get('/', UnitController::class . ':actionIndex')->setName('home');
-        $slim->group('/image',
-            function() {
-            $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imageUpload');
-            $this->get('/{id}', ImageController::class . ':actionIndex')->setName('image');
-        });
-        $slim->group('/unit',
-            function() {
-            $this->get('[/]', UnitController::class . ':actionIndex')->setName('unit');
-            $this->post('/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
-        });
-        $slim->group('/oauth',
-            function () {
-            $this->get('[/]', OauthController::class . ':actionIndex')->setName('oauth');
-            $this->post('/login', OauthController::class . ':actionLogin')->setName('login');
-            $this->post('/logout', OauthController::class . ':actionLogout')->setName('logout');
-        });
-
-        $this->slim   = $slim;
-        $this->router = $container->router;
+        $this->slim   = $config->getSlim();
+        $this->router = $config->getRouter();
     }
 }

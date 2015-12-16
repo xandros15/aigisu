@@ -20,6 +20,7 @@
             "app\\core\\": "src/components/core",
             "controller\\": "src/controllers",
             "Imgur\\": "vendor/imgur-php-wrapper",
+            "app\\slim\\": "src/components/slim",
             "app\\alert\\": "src/components/alert",
             "app\\exception\\": "src/components/exception",
             "app\\google\\": "src/components/google",
