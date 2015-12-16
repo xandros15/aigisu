@@ -16,7 +16,7 @@ class UnitsController extends Controller
     {
         $model = Units::load();
         $units = $model->getUnits();
-        $response->write($this->render('unit/units', ['model' => $model, 'units' => $units]));
+        $response->write($this->render('unit/index', ['model' => $model, 'units' => $units]));
         return $response;
     }
 

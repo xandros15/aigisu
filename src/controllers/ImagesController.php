@@ -15,7 +15,7 @@ class ImagesController extends Controller
         $id       = $request->getAttribute('id');
         $imageSet = Images::imagesByUnit($id);
         $images   = $imageSet->getSortedImages();
-        $response->write($this->render('image/images', ['images' => $images]));
+        $response->write($this->render('image/index', ['images' => $images]));
         return $response;
     }
 }
