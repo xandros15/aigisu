@@ -63,18 +63,6 @@ function configuration()
     defined('DEBUG') || define('DEBUG', 0);
 }
 
-function urlQueryToGlobal()
-{
-    global $query;
-    if (!empty($query->post->uploadImages)) {
-        $upload = new UploadImages(Images::IMAGE_DIRECTORY);
-        $upload->upload();
-    }
-    if (!empty($query->post->updateUnit)) {
-//        Units::editUnit($query->post);
-    }
-}
-
 function generateLink(array $options)
 {
     global $query;
@@ -129,8 +117,12 @@ function goSlimRoute()
     $container = new Container($controllers);
     $slim      = new Slim($container);
 
-    $slim->get('/image/{id}', ImagesController::class . ':actionIndex')->setName('images');
     $slim->get('/', UnitsController::class . ':actionIndex')->setName('home');
+    $slim->group('/image',
+        function() {
+            $this->get('/upload', ImagesController::class . ':actionCreate')->setName('imagesUpload');
+            $this->get('/{id}', ImagesController::class . ':actionIndex')->setName('images');
+        });
     $slim->group('/units',
         function() {
         $this->get('[/]', UnitsController::class . ':actionIndex')->setName('units');
