@@ -1,6 +1,12 @@
+<?php
+
+use app\core\View;
+
+/* @var $this View */
+?>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-help">
-  How to upload file
+    How to upload file
 </button>
 <div id="modal-help" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-label-help">
     <div class="modal-dialog" role="document">

@@ -2,7 +2,9 @@
 
 use models\Images;
 use RedBeanPHP\OODBBean;
+use app\core\View;
 
+/* @var $this View */
 /* @var $image OODBBean */
 $name = $image->server . $image->scene;
 ?>

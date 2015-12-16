@@ -1,7 +1,9 @@
 <?php
 
 use models\Images;
+use app\core\View;
 
+/* @var $this View */
 /* @var $imagesSet Images */
 $images = $imagesSet->getAllImages(Images::IMAGE_REQIRED);
 ?>
@@ -19,7 +21,7 @@ $images = $imagesSet->getAllImages(Images::IMAGE_REQIRED);
                 </div>
                 <div class="modal-body">
                     <?php foreach ($images as $image): ?>
-                        <?= renderPhpFile('upload/modal-body', ['image' => $image]); ?>
+                        <?= $this->render('upload/modal-body', ['image' => $image]); ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="modal-footer">

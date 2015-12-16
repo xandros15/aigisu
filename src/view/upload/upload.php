@@ -1,7 +1,9 @@
 <?php
 
 use models\Images;
+use app\core\View;
 
+/* @var $this View */
 /* @var imagesSet models\Images */
 /* @var $model Units */
 $imagesSet = Images::imagesByUnit($unit->id, $model);
@@ -29,7 +31,7 @@ $imagesSet = Images::imagesByUnit($unit->id, $model);
         <?php endforeach; ?>
     </div>
     <?php if (!$imagesSet->isCompletedUpload()): ?>
-        <?= renderPhpFile('upload/modal', ['imagesSet' => $imagesSet]); ?>
+        <?= $this->render('upload/modal', ['imagesSet' => $imagesSet]); ?>
     <?php endif; ?>
     <?php if ($imagesSet->isAnyImagesUploaded()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
