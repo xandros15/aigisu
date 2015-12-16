@@ -30,14 +30,11 @@ function bootstrap()
 
 use models\Oauth;
 use app\alert\Alert;
-// @todo create better sesion holder
-$oauth;
 
 function createSessions()
 {
     $alert = new Alert();
     $alert->init();
-    global $oauth;
     $oauth = new Oauth();
     $oauth->run();
 }

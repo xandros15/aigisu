@@ -22,9 +22,7 @@ class OauthController extends Controller
 
     public function actionLogin(Request $request, Response $response)
     {
-        /* @var $oauth Oauth */
-        global $oauth;
-
+        $oauth = new Oauth();
         $oauth->pin = $request->getParam('pin');
 
         if (!$oauth->validate()) {
@@ -49,11 +47,8 @@ class OauthController extends Controller
 
     public function actionLogout(Request $request, Response $response)
     {
-        /* @var $oauth Oauth */
-        global $oauth;
-
         if (Oauth::isLogged()) {
-            $oauth->logout();
+            Oauth::logout();
         }
 
         return $response->withRedirect('/');

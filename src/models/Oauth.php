@@ -2,10 +2,6 @@
 
 namespace models;
 
-use RedBeanPHP\R;
-use RedBeanPHP\OODBBean;
-use app\alert\Alert;
-
 class Oauth
 {
     const SESSION_NAME = 'oauth';
@@ -33,25 +29,7 @@ class Oauth
     {
         return $this->errorLog;
     }
-
-    private function startSession()
-    {
-        return (session_status() == PHP_SESSION_NONE && !session_id()) ? session_start() : false;
-    }
-
-    public function logout()
-    {
-        $_SESSION[self::SESSION_NAME] = [];
-        return session_destroy();
-    }
-
-    public function login()
-    {
-        $_SESSION[self::SESSION_NAME]['run']   = true;
-        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
-    }
-
-    public function validate()
+        public function validate()
     {
         if (empty($this->pin)) {
             return false;
@@ -67,4 +45,22 @@ class Oauth
     {
         return ($time - time() < 0);
     }
+
+    public static function logout()
+    {
+        $_SESSION[self::SESSION_NAME] = [];
+        return session_destroy();
+    }
+
+    public function login()
+    {
+        $_SESSION[self::SESSION_NAME]['run']   = true;
+        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
+    }
+
+    private function startSession()
+    {
+        return (session_status() == PHP_SESSION_NONE && !session_id()) ? session_start() : false;
+    }
+
 }
