@@ -22,7 +22,7 @@ class UnitsController extends Controller
 
     public function actionUpdate(Request $request, Response $response)
     {
-        
+
         $unitPost = (object) $request->getParam('unit');
         $id       = (int) $request->getAttribute('id');
         if (!($errors   = Units::validate($unitPost))) {
@@ -43,7 +43,6 @@ class UnitsController extends Controller
                 Alert::add($error, Alert::ERROR);
             }
         }
-        $response = $this->actionIndex($request, $response);
-        return $response;
+        return $response->withRedirect('/');
     }
 }
