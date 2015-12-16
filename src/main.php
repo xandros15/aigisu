@@ -15,6 +15,7 @@ use controller\UnitController;
 use controller\OauthController;
 use models\Oauth;
 use app\alert\Alert;
+use app\core\Configuration;
 
 class Main
 {
@@ -27,11 +28,14 @@ class Main
     /** @var Router */
     public $router;
 
+    /** @var Configuration */
+    public $web;
+
     public function bootstrap()
     {
         static::$app = $this;
-        $this->configuration();
         $this->setAutoloader();
+        $this->configuration();
         $this->dbconnect();
         $this->createSessions();
         $this->setSlim();
@@ -72,11 +76,7 @@ class Main
 
     private function configuration()
     {
-        defined('SITE_URL') || define('SITE_URL', 'http://aigisu.pl/');
-        defined('CONFIG_DIR') || define('CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR);
-        defined('VIEW_DIR') || define('VIEW_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
-        defined('MAX_ROWS') || define('MAX_ROWS', 30);
-        defined('DEBUG') || define('DEBUG', 0);
+        $this->web = new Configuration;
     }
 
     private function dbconnect()
