@@ -1,7 +1,9 @@
 <?php
 
 use RedBeanPHP\OODBBean;
+use app\core\View;
 
+/* @var $this View */
 /* @var $unit OODBBean */
 ?>
 

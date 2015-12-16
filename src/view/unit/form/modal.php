@@ -2,7 +2,9 @@
 
 use RedBeanPHP\OODBBean;
 use models\Units;
+use app\core\View;
 
+/* @var $this View */
 /* @var $unit OODBBean */
 $rarities = Units::getRarities();
 ?>
@@ -13,9 +15,9 @@ $rarities = Units::getRarities();
 </div>
 <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
-        <form id="<?= $unit->id ?>" method="post" role="form" style="margin-top: 5px">
-            <input type="hidden" name="unit[id]" value="<?= $unit->id ?>">
-            <input type="hidden" name="updateUnit" value="1">
+        <form id="<?= $unit->id ?>" method="post" role="form" action="<?=
+        $this->getRouter()->pathFor('unitsUpdate', ['id' => $unit->id])
+        ?>" style="margin-top: 5px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
