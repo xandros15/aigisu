@@ -18,6 +18,8 @@ use app\alert\Alert;
 class Main
 {
     static $app;
+    /** @var Slim */
+    public $slim;
 
     public function bootstrap()
     {
@@ -26,7 +28,8 @@ class Main
         $this->setAutoloader();
         $this->dbconnect();
         $this->createSessions();
-        $this->goSlimRoute();
+        $this->setSlim();
+        $this->slim->run();
     }
 
     public function generateLink(array $options)
@@ -87,7 +90,7 @@ class Main
         require_once ROOT_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
     }
 
-    private function goSlimRoute()
+    private function setSlim()
     {
         $controllers               = [
             ImageController::class => function ($c) {
@@ -128,6 +131,6 @@ class Main
             $this->post('/logout', OauthController::class . ':actionLogout')->setName('logout');
         });
 
-        $slim->run();
+        $this->slim = $slim;
     }
 }
