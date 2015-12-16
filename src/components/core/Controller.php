@@ -3,6 +3,7 @@
 namespace app\core;
 
 use app\core\View;
+use Slim\Container;
 
 class Controller
 {
@@ -11,9 +12,9 @@ class Controller
     /** @var View */
     private $view;
 
-    public function __construct()
+    public function __construct(Container $c)
     {
-        $this->view = new View();
+        $this->view = new View($c->router);
     }
 
     public function render($view, $params = [])
