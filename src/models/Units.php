@@ -228,9 +228,6 @@ class Units
     public static function validate($unit)
     {
         $errors = [];
-        if (!isset($unit->id) || !preg_match('/^\d+$/', $unit->id)) {
-            $errors[] = "Unit not found";
-        }
 
         if (!preg_match('/^[\w]+$/', $unit->name)) {
             $errors[] = "Wrong name for unit.";
