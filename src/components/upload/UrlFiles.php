@@ -155,19 +155,18 @@ class UrlFiles implements DirectServer
 
     protected function setCtx()
     {
-        $opts = [
-            'http' =>
-            [
+        $header = [
+            'Accept-Language: en-US,en;q=0.8',
+            'Accept-Charset:UTF-8,*;q=0.5',
+            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) ' .
+            'AppleWebKit/537.36 (KHTML, like Gecko) ' .
+            'Ubuntu Chromium/36.0.1985.125 ' .
+            'Chrome/36.0.1985.125 Safari/537.36'
+        ];
+        $opts   = [
+            'http' => [
                 'timeout' => 15,
-                'header' => implode("\r\n",
-                    [
-                    'Accept-Language: en-US,en;q=0.8',
-                    'Accept-Charset:UTF-8,*;q=0.5',
-                    'User-Agent: Mozilla/5.0 (X11; Linux x86_64) ' .
-                    'AppleWebKit/537.36 (KHTML, like Gecko) ' .
-                    'Ubuntu Chromium/36.0.1985.125 ' .
-                    'Chrome/36.0.1985.125 Safari/537.36'
-                ]),
+                'header' => implode("\r\n", $header),
                 'ignore_errors' => true,
             ],
             'ssl' => [
@@ -193,8 +192,8 @@ class UrlFiles implements DirectServer
         $parse = [];
         foreach ($header as $line) {
             if (strpos($line, ': ') !== false) {
-                $option                        = explode(': ', $line, 2);
-                $parse[strtolower($option[0])] = trim($option[1]);
+                list($name, $value) = explode(': ', $line, 2);
+                $parse[strtolower($name)] = trim($value);
             } else {
                 $parse[] = trim($line);
             }
