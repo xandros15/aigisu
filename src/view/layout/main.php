@@ -18,6 +18,9 @@ use app\core\View;
     </head>
     <body>
         <div class="wrap">
+            <nav class="navbar navbar-default navbar-inverse">
+                <?= $this->render('search/form') ?>
+            </nav>
             <main class="<?= $this->containerClass ?>">
                 <?= Alert::display(); ?>
                 <?= $content ?>
