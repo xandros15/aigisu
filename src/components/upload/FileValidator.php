@@ -2,7 +2,7 @@
 
 namespace app\upload\validators;
 
-use app\upload\UrlFiles;
+use app\upload\FileFromUrl;
 use app\upload\DirectServer;
 
 /**
@@ -63,7 +63,7 @@ class FileValidator
         }
     }
 
-    public function validateUrl(UrlFiles $object)
+    public function validateUrl(FileFromUrl $object)
     {
         $urlRegex = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})'
             . '(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3})'

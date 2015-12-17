@@ -6,7 +6,7 @@ use app\google\GoogleFile;
 use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
 use app\upload\DirectFiles;
-use app\upload\UrlFiles;
+use app\upload\FileFromUrl;
 use app\upload\validators\FileValidator;
 use RedBeanPHP\OODBBean;
 use Symfony\Component\HttpFoundation\File\File;
@@ -26,7 +26,7 @@ class Rely
 
     public function uploadFromServer($url, array &$errors)
     {
-        $upload = new UrlFiles();
+        $upload = new FileFromUrl();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
         $upload->setMimeTypes([$this->mimeType]);
         $upload->file($url);
