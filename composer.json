@@ -19,15 +19,15 @@
         "psr-4": {
             "app\\core\\": "src/components/core",
             "controller\\": "src/controllers",
-            "Imgur\\": "vendor/imgur-php-wrapper",
+            "models\\": "src/models",
             "app\\slim\\": "src/components/slim",
             "app\\alert\\": "src/components/alert",
             "app\\exception\\": "src/components/exception",
-            "app\\google\\": "src/components/google",
-            "app\\imgur\\": "src/components/imgur",
             "app\\upload\\": "src/components/upload",
             "app\\upload\\validators\\": "src/components/upload",
-            "models\\": "src/models"
+            "app\\google\\": "src/components/google",
+            "app\\imgur\\": "src/components/imgur",
+            "Imgur\\": "src/components/imgur/imgur-php-wrapper"
         }
     }
 }
