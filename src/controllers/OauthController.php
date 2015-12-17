@@ -3,49 +3,43 @@
 namespace controller;
 
 use app\core\Controller;
-use Slim\Http\Response;
 use Slim\Http\Request;
 use models\Oauth;
 use RedBeanPHP\R;
-use RedBeanPHP\OODBBean;
 use app\alert\Alert;
 
 class OauthController extends Controller
 {
 
-    public function actionIndex(Request $request, Response $response)
+    public function actionIndex()
     {
-        $content = $this->render('oauth/index');
-        $response->write($content);
-        return $response;
+        return $this->render('oauth/index');
     }
 
-    public function actionLogin(Request $request, Response $response)
+    public function actionLogin(Request $request)
     {
-        $oauth = new Oauth();
+        $oauth      = new Oauth();
         $oauth->pin = $request->getParam('pin');
 
-        if (!$oauth->validate()) {
+        $results = ($oauth->validate()) ? R::findOne(Oauth::tableName(), ' pin = ? ', [$oauth->pin]) : false;
+        if (!$results) {
             Alert::add('Wrong pin', Alert::ERROR);
-        } elseif (($results = R::find(Oauth::tableName(), ' pin = ? ', [$oauth->pin]))) {
-            /* @var $result OODBBean */
-            $result = reset($results);
-            if (!$oauth->isTimeout($result->time)) {
-                $response->token = $result->token;
-                $oauth->login();
-                return $this->goBack;
-            }
+
+            return $this->render('oauth/index');
+        }
+        if ($oauth->isTimeout($results->time)) {
             Alert::add('Pin is outdated', Alert::ERROR);
-        } else {
-            Alert::add('Wrong pin', Alert::ERROR);
+
+            return $this->render('oauth/index');
         }
 
-        $content = $this->render('oauth/index');
-        $response->write($content);
-        return $response;
+        $oauth->login();
+        Alert::add('You have been logged in');
+
+        return $this->goHome();
     }
 
-    public function actionLogout(Request $request, Response $response)
+    public function actionLogout()
     {
         if (Oauth::isLogged()) {
             Oauth::logout();

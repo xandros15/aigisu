@@ -30,11 +30,10 @@ class Controller
     public function render($view, $params = [])
     {
         $content = $this->getView()->render($view, $params);
+        $render  = ($view === $this->layout) ? $content : $this->getView()->render($this->layout,
+                ['content' => $content]);
 
-        if ($view === $this->layout) {
-            return $this->getView()->render($view, $params);
-        }
-        return $this->getView()->render($this->layout, ['content' => $content]);
+        return $this->response->write($render);
     }
 
     public function getView()

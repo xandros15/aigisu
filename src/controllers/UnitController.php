@@ -4,7 +4,6 @@ namespace controller;
 
 use models\Unit;
 use app\core\Controller;
-use Slim\Http\Response;
 use Slim\Http\Request;
 use RedBeanPHP\R;
 use app\alert\Alert;
@@ -12,15 +11,15 @@ use app\alert\Alert;
 class UnitController extends Controller
 {
 
-    public function actionIndex(Request $request, Response $response)
+    public function actionIndex()
     {
         $model = Unit::load();
         $units = $model->getUnits();
-        $response->write($this->render('unit/index', ['model' => $model, 'units' => $units]));
-        return $response;
+
+        return $this->render('unit/index', ['model' => $model, 'units' => $units]);
     }
 
-    public function actionUpdate(Request $request, Response $response)
+    public function actionUpdate(Request $request)
     {
 
         $unitPost = (object) $request->getParam('unit');

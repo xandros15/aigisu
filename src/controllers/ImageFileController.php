@@ -13,8 +13,6 @@ use app\upload\SingleFile;
 use RedBeanPHP\Facade as R;
 use RedBeanPHP\OODBBean;
 use Exception;
-use Slim\Http\Response;
-use Slim\Http\Request;
 
 class ImageFileController extends Controller
 {
@@ -29,7 +27,7 @@ class ImageFileController extends Controller
     /** @var OODBBean */
     private $image;
 
-    public function actionCreate(Request $request, Response $response)
+    public function actionCreate()
     {
         $this->setRely(Image::IMAGE_DIRECTORY);
         $this->upload();
