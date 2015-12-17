@@ -5,7 +5,7 @@ namespace app\upload;
 use app\upload\validators\FileValidator;
 use Exception;
 
-class UrlFiles implements DirectServer
+class FileFromUrl implements DirectServer
 {
     public $file          = [];
     public $url;

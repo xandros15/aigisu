@@ -3,6 +3,7 @@
 namespace app\upload;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Slim\Http\UploadedFile;
 use models\Image;
 
 class SingleFile
@@ -21,20 +22,20 @@ class SingleFile
     /** @var File */
     public $object;
 
-    public static function loadFile($file, array $info)
+    public static function loadFile(UploadedFile $file, array $info)
     {
-        if (empty($file['name']) && empty($info['url'])) {
+        if (empty($file->getClientFilename()) && empty($info['url'])) {
             return false;
         }
         return new SingleFile($file, $info);
     }
 
-    public function __construct($file, array $info)
+    public function __construct(UploadedFile $file, array $info)
     {
-        if ($file['error'] === UPLOAD_ERR_OK) {
-            $this->name = $file['name'];
-            $this->file = $file;
-        } elseif ($file['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($file->getError() === UPLOAD_ERR_OK) {
+            $this->name = $file->getClientFilename();
+            $this->file = $file->file;
+        } elseif ($file->getError() !== UPLOAD_ERR_NO_FILE) {
             Alert::add("File: '{$file['name']}' got error. Maby is to big.", Alert::ERROR);
             return;
         } elseif (!empty($info['url'])) {
