@@ -11,17 +11,17 @@ return [
     'maxRows' => 30,
     'slim' => [
         'values' => [
-            ImageController::class => function () {
-                return new ImageController();
+            ImageController::class => function ($container) {
+                return new ImageController($container);
             },
-            ImageFileController::class => function () {
-                return new ImageFileController();
+            ImageFileController::class => function ($container) {
+                return new ImageFileController($container);
             },
-            UnitController::class => function () {
-                return new UnitController();
+            UnitController::class => function ($container) {
+                return new UnitController($container);
             },
-            OauthController::class => function () {
-                return new OauthController();
+            OauthController::class => function ($container) {
+                return new OauthController($container);
             },
             'settings' => [
                 'displayErrorDetails' => true,

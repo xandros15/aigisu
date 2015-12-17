@@ -33,7 +33,7 @@ class ImageFileController extends Controller
     {
         $this->setRely(Image::IMAGE_DIRECTORY);
         $this->upload();
-        return $response->withRedirect('/');
+        return $this->goBack();
     }
 
     public function setRely($destination)

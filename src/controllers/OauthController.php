@@ -33,7 +33,7 @@ class OauthController extends Controller
             if (!$oauth->isTimeout($result->time)) {
                 $response->token = $result->token;
                 $oauth->login();
-                return $response->withRedirect('/');
+                return $this->goBack;
             }
             Alert::add('Pin is outdated', Alert::ERROR);
         } else {
@@ -51,6 +51,6 @@ class OauthController extends Controller
             Oauth::logout();
         }
 
-        return $response->withRedirect('/');
+        return $this->goBack();
     }
 }

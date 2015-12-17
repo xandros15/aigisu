@@ -43,6 +43,7 @@ class UnitController extends Controller
                 Alert::add($error, Alert::ERROR);
             }
         }
-        return $response->withRedirect('/');
+
+        return $this->goBack();
     }
 }
