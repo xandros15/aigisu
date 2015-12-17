@@ -31,7 +31,10 @@ use app\core\View;
         </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        <script>globalUrl = '<?= SITE_URL ?>';</script>
+        <script>
+            globalUrl = '<?= SITE_URL ?>';
+            $("[data-toggle=popover]").popover();
+        </script>
         <script src="/js/blockDisabledLinks.js"></script>
         <script src="/js/openImages.js"></script>
     </body>
