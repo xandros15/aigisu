@@ -20,6 +20,7 @@
             "app\\core\\": "src/components/core",
             "controller\\": "src/controllers",
             "models\\": "src/models",
+            "helpers\\": "src/helpers",
             "app\\slim\\": "src/components/slim",
             "app\\alert\\": "src/components/alert",
             "app\\exception\\": "src/components/exception",
