@@ -5,7 +5,7 @@ namespace app\upload;
 use app\google\GoogleFile;
 use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
-use app\upload\DirectFiles;
+use app\upload\FileFromClient;
 use app\upload\FileFromUrl;
 use app\upload\validators\FileValidator;
 use RedBeanPHP\OODBBean;
@@ -47,7 +47,7 @@ class Rely
 
     public function uploadFromClient(array $file, array &$errors)
     {
-        $upload = new DirectFiles();
+        $upload = new FileFromClient();
         $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
         $upload->setMimeTypes([$this->mimeType]);
         $upload->file($file);

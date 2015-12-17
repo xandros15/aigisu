@@ -4,7 +4,7 @@ namespace app\upload;
 
 use app\upload\Upload;
 
-class DirectFiles extends Upload implements DirectServer
+class FileFromClient extends Upload implements DirectServer
 {
 
     public function setValidator(array $callback)
