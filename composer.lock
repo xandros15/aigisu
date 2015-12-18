@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4ea5875c5efaeac7b05c88ef3ff747f9",
-    "content-hash": "ce7994f2e89cb91c248c72b63c45346b",
+    "hash": "5d0bb6312e6ddcd3fccdb39434bee8e5",
+    "content-hash": "6d85f9a80ac14eb79a3007ca7ded80d4",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -191,12 +191,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "12fee354361cf423870581b52ad5f2274f429325"
+                "reference": "6b2a66f21a39788c371fc89155c8454a96d202e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/12fee354361cf423870581b52ad5f2274f429325",
-                "reference": "12fee354361cf423870581b52ad5f2274f429325",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/6b2a66f21a39788c371fc89155c8454a96d202e1",
+                "reference": "6b2a66f21a39788c371fc89155c8454a96d202e1",
                 "shasum": ""
             },
             "require": {
@@ -214,7 +214,7 @@
                     "Illuminate\\Container\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -226,7 +226,7 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-08 14:26:15"
+            "time": "2015-12-17 19:55:34"
         },
         {
             "name": "illuminate/contracts",
@@ -234,12 +234,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "7fdce9a8f2303e15f928a7c54aaff08db1caa567"
+                "reference": "26f5943c44d9d6c8cce4425ac550d315ecb466df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/7fdce9a8f2303e15f928a7c54aaff08db1caa567",
-                "reference": "7fdce9a8f2303e15f928a7c54aaff08db1caa567",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/26f5943c44d9d6c8cce4425ac550d315ecb466df",
+                "reference": "26f5943c44d9d6c8cce4425ac550d315ecb466df",
                 "shasum": ""
             },
             "require": {
@@ -256,7 +256,7 @@
                     "Illuminate\\Contracts\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -268,7 +268,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-06 03:54:28"
+            "time": "2015-12-17 19:55:34"
         },
         {
             "name": "illuminate/database",
@@ -276,12 +276,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "fb09dda57ee49092ff2b0954447edb188eaee9f1"
+                "reference": "6f50a519110abdbf72879d4e701b316626c03f1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/fb09dda57ee49092ff2b0954447edb188eaee9f1",
-                "reference": "fb09dda57ee49092ff2b0954447edb188eaee9f1",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/6f50a519110abdbf72879d4e701b316626c03f1e",
+                "reference": "6f50a519110abdbf72879d4e701b316626c03f1e",
                 "shasum": ""
             },
             "require": {
@@ -328,7 +328,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-12-13 22:27:08"
+            "time": "2015-12-17 19:55:34"
         },
         {
             "name": "illuminate/support",
@@ -618,12 +618,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "48fb2ce25255ad73f0c322f8914d289d8e55e923"
+                "reference": "e88c825201589885e5dfb3d8bcdfb1b5216e5cc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/48fb2ce25255ad73f0c322f8914d289d8e55e923",
-                "reference": "48fb2ce25255ad73f0c322f8914d289d8e55e923",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/e88c825201589885e5dfb3d8bcdfb1b5216e5cc1",
+                "reference": "e88c825201589885e5dfb3d8bcdfb1b5216e5cc1",
                 "shasum": ""
             },
             "require": {
@@ -642,7 +642,7 @@
                     "Slim\\": "Slim"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -676,60 +676,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2015-12-10 21:26:44"
-        },
-        {
-            "name": "symfony/http-foundation",
-            "version": "2.8.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "2c45496b228b3d04b838d7b3095bbd37cc80b930"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/2c45496b228b3d04b838d7b3095bbd37cc80b930",
-                "reference": "2c45496b228b3d04b838d7b3095bbd37cc80b930",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9",
-                "symfony/polyfill-php54": "~1.0"
-            },
-            "require-dev": {
-                "symfony/expression-language": "~2.4|~3.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\HttpFoundation\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "http://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony HttpFoundation Component",
-            "homepage": "https://symfony.com",
-            "time": "2015-12-05 17:37:59"
+            "time": "2015-12-17 13:22:04"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -789,64 +736,6 @@
                 "shim"
             ],
             "time": "2015-11-20 09:19:13"
-        },
-        {
-            "name": "symfony/polyfill-php54",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php54.git",
-                "reference": "2c9f6d98eb30dc04fe0b06f9cc92a55acea5bdcc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php54/zipball/2c9f6d98eb30dc04fe0b06f9cc92a55acea5bdcc",
-                "reference": "2c9f6d98eb30dc04fe0b06f9cc92a55acea5bdcc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php54\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 5.4+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2015-11-04 20:28:58"
         },
         {
             "name": "symfony/translation",
