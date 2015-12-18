@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+use Main;
 use app\core\View;
 use Slim\Container;
 use Slim\Http\Request;
@@ -22,9 +23,9 @@ class Controller
 
     public function __construct(Container $container)
     {
-        $this->request  = $container->request;
-        $this->response = $container->response;
-        $this->view     = new View();
+        $this->request      = Main::$app->request = $container->request;
+        $this->response     = $container->response;
+        $this->view         = new View();
     }
 
     public function render($view, $params = [])

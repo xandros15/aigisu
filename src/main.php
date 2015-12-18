@@ -7,6 +7,7 @@ $query = (object) [
 
 use Slim\App as Slim;
 use Slim\Router;
+use Slim\Http\Request;
 use models\Oauth;
 use app\alert\Alert;
 use app\core\Configuration;
@@ -18,14 +19,17 @@ class Main
     /** @var Main */
     static $app;
 
-    /** @var Slim */
-    public $slim;
-
     /** @var Router */
     public $router;
 
+    /** @var Request */
+    public $request;
+
     /** @var Configuration */
     public $web;
+
+    /** @var Slim */
+    private $slim;
 
     public function bootstrap()
     {
@@ -40,34 +44,6 @@ class Main
     public function run()
     {
         $this->slim->run();
-    }
-
-    public function generateLink(array $options)
-    {
-        global $query;
-        if (!isset($query->get)) {
-            $get = $options;
-        } else {
-            $get = clone $query->get;
-            foreach ($options as $name => $value) {
-                $get->{$name} = $this->reverseGet($get, $name, $value);
-            }
-        }
-        return '?' . http_build_query($get);
-    }
-
-    public function reverseGet(stdClass $get, $name, $value)
-    {
-        return ($name == 'sort' && isset($get->{$name}) && strpos($get->{$name}, '-') !== 0) ? '-' . $value : $value;
-    }
-
-    public function getSearchQuery()
-    {
-        global $query;
-        if (empty($query->get->q)) {
-            return '';
-        }
-        return $query->get->q;
     }
 
     private function configuration()

@@ -2,6 +2,7 @@
 
 namespace controller;
 
+use Main;
 use models\Unit;
 use app\core\Controller;
 use Slim\Http\Request;
@@ -44,5 +45,22 @@ class UnitController extends Controller
         }
 
         return $this->goBack();
+    }
+
+    public static function getSearchQuery()
+    {
+        return Main::$app->request->getParam('q', '');
+    }
+
+    public static function generateLink(array $options)
+    {
+        $request = Main::$app->request;
+        $query   = $request->getParams();
+
+        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
+            $options['sort'] = '-' . $options['sort'];
+        }
+
+        return '?' . http_build_query(array_merge($query, $options));
     }
 }
