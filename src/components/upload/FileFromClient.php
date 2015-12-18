@@ -2,33 +2,32 @@
 
 namespace app\upload;
 
-use app\upload\Upload;
+use Slim\Http\UploadedFile;
+use Exception;
 
-class FileFromClient extends Upload implements DirectServer
+class FileFromClient extends Upload
 {
+    /** @var UploadedFile */
+    protected $file;
 
-    public function setValidator(array $callback)
+    public function upload($filename)
     {
-        $this->callbacks($callback);
+        $this->file->moveTo($filename);
+        $this->oldFilename = $this->filename;
+        $this->filename    = $filename;
+        return $this->filename;
     }
 
-    public function setDirectory($directory, $root = false)
+    public function setFile($fileOrUrl)
     {
-        if ($root) {
-            $this->root = $root;
-        } else {
-            $this->root = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR;
+        if (!$fileOrUrl instanceof UploadedFile) {
+            throw new Exception("The File isn't instance of Slim\\UploadedFile. '" . gettype($fileOrUrl) . "' given.");
         }
-        $this->set_destination($directory);
-    }
 
-    public function setMimeTypes(array $mimeTypes)
-    {
-        $this->set_allowed_mime_types($mimeTypes);
-    }
+        $this->file = $fileOrUrl;
 
-    public function getErrors()
-    {
-        return $this->get_errors();
+        $this->filename = $fileOrUrl->file;
+        $this->setFileSize();
+        $this->setFileMime();
     }
 }

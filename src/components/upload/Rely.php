@@ -7,93 +7,67 @@ use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
 use app\upload\FileFromClient;
 use app\upload\FileFromUrl;
-use app\upload\validators\FileValidator;
-use RedBeanPHP\OODBBean;
-use Symfony\Component\HttpFoundation\File\File;
+use models\Image;
 use Exception;
 
 class Rely
 {
-    const TEMPORARY_FOLDER = 'tmp';
-
-    protected $mimeType        = 'image/png';
-    protected $extendedServers = [];
-
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-    }
+    public $extendedServers = [];
 
     public function uploadFromServer($url, array &$errors)
     {
         $upload = new FileFromUrl();
-        $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
-        $upload->setMimeTypes([$this->mimeType]);
-        $upload->file($url);
-
-        $validator = new FileValidator();
-        $upload->setValidator([$validator, 'checkFileSize']);
-        $upload->setValidator([$validator, 'checkMimeType']);
-        $upload->setValidator([$validator, 'checkResolution']);
-
-        $results = $upload->upload();
-
+        $upload->setDirectory(Image::IMAGE_DIRECTORY, ROOT_DIR);
+        $upload->setFile($url);
         if ($upload->getErrors()) {
             $errors = $upload->getErrors();
         }
 
-        return $results;
+        return $upload;
     }
 
-    public function uploadFromClient(array $file, array &$errors)
+    public function uploadFromClient($file, array &$errors)
     {
         $upload = new FileFromClient();
-        $upload->setDirectory(self::TEMPORARY_FOLDER, ROOT_DIR);
-        $upload->setMimeTypes([$this->mimeType]);
-        $upload->file($file);
-
-        $validator = new FileValidator();
-        $upload->setValidator([$validator, 'checkFileSize']);
-        $upload->setValidator([$validator, 'checkResolution']);
-
-        $results = $upload->upload();
+        $upload->setDirectory(Image::IMAGE_DIRECTORY, ROOT_DIR);
+        $upload->setFile($file);
 
         if ($upload->getErrors()) {
             $errors = $upload->getErrors();
         }
 
-        return $results;
+        return $upload;
     }
 
-    public function setExtendedServer($name, ExtedndetServer $extentionServer)
+    public function setExtendedServer($name, ExtedndetServer $extentionServer, $method)
     {
-        $this->extendedServers[$name] = $extentionServer;
+        $this->extendedServers[$name] = [ 'server' => $extentionServer, 'callback' => [$this, $method]];
     }
 
-    public function uploadOnGoogleDrive(OODBBean $image, File $file)
+    public function uploadOnGoogleDrive(SingleFile $image)
     {
         try {
             /* @var $google GoogleFile */
             $google = $this->getExtendednServer('google');
-            $google->setMimeType($file->getMimeType());
-            $google->setExtension($file->guessExtension());
+            $google->setMimeType($image->file->mimeType);
+            $google->setExtension($image->file->extension);
             $google->setDescription('R18');
             $google->setName($image->server . $image->scene);
-            $google->setCatalog($image->units->name);
-            $google->setFilename($file->getPathname());
+            $google->setCatalog($image->unit->name);
+            $google->setFilename($image->file->filename);
             return $google->uploadFile()->resultOfUpload;
         } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function uploadOnImgur(OODBBean $image, File $file)
+    public function uploadOnImgur(SingleFile $image)
     {
         try {
             /* @var $imgur Imgur */
             $imgur = $this->getExtendednServer('imgur');
-            $imgur->setFilename($file->getPathname());
-            $imgur->setName($image->server . ': ' . $image->units->name);
+            $imgur->setFilename($image->file->filename);
+            $imgur->setName($image->server . ': ' . $image->unit->name);
             $imgur->setDescription('R18');
             $imgur->setCatalog($image->server);
             return $imgur->uploadFile();
@@ -107,6 +81,6 @@ class Rely
         if (!isset($this->extendedServers[$name])) {
             throw new Exception("Server: '{$name}' is no implemented");
         }
-        return $this->extendedServers[$name];
+        return $this->extendedServers[$name]['server'];
     }
 }

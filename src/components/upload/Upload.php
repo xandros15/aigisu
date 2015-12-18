@@ -2,57 +2,68 @@
 
 namespace app\upload;
 
-use app\upload\DirectServer;
+use helpers\MimeTypeExtensionGuesser as Extension;
 use Exception;
 
-abstract class Upload implements DirectServer
+abstract class Upload
 {
     const MODE_FILE_DIR = 755;
 
-    /** @var UploadedFile */
-    public $file;
+    /** @var string */
+    public $filename = '';
 
     /** @var string */
-    protected $mimeType;
+    public $oldFilename = '';
+
+    /** @var int */
+    public $filesize;
+
+    /** @var string */
+    public $mimeType;
+
+    /** @var string */
+    public $extension;
+
+    /** @var string */
+    public $destination;
+
+    /** @var string */
+    public $root;
 
     /** @var array */
     protected $errors = [];
 
-    /** @var string */
-    protected $destination;
-
-    /** @var string */
-    protected $root;
-
-    abstract public function upload();
+    abstract public function upload($filename);
 
     abstract public function setFile($fileOrUrl);
-
-    public function setValidator(array $callback)
-    {
-        
-    }
 
     public function setDirectory($destination, $root = false)
     {
         if ($root) {
-            $this->root = $root;
+            $this->root = rtrim($root, '\\/') . DIRECTORY_SEPARATOR;
         } else {
             $this->root = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR;
         }
         if (!$this->setDestination($destination)) {
-            throw new Exception("Upload: Can't create destination: {$this->root}{$this->destination}");
+            throw new Exception("Upload: Can't create destination: {$this->destination}");
         }
-    }
-
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
     }
 
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    protected function setFileSize()
+    {
+        return $this->filesize = filesize($this->filename);
+    }
+
+    protected function setFileMime()
+    {
+        $this->mimeType  = image_type_to_mime_type(exif_imagetype($this->filename));
+        $this->extension = Extension::guess($this->mimeType);
+        return $this->mimeType;
     }
 
     protected function setError($message)
@@ -62,14 +73,19 @@ abstract class Upload implements DirectServer
 
     protected function setDestination($destination)
     {
-        $this->destination = $destination . DIRECTORY_SEPARATOR;
+        $this->destination = $this->root . $destination . DIRECTORY_SEPARATOR;
 
         return $this->isDestinationExist() ? true : $this->createDestination();
     }
 
+    protected function generateFilename()
+    {
+        return sha1(mt_rand(1, 9999) . $this->destination . uniqid()) . time() . '.tmp';
+    }
+
     private function isDestinationExist()
     {
-        return is_writable($this->root . $this->destination);
+        return is_writable(dirname($this->destination));
     }
 
     private function createDestination()

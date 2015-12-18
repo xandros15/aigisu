@@ -2,82 +2,201 @@
 
 namespace app\upload;
 
-use Symfony\Component\HttpFoundation\File\File;
-use Slim\Http\UploadedFile;
+use app\upload\Upload;
+use app\alert\Alert;
 use models\Image;
+use RedBeanPHP\R;
+use RedBeanPHP\OODBBean;
+use Exception;
 
 class SingleFile
 {
-    public $name;
+    const MAX_WIDTH    = 961;
+    const MAX_HEIGHT   = 641;
+    const MIN_WIDTH    = 959;
+    const MIN_HEIGHT   = 639;
+    const MIN_FILESIZE = 90 * 1024;
+    const MAX_FILESIZE = 512 * 1024;
+
+    /** @var int */
+    public $id;
+
+    /** @var OODBBean */
+    public $unit;
+
+    /** @var OODBBean */
+    public $imageBean;
+
+    /** @var Upload */
     public $file;
+
+    /** @var array */
+    public $errors = [];
+
+    /** @var string */
     public $url;
-    public $status;
-    public $size_in_bytes;
-    public $full_path;
-    public $filename;
-    public $path;
+
+    /** @var int */
     public $scene;
+
+    /** @var string */
     public $server;
 
-    /** @var File */
-    public $object;
-
-    public static function loadFile(UploadedFile $file, array $info)
+    public function setPost(array $post)
     {
-        if (empty($file->getClientFilename()) && empty($info['url'])) {
-            return false;
+        foreach ($post as $key => $value) {
+            $this->{$key} = $value;
         }
-        return new SingleFile($file, $info);
     }
 
-    public function __construct(UploadedFile $file, array $info)
+    public function setFile(Upload $file)
     {
-        if ($file->getError() === UPLOAD_ERR_OK) {
-            $this->name = $file->getClientFilename();
-            $this->file = $file->file;
-        } elseif ($file->getError() !== UPLOAD_ERR_NO_FILE) {
-            Alert::add("File: '{$file['name']}' got error. Maby is to big.", Alert::ERROR);
-            return;
-        } elseif (!empty($info['url'])) {
-            $this->name = $info['url'];
-            $this->file = $info['url'];
-        }
-        $this->setInfo($info);
+        $this->file = $file;
     }
 
-    public function setInfo($info)
+    public function setUnit(OODBBean $unit)
+    {
+        $this->unit = $unit;
+    }
+
+    public function upload()
+    {
+        R::begin();
+        try {
+            $this->transaction($this->file);
+            $newFileName = sprintf('%s%d.%s', $this->file->destination, $this->id, $this->file->extension);
+            $this->file->upload($newFileName);
+            R::commit();
+        } catch (Exception $exc) {
+            R::rollback();
+            $this->setError($exc->getMessage());
+            Alert::add($exc->getMessage(), Alert::ERROR);
+            $this->deteleFile($this->file->filename);
+        }
+        $this->deteleFile($this->file->oldFilename);
+    }
+
+    public function validate()
     {
         $servers = Image::getServers();
-        if (!isset($info['server'])) {
-            throw new Exception('No server name in post request');
+
+        if (!$this->server) {
+            $this->setError('No server name in post request');
         }
-        $this->server = $info['server'];
         if (!isset($servers[$this->server])) {
-            throw new Exception('No server name found');
+            $this->setError('No server name found');
         }
-        if (!isset($info['scene'])) {
-            throw new Exception('No scene number in post request');
+        if (!$this->scene) {
+            $this->setError('No scene number in post request');
         }
-        $this->scene = (int) $info['scene'];
         if ($this->scene < 1 || $this->scene > $servers[$this->server]) {
-            throw new Exception("Wrong number of scene");
+            $this->setError("Wrong number of scene");
+        }
+        if (!$this->unit->name) {
+            $this->setError("Unit name is null");
+        }
+        if ($this->isRecordExist()) {
+            $this->setError("Image exist");
+        }
+        $this->checkFileSize($this->file);
+        $this->checkMimeType($this->file, ['image/png']);
+        $this->checkResolution($this->file->filename);
+
+        if ($this->isErrors()) {
+            foreach ($this->getErrors() as $error) {
+                Alert::add($error, Alert::ERROR);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public function isErrors()
+    {
+        return (bool) $this->errors;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    public function setError($message)
+    {
+        $this->errors[] = $message;
+    }
+
+    private function isRecordExist()
+    {
+        $imagesList = $this->unit->ownImagesList;
+        foreach ($imagesList as $image) {
+            if ($image->scene == $this->scene && $image->server == $this->server) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function transaction()
+    {
+        $image         = R::dispense(Image::tableName());
+        $image->md5    = md5_file($this->file->filename);
+        $image->server = $this->server;
+        $image->scene  = $this->scene;
+
+        $this->unit->ownImagesList[] = $image;
+
+        R::store($this->unit);
+
+        $this->imageBean = $image;
+        $this->id        = $image->getID();
+    }
+
+    private function deteleFile($filename)
+    {
+        return (is_file($filename) && is_executable($filename)) ? unlink($filename) : false;
+    }
+
+    private function checkResolution($filename)
+    {
+        list($width, $height) = getimagesize($filename);
+        if (empty($width) || empty($height)) {
+            return $this->setError('Image has no width or height');
+        }
+        if ($width > self::MAX_WIDTH) {
+            $this->setError(sprintf('Image width is to large. Your image has %dpx. Max is %dpx', $width, self::MAX_WIDTH));
+        }
+        if ($height > self::MAX_HEIGHT) {
+            $this->setError(
+                sprintf('Image height is to large. Your image has %dpx. Max is %dpx'), $height, self::MAX_HEIGHT);
+        }
+        if ($width < self::MIN_WIDTH) {
+            $this->setError(
+                sprintf('Image width is to low. Your image has %dpx. Min is %dpx', $width, self::MIN_WIDTH));
+        }
+        if ($height < self::MIN_HEIGHT) {
+            $this->setError(
+                sprintf('Image height is to low. Your image has %dpx. Min is %dpx'), $height, self::MIN_HEIGHT);
         }
     }
 
-    public function setResults($results)
+    private function checkMimeType(Upload $file, array $mime)
     {
-        $this->status        = $results['status'];
-        $this->size_in_bytes = $results['size_in_bytes'];
-        $this->full_path     = $results['full_path'];
-        $this->filename      = $results['filename'];
-        $this->path          = $results['path'];
+        if (!$file->mimeType) {
+            $this->setError('Target file have no mimeType');
+        }
+        if (!in_array($file->mimeType, $mime)) {
+            $this->setError("File don't have correct type. Avaiable are: " . implode('|', $this->mimes));
+        }
     }
 
-    public function setObject()
+    private function checkFileSize(Upload $file)
     {
-        if (!is_file($this->full_path)) {
-            throw new Exception("File: '{$this->full_path}' no exist");
+        if ($file->filesize < self::MIN_FILESIZE) {
+            $this->setError('File is too small');
         }
-        $this->object = new File($this->full_path);
+        if ($file->filesize > self::MAX_FILESIZE) {
+            $this->setError('File is too large');
+        }
     }
 }
