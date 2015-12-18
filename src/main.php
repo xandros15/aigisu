@@ -5,13 +5,13 @@ $query = (object) [
         'files' => (object) $_FILES,
 ];
 
-use RedBeanPHP\Facade as R;
 use Slim\App as Slim;
 use Slim\Router;
 use models\Oauth;
 use app\alert\Alert;
 use app\core\Configuration;
 use app\slim\SlimConfig;
+use RedBeanPHP\R;
 
 class Main
 {
@@ -77,7 +77,6 @@ class Main
 
     private function dbconnect()
     {
-        require CONFIG_DIR . 'db.config.php';
         R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
         R::debug(DEBUG);
         R::freeze();

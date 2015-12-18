@@ -3,6 +3,7 @@
 namespace app\core;
 
 use Exception;
+use RedBeanPHP\R;
 
 class Configuration
 {
@@ -11,9 +12,15 @@ class Configuration
     private static $instance;
     private $config = [];
 
-    private function __construct(){}
+    private function __construct()
+    {
 
-    private function __clone(){}
+    }
+
+    private function __clone()
+    {
+
+    }
 
     public static function getInstance()
     {
@@ -41,16 +48,9 @@ class Configuration
     private function configurate()
     {
         $this->defineDirs();
-        $this->loadConfig();
+        $this->loadWebConfiguration();
+        $this->loadDatabaseConfiguration();
         $this->define();
-    }
-
-    private function loadConfig()
-    {
-        if (!is_file(CONFIG_DIR . self::WEB_BASENAME)) {
-            throw new Exception("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
-        }
-        $this->config = require_once CONFIG_DIR . self::WEB_BASENAME;
     }
 
     private function defineDirs()
@@ -65,5 +65,18 @@ class Configuration
         defined('DEBUG') || define('DEBUG', $this->debug);
         defined('SITE_URL') || define('SITE_URL', $this->siteUrl);
         defined('MAX_ROWS') || define('MAX_ROWS', $this->maxRows);
+    }
+
+    private function loadWebConfiguration()
+    {
+        if (!is_file(CONFIG_DIR . self::WEB_BASENAME)) {
+            throw new Exception("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
+        }
+        $this->config = require_once CONFIG_DIR . self::WEB_BASENAME;
+    }
+
+    private function loadDatabaseConfiguration()
+    {
+        require CONFIG_DIR . 'db.config.php';
     }
 }
