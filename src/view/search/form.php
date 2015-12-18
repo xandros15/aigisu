@@ -3,7 +3,7 @@
 use controller\UnitController;
 ?>
 <div class="container-fluid">
-    <form class="navbar-form navbar-right" style="display:inline-block" role="search">
+    <form class="navbar-form navbar-right" action="<?= Main::$app->router->pathFor('home')?>" style="display:inline-block" role="search">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Search" name="q" value="<?= UnitController::getSearchQuery() ?>">
             <div class="input-group-btn">
