@@ -8,12 +8,6 @@ class Configuration
 {
     const WEB_BASENAME = 'web.php';
 
-    /** @var bool */
-    public $debug = false;
-
-    /** @var string */
-    public $siteUrl;
-
     /** @var Configuration */
     private static $instance;
 
