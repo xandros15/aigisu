@@ -72,7 +72,7 @@ class Main
 
     private function configuration()
     {
-        $this->web = new Configuration;
+        $this->web = Configuration::getInstance();
     }
 
     private function dbconnect()

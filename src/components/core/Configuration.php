@@ -8,13 +8,20 @@ class Configuration
 {
     const WEB_BASENAME = 'web.php';
 
+    private static $instance;
     private $config = [];
 
-    public function __construct()
+    private function __construct(){}
+
+    private function __clone(){}
+
+    public static function getInstance()
     {
-        $this->defineDirs();
-        $this->loadConfig();
-        $this->define();
+        if (self::$instance === null) {
+            self::$instance = new Configuration();
+            self::$instance->configurate();
+        }
+        return self::$instance;
     }
 
     public function __get($name)
@@ -29,6 +36,13 @@ class Configuration
             return null;
         }
         return $this->config[$name];
+    }
+
+    private function configurate()
+    {
+        $this->defineDirs();
+        $this->loadConfig();
+        $this->define();
     }
 
     private function loadConfig()
