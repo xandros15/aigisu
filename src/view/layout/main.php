@@ -32,7 +32,7 @@ use app\core\View;
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
         <script>
-            globalUrl = '<?= SITE_URL ?>';
+            globalUrl = '<?= Main::$app->web->siteUrl ?>';
             $("[data-toggle=popover]").popover();
         </script>
         <script src="/js/blockDisabledLinks.js"></script>

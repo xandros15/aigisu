@@ -6,6 +6,7 @@ use RedBeanPHP\OODBBean;
 use RedBeanPHP\Facade as R;
 use Exception;
 use stdClass;
+use Main;
 
 class Image
 {
@@ -67,7 +68,7 @@ class Image
 
     public static function createImagelink($id)
     {
-        return SITE_URL . self::IMAGE_DIRECTORY . DIRECTORY_SEPARATOR . $id . '.png';
+        return Main::$app->web->siteUrl . self::IMAGE_DIRECTORY . DIRECTORY_SEPARATOR . $id . '.png';
     }
 
     public static function imagesByUnit($unitId, Unit $modelUnits = null)

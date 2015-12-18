@@ -78,7 +78,7 @@ class Main
     private function dbconnect()
     {
         R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
-        R::debug(DEBUG);
+        R::debug(self::$app->web->debug);
         R::freeze();
     }
 

@@ -3,13 +3,21 @@
 namespace app\core;
 
 use Exception;
-use RedBeanPHP\R;
 
 class Configuration
 {
     const WEB_BASENAME = 'web.php';
 
+    /** @var bool */
+    public $debug = false;
+
+    /** @var string */
+    public $siteUrl;
+
+    /** @var Configuration */
     private static $instance;
+
+    /** @var array */
     private $config = [];
 
     private function __construct()
@@ -50,7 +58,6 @@ class Configuration
         $this->defineDirs();
         $this->loadWebConfiguration();
         $this->loadDatabaseConfiguration();
-        $this->define();
     }
 
     private function defineDirs()
@@ -58,13 +65,6 @@ class Configuration
         defined('SOURCE_DIR') || define('SOURCE_DIR', ROOT_DIR . 'src' . DIRECTORY_SEPARATOR);
         defined('CONFIG_DIR') || define('CONFIG_DIR', SOURCE_DIR . 'config' . DIRECTORY_SEPARATOR);
         defined('VIEW_DIR') || define('VIEW_DIR', SOURCE_DIR . 'view' . DIRECTORY_SEPARATOR);
-    }
-
-    private function define()
-    {
-        defined('DEBUG') || define('DEBUG', $this->debug);
-        defined('SITE_URL') || define('SITE_URL', $this->siteUrl);
-        defined('MAX_ROWS') || define('MAX_ROWS', $this->maxRows);
     }
 
     private function loadWebConfiguration()
