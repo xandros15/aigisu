@@ -9,6 +9,8 @@
 
 namespace Imgur;
 
+use Exception;
+
 class Connect
 {
     const TYPE_GET    = 'GET';
