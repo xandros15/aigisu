@@ -19,7 +19,10 @@
     "autoload": {
         "psr-4": {
             "Imgur\\": "src/components/imgur/imgur-php-wrapper",
-            "":"src",
+            "traits\\": "src/traits",
+            "controller\\": "src/controllers",
+            "models\\": "src/models",
+            "helpers\\": "src/helpers",
             "app\\": "src/components"
         }
     }
