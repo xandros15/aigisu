@@ -9,29 +9,36 @@ class UnitSearch extends Unit
 {
     const MAX_UNITS_DISPLAY = 30;
 
+    public $maxPages = 0;
+
     public function search(array $params)
     {
-        /* @var $query Collection */
-        $query = Unit::all();
-        $query = $this->parseSearch($params, $query);
-        $query = $this->parseSort($params, $query);
-        $query = $this->parsePage($params, $query);
-        return $query->all();
+        /* @var $collection Collection */
+        $collection = Unit::all();
+
+        $collection = $this->parseSearch($params, $collection);
+        $collection = $this->parseSort($params, $collection);
+
+        $this->setMaxPages($collection);
+
+        return $this->parsePage($params, $collection);
     }
 
-    protected function parsePage(array $params, Collection $query)
+    protected function parsePage(array $params, Collection $collection)
     {
         if (!isset($params['page'])) {
-            return $query->slice(0, self::MAX_UNITS_DISPLAY);
+            return $collection->slice(0, self::MAX_UNITS_DISPLAY);
         }
         $page = max(($params['page'] - 1) * self::MAX_UNITS_DISPLAY, 0);
-        return $query->slice($page, self::MAX_UNITS_DISPLAY);
+
+        $this->setMaxPages($collection);
+        return $collection->slice($page, self::MAX_UNITS_DISPLAY);
     }
 
-    protected function parseSort(array $params, Collection $query)
+    protected function parseSort(array $params, Collection $collection)
     {
         if (!isset($params['sort'])) {
-            return $query->sortByDesc('id');
+            return $collection->sortByDesc('id');
         }
         $sort = strtolower($params['sort']);
         $desc = false;
@@ -40,30 +47,30 @@ class UnitSearch extends Unit
             $sort = ltrim($sort, '-');
         }
         if (!in_array($sort, Unit::getColumns())) {
-            return $query->sortByDesc('id');
+            return $collection->sortByDesc('id');
         }
         if (!in_array($sort, Unit::getRarities())) {
             $enum     = array_flip(Unit::getRarities());
             $callback = function ($unit) use ($enum) {
                 return $enum[$unit['rarity']];
             };
-            return($desc) ? $query->sortByDesc($callback) : $query->sortBy($callback);
+            return($desc) ? $collection->sortByDesc($callback) : $collection->sortBy($callback);
         }
-        return ($desc) ? $query->sortByDesc($sort) : $query->sortBy($sort);
+        return ($desc) ? $collection->sortByDesc($sort) : $collection->sortBy($sort);
     }
 
-    protected function parseSearch(array $params, Collection $query)
+    protected function parseSearch(array $params, Collection $collection)
     {
         if (!isset($params['q'])) {
-            return $query;
+            return $collection;
         }
 
         $arguments = $this->parseSearchQuery($params);
         foreach ($arguments as $namespace => $value) {
-            $query = $query->where($namespace, $value);
+            $collection = $collection->where($namespace, $value);
         }
 
-        return $query;
+        return $collection;
     }
 
     private function parseSearchQuery(array $params)
@@ -92,5 +99,10 @@ class UnitSearch extends Unit
             $newArguments[$namespace] = $argument;
         }
         return $newArguments;
+    }
+
+    private function setMaxPages(Collection $collection)
+    {
+        $this->maxPages = (int) ceil($collection->count() / self::MAX_UNITS_DISPLAY);
     }
 }

@@ -9,6 +9,7 @@ use app\core\Controller;
 use Slim\Http\Request;
 use RedBeanPHP\R;
 use app\alert\Alert;
+use Illuminate\Database\Eloquent\Collection;
 
 class UnitController extends Controller
 {
@@ -16,9 +17,15 @@ class UnitController extends Controller
     public function actionIndex(Request $request)
     {
 
-        $model = new \models\UnitSearch();
+        $model   = new UnitSearch();
+        /* @var $results Collection */
 
-        return $this->render('unit/index', ['model' => $model->search($request->getParams()), 'units' => null]);
+        return $this->render('unit/index',
+                [
+                'model' => $model->search($request->getParams()),
+                'units' => null,
+                'maxPages' => $model->maxPages
+        ]);
     }
 
     public function actionUpdate(Request $request)
