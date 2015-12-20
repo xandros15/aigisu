@@ -2,65 +2,33 @@
 
 namespace models;
 
-class Oauth
+use Illuminate\Database\Eloquent\Model;
+use traits\Validator;
+
+/**
+ * Class Oauth
+ */
+
+/**
+ * @property int $time
+ * @property string $pin
+ * @property string $token
+ */
+class Oauth extends Model
 {
-    const SESSION_NAME = 'oauth';
 
-    public $pin;
-    public $errorLog = [];
-    private $token;
+    use Validator;
+    public $timestamps  = false;
+    protected $table    = 'oauth';
+    protected $fillable = [
+        'time',
+        'pin',
+        'token'
+    ];
+    protected $guarded  = [];
 
-    public static function tableName()
+    public function validateTime()
     {
-        return 'oauth';
+        return ($this->time - time() > 0);
     }
-
-    public static function isLogged()
-    {
-        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
-    }
-
-    public function run()
-    {
-        $this->startSession();
-    }
-
-    public function getErrorLog()
-    {
-        return $this->errorLog;
-    }
-        public function validate()
-    {
-        if (empty($this->pin)) {
-            return false;
-        }
-
-        if (strlen($this->pin) != 8) {
-            return false;
-        }
-        return true;
-    }
-
-    public function isTimeout($time)
-    {
-        return ($time - time() < 0);
-    }
-
-    public static function logout()
-    {
-        $_SESSION[self::SESSION_NAME] = [];
-        return session_destroy();
-    }
-
-    public function login()
-    {
-        $_SESSION[self::SESSION_NAME]['run']   = true;
-        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
-    }
-
-    private function startSession()
-    {
-        return (session_status() == PHP_SESSION_NONE && !session_id()) ? session_start() : false;
-    }
-
 }

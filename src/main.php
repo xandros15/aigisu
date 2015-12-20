@@ -8,7 +8,6 @@ $query = (object) [
 use Slim\App as Slim;
 use Slim\Router;
 use Slim\Http\Request;
-use models\Oauth;
 use app\alert\Alert;
 use app\core\Configuration;
 use app\slim\SlimConfig;
@@ -75,10 +74,12 @@ class Main
 
     private function createSessions()
     {
+        if (session_status() == PHP_SESSION_NONE && !session_id()) {
+            session_start();
+        }
+
         $alert = new Alert();
         $alert->init();
-        $oauth = new Oauth();
-        $oauth->run();
     }
 
     private function setAutoloader()

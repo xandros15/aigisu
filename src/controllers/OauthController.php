@@ -5,11 +5,16 @@ namespace controller;
 use app\core\Controller;
 use Slim\Http\Request;
 use models\Oauth;
-use RedBeanPHP\R;
 use app\alert\Alert;
 
 class OauthController extends Controller
 {
+    const SESSION_NAME = 'oauth';
+
+    public static function isLogged()
+    {
+        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
+    }
 
     public function actionIndex()
     {
@@ -18,33 +23,39 @@ class OauthController extends Controller
 
     public function actionLogin(Request $request)
     {
-        $oauth      = new Oauth();
-        $oauth->pin = $request->getParam('pin');
-
-        $results = ($oauth->validate()) ? R::findOne(Oauth::tableName(), ' pin = ? ', [$oauth->pin]) : false;
-        if (!$results) {
+        $model = Oauth::firstOrNew($request->getParams());
+        if (!$model->id) {
             Alert::add('Wrong pin', Alert::ERROR);
 
             return $this->render('oauth/index');
         }
-        if ($oauth->isTimeout($results->time)) {
+        if (!$model->validateTime()) {
             Alert::add('Pin is outdated', Alert::ERROR);
 
             return $this->render('oauth/index');
         }
-
-        $oauth->login();
-        Alert::add('You have been logged in');
-
+        $this->login();
         return $this->goHome();
     }
 
     public function actionLogout()
     {
-        if (Oauth::isLogged()) {
-            Oauth::logout();
+        if (self::isLogged()) {
+            $this->logout();
         }
 
         return $this->goBack();
+    }
+
+    public static function logout()
+    {
+        $_SESSION[self::SESSION_NAME] = [];
+        return session_destroy();
+    }
+
+    public function login()
+    {
+        $_SESSION[self::SESSION_NAME]['run']   = true;
+        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
     }
 }
