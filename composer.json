@@ -12,10 +12,13 @@
         "illuminate/database": "^5.1",
         "gabordemooij/redbean": "4.2",
         "google/apiclient": "1.*",
-        "plasticbrain/php-flash-messages": "^1.0"
+        "plasticbrain/php-flash-messages": "^1.0",
+        "illuminate/validation": "^5.1",
+        "illuminate/translation": "^5.1"
     },
     "autoload": {
         "psr-4": {
+            "traits\\":"src/traits",
             "app\\core\\": "src/components/core",
             "controller\\": "src/controllers",
             "models\\": "src/models",

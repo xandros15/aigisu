@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5d0bb6312e6ddcd3fccdb39434bee8e5",
-    "content-hash": "6d85f9a80ac14eb79a3007ca7ded80d4",
+    "hash": "dadaeabdbdfc3335ea00eb9212d9dbde",
+    "content-hash": "b54328727c1faa2ea0ab01cbf6c6d8fa",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -234,12 +234,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "26f5943c44d9d6c8cce4425ac550d315ecb466df"
+                "reference": "18764fd277cfe285de1259e42dde479e0126a40f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/26f5943c44d9d6c8cce4425ac550d315ecb466df",
-                "reference": "26f5943c44d9d6c8cce4425ac550d315ecb466df",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/18764fd277cfe285de1259e42dde479e0126a40f",
+                "reference": "18764fd277cfe285de1259e42dde479e0126a40f",
                 "shasum": ""
             },
             "require": {
@@ -268,7 +268,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-17 19:55:34"
+            "time": "2015-12-19 18:48:33"
         },
         {
             "name": "illuminate/database",
@@ -276,12 +276,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "6f50a519110abdbf72879d4e701b316626c03f1e"
+                "reference": "941c80358ebbc8723af62ab39df44342ca78eaa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/6f50a519110abdbf72879d4e701b316626c03f1e",
-                "reference": "6f50a519110abdbf72879d4e701b316626c03f1e",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/81113f0f9e1167b15fe247265426e2b5a99d0ecf",
+                "reference": "941c80358ebbc8723af62ab39df44342ca78eaa8",
                 "shasum": ""
             },
             "require": {
@@ -328,7 +328,57 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-12-17 19:55:34"
+            "time": "2015-12-19 18:56:03"
+        },
+        {
+            "name": "illuminate/filesystem",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/filesystem.git",
+                "reference": "017823993faf0d47d41b3f0f8724a4cf8c745dc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/017823993faf0d47d41b3f0f8724a4cf8c745dc4",
+                "reference": "017823993faf0d47d41b3f0f8724a4cf8c745dc4",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.3.*",
+                "illuminate/support": "5.3.*",
+                "php": ">=5.6.4",
+                "symfony/finder": "3.1.*"
+            },
+            "suggest": {
+                "league/flysystem": "Required to use the Flysystem local and FTP drivers (~1.0).",
+                "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (~1.0).",
+                "league/flysystem-rackspace": "Required to use the Flysystem Rackspace driver (~1.0)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Filesystem\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Filesystem package.",
+            "homepage": "http://laravel.com",
+            "time": "2015-12-19 18:33:07"
         },
         {
             "name": "illuminate/support",
@@ -384,6 +434,101 @@
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
             "time": "2015-12-07 16:37:25"
+        },
+        {
+            "name": "illuminate/translation",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/translation.git",
+                "reference": "8947d69f891ec174c89b1ea5eb6f57bb9fe9a4c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/translation/zipball/8947d69f891ec174c89b1ea5eb6f57bb9fe9a4c0",
+                "reference": "8947d69f891ec174c89b1ea5eb6f57bb9fe9a4c0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "5.3.*",
+                "illuminate/support": "5.3.*",
+                "php": ">=5.6.4",
+                "symfony/translation": "3.1.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Translation\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Translation package.",
+            "homepage": "http://laravel.com",
+            "time": "2015-12-14 14:44:26"
+        },
+        {
+            "name": "illuminate/validation",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/validation.git",
+                "reference": "138075b7906c17ac719bf5eef8ae81b45a557f25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/138075b7906c17ac719bf5eef8ae81b45a557f25",
+                "reference": "138075b7906c17ac719bf5eef8ae81b45a557f25",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "5.3.*",
+                "illuminate/contracts": "5.3.*",
+                "illuminate/support": "5.3.*",
+                "php": ">=5.6.4",
+                "symfony/http-foundation": "3.1.*",
+                "symfony/translation": "3.1.*"
+            },
+            "suggest": {
+                "illuminate/database": "Required to use the database presence verifier (5.3.*)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Validation\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Validation package.",
+            "homepage": "http://laravel.com",
+            "time": "2015-12-14 14:44:26"
         },
         {
             "name": "nesbot/carbon",
@@ -618,12 +763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "e88c825201589885e5dfb3d8bcdfb1b5216e5cc1"
+                "reference": "12782640b472b7d32b62e6fcd8b8c54d35ee617e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/e88c825201589885e5dfb3d8bcdfb1b5216e5cc1",
-                "reference": "e88c825201589885e5dfb3d8bcdfb1b5216e5cc1",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/12782640b472b7d32b62e6fcd8b8c54d35ee617e",
+                "reference": "12782640b472b7d32b62e6fcd8b8c54d35ee617e",
                 "shasum": ""
             },
             "require": {
@@ -676,7 +821,108 @@
                 "micro",
                 "router"
             ],
-            "time": "2015-12-17 13:22:04"
+            "time": "2015-12-19 19:48:36"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "f3a70b02456bb0e0dd12a0159cea2f3ad7bcb2c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/f3a70b02456bb0e0dd12a0159cea2f3ad7bcb2c3",
+                "reference": "f3a70b02456bb0e0dd12a0159cea2f3ad7bcb2c3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-12-05 11:13:35"
+        },
+        {
+            "name": "symfony/http-foundation",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-foundation.git",
+                "reference": "8b506ade9bbae940f1a3dcd9ebb97f89af1f2303"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/8b506ade9bbae940f1a3dcd9ebb97f89af1f2303",
+                "reference": "8b506ade9bbae940f1a3dcd9ebb97f89af1f2303",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~2.8|~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\HttpFoundation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony HttpFoundation Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-12-18 15:44:05"
         },
         {
             "name": "symfony/polyfill-mbstring",
