@@ -25,8 +25,6 @@ class Unit extends Model
 {
 
     use Validator;
-    const MAX_UNITS_DISPLAY = 30;
-
     public $timestamps  = false;
     protected $table    = 'unit';
     protected $fillable = [
@@ -40,6 +38,11 @@ class Unit extends Model
         'is_only_dmm'
     ];
     protected $guarded  = [];
+
+    public static function getColumns()
+    {
+        return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm'];
+    }
 
     public function rules()
     {

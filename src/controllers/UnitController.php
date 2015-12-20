@@ -4,6 +4,7 @@ namespace controller;
 
 use Main;
 use models\Unit;
+use models\UnitSearch;
 use app\core\Controller;
 use Slim\Http\Request;
 use RedBeanPHP\R;
@@ -12,12 +13,12 @@ use app\alert\Alert;
 class UnitController extends Controller
 {
 
-    public function actionIndex()
+    public function actionIndex(Request $request)
     {
-        $model = Unit::load();
-        $units = $model->getUnits();
 
-        return $this->render('unit/index', ['model' => $model, 'units' => $units]);
+        $model = new \models\UnitSearch();
+
+        return $this->render('unit/index', ['model' => $model->search($request->getParams()), 'units' => null]);
     }
 
     public function actionUpdate(Request $request)
