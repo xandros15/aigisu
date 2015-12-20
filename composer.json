@@ -18,19 +18,18 @@
     },
     "autoload": {
         "psr-4": {
-            "traits\\":"src/traits",
-            "app\\core\\": "src/components/core",
+            "Imgur\\": "src/components/imgur/imgur-php-wrapper",
+            "traits\\": "src/traits",
             "controller\\": "src/controllers",
             "models\\": "src/models",
             "helpers\\": "src/helpers",
+            "app\\core\\": "src/components/core",
             "app\\slim\\": "src/components/slim",
             "app\\alert\\": "src/components/alert",
             "app\\exception\\": "src/components/exception",
             "app\\upload\\": "src/components/upload",
-            "app\\upload\\validators\\": "src/components/upload",
             "app\\google\\": "src/components/google",
-            "app\\imgur\\": "src/components/imgur",
-            "Imgur\\": "src/components/imgur/imgur-php-wrapper"
+            "app\\imgur\\": "src/components/imgur"
         }
     }
 }
