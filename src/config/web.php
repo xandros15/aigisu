@@ -7,6 +7,7 @@ use controller\OauthController;
 
 return [
     'siteUrl' => 'http://aigisu.pl/',
+    'locale' => 'en',
     'debug' => false,
     'maxRows' => 30,
     'slim' => [
