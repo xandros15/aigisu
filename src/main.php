@@ -13,6 +13,7 @@ use app\alert\Alert;
 use app\core\Configuration;
 use app\slim\SlimConfig;
 use RedBeanPHP\R;
+use app\core\Connection;
 
 class Main
 {
@@ -27,6 +28,9 @@ class Main
 
     /** @var Configuration */
     public $web;
+
+    /** @var Connection */
+    public $connection;
 
     /** @var Slim */
     private $slim;
@@ -56,6 +60,17 @@ class Main
         R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
         R::debug(self::$app->web->debug);
         R::freeze();
+        $this->connection = new Connection([
+            'driver' => 'mysql',
+            'host' => DB_HOST,
+            'database' => DB_NAME,
+            'username' => DB_USER,
+            'password' => DB_PASSWORD,
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+        ]);
     }
 
     private function createSessions()
