@@ -22,7 +22,6 @@ class UnitController extends Controller
         return $this->render('unit/index',
                 [
                 'model' => $model->search($request->getParams()),
-                'units' => null,
                 'maxPages' => $model->maxPages
         ]);
     }
