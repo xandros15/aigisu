@@ -17,7 +17,7 @@ class UnitController extends Controller
     public function actionIndex(Request $request)
     {
 
-        $model   = new UnitSearch();
+        $model = new UnitSearch();
         /* @var $results Collection */
 
         return $this->render('unit/index',
@@ -70,5 +70,10 @@ class UnitController extends Controller
         }
 
         return '?' . http_build_query(array_merge($query, $options));
+    }
+
+    public static function getPage()
+    {
+        return Main::$app->request->getParam('page', 1);
     }
 }
