@@ -1,6 +1,6 @@
 <?php
 
-use models\Oauth;
+use controller\OauthController as Oauth;
 use app\core\View;
 
 /* @var $this View */
