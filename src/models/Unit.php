@@ -17,8 +17,8 @@ use models\Image;
  * @property string $link
  * @property string $linkgc
  * @property string $rarity
- * @property bool $isMale
- * @property bool $isOnlyDmm
+ * @property bool $is_male
+ * @property bool $is_only_dmm
  * @property Image[] $images
  */
 class Unit extends Model
