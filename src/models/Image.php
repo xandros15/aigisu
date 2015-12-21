@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use traits\Validator;
 
 /**
- * Class Unit
+ * Class Image
  */
 
 /**
@@ -36,13 +36,10 @@ class Image extends Model
     ];
     protected $guarded  = [];
 
-    const IMAGE_DIRECTORY = 'images';
-    const SERVER_NUTAKU   = 'nutaku';
-    const SERVER_DMM      = 'dmm';
-    const IMAGE_ALL       = 1;
-    const IMAGE_AVAIABLE  = 2;
-    const IMAGE_REQIRED   = 3;
-    const IMAGE_LOCKED    = 4;
+    const IMAGE_PER_SERVER = 2;
+    const IMAGE_DIRECTORY  = 'images';
+    const SERVER_NUTAKU    = 'nutaku';
+    const SERVER_DMM       = 'dmm';
 
     public static function tableName()
     {
