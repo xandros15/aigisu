@@ -21,12 +21,13 @@ trait Validator
 
         $validator = Main::$app->connection->validator->make($this->getAttributes(), $this->rules());
 
-        $this->errors = $validator->errors();
         if ($validator->passes()) {
             return true;
         }
-        foreach ($this->errors as $error) {
-            Alert::add($error, Alert::ERROR);
+        foreach ($validator->errors()->getMessages() as $errors) {
+            foreach ($errors as $error) {
+                Alert::add($error, Alert::ERROR);
+            }
         }
         return false;
     }
