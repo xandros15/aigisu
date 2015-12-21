@@ -3,7 +3,7 @@
 namespace models;
 
 use models\Unit;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder as Query;
 
 class UnitSearch extends Unit
 {
@@ -13,64 +13,60 @@ class UnitSearch extends Unit
 
     public function search(array $params)
     {
-        /* @var $collection Collection */
-        $collection = Unit::all();
+        /* @var $query Query */
+        $query = Unit::query()->toBase();
 
-        $collection = $this->parseSearch($params, $collection);
-        $collection = $this->parseSort($params, $collection);
+        $query = $this->parseSearch($params, $query);
+        $query = $this->parseSort($params, $query);
 
-        $this->setMaxPages($collection);
-
-        return $this->parsePage($params, $collection);
+        return $this->parsePage($params, $query)->get();
     }
 
-    protected function parsePage(array $params, Collection $collection)
+    protected function parsePage(array $params, Query $query)
     {
+        $this->setMaxPages($query);
+        $parsed = $query->limit(self::MAX_UNITS_DISPLAY);
         if (!isset($params['page'])) {
-            return $collection->slice(0, self::MAX_UNITS_DISPLAY);
+            return $parsed;
         }
         $page = max(($params['page'] - 1) * self::MAX_UNITS_DISPLAY, 0);
 
-        $this->setMaxPages($collection);
-        return $collection->slice($page, self::MAX_UNITS_DISPLAY);
+        return $query->offset($page);
     }
 
-    protected function parseSort(array $params, Collection $collection)
+    protected function parseSort(array $params, Query $query)
     {
         if (!isset($params['sort'])) {
-            return $collection->sortByDesc('id');
+            return $query->orderBy('id', 'desc');
         }
-        $sort = strtolower($params['sort']);
-        $desc = false;
+
+        $column  = strtolower($params['sort']);
+        $direction = 'asc';
+
         if (strpos($params['sort'], '-') === 0) {
-            $desc = true;
-            $sort = ltrim($sort, '-');
+            $direction = 'desc';
+            $column  = ltrim($column, '-');
         }
-        if (!in_array($sort, Unit::getColumns())) {
-            return $collection->sortByDesc('id');
+
+        if (!in_array($column, Unit::getColumns())) {
+            return $query->orderBy('id', 'desc');
         }
-        if (!in_array($sort, Unit::getRarities())) {
-            $enum     = array_flip(Unit::getRarities());
-            $callback = function ($unit) use ($enum) {
-                return $enum[$unit['rarity']];
-            };
-            return($desc) ? $collection->sortByDesc($callback) : $collection->sortBy($callback);
-        }
-        return ($desc) ? $collection->sortByDesc($sort) : $collection->sortBy($sort);
+
+        return $query->orderBy($column, $direction);
     }
 
-    protected function parseSearch(array $params, Collection $collection)
+    protected function parseSearch(array $params, Query $query)
     {
         if (!isset($params['q'])) {
-            return $collection;
+            return $query;
         }
 
         $arguments = $this->parseSearchQuery($params);
         foreach ($arguments as $namespace => $value) {
-            $collection = $collection->where($namespace, $value);
+            $query = $query->where($namespace, '=', $value);
         }
 
-        return $collection;
+        return $query;
     }
 
     private function parseSearchQuery(array $params)
@@ -101,8 +97,8 @@ class UnitSearch extends Unit
         return $newArguments;
     }
 
-    private function setMaxPages(Collection $collection)
+    private function setMaxPages(Query $query)
     {
-        $this->maxPages = (int) ceil($collection->count() / self::MAX_UNITS_DISPLAY);
+        $this->maxPages = (int) ceil($query->count() / self::MAX_UNITS_DISPLAY);
     }
 }
