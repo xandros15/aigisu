@@ -13,13 +13,13 @@ class UnitSearch extends Unit
 
     public function search(array $params)
     {
-        $query = Unit::query()->with('images');
+        $query = Unit::with('images');
 
         $query = $this->parseSearch($params, $query);
         $query = $this->parseSort($params, $query);
         $query = $this->parsePagination($params, $query);
 
-        return $query->get();
+        return  $query->get();
     }
 
     protected function parsePagination(array $params, Query $query)

@@ -8,22 +8,16 @@ use models\UnitSearch;
 use app\core\Controller;
 use Slim\Http\Request;
 use app\alert\Alert;
-use Illuminate\Database\Eloquent\Collection;
 
 class UnitController extends Controller
 {
 
     public function actionIndex(Request $request)
     {
-
         $model = new UnitSearch();
-        /* @var $results Collection */
 
         return $this->render('unit/index',
-                [
-                'model' => $model->search($request->getParams()),
-                'maxPages' => $model->maxPages
-        ]);
+                ['model' => $model->search($request->getParams()), 'maxPages' => $model->maxPages]);
     }
 
     public function actionUpdate(Request $request)
@@ -31,7 +25,7 @@ class UnitController extends Controller
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
         $model->fill($request->getParams());
-        
+
         if ($model->validate()) {
             $model->save();
             Alert::add("Successful update {$model->name}");
