@@ -14,33 +14,17 @@ $this->setTitle('Units');
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
         <ul class="unit-list list-group col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading"><?= $this->render('unit/sort') ?></div>
+                <div class="panel-heading">
+                    <?= $this->render('unit/sort') ?>
+                </div>
                 <?php foreach ($model as $unit): ?>
-                    <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
-                        <div class="buttons media-left">
-                            <p class="text-right"><?= $this->render('unit/form/modal', ['unit' => $unit]); ?></p>
-                            <p class="text-right"><button class="btn btn-default">Upload</button></p>
-                        </div>
-                        <div class="media-left">
-                            <a target="_blank" href="<?= $unit->linkgc ?>">
-                                <img class="icon" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <div class="form-group">
-                                <input class="form-control unit-name" value="<?= ($unit->name) ? $unit->name : '' ?>" readonly>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="text" value="<?= $unit->original ?>" readonly>
-                            </div>
-                        </div>
-                    </li>
+                    <?= $this->render('unit/unit', ['unit' => $unit]) ?>
                 <?php endforeach; ?>
             </div>
         </ul>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
-<?php else: ?>
-    <h3 class="text-center">Nothing found</h3>
-<?php endif; ?>
+    <?php else: ?>
+        <h3 class="text-center">Nothing found</h3>
+    <?php endif; ?>
 </div>
 
