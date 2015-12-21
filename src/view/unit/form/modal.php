@@ -1,16 +1,15 @@
 <?php
 
-use RedBeanPHP\OODBBean;
 use models\Unit;
 use app\core\View;
 
 /* @var $this View */
-/* @var $unit OODBBean */
+/* @var $unit Unit */
 $rarities = Unit::getRarities();
 ?>
 <div class="form-group text-center">
     <button class="btn btn-default" type="button" data-toggle="modal" data-target="#unit-update-modal-<?= $unit->id ?>">
-        edit unit
+        Edit
     </button>
 </div>
 <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

@@ -1,37 +1,42 @@
 <?php
 
 use models\Unit;
-use models\Oauth;
 use app\core\View;
 
 /* @var $this View */
 /* @var $model Unit */
-/* @var $units array */
+
 $this->setTitle('Units');
 ?>
-<div id="units" class="col-xs-12">
-    <?php if (count($units) > 0): ?>
+<div id="units">
+    <?php if (count($model) > 0): ?>
         <div class="col-xs-12"><?= $this->render('image/upload/help') ?></div>
-        <?= $this->render('unit/pagination', ['model' => $model]) ?>
-        <div class="unit-list col-xs-12 col-xs-offset-0 col-sm-10  col-sm-offset-2">
+        <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
+        <ul class="unit-list list-group  col-xs-12 col-xs-offset-0 col-sm-10  col-sm-offset-2">
             <?= $this->render('unit/sort') ?>
-            <?php foreach ($units as $unit): ?>
-                <div class="single-unit row col-xs-12">
-                    <div class="row">
-                        <?= $this->render('unit/unit', ['unit' => $unit]) ?>
+            <?php foreach ($model as $unit): ?>
+                <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
+                    <div class="buttons media-left">
+                        <p class="text-right"><?= $this->render('unit/form/modal', ['unit' => $unit]); ?></p>
+                        <p class="text-right"><button class="btn btn-default">Upload</button></p>
                     </div>
-                    <?php if (Oauth::isLogged()): ?>
-                        <div class="row">
-                            <?= $this->render('unit/form/modal', ['unit' => $unit]) ?>
+                    <div class="media-left">
+                        <a target="_blank" href="<?= $unit->linkgc ?>">
+                            <img class="icon" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <div class="form-group">
+                            <input class="form-control unit-name" value="<?= ($unit->name) ? $unit->name : '' ?>" readonly>
                         </div>
-                    <?php endif; ?>
-                    <div class="row">
-                        <?= $this->render('image/upload/upload', ['model' => $model, 'unit' => $unit]); ?>
+                        <div class="form-group">
+                            <input class="form-control" type="text" value="<?= $unit->original ?>" readonly>
+                        </div>
                     </div>
-                </div>
+                </li>
             <?php endforeach; ?>
-        </div>
-        <?= $this->render('unit/pagination', ['model' => $model]) ?>
+        </ul>
+        <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
     <?php else: ?>
         <h3 class="text-center">Nothing found</h3>
     <?php endif; ?>
