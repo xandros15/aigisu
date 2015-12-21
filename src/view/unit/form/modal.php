@@ -25,13 +25,13 @@ $rarities = Unit::getRarities();
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Romaji name:</label>
-                        <input class="form-control unit-name" name="unit[name]" type="text" value="<?=
+                        <input class="form-control unit-name" name="name" type="text" value="<?=
                         ($unit->name) ? $unit->name : ''
                         ?>">
                     </div>
                     <div class="form-group">
                         <label>Rarity:</label>
-                        <select class="form-control unit-rarity" name="unit[rarity]">
+                        <select class="form-control unit-rarity" name="rarity">
                             <?php foreach ($rarities as $rarity): ?>
                                 <option value="<?= $rarity ?>" <?= ($rarity == $unit->rarity) ? 'selected' : '' ?>><?= $rarity ?></option>
                             <?php endforeach; ?>
@@ -39,12 +39,14 @@ $rarities = Unit::getRarities();
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input name="unit[isOnlyDmm]" type="checkbox"<?= ($unit->isOnlyDmm) ? 'checked' : '' ?>> is only dmm?
+                            <input name="is_only_dmm" type="hidden" value="0">
+                            <input name="is_only_dmm" value="1" type="checkbox"<?= ($unit->is_only_dmm) ? 'checked' : '' ?>> is only dmm?
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input name="unit[isMale]" type="checkbox"<?= ($unit->isMale) ? 'checked' : '' ?>> is male?
+                            <input name="is_male" type="hidden" value="0">
+                            <input name="is_male" value="1" type="checkbox"<?= ($unit->is_male) ? 'checked' : '' ?>> is male?
                         </label>
                     </div>
                 </div>
