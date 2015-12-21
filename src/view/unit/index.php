@@ -12,7 +12,7 @@ $this->setTitle('Units');
     <?php if (count($model) > 0): ?>
         <div class="col-xs-12"><?= $this->render('image/upload/help') ?></div>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
-        <ul class="unit-list list-group  col-xs-12 col-xs-offset-0 col-sm-10  col-sm-offset-2">
+        <ul class="unit-list list-group col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading"><?= $this->render('unit/sort') ?></div>
                 <?php foreach ($model as $unit): ?>
@@ -36,9 +36,9 @@ $this->setTitle('Units');
                         </div>
                     </li>
                 <?php endforeach; ?>
+            </div>
         </ul>
-    </div>
-    <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
+        <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
 <?php else: ?>
     <h3 class="text-center">Nothing found</h3>
 <?php endif; ?>
