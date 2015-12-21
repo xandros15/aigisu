@@ -3,35 +3,32 @@
 namespace models;
 
 use models\Unit;
-use Illuminate\Database\Query\Builder as Query;
+use Illuminate\Database\Eloquent\Builder as Query;
 
 class UnitSearch extends Unit
 {
-    const MAX_UNITS_DISPLAY = 30;
+    const UNITS_PER_PAGE = 30;
 
     public $maxPages = 0;
 
     public function search(array $params)
     {
-        /* @var $query Query */
-        $query = Unit::query()->toBase();
+        $query = Unit::query()->with('images');
 
         $query = $this->parseSearch($params, $query);
         $query = $this->parseSort($params, $query);
+        $query = $this->parsePagination($params, $query);
 
-        return $this->parsePage($params, $query)->get();
+        return $query->get();
     }
 
-    protected function parsePage(array $params, Query $query)
+    protected function parsePagination(array $params, Query $query)
     {
-        $this->setMaxPages($query);
-        $parsed = $query->limit(self::MAX_UNITS_DISPLAY);
-        if (!isset($params['page'])) {
-            return $parsed;
-        }
-        $page = max(($params['page'] - 1) * self::MAX_UNITS_DISPLAY, 0);
+        $page = (isset($params['page'])) ? $params['page'] : 1;
 
-        return $query->offset($page);
+        $this->maxPages = (int) ceil($query->toBase()->getCountForPagination() / self::UNITS_PER_PAGE);
+
+        return $query->forPage($page, self::UNITS_PER_PAGE);
     }
 
     protected function parseSort(array $params, Query $query)
@@ -40,12 +37,12 @@ class UnitSearch extends Unit
             return $query->orderBy('id', 'desc');
         }
 
-        $column  = strtolower($params['sort']);
+        $column    = strtolower($params['sort']);
         $direction = 'asc';
 
         if (strpos($params['sort'], '-') === 0) {
             $direction = 'desc';
-            $column  = ltrim($column, '-');
+            $column    = ltrim($column, '-');
         }
 
         if (!in_array($column, Unit::getColumns())) {
@@ -95,10 +92,5 @@ class UnitSearch extends Unit
             $newArguments[$namespace] = $argument;
         }
         return $newArguments;
-    }
-
-    private function setMaxPages(Query $query)
-    {
-        $this->maxPages = (int) ceil($query->count() / self::MAX_UNITS_DISPLAY);
     }
 }
