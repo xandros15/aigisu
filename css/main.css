@@ -1,8 +1,8 @@
 html, body {
     height: 100%;
 }
-img{
-    max-width: 100%;
+.media{
+    margin-top: 0;
 }
 .wrap{
     min-height: 100%;
