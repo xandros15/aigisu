@@ -73,4 +73,14 @@ class Unit extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    public function isImagesRequired()
+    {
+        $imgPerServ = Image::IMAGE_PER_SERVER;
+        $servers    = Image::getServersNames();
+
+        $total = ($this->is_male) ? 0 : (($this->is_only_dmm) ? $imgPerServ : $imgPerServ * count($servers));
+
+        return $this->images->count() != $total;
+    }
 }
