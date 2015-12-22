@@ -48,11 +48,13 @@ class Image extends Model
         Main::$app->connection->validator->extend('imageExists',
             function($attribute, $value, $parameters, $validator) {
             list($scene, $server, $id) = $parameters;
+
             $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
             if ($id) {
                 $image = $image->where('id', '!=', $id);
             }
-            return $image->toBase()->count() != 0;
+
+            return $image->count() != 0;
         });
     }
 
@@ -67,7 +69,6 @@ class Image extends Model
             'md5' => ['required', 'size:32'],
             'server' => ['required', 'in:' . implode(',', self::getServersNames())],
             'scene' => ['required', 'digits_between:1,2'],
-            //create uniq rule
             'unit_id' => ['required', 'exists:unit,id', 'imageExists:' . implode(',',
                     [$this->scene, $this->server, $this->id])],
             'google' => ['string'],
