@@ -11,7 +11,7 @@ $this->setTitle('images');
 $this->setContainerClass('container-fluid');
 ?>
 <?php foreach ($images as $serverName => $server): ?>
-    <ul class="list-unstyled <?= $serverName ?> col-xs-12 col-sm-6">
+    <ul class="list-unstyled <?= $serverName ?> col-xs-12 col-md-6">
         <h2 class="text-center">#<?= $serverName ?></h2>
         <?php foreach ($server as $image): ?>
             <li style="display: inline-block; position: relative;">
