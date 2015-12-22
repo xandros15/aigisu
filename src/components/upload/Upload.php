@@ -36,7 +36,7 @@ abstract class Upload
     /** @var array */
     protected $errors = [];
 
-    abstract public function upload($filename);
+    abstract public function upload($name);
 
     abstract public function setFile($fileOrUrl);
 
