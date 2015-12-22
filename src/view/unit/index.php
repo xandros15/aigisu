@@ -10,7 +10,7 @@ $this->setTitle('Units');
 ?>
 <div id="units">
     <?php if (count($model) > 0): ?>
-        <div class="col-xs-12"><?= $this->render('image/upload/help') ?></div>
+        <div class="col-xs-12"><?= $this->render('image/help') ?></div>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
         <ul class="unit-list list-group col-xs-12">
             <div class="panel panel-default">
