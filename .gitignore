@@ -28,3 +28,6 @@ phpunit.phar
 
 # ignore apache config
 .htaccess
+
+# ignore ide helper
+/laravel-ide-helper
