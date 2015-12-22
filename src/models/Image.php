@@ -42,6 +42,20 @@ class Image extends Model
     const SERVER_NUTAKU    = 'nutaku';
     const SERVER_DMM       = 'dmm';
 
+    public static function boot()
+    {
+        parent::boot();
+        Main::$app->connection->validator->extend('imageExists',
+            function($attribute, $value, $parameters, $validator) {
+            list($scene, $server, $id) = $parameters;
+            $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
+            if ($id) {
+                $image = $image->where('id', '!=', $id);
+            }
+            return $image->toBase()->count() != 0;
+        });
+    }
+
     public static function tableName()
     {
         return 'image';
@@ -51,9 +65,11 @@ class Image extends Model
     {
         return [
             'md5' => ['required', 'size:32'],
-            'unit_id' => ['required', 'exists:unit,id'],
             'server' => ['required', 'in:' . implode(',', self::getServersNames())],
             'scene' => ['required', 'digits_between:1,2'],
+            //create uniq rule
+            'unit_id' => ['required', 'exists:unit,id', 'imageExists:' . implode(',',
+                    [$this->scene, $this->server, $this->id])],
             'google' => ['string'],
             'imgur' => ['string'],
             'delhash' => ['string']
