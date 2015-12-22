@@ -30,7 +30,7 @@ $isImgReqired = $unit->isImagesRequired();
                         <?php
                         foreach (Image::getServersNames() as $server):
                             for ($scene = 1; $scene <= Image::IMAGE_PER_SERVER; $scene++):
-                                if(!$unit->isImageExsists($server, $scene)):
+                                if (!$unit->isImageExsists($server, $scene)):
                                     echo $this->render('image/form/modal-body',
                                         ['image' => (object) ['server' => $server, 'scene' => $scene]]);
                                 endif;

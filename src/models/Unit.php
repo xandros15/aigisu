@@ -83,7 +83,8 @@ class Unit extends Model
 
     public function isImageExsists($server, $scene)
     {
-        return $this->images->where('server', $server)->contains('scene', $scene);
+        return ($this->is_only_dmm && $server == Image::SERVER_NUTAKU) ? true : $this->images->where('server', $server)->contains('scene',
+                $scene);
     }
 
     public function isAnyImages()
