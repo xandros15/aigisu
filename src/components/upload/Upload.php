@@ -30,6 +30,9 @@ abstract class Upload
     /** @var string */
     public $root;
 
+    /** @var string */
+    public $md5;
+
     /** @var array */
     protected $errors = [];
 
@@ -64,6 +67,11 @@ abstract class Upload
         $this->mimeType  = image_type_to_mime_type(exif_imagetype($this->filename));
         $this->extension = Extension::guess($this->mimeType);
         return $this->mimeType;
+    }
+
+    protected function setFileMd5()
+    {
+        $this->md5 = md5_file($this->filename);
     }
 
     protected function setError($message)
