@@ -11,10 +11,8 @@ class ImageController extends Controller
 
     public function actionIndex(Request $request)
     {
-        $id       = $request->getAttribute('id');
-        $imageSet = Image::imagesByUnit($id);
-        $images   = $imageSet->getSortedImages();
+        $images = Image::where('unit_id', $request->getAttribute('id'))->get();
 
-        return $this->render('image/index', ['images' => $images]);
+        return $this->render('image/index', ['images' => $images->sortByDesc('scene')->groupBy('server')]);
     }
 }
