@@ -53,7 +53,7 @@ class Unit extends Model
             'icon' => ['required', 'active_url'],
             'link' => ['active_url'],
             'linkgc' => ['required', 'active_url'],
-            'rarity' => ['required', 'in:' . implode(',', self::getRarities())],
+            'rarity' => ['required_with:' . implode(',', self::getRarities())],
             'is_male' => ['required', 'bool'],
             'is_only_dmm' => ['required', 'bool']
         ];
