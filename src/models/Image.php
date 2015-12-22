@@ -16,6 +16,7 @@ use traits\Validator;
  * @property string $server
  * @property int $scene
  * @property string $google
+ * @property string $imgur
  * @property string $delhash
  * @property Unit $unit
  */
@@ -81,6 +82,10 @@ class Image extends Model
 
     public function getLink()
     {
-        return sprintf('%s%s/%d.png', Main::$app->web->siteUrl, self::IMAGE_DIRECTORY, $this->id);
+        /**
+         * http://i.imgur.com/{fieldId}.png
+         * https://drive.google.com/uc?export=view&id={fileId}
+         */
+        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
     }
 }
