@@ -91,7 +91,7 @@ class Image extends Model
 
     public static function getImageSetByUnitId($id)
     {
-        $imageSet = Image::where('unit_id', $id)->get();
+        $imageSet = self::where('unit_id', $id)->get();
 
         return $imageSet->sortByDesc('scene')->groupBy('server');
     }
