@@ -32,7 +32,8 @@ trait Validator
         }
 
         if (!$result) {
-            foreach ($validator->errors()->getMessages() as $errors) {
+            $this->errors = $validator->errors();
+            foreach ($this->errors->getMessages() as $errors) {
                 foreach ($errors as $error) {
                     Alert::add($error, Alert::ERROR);
                 }
