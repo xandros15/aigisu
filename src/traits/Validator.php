@@ -19,16 +19,26 @@ trait Validator
             return true;
         }
 
+        if (method_exists($this, 'beforeValidate')) {
+            $this->beforeValidate();
+        }
+
         $validator = Main::$app->connection->validator->make($this->getAttributes(), $this->rules());
 
-        if ($validator->passes()) {
-            return true;
+        $result = $validator->passes();
+
+        if (method_exists($this, 'afterValidate')) {
+            $this->beforeValidate();
         }
-        foreach ($validator->errors()->getMessages() as $errors) {
-            foreach ($errors as $error) {
-                Alert::add($error, Alert::ERROR);
+
+        if (!$result) {
+            foreach ($validator->errors()->getMessages() as $errors) {
+                foreach ($errors as $error) {
+                    Alert::add($error, Alert::ERROR);
+                }
             }
+            return false;
         }
-        return false;
+        return true;
     }
 }
