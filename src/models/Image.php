@@ -54,7 +54,7 @@ class Image extends Model
                 $image = $image->where('id', '!=', $id);
             }
 
-            return $image->count() != 0;
+            return $image->count() === 0;
         });
     }
 
