@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dadaeabdbdfc3335ea00eb9212d9dbde",
-    "content-hash": "b54328727c1faa2ea0ab01cbf6c6d8fa",
+    "hash": "5d18a453494f8532c1c9abc5919ce772",
+    "content-hash": "fbd279ababca9e9b0cb49c195845820d",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -195,7 +195,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/6b2a66f21a39788c371fc89155c8454a96d202e1",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/51c1a6b1a4ad7e25cfe6b8086a00e1c657ef7911",
                 "reference": "6b2a66f21a39788c371fc89155c8454a96d202e1",
                 "shasum": ""
             },
@@ -280,7 +280,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/81113f0f9e1167b15fe247265426e2b5a99d0ecf",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/6fbdc06221a5ba0c1866ab81de2a67e1abbd929c",
                 "reference": "941c80358ebbc8723af62ab39df44342ca78eaa8",
                 "shasum": ""
             },
@@ -340,7 +340,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/017823993faf0d47d41b3f0f8724a4cf8c745dc4",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/baea3e2cc864910eb22f242834c875cbddc16c90",
                 "reference": "017823993faf0d47d41b3f0f8724a4cf8c745dc4",
                 "shasum": ""
             },
@@ -490,7 +490,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/138075b7906c17ac719bf5eef8ae81b45a557f25",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/f77697c912963429a927d34a3bec689d35e47215",
                 "reference": "138075b7906c17ac719bf5eef8ae81b45a557f25",
                 "shasum": ""
             },
@@ -1046,6 +1046,69 @@
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
             "time": "2015-12-05 17:45:25"
+        },
+        {
+            "name": "symfony/var-dumper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "14ed95dc176e56b2258fea3deb936b9488de1dbe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/14ed95dc176e56b2258fea3deb936b9488de1dbe",
+                "reference": "14ed95dc176e56b2258fea3deb936b9488de1dbe",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2015-12-05 11:13:35"
         }
     ],
     "packages-dev": [],
