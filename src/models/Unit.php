@@ -76,11 +76,13 @@ class Unit extends Model
 
     public function isImagesRequired()
     {
-        $imgPerServ = Image::IMAGE_PER_SERVER;
-        $servers    = Image::getServersNames();
-
-        $total = ($this->is_male) ? 0 : (($this->is_only_dmm) ? $imgPerServ : $imgPerServ * count($servers));
+        $total = ($this->is_male) ? 0 : (($this->is_only_dmm) ? Image::IMAGE_PER_SERVER : Image::IMAGE_PER_SERVER * count(Image::getServersNames()));
 
         return $this->images->count() != $total;
+    }
+
+    public function isImageExsists($server, $scene)
+    {
+        return $this->images->where('server', $server)->contains('scene', $scene);
     }
 }

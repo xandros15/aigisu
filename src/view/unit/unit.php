@@ -9,7 +9,7 @@ use app\core\View;
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
     <div class="buttons media-left">
         <p class="text-right"><?= $this->render('unit/form/modal', ['unit' => $unit]); ?></p>
-        <p class="text-right"><button class="btn btn-default<?= !$unit->isImagesRequired() ? '' : ' disabled' ?>" type="button" data-toggle="modal" data-target="#unit-image-upload-modal-<?= $unit->id ?>">Upload</button></p>
+        <p class="text-right"><?= $this->render('image/upload/form/modal', ['unit' => $unit]); ?></p>
     </div>
     <div class="media-left">
         <a target="_blank" href="<?= $unit->linkgc ?>">

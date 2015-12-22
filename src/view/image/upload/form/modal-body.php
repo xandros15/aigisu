@@ -1,11 +1,9 @@
 <?php
 
 use models\Image;
-use RedBeanPHP\OODBBean;
 use app\core\View;
 
 /* @var $this View */
-/* @var $image OODBBean */
 $name = $image->server . $image->scene;
 ?>
 <div class="row">
