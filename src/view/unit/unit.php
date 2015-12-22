@@ -24,4 +24,8 @@ use app\core\View;
             <input class="form-control" type="text" value="<?= $unit->original ?>" readonly>
         </div>
     </div>
+    <?php if ($unit->isAnyImages()): ?>
+        <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
+        <input class="image-route" type="hidden" value="<?= Main::$app->router->pathFor('image', ['id' => $unit->id]) ?>">
+    <?php endif; ?>
 </li>

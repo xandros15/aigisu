@@ -85,4 +85,9 @@ class Unit extends Model
     {
         return $this->images->where('server', $server)->contains('scene', $scene);
     }
+
+    public function isAnyImages()
+    {
+        return !$this->images->isEmpty();
+    }
 }
