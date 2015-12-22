@@ -88,4 +88,11 @@ class Image extends Model
          */
         return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
     }
+
+    public static function getImageSetByUnitId($id)
+    {
+        $imageSet = Image::where('unit_id', $id)->get();
+
+        return $imageSet->sortByDesc('scene')->groupBy('server');
+    }
 }
