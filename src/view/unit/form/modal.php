@@ -17,7 +17,7 @@ $isLogged = Oauth::isLogged();
 <?php if ($isLogged): ?>
     <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <form id="<?= $unit->id ?>" method="post" role="form" action="<?=
+            <form id="<?= $unit->id ?>" class="ws-validate" method="post" role="form" action="<?=
             Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
             ?>">
                 <div class="modal-content">
@@ -30,7 +30,7 @@ $isLogged = Oauth::isLogged();
                             <label>Romaji name:</label>
                             <input class="form-control unit-name" name="name" type="text" value="<?=
                             ($unit->name) ? $unit->name : ''
-                            ?>">
+                            ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Rarity:</label>

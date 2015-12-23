@@ -39,3 +39,7 @@ body > * {
 .modal img{
     max-width: 100%;
 }
+
+.form-group >[class*="col-"] + .ws-errorbox {
+    padding: 0 15px;
+}

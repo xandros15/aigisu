@@ -24,7 +24,7 @@ $name = $image->server . $image->scene;
             <label>Source URL:</label>
         </div>
         <div class="col-xs-9">
-            <input class="form-control" name="<?= $name ?>[url]" autocomplete="off" type="text"  placeholder="http://">
+            <input class="form-control" name="<?= $name ?>[url]" autocomplete="off" type="url"  placeholder="http://">
         </div>
     </div>
     <input type="hidden" name="<?= $name ?>[server]" value="<?= $image->server ?>">

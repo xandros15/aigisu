@@ -17,7 +17,7 @@ $isImgReqired = $unit->isImagesRequired();
 <?php if ($isImgReqired): ?>
     <div class="modal fade" id="unit-image-upload-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <form enctype="multipart/form-data" method="post" role="form" action=<?=
+            <form enctype="multipart/form-data" class="ws-validate" method="post" role="form" action=<?=
             Main::$app->router->pathFor('imageUpload', ['id' => $unit->id])
             ?>>
                 <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
