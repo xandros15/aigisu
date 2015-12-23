@@ -2,135 +2,136 @@
 
 namespace controller;
 
-use models\Unit;
 use app\core\Controller;
 use app\alert\Alert;
 use app\google\GoogleFile;
 use app\imgur\Imgur;
 use app\upload\Rely;
-use app\upload\SingleFile;
+use models\ImageFile;
 use Slim\Http\Request;
-use RedBeanPHP\R;
+use app\upload\Upload;
 use Exception;
 
 class ImageFileController extends Controller
 {
-    public $newDir;
-    public $unit;
+    /** @var Rely */
     protected $rely;
-
-    /** @var SingleFile */
-    protected $files = [];
-    protected $destination;
 
     public function actionCreate(Request $request)
     {
-        $this->request = $request;
-        $this->setRely();
-        $this->upload($request->getAttribute('id'));
+        $this->uploadFiles($request->getUploadedFiles(), $request->getParams(), $request->getAttribute('id'));
+
         return $this->goBack();
     }
 
-    public function setRely()
+    protected function setRely()
     {
         $this->rely = new Rely();
+        $this->rely->setDirectory(ImageFile::IMAGE_DIRECTORY);
         $this->rely->setExtendedServer('google', new GoogleFile(), 'uploadOnGoogleDrive');
         $this->rely->setExtendedServer('imgur', Imgur::facade(), 'uploadOnImgur');
     }
 
-    public function upload($id)
+    protected function uploadFiles($files, $post, $unitId)
     {
-        $this->setUnit($id);
-        $this->setFiles();
-        $this->uploadEachFiles();
-    }
+        $this->setRely();
+        $errors = [];
+        foreach ($files as $key => $file) {
+            if (!isset($post[$key])) {
+                continue;
+            }
 
-    protected function uploadEachFiles()
-    {
-        foreach ($this->files as $file) {
-            $file->upload();
-            if (!$file->isErrors()) {
-                Alert::add("Successful uploaded {$file->unit->name} {$file->server} {$file->scene} scene");
-                $this->uploadToExtendetServers($file);
+            /* @var $uploadedFile Upload */
+            if (!empty($post[$key]['url'])) {
+                $uploadedFile = $this->rely->uploadFromServer($post[$key]['url'], $errors);
+            } elseif ($file->getError() === UPLOAD_ERR_OK) {
+                $uploadedFile = $this->rely->uploadFromClient($file, $errors);
+            } else {
+                continue;
+            }
+
+            if ($errors) {
+                $this->showErrors($errors);
+                continue;
+            }
+            $model = new ImageFile([
+                'unit_id' => $unitId,
+                'scene' => $post[$key]['scene'],
+                'server' => $post[$key]['server'],
+                'md5' => $uploadedFile->md5
+            ]);
+
+            if ($this->transaction($model, $uploadedFile)) {
+                $this->uploadToExtendetServers($model, $uploadedFile);
             }
         }
     }
 
-    protected function uploadToExtendetServers(SingleFile $image)
+    protected function uploadToExtendetServers(ImageFile $model, Upload $uploadedFile)
     {
-        $isChanged = false;
         foreach ($this->rely->extendedServers as $name => $server) {
             if (!is_callable($server['callback'])) {
                 continue;
             }
-            $results = call_user_func($server['callback'], $image);
+            $results = call_user_func($server['callback'], $model, $uploadedFile);
             if ($results instanceof Exception) {
                 Alert::add("Upload on {$name} Failed. Error: " . $results->getMessage(), Alert::WARNING);
                 continue;
             }
             switch ($name) {
                 case 'imgur':
-                    $image->imageBean->imgur   = $results['data']['id'];
-                    $image->imageBean->delhash = $results['data']['deletehash'];
+                    $model->imgur   = $results['data']['id'];
+                    $model->delhash = $results['data']['deletehash'];
                     break;
                 case 'google':
-                    $image->imageBean->google  = $results->id;
+                    $model->google  = $results->id;
                     break;
             }
-            Alert::add("Successful uploaded {$image->unit->name} {$image->server} {$image->scene} scene on {$name}");
-            $isChanged = true;
-        }
-        return ($isChanged) ? R::store($image->imageBean) : false;
-    }
-
-    protected function setUnit($id)
-    {
-        if (!($unit = R::load(Unit::tableName(), $id))) {
-            throw new Exception("No find unit with id:'{$id}'");
-        }
-        $this->unit = $unit;
-    }
-
-    protected function setFiles()
-    {
-        $files  = $this->request->getUploadedFiles();
-        $post   = $this->request->getParams();
-        $errors = [];
-        foreach ($files as $key => $file) {
-            if (isset($post[$key])) {
-                if ($this->isFileFromUrl($post[$key])) {
-                    $uploadedFile = $this->rely->uploadFromServer($post[$key]['url'], $errors);
-                } elseif ($file->getError() === UPLOAD_ERR_OK) {
-                    $uploadedFile = $this->rely->uploadFromClient($file, $errors);
-                } else {
-                    continue;
-                }
-                if ($errors) {
-                    foreach ($errors as $message) {
-                        Alert::add($message, Alert::ERROR);
-                    }
-                    continue;
-                }
-
-                $model = new SingleFile();
-                $model->setPost($post[$key]);
-                $model->setFile($uploadedFile);
-                $model->setUnit($this->unit);
-
-                if ($model->validate()) {
-                    $this->setFile($key, $model);
-                }
+            if ($model->validate() && $model->save()) {
+                Alert::add(
+                    sprintf("Successful uploaded %s %s %s on %s", $model->unit->name, $model->server,
+                        ImageFile::imageSceneToHuman($model->scene), $name));
             }
         }
     }
 
-    protected function setFile($key, SingleFile $model)
+    private function transaction(ImageFile $model, Upload $uploadedFile)
     {
-        $this->files[$key] = $model;
+        $model->getConnection()->beginTransaction();
+        $stuffForValidate = [
+            'size' => $uploadedFile->filesize,
+            'file' => $uploadedFile->filename,
+            'mime' => $uploadedFile->mimeType,
+            'height' => $uploadedFile->height,
+            'width' => $uploadedFile->width
+        ];
+        if ($model->validate($stuffForValidate) && $model->save()) {
+            try {
+                $uploadedFile->upload($model->id);
+
+                $model->getConnection()->commit();
+
+                Alert::add("Successful uploaded {$model->unit->name} {$model->server} {$model->scene} scene");
+                return true;
+            } catch (Exception $exc) {
+                $model->getConnection()->rollBack();
+                Alert::add($exc->getTraceAsString(), Alert::ERROR);
+            }
+        }
+
+        $this->deteleFile($uploadedFile->filename);
+        return false;
     }
 
-    protected function isFileFromUrl($post)
+    private function deteleFile($filename)
     {
-        return !empty($post['url']);
+        return (is_file($filename) && is_executable($filename)) ? unlink($filename) : false;
+    }
+
+    private function showErrors(array $errors)
+    {
+        foreach ($errors as $message) {
+            Alert::add($message, Alert::ERROR);
+        }
     }
 }
