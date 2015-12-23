@@ -54,6 +54,7 @@ class ImageFileController extends Controller
                 $this->showErrors($errors);
                 continue;
             }
+
             $model = new ImageFile([
                 'unit_id' => $unitId,
                 'scene' => $post[$key]['scene'],
@@ -61,13 +62,21 @@ class ImageFileController extends Controller
                 'md5' => $uploadedFile->md5
             ]);
 
-            if ($this->transaction($model, $uploadedFile)) {
-                $this->uploadToExtendetServers($model, $uploadedFile);
+            $stuffForValidate = [
+                'size' => $uploadedFile->filesize,
+                'file' => $uploadedFile->filename,
+                'mime' => $uploadedFile->mimeType,
+                'height' => $uploadedFile->height,
+                'width' => $uploadedFile->width
+            ];
+
+            if ($this->transaction($model, $uploadedFile, $stuffForValidate)) {
+                $this->uploadToExtendetServers($model, $uploadedFile, $stuffForValidate);
             }
         }
     }
 
-    protected function uploadToExtendetServers(ImageFile $model, Upload $uploadedFile)
+    protected function uploadToExtendetServers(ImageFile $model, Upload $uploadedFile, $stuffForValidate)
     {
         foreach ($this->rely->extendedServers as $name => $server) {
             if (!is_callable($server['callback'])) {
@@ -87,7 +96,7 @@ class ImageFileController extends Controller
                     $model->google  = $results->id;
                     break;
             }
-            if ($model->validate() && $model->save()) {
+            if ($model->validate($stuffForValidate) && $model->save()) {
                 Alert::add(
                     sprintf("Successful uploaded %s %s %s on %s", $model->unit->name, $model->server,
                         ImageFile::imageSceneToHuman($model->scene), $name));
@@ -95,16 +104,9 @@ class ImageFileController extends Controller
         }
     }
 
-    private function transaction(ImageFile $model, Upload $uploadedFile)
+    private function transaction(ImageFile $model, Upload $uploadedFile, $stuffForValidate)
     {
         $model->getConnection()->beginTransaction();
-        $stuffForValidate = [
-            'size' => $uploadedFile->filesize,
-            'file' => $uploadedFile->filename,
-            'mime' => $uploadedFile->mimeType,
-            'height' => $uploadedFile->height,
-            'width' => $uploadedFile->width
-        ];
         if ($model->validate($stuffForValidate) && $model->save()) {
             try {
                 $uploadedFile->upload($model->id);
