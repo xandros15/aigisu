@@ -35,3 +35,7 @@ body > * {
 .single-unit{
     margin-bottom: 10px;
 }
+
+.modal img{
+    max-width: 100%;
+}
