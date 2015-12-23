@@ -60,6 +60,11 @@ return [
                     'methods' => ['post'],
                     'action' => UnitController::class . ':actionCreate',
                     'name' => 'unitCreate'
+                ],
+                '/delete/{id:\d+}' => [
+                    'methods' => ['get'],
+                    'action' => UnitController::class . ':actionDelete',
+                    'name' => 'unitDelete'
                 ]
             ],
             '/oauth' => [

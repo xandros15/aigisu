@@ -18,8 +18,8 @@ $isLogged = Oauth::isLogged();
     <div class="modal fade" id="unit-update-modal-<?= $unit->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <form id="<?= $unit->id ?>" class="ws-validate" method="post" role="form" action="<?=
-            Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
-            ?>">
+                  Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
+                  ?>">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -29,15 +29,15 @@ $isLogged = Oauth::isLogged();
                         <div class="form-group">
                             <label>Romaji name:</label>
                             <input class="form-control unit-name" name="name" type="text" value="<?=
-                            ($unit->name) ? $unit->name : ''
-                            ?>" required>
+                                   ($unit->name) ? $unit->name : ''
+                                   ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Rarity:</label>
                             <select class="form-control unit-rarity" name="rarity">
                                 <?php foreach ($rarities as $rarity): ?>
                                     <option value="<?= $rarity ?>" <?= ($rarity == $unit->rarity) ? 'selected' : '' ?>><?= $rarity ?></option>
-                                <?php endforeach; ?>
+    <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="checkbox">
@@ -54,6 +54,7 @@ $isLogged = Oauth::isLogged();
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <a role="button" class="btn btn-danger pull-left" onclick="return confirm('Are you sure');" href="<?= Main::$app->router->pathFor('unitDelete', ['id' => $unit->id]) ?>">delete</a>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">update</button>
                     </div>

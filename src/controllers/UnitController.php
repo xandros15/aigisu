@@ -51,6 +51,22 @@ class UnitController extends Controller
         return $this->goBack();
     }
 
+    public function actionDelete(Request $request)
+    {
+        if (!Oauth::isLogged()) {
+            return $this->goBack();
+        }
+
+        /* @var $model Unit */
+        $model = Unit::find($request->getAttribute('id'));
+
+        if ($model->delete()) {
+            Alert::add("Successful delete {$model->name}");
+        }
+
+        return $this->goBack();
+    }
+
     public static function getSearchQuery()
     {
         return Main::$app->request->getParam('q', '');
