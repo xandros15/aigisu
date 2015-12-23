@@ -7,6 +7,9 @@ html, body {
 .icon{
     width: 100px;
 }
+.popover{
+    max-width: 100%;
+}
 .wrap{
     min-height: 100%;
     height: auto;
