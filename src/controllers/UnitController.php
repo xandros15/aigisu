@@ -44,8 +44,7 @@ class UnitController extends Controller
         $model = Unit::find($request->getAttribute('id'));
         $model->fill($request->getParams());
 
-        if ($model->validate()) {
-            $model->save();
+        if ($model->validate() && $model->save()) {
             Alert::add("Successful update {$model->name}");
         }
 
