@@ -8,6 +8,7 @@ use models\UnitSearch;
 use app\core\Controller;
 use Slim\Http\Request;
 use app\alert\Alert;
+use controller\OauthController as Oauth;
 
 class UnitController extends Controller
 {
@@ -22,6 +23,11 @@ class UnitController extends Controller
 
     public function actionUpdate(Request $request)
     {
+
+        if(!Oauth::isLogged()){
+            return $this->goBack();
+        }
+
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
         $model->fill($request->getParams());
