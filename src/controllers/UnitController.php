@@ -21,10 +21,22 @@ class UnitController extends Controller
                 ['model' => $model->search($request->getParams()), 'maxPages' => $model->maxPages]);
     }
 
+    public function actionCreate(Request $request)
+    {
+        if (!Oauth::isLogged()) {
+            return $this->goBack();
+        }
+
+        $model = new Unit($request->getParams());
+        if ($model->validate() && $model->save()) {
+            Alert::add('Successful added ' . $model->name);
+        }
+        $this->goBack();
+    }
+
     public function actionUpdate(Request $request)
     {
-
-        if(!Oauth::isLogged()){
+        if (!Oauth::isLogged()) {
             return $this->goBack();
         }
 
