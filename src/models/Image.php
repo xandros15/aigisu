@@ -47,6 +47,9 @@ class Image extends Model
         parent::boot();
         Main::$app->connection->validator->extend('imageExists',
             function($attribute, $value, $parameters, $validator) {
+
+            $validator->setCustomMessages([$attribute => 'Image already exists']);
+
             list($scene, $server, $id) = $parameters;
 
             $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
@@ -68,7 +71,7 @@ class Image extends Model
         return [
             'md5' => ['required', 'size:32'],
             'server' => ['required', 'in:' . implode(',', self::getServersNames())],
-            'scene' => ['required', 'digits_between:1,2'],
+            'scene' => ['required', 'integer', 'in:1,2'],
             'unit_id' => ['required', 'exists:unit,id', 'imageExists:' . implode(',',
                     [$this->scene, $this->server, $this->id])],
             'google' => ['string'],
