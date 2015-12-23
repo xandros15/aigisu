@@ -12,24 +12,18 @@ trait Validator
     /** @var  MessageBag */
     public $errors;
 
-    public function validate()
+    public function validate($attributes = [])
     {
         /* @var $this Model */
         if (!method_exists($this, 'rules')) {
             return true;
         }
 
-        if (method_exists($this, 'beforeValidate')) {
-            $this->beforeValidate();
-        }
+        $attributes = ($attributes) ? array_merge($this->getAttributes(), $attributes) : $this->getAttributes();
 
-        $validator = Main::$app->connection->validator->make($this->getAttributes(), $this->rules());
+        $validator = Main::$app->connection->validator->make($attributes, $this->rules());
 
         $result = $validator->passes();
-
-        if (method_exists($this, 'afterValidate')) {
-            $this->beforeValidate();
-        }
 
         if (!$result) {
             $this->errors = $validator->errors();
