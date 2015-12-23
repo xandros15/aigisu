@@ -50,9 +50,9 @@ class Unit extends Model
         return [
             'name' => ['required', 'alpha_dash'],
             'original' => ['required', 'string', 'unique:unit,original,' . $this->id],
-            'icon' => ['required', 'active_url'],
-            'link' => ['active_url'],
-            'linkgc' => ['required', 'active_url'],
+            'icon' => ['required', 'url'],
+            'link' => ['url'],
+            'linkgc' => ['required', 'url'],
             'rarity' => ['required_with:' . implode(',', self::getRarities())],
             'is_male' => ['required', 'bool'],
             'is_only_dmm' => ['required', 'bool']
