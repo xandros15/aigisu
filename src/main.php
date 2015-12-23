@@ -1,9 +1,4 @@
 <?php
-$query = (object) [
-        'get' => (object) $_GET,
-        'post' => (object) $_POST,
-        'files' => (object) $_FILES,
-];
 
 use Slim\App as Slim;
 use Slim\Router;
