@@ -31,7 +31,7 @@ class UnitController extends Controller
         if ($model->validate() && $model->save()) {
             Alert::add('Successful added ' . $model->name);
         }
-        $this->goBack();
+        return $this->goBack();
     }
 
     public function actionUpdate(Request $request)
