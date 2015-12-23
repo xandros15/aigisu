@@ -2,7 +2,6 @@
 
 namespace app\upload;
 
-use app\upload\SingleFile;
 use app\upload\Upload;
 use Exception;
 
@@ -11,20 +10,24 @@ class FileFromUrl extends Upload
     public $url;
     protected $ctx;
 
-    const MAX_FILE_SIZE = SingleFile::MAX_FILESIZE + 1;
+    const MAX_FILE_SIZE = 512 * 1024 + 1;
 
     public function __construct()
     {
         $this->setCtx();
     }
 
-    public function upload($filename)
+    public function upload($name)
     {
-        if (!rename($this->filename, $filename)) {
-            throw new Exception("Can't move file from: '{$this->filename}' to: '{$filename}'");
+        $name = sprintf('%s%s.%s', $this->destination, $name, $this->extension);
+
+        if (!rename($this->filename, $name)) {
+            throw new Exception("Can't move file from: '{$this->filename}' to: '{$name}'");
         }
+
         $this->oldFilename = $this->filename;
-        $this->filename    = $filename;
+        $this->filename    = $name;
+
         return $this->filename;
     }
 
@@ -38,6 +41,8 @@ class FileFromUrl extends Upload
             $this->setFileFromUrl();
             $this->setFileMime();
             $this->setFileSize();
+            $this->setFileMd5();
+            $this->setFileResolution();
         } catch (Exception $e) {
             $this->setError($e->getMessage());
         }

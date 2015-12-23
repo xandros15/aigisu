@@ -33,6 +33,12 @@ abstract class Upload
     /** @var string */
     public $md5;
 
+    /** @var int */
+    public $width;
+
+    /** @var int */
+    public $height;
+
     /** @var array */
     protected $errors = [];
 
@@ -55,6 +61,11 @@ abstract class Upload
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    protected function setFileResolution()
+    {
+        list($this->width, $this->height) = getimagesize($this->filename);
     }
 
     protected function setFileSize()
