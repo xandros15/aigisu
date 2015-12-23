@@ -7,7 +7,7 @@ use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
 use app\upload\FileFromClient;
 use app\upload\FileFromUrl;
-use models\ImageFile;
+use models\Image;
 use Exception;
 
 class Rely
@@ -45,7 +45,7 @@ class Rely
         $this->extendedServers[$name] = [ 'server' => $extentionServer, 'callback' => [$this, $method]];
     }
 
-    public function uploadOnGoogleDrive(ImageFile $model, Upload $file)
+    public function uploadOnGoogleDrive(Image $model, Upload $file)
     {
         try {
             /* @var $google GoogleFile */
@@ -62,7 +62,7 @@ class Rely
         }
     }
 
-    public function uploadOnImgur(ImageFile $model, Upload $file)
+    public function uploadOnImgur(Image $model, Upload $file)
     {
         try {
             /* @var $imgur Imgur */
