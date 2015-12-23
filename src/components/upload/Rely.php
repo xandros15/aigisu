@@ -7,20 +7,21 @@ use app\imgur\Imgur;
 use app\upload\ExtedndetServer;
 use app\upload\FileFromClient;
 use app\upload\FileFromUrl;
-use models\Image;
+use models\ImageFile;
 use Exception;
 
 class Rely
 {
     public $extendedServers = [];
+    public $directory;
 
     public function uploadFromServer($url, array &$errors)
     {
         $upload = new FileFromUrl();
-        $upload->setDirectory(Image::IMAGE_DIRECTORY, ROOT_DIR);
+        $upload->setDirectory($this->directory, ROOT_DIR);
         $upload->setFile($url);
         if ($upload->getErrors()) {
-            $errors = $upload->getErrors();
+            $errors = array_merge($errors, $upload->getErrors());
         }
 
         return $upload;
@@ -29,11 +30,11 @@ class Rely
     public function uploadFromClient($file, array &$errors)
     {
         $upload = new FileFromClient();
-        $upload->setDirectory(Image::IMAGE_DIRECTORY, ROOT_DIR);
+        $upload->setDirectory($this->directory, ROOT_DIR);
         $upload->setFile($file);
 
         if ($upload->getErrors()) {
-            $errors = $upload->getErrors();
+            $errors = array_merge($errors, $upload->getErrors());
         }
 
         return $upload;
@@ -44,36 +45,41 @@ class Rely
         $this->extendedServers[$name] = [ 'server' => $extentionServer, 'callback' => [$this, $method]];
     }
 
-    public function uploadOnGoogleDrive(SingleFile $image)
+    public function uploadOnGoogleDrive(ImageFile $model, Upload $file)
     {
         try {
             /* @var $google GoogleFile */
             $google = $this->getExtendednServer('google');
-            $google->setMimeType($image->file->mimeType);
-            $google->setExtension($image->file->extension);
+            $google->setMimeType($file->mimeType);
+            $google->setExtension($file->extension);
             $google->setDescription('R18');
-            $google->setName($image->server . $image->scene);
-            $google->setCatalog($image->unit->name);
-            $google->setFilename($image->file->filename);
+            $google->setName($model->server . $model->scene);
+            $google->setCatalog($model->unit->name);
+            $google->setFilename($file->filename);
             return $google->uploadFile()->resultOfUpload;
         } catch (Exception $e) {
             return $e;
         }
     }
 
-    public function uploadOnImgur(SingleFile $image)
+    public function uploadOnImgur(ImageFile $model, Upload $file)
     {
         try {
             /* @var $imgur Imgur */
             $imgur = $this->getExtendednServer('imgur');
-            $imgur->setFilename($image->file->filename);
-            $imgur->setName($image->server . ': ' . $image->unit->name);
+            $imgur->setFilename($file->filename);
+            $imgur->setName($model->server . ': ' . $model->unit->name);
             $imgur->setDescription('R18');
-            $imgur->setCatalog($image->server);
+            $imgur->setCatalog($model->server);
             return $imgur->uploadFile();
         } catch (Exception $e) {
             return $e;
         }
+    }
+
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
     }
 
     protected function getExtendednServer($name)
