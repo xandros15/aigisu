@@ -55,6 +55,11 @@ return [
                     'methods' => ['post'],
                     'action' => UnitController::class . ':actionUpdate',
                     'name' => 'unitUpdate'
+                ],
+                '/create' => [
+                    'methods' => ['post'],
+                    'action' => UnitController::class . ':actionCreate',
+                    'name' => 'unitCreate'
                 ]
             ],
             '/oauth' => [
