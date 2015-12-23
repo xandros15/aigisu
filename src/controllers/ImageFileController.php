@@ -113,7 +113,8 @@ class ImageFileController extends Controller
 
                 $model->getConnection()->commit();
 
-                Alert::add("Successful uploaded {$model->unit->name} {$model->server} {$model->scene} scene");
+                Alert::add(sprintf("Successful uploaded %s %s %s", $model->unit->name, $model->server,
+                        ImageFile::imageSceneToHuman($model->scene)));
                 return true;
             } catch (Exception $exc) {
                 $model->getConnection()->rollBack();
