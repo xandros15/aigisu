@@ -54,7 +54,7 @@ class UnitSearch extends Unit
 
     protected function parseSearch(array $params, Query $query)
     {
-        if (!isset($params['q'])) {
+        if (empty($params['q'])) {
             return $query;
         }
 
