@@ -6,34 +6,31 @@ use controller\OauthController as Oauth;
 
 /* @var $this View */
 /* @var $unit Unit */
-$createButton = function ($pathname, $id, $condition) {
-    $btn = 'class="btn ajax btn-default';
-    if (!$condition) {
-        $btn .= ' disabled"';
-    } else {
-        $btn .= '" data-target="';
-        $btn .= Main::$app->router->pathFor($pathname, ['id' => $id]) . '"';
-    }
-
-    return $btn;
-};
 ?>
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
-    <div class="buttons media-left">
-        <div class="form-group text-center">
-            <button type="button" <?= $createButton('unitUpdate', $unit->id, Oauth::isLogged()) ?>>
-                Edit
-            </button>
-        </div>
-        <div class="form-group text-center">
-            <button type="button" <?= $createButton('imageUpload', $unit->id, $unit->isImagesRequired()) ?>>
-                Upload
-            </button>
-        </div>
+    <div class="buttons media-left ">
+        <?php if (Oauth::isLogged()): ?>
+            <div class="form-group text-center">
+                <button type="button" class="btn ajax btn-default" data-target="<?=
+                Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
+                ?>">
+                    Edit
+                </button>
+            </div>
+        <?php endif; ?>
+        <?php if ($unit->isImagesRequired()): ?>
+            <div class="form-group text-center">
+                <button type="button" class="btn ajax btn-default" data-target="<?=
+                Main::$app->router->pathFor('imageUpload', ['id' => $unit->id])
+                ?>">
+                    Upload
+                </button>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="media-left">
         <a target="_blank" href="<?= $unit->linkgc ?>">
-            <img class="icon" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
+            <img class="icon img-thumbnail<?= ($unit->isAnyImages()) ? ' success' : '' ?>" alt="" src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
         </a>
     </div>
     <div class="media-body">

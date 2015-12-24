@@ -7,9 +7,18 @@ body > * {
 .media{
     margin-top: 0;
 }
+.media > .media-left{
+    min-width: 120px;
+}
 .icon{
     width: 100px;
 }
+
+.icon.success{
+    border: 1px solid #3c763d;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.9);
+}
+
 .popover{
     max-width: 100%;
 }
