@@ -8,6 +8,7 @@ use app\google\GoogleFile;
 use app\imgur\Imgur;
 use app\upload\Rely;
 use models\ImageFile;
+use models\Unit;
 use Slim\Http\Request;
 use app\upload\Upload;
 use Exception;
@@ -19,6 +20,10 @@ class ImageFileController extends Controller
 
     public function actionCreate(Request $request)
     {
+        if($request->isXhr()){
+            $model = Unit::find($request->getAttribute('id'));
+            return $this->renderAjax('image/ajax/modal', ['model' => $model]);
+        }
         $this->uploadFiles($request->getUploadedFiles(), $request->getParams(), $request->getAttribute('id'));
 
         return $this->goBack();
