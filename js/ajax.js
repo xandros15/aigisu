@@ -1,4 +1,3 @@
-var globalUrl;
 
 var ajaxModal = {
     onReady: function () {
@@ -21,6 +20,9 @@ var ajaxModal = {
     onTrigger: function (e) {
         e.preventDefault();
         var target = $(this).data('target');
+        if(!target){
+            return;
+        }    
         if (ajaxModal.loaded[target]) {
             ajaxModal.openModal(target);
         } else {

@@ -6,22 +6,27 @@ use controller\OauthController as Oauth;
 
 /* @var $this View */
 /* @var $unit Unit */
+$createButton = function ($pathname, $id, $condition) {
+    $btn = 'class="btn ajax btn-default';
+    if (!$condition) {
+        $btn .= ' disabled"';
+    } else {
+        $btn .= '" data-target="';
+        $btn .= Main::$app->router->pathFor($pathname, ['id' => $id]) . '"';
+    }
+
+    return $btn;
+};
 ?>
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
     <div class="buttons media-left">
         <div class="form-group text-center">
-            <button class="btn ajax btn-default<?=
-            (!Oauth::isLogged()) ? ' disabled' : ''
-            ?>" type="button" data-target="<?=
-                    Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
-                    ?>">
+            <button type="button" <?= $createButton('unitUpdate', $unit->id, Oauth::isLogged()) ?>>
                 Edit
             </button>
         </div>
         <div class="form-group text-center">
-            <button class="btn ajax btn-default<?=  $unit->isImagesRequired() ? '' : ' disabled' ?>" type="button" data-target="<?=
-            Main::$app->router->pathFor('imageUpload', ['id' => $unit->id])
-            ?>">
+            <button type="button" <?= $createButton('imageUpload', $unit->id, $unit->isImagesRequired()) ?>>
                 Upload
             </button>
         </div>
