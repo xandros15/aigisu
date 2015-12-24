@@ -3,6 +3,7 @@
 namespace models;
 
 use models\Unit;
+use stdClass;
 use Illuminate\Database\Eloquent\Builder as Query;
 
 class UnitSearch extends Unit
@@ -19,7 +20,7 @@ class UnitSearch extends Unit
         $query = $this->parseSort($params, $query);
         $query = $this->parsePagination($params, $query);
 
-        return  $query->get();
+        return $query->get();
     }
 
     protected function parsePagination(array $params, Query $query)
@@ -59,8 +60,8 @@ class UnitSearch extends Unit
         }
 
         $arguments = $this->parseSearchQuery($params);
-        foreach ($arguments as $namespace => $value) {
-            $query = $query->where($namespace, '=', $value);
+        foreach ($arguments as $argument) {
+            $query = $query->where($argument->column, $argument->operator, $argument->value);
         }
 
         return $query;
@@ -70,27 +71,55 @@ class UnitSearch extends Unit
     {
         $arguments = explode(' ', $params['q']);
 
+
         $newArguments = [];
-        foreach ($arguments as $argument) {
-            $namespace = 'name';
-            if (preg_match('/^(.+):(.+)$/', $argument, $matches)) {
-                list($string, $namespace, $argument) = $matches;
-            }
-            if ($argument == 'male') {
-                $namespace = 'is_male';
-                $argument  = 1;
-            }
-            if ($argument == 'dmm') {
-                $namespace = 'is_only_dmm';
-                $argument  = 1;
-            }
-            if ($argument == 'nutaku') {
-                $namespace = 'is_only_dmm';
-                $argument  = 0;
+        foreach ($arguments as $value) {
+            $column   = 'name';
+            $operator = '=';
+            $equal    = true;
+            if (strpos($value, '-') === 0) {
+                $value = ltrim($value, '-');
+                $equal = false;
             }
 
-            $newArguments[$namespace] = $argument;
+            if (strpos($value, ':') !== false) {
+                list($column, $value) = explode(':', $value, 2);
+            }
+            if (!$equal) {
+                $operator = '!=';
+            }
+            if (strpos($value, '*') !== false) {
+                $operator = ($equal) ? 'LIKE' : 'LIKE NOT';
+                $value    = str_replace('*', '%', $value);
+                while (strpos($value, '%%') !== false) {
+                    $value = str_replace('%%', '%', $value);
+                }
+            } else {
+                switch ($value) {
+                    case 'male':
+                        $column = 'is_male';
+                        $value  = 1;
+                        break;
+                    case 'dmm':
+                        $column = 'is_only_dmm';
+                        $value  =  1;
+                        break;
+                    case 'nutaku':
+                        $column = 'is_only_dmm';
+                        $value  = 0;
+                        break;
+                }
+            }
+
+            $param = new stdClass();
+
+            $param->column   = $column;
+            $param->operator = $operator;
+            $param->value    = $value;
+
+            $newArguments[] = $param;
         }
+
         return $newArguments;
     }
 }
