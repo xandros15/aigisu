@@ -28,6 +28,11 @@ class UnitController extends Controller
         }
 
         $model = new Unit($request->getParams());
+
+        if ($request->isXhr()) {
+            return $this->renderAjax('unit/ajax/modal', ['model' => $model]);
+        }
+
         if ($model->validate() && $model->save()) {
             Alert::add('Successful added ' . $model->name);
         }
@@ -42,6 +47,11 @@ class UnitController extends Controller
 
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
+
+        if ($request->isXhr()) {
+            return $this->renderAjax('unit/ajax/modal', ['model' => $model]);
+        }
+
         $model->fill($request->getParams());
 
         if ($model->validate() && $model->save()) {
