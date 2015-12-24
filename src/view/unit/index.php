@@ -2,6 +2,7 @@
 
 use models\Unit;
 use app\core\View;
+use controller\OauthController as Oauth;
 
 /* @var $this View */
 /* @var $model Unit */
@@ -10,7 +11,13 @@ $this->setTitle('Units');
 ?>
 <div id="units">
     <?php if (count($model) > 0): ?>
-    <div class="col-xs-12"><?= $this->render('image/help') ?><?= $this->render('unit/form/modal-create') ?></div>
+        <div class="col-xs-12">
+            <?= $this->render('image/help') ?>
+            <?php if (Oauth::isLogged()): ?>
+                <button type="button" class="btn btn-primary ajax pull-right" data-target="<?= 
+                Main::$app->router->pathFor('unitCreate') ?>">Create</button>
+            <?php endif; ?>
+        </div>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
         <ul class="unit-list list-group col-xs-12">
             <div class="panel panel-default">

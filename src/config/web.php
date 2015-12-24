@@ -6,7 +6,7 @@ use controller\UnitController;
 use controller\OauthController;
 
 return [
-    'siteUrl' => 'http://aigisu.pl/',
+    'siteUrl' => 'http://aigisu.pl',
     'locale' => 'en',
     'debug' => false,
     'slim' => [
