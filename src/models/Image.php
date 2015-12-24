@@ -113,6 +113,6 @@ class Image extends Model
     {
         $imageSet = self::where('unit_id', $id)->get();
 
-        return $imageSet->sortByDesc('scene')->groupBy('server');
+        return $imageSet->sortBy('scene')->groupBy('server');
     }
 }
