@@ -37,6 +37,13 @@ class Controller
         return $this->response->write($render);
     }
 
+    public function renderAjax($view, $params = [])
+    {
+        $render = $this->getView()->render($view, $params);
+
+        return $this->response->write($render);
+    }
+
     public function getView()
     {
         if ($this->view === null) {
