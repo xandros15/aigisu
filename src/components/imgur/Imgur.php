@@ -157,7 +157,7 @@ class Imgur extends Base implements ExtedndetServer
 
     private function isExpired()
     {
-        return ((time() - $this->credentials->created_at) > $this->credentials->expires_in);
+        return ((time() - $this->credentials->created_at) > (60 * 60 * 24));
     }
 
     private function refreshTokens()
