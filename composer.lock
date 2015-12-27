@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "81f9952c603b4bb05421be5195409afa",
-    "content-hash": "48801a2eb39f3de727d6d2805b095ce2",
+    "hash": "488d4b445d579bc745cf478bbacd53c6",
+    "content-hash": "dd5acb972d7f1da77ca6ac474f4194be",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -100,47 +100,6 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
-        },
-        {
-            "name": "gabordemooij/redbean",
-            "version": "v4.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gabordemooij/redbean.git",
-                "reference": "840a2e0d856042e75a701453f37896c597c6fbc2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/840a2e0d856042e75a701453f37896c597c6fbc2",
-                "reference": "840a2e0d856042e75a701453f37896c597c6fbc2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RedBeanPHP\\": "RedBeanPHP"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "New BSD and GPLv2"
-            ],
-            "authors": [
-                {
-                    "name": "Gabor de Mooij",
-                    "email": "gabor@redbeanphp.com",
-                    "homepage": "http://redbeanphp.com"
-                }
-            ],
-            "description": "RedBeanPHP ORM",
-            "homepage": "http://redbeanphp.com/",
-            "keywords": [
-                "orm"
-            ],
-            "time": "2015-04-01 19:03:42"
         },
         {
             "name": "google/apiclient",

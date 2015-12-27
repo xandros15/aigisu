@@ -6,7 +6,6 @@ use Slim\Http\Request;
 use app\alert\Alert;
 use app\core\Configuration;
 use app\slim\SlimConfig;
-use RedBeanPHP\R;
 use app\core\Connection;
 
 class Main
@@ -51,9 +50,6 @@ class Main
 
     private function dbconnect()
     {
-        R::setup('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
-        R::debug(self::$app->web->debug);
-        R::freeze();
         $this->connection = new Connection([
             'driver' => 'mysql',
             'host' => DB_HOST,
