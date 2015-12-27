@@ -191,12 +191,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "6b2a66f21a39788c371fc89155c8454a96d202e1"
+                "reference": "91116775bf2efdc457892ab34aa4d2080a71df05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/51c1a6b1a4ad7e25cfe6b8086a00e1c657ef7911",
-                "reference": "6b2a66f21a39788c371fc89155c8454a96d202e1",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/91116775bf2efdc457892ab34aa4d2080a71df05",
+                "reference": "91116775bf2efdc457892ab34aa4d2080a71df05",
                 "shasum": ""
             },
             "require": {
@@ -226,7 +226,7 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-17 19:55:34"
+            "time": "2015-12-24 15:15:36"
         },
         {
             "name": "illuminate/contracts",
@@ -276,12 +276,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "941c80358ebbc8723af62ab39df44342ca78eaa8"
+                "reference": "cbc0fa915604872a78f190ce0c2a23a427d52b18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/6fbdc06221a5ba0c1866ab81de2a67e1abbd929c",
-                "reference": "941c80358ebbc8723af62ab39df44342ca78eaa8",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/cbc0fa915604872a78f190ce0c2a23a427d52b18",
+                "reference": "cbc0fa915604872a78f190ce0c2a23a427d52b18",
                 "shasum": ""
             },
             "require": {
@@ -328,7 +328,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-12-19 18:56:03"
+            "time": "2015-12-24 15:15:36"
         },
         {
             "name": "illuminate/filesystem",
@@ -336,12 +336,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
-                "reference": "017823993faf0d47d41b3f0f8724a4cf8c745dc4"
+                "reference": "baea3e2cc864910eb22f242834c875cbddc16c90"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/illuminate/filesystem/zipball/baea3e2cc864910eb22f242834c875cbddc16c90",
-                "reference": "017823993faf0d47d41b3f0f8724a4cf8c745dc4",
+                "reference": "baea3e2cc864910eb22f242834c875cbddc16c90",
                 "shasum": ""
             },
             "require": {
@@ -378,7 +378,7 @@
             ],
             "description": "The Illuminate Filesystem package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-19 18:33:07"
+            "time": "2015-12-20 16:19:23"
         },
         {
             "name": "illuminate/support",
@@ -386,12 +386,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "6d1c7159150a00b862e8383105662311fc1d3e90"
+                "reference": "3045af9d639fc9d7fcd609299c71d882b060af60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/6d1c7159150a00b862e8383105662311fc1d3e90",
-                "reference": "6d1c7159150a00b862e8383105662311fc1d3e90",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/3045af9d639fc9d7fcd609299c71d882b060af60",
+                "reference": "3045af9d639fc9d7fcd609299c71d882b060af60",
                 "shasum": ""
             },
             "require": {
@@ -421,7 +421,7 @@
                     "helpers.php"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -433,7 +433,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-07 16:37:25"
+            "time": "2015-12-24 15:15:36"
         },
         {
             "name": "illuminate/translation",
@@ -486,12 +486,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "138075b7906c17ac719bf5eef8ae81b45a557f25"
+                "reference": "f89c40c2cb9d01d4df5e28fe129977c743c90edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/f77697c912963429a927d34a3bec689d35e47215",
-                "reference": "138075b7906c17ac719bf5eef8ae81b45a557f25",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/f89c40c2cb9d01d4df5e28fe129977c743c90edc",
+                "reference": "f89c40c2cb9d01d4df5e28fe129977c743c90edc",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +528,7 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-14 14:44:26"
+            "time": "2015-12-24 15:15:36"
         },
         {
             "name": "nesbot/carbon",
@@ -763,12 +763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "12782640b472b7d32b62e6fcd8b8c54d35ee617e"
+                "reference": "a5f39a5775471b39770a1df8c276d5313363f137"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/12782640b472b7d32b62e6fcd8b8c54d35ee617e",
-                "reference": "12782640b472b7d32b62e6fcd8b8c54d35ee617e",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/a5f39a5775471b39770a1df8c276d5313363f137",
+                "reference": "a5f39a5775471b39770a1df8c276d5313363f137",
                 "shasum": ""
             },
             "require": {
@@ -821,7 +821,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2015-12-19 19:48:36"
+            "time": "2015-12-22 16:13:46"
         },
         {
             "name": "symfony/finder",
