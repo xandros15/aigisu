@@ -6,7 +6,7 @@ use controller\UnitController as Unit;
 $page = Unit::getPage();
 ?>
 <?php if ($maxPages > 0): ?>
-    <nav class="text-center row col-xs-12">
+    <nav class="text-center col-xs-12">
         <ul class="pagination">
             <li<?= (1 == $page) ? ' class="disabled"' : '' ?>>
                 <a href="<?= Unit::generateLink(['page' => 1]) ?>" aria-label="first">

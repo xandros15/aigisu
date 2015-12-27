@@ -19,7 +19,7 @@ $this->setTitle('Units');
             <?php endif; ?>
         </div>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
-        <ul class="unit-list list-group col-xs-12">
+        <ul class="unit-list col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <?= $this->render('unit/sort') ?>
