@@ -11,7 +11,7 @@ $this->setTitle('Units');
 ?>
 <div id="units">
     <?php if (count($model) > 0): ?>
-        <div class="col-xs-12">
+        <div class="col-xs-12 form-group">
             <?= $this->render('image/help') ?>
             <?php if (Oauth::isLogged()): ?>
                 <button type="button" class="btn btn-primary ajax pull-right" data-target="<?= 

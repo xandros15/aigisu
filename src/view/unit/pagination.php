@@ -5,7 +5,7 @@ use controller\UnitController as Unit;
 /* @var $maxPages int */
 $page = Unit::getPage();
 ?>
-<?php if ($maxPages > 0): ?>
+<?php if ($maxPages > 1): ?>
     <nav class="text-center col-xs-12">
         <ul class="pagination">
             <li<?= (1 == $page) ? ' class="disabled"' : '' ?>>
