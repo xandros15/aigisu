@@ -37,7 +37,7 @@ use app\core\View;
         </script>
         <script src="/js/blockDisabledLinks.js"></script>
         <script src="/js/openImages.js"></script>
-        <script src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
+        <script src="/js/polyfiller.js"></script>
         <script src="/js/html5Validator.js"></script>
         <script src="/js/ajax.js"></script>
     </body>
