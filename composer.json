@@ -9,12 +9,12 @@
     "minimum-stability": "dev",
     "require": {
         "slim/slim": "^3.0",
-        "illuminate/database": "^5.1",
+        "illuminate/database": "5.2.*",
         "gabordemooij/redbean": "4.2",
         "google/apiclient": "1.*",
         "plasticbrain/php-flash-messages": "^1.0",
-        "illuminate/validation": "^5.1",
-        "illuminate/translation": "^5.1",
+        "illuminate/validation": "5.2.*",
+        "illuminate/translation": "5.2.*",
         "symfony/var-dumper": "^3.0"
     },
     "autoload": {
