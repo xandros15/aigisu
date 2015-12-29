@@ -60,23 +60,38 @@ class UnitSearch extends Unit
         }
 
         $arguments = $this->parseSearchQuery($params);
+
         foreach ($arguments as $argument) {
-            $query = $query->where($argument->column, $argument->operator, $argument->value);
+            if ($argument->column == 'tags') {
+                $query = $this->searchByTags($query, $argument);
+            } else {
+                $query = $query->where($argument->column, $argument->operator, $argument->value);
+            }
         }
 
         return $query;
     }
 
+    private function searchByTags(Query $query, stdClass $argument)
+    {
+        return $query->where(function(Query $query) use ($argument) {
+                $query->where('name', $argument->operator, $argument->value)->orWhereHas('tags',
+                    function(Query $query) use ($argument) {
+                    $query->where('name', $argument->operator, $argument->value);
+                });
+            });
+    }
+
     private function parseSearchQuery(array $params)
     {
-        $arguments = explode(' ', $params['q']);
-
-
+        $arguments    = explode(' ', trim($params['q']));
         $newArguments = [];
         foreach ($arguments as $value) {
-            $column   = 'name';
+
+            $column   = 'tags';
             $operator = '=';
             $equal    = true;
+
             if (strpos($value, '-') === 0) {
                 $value = ltrim($value, '-');
                 $equal = false;
@@ -84,42 +99,37 @@ class UnitSearch extends Unit
 
             if (strpos($value, ':') !== false) {
                 list($column, $value) = explode(':', $value, 2);
+                if (!in_array($column, $this->fillable)) {
+                    continue;
+                }
             }
+
             if (!$equal) {
                 $operator = '!=';
             }
+
             if (strpos($value, '*') !== false) {
                 $operator = ($equal) ? 'LIKE' : 'LIKE NOT';
                 $value    = str_replace('*', '%', $value);
                 while (strpos($value, '%%') !== false) {
                     $value = str_replace('%%', '%', $value);
                 }
-            } else {
-                switch ($value) {
-                    case 'male':
-                        $column = 'is_male';
-                        $value  = 1;
-                        break;
-                    case 'dmm':
-                        $column = 'is_only_dmm';
-                        $value  =  1;
-                        break;
-                    case 'nutaku':
-                        $column = 'is_only_dmm';
-                        $value  = 0;
-                        break;
-                }
             }
 
-            $param = new stdClass();
-
-            $param->column   = $column;
-            $param->operator = $operator;
-            $param->value    = $value;
-
-            $newArguments[] = $param;
+            $newArguments[] = $this->parsedArgumentsToObject($column, $operator, $value);
         }
 
         return $newArguments;
+    }
+
+    private function parsedArgumentsToObject($column, $operator, $value)
+    {
+        $param = new stdClass();
+
+        $param->operator = $operator;
+        $param->value    = $value;
+        $param->column   = $column;
+
+        return $param;
     }
 }

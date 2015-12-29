@@ -62,6 +62,10 @@ $route = ($isNewUnit) ? Main::$app->router->pathFor('unitCreate') :
                             <input name="is_male" value="1" type="checkbox"<?= ($model->is_male) ? 'checked' : '' ?>> is male?
                         </label>
                     </div>
+                    <div class="form-group">
+                        <label>Tags:</label>
+                        <textarea class="form-control" name="tags" rows="3"><?= $model->getTagsString() ?></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <?php if (!$isNewUnit): ?>

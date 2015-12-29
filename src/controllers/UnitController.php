@@ -52,6 +52,8 @@ class UnitController extends Controller
             return $this->renderAjax('unit/ajax/modal', ['model' => $model]);
         }
 
+        $model->addTagsToUnit($request->getParam('tags'));
+
         $model->fill($request->getParams());
 
         if ($model->validate() && $model->save()) {

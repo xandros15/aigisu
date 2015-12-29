@@ -5,6 +5,7 @@ namespace models;
 use traits\Validator;
 use Illuminate\Database\Eloquent\Model;
 use models\Image;
+use models\Tag;
 
 /**
  * Class Unit
@@ -90,5 +91,40 @@ class Unit extends Model
     public function isAnyImages()
     {
         return !$this->images->isEmpty();
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function getTagsString()
+    {
+        return $this->tags()->lists('name')->implode(', ');
+    }
+
+    public function addTagsToUnit($tagsString)
+    {
+        $tagsArray = $this->parseTags($tagsString);
+
+        $tags = [];
+
+        foreach ($tagsArray as $tagName) {
+            $tags[] = Tag::firstOrCreate(['name' => $tagName])->id;
+        }
+
+        $this->tags()->sync($tags);
+    }
+
+    private function parseTags($tagsString)
+    {
+        $tags = explode(',', $tagsString);
+        $tags = array_map('trim', $tags);
+        $tags = array_map('strtolower', $tags);
+        $tags = array_map(function ($string) {
+            return str_replace(' ', '_', $string);
+        }, $tags);
+        $tags = array_unique($tags);
+        return array_filter($tags);
     }
 }
