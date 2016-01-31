@@ -11,7 +11,7 @@ class ImageFile extends Image
     const MIN_WIDTH    = 959;
     const MIN_HEIGHT   = 639;
     const MIN_FILESIZE = 90 * 1024;
-    const MAX_FILESIZE = 512 * 1024;
+    const MAX_FILESIZE = 2 * 1024 * 1024;
 
     public function rules()
     {

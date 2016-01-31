@@ -10,7 +10,7 @@ class FileFromUrl extends Upload
     public $url;
     protected $ctx;
 
-    const MAX_FILE_SIZE = 512 * 1024 + 1;
+    const MAX_FILE_SIZE = 2 * 1024 * 1024 + 1;
 
     public function __construct()
     {
