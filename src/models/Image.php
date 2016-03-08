@@ -106,7 +106,7 @@ class Image extends Model
          * http://i.imgur.com/{fieldId}.png
          * https://drive.google.com/uc?export=view&id={fileId}
          */
-        return sprintf('https://drive.google.com/uc?export=view&id=%s', $this->google);
+        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
     }
 
     public static function getImageSetByUnitId($id)
