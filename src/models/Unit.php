@@ -144,13 +144,16 @@ class Unit extends Model
 
     private function parseTags($tagsString)
     {
+        $parsedTags = [];
         $tags = explode(',', $tagsString);
-        $tags = array_map('trim', $tags);
-        $tags = array_map('strtolower', $tags);
-        $tags = array_map(function ($string) {
-            return str_replace(' ', '_', $string);
-        }, $tags);
-        $tags = array_unique($tags);
-        return array_filter($tags);
+        foreach($tags as $tag){
+            $tag = trim($tag);
+            $tag = strtolower($tag);
+            $tag = str_replace(' ', '_', $tag);
+            if($tag){
+                $parsedTags[] = $tag;
+            }
+        }
+        return array_unique($parsedTags);
     }
 }
