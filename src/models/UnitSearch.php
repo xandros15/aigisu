@@ -16,10 +16,9 @@ class UnitSearch extends Unit
     {
         $query = Unit::with('images');
 
-        $query = $this->parseSearch($params, $query);
-        $query = $this->parseSort($params, $query);
-        $query = $this->parsePagination($params, $query);
-
+        $this->parseSearch($params, $query);
+        $this->parseSort($params, $query);
+        $this->parsePagination($params, $query);
         return $query->get();
     }
 
@@ -38,12 +37,12 @@ class UnitSearch extends Unit
             return $query->orderBy('id', 'desc');
         }
 
-        $column    = strtolower($params['sort']);
+        $column = strtolower($params['sort']);
         $direction = 'asc';
 
         if (strpos($params['sort'], '-') === 0) {
             $direction = 'desc';
-            $column    = ltrim($column, '-');
+            $column = ltrim($column, '-');
         }
 
         if (!in_array($column, Unit::getColumns())) {
@@ -63,34 +62,34 @@ class UnitSearch extends Unit
 
         foreach ($arguments as $argument) {
             if ($argument->column == 'tags') {
-                $query = $this->searchByTags($query, $argument);
+                $this->searchWithTags($query, $argument);
             } else {
-                $query = $query->where($argument->column, $argument->operator, $argument->value);
+                $query->where($argument->column, $argument->operator, $argument->value);
             }
         }
 
         return $query;
     }
 
-    private function searchByTags(Query $query, stdClass $argument)
+    private function searchWithTags(Query $query, stdClass $argument)
     {
-        return $query->where(function(Query $query) use ($argument) {
-                $query->where('name', $argument->operator, $argument->value)->orWhereHas('tags',
-                    function(Query $query) use ($argument) {
+        return $query->where(function (Query $query) use ($argument) {
+            $query->where('unit.name', $argument->operator, $argument->value)->orWhereHas('tags',
+                function (Query $query) use ($argument) {
                     $query->where('name', $argument->operator, $argument->value);
                 });
-            });
+        });
     }
 
     private function parseSearchQuery(array $params)
     {
-        $arguments    = explode(' ', trim($params['q']));
+        $arguments = explode(' ', trim($params['q']));
         $newArguments = [];
         foreach ($arguments as $value) {
 
-            $column   = 'tags';
+            $column = 'tags';
             $operator = '=';
-            $equal    = true;
+            $equal = true;
 
             if (strpos($value, '-') === 0) {
                 $value = ltrim($value, '-');
@@ -110,7 +109,7 @@ class UnitSearch extends Unit
 
             if (strpos($value, '*') !== false) {
                 $operator = ($equal) ? 'LIKE' : 'LIKE NOT';
-                $value    = str_replace('*', '%', $value);
+                $value = str_replace('*', '%', $value);
                 while (strpos($value, '%%') !== false) {
                     $value = str_replace('%%', '%', $value);
                 }
@@ -127,8 +126,8 @@ class UnitSearch extends Unit
         $param = new stdClass();
 
         $param->operator = $operator;
-        $param->value    = $value;
-        $param->column   = $column;
+        $param->value = $value;
+        $param->column = $column;
 
         return $param;
     }
