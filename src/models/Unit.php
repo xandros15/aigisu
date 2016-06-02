@@ -85,13 +85,12 @@ class Unit extends Model
         }
         if ($this->is_only_dmm) {
             $total = Image::IMAGE_PER_SERVER;
-            if ($this->has_aw_image) {
-                $total++;
-            }
         } else {
             $total = Image::IMAGE_PER_SERVER * count(Image::getImageSchemeArray());
         }
-
+        if ($this->has_aw_image) {
+            $total++;
+        }
         return $total;
     }
 
