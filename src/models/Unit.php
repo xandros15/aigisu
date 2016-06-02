@@ -20,14 +20,15 @@ use models\Tag;
  * @property string $rarity
  * @property bool $is_male
  * @property bool $is_only_dmm
+ * @property bool $has_aw_image
  * @property Image[] $images
  */
 class Unit extends Model
 {
 
     use Validator;
-    public $timestamps  = false;
-    protected $table    = 'unit';
+    public $timestamps = false;
+    protected $table = 'unit';
     protected $fillable = [
         'name',
         'original',
@@ -36,13 +37,14 @@ class Unit extends Model
         'linkgc',
         'rarity',
         'is_male',
-        'is_only_dmm'
+        'is_only_dmm',
+        'has_aw_image'
     ];
-    protected $guarded  = [];
+    protected $guarded = [];
 
     public static function getColumns()
     {
-        return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm'];
+        return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm', 'has_aw_image'];
     }
 
     public function rules()
@@ -56,7 +58,8 @@ class Unit extends Model
             'linkgc' => ['required', 'url'],
             'rarity' => ['required_with:' . implode(',', self::getRarities())],
             'is_male' => ['required', 'bool'],
-            'is_only_dmm' => ['required', 'bool']
+            'is_only_dmm' => ['required', 'bool'],
+            'has_aw_image' => ['required', 'bool']
         ];
     }
 
@@ -75,17 +78,40 @@ class Unit extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function isImagesRequired()
-    {
-        $total = ($this->is_male) ? 0 : (($this->is_only_dmm) ? Image::IMAGE_PER_SERVER : Image::IMAGE_PER_SERVER * count(Image::getServersNames()));
+    public function getTotalImageRequired(){
+        $total = 0;
+        if($this->is_male){
+            return $total;
+        }
+        if ($this->is_only_dmm) {
+            $total = Image::IMAGE_PER_SERVER;
+            if ($this->has_aw_image) {
+                $total++;
+            }
+        } else {
+            $total = Image::IMAGE_PER_SERVER * count(Image::getImageSchemeArray());
+        }
 
-        return $this->images->count() != $total;
+        return $total;
     }
 
-    public function isImageExsists($server, $scene)
+    public function isImagesRequired()
     {
-        return ($this->is_only_dmm && $server == Image::SERVER_NUTAKU) ? true : $this->images->where('server', $server)->contains('scene',
-                $scene);
+        return $this->images->count() != $this->getTotalImageRequired();
+    }
+
+    public function isImageRequired($server, $scene)
+    {
+        return !(($this->is_only_dmm && $server != Image::SERVER_DMM)
+        || ($scene == Image::IMAGE_SPECIAL_SCENE && !$this->has_aw_image)
+        || $this->isImageExist($server, $scene)
+        );
+
+    }
+    public function isImageExist($server, $scene)
+    {
+        return $this->images->where('server',$server)->contains('scene',$scene);
+
     }
 
     public function isAnyImages()

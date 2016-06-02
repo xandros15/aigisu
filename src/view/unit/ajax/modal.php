@@ -62,6 +62,12 @@ $route = ($isNewUnit) ? Main::$app->router->pathFor('unitCreate') :
                             <input name="is_male" value="1" type="checkbox"<?= ($model->is_male) ? 'checked' : '' ?>> is male?
                         </label>
                     </div>
+                    <div class="checkbox">
+                        <label>
+                            <input name="has_aw_image" type="hidden" value="0">
+                            <input name="has_aw_image" value="1" type="checkbox"<?= ($model->has_aw_image) ? 'checked' : '' ?>> has aw image?
+                        </label>
+                    </div>
                     <div class="form-group">
                         <label>Tags:</label>
                         <textarea class="form-control" name="tags" rows="3"><?= $model->getTagsString() ?></textarea>

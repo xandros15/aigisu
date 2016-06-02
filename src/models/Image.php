@@ -38,6 +38,7 @@ class Image extends Model
     protected $guarded  = [];
 
     const IMAGE_PER_SERVER = 2;
+    const IMAGE_SPECIAL_SCENE = 3;
     const IMAGE_DIRECTORY  = 'images';
     const SERVER_NUTAKU    = 'nutaku';
     const SERVER_DMM       = 'dmm';
@@ -66,12 +67,19 @@ class Image extends Model
         return 'image';
     }
 
+    public static function getImageSchemeArray(){
+        return [
+            Image::SERVER_DMM => [1, 2, 3],
+            Image::SERVER_NUTAKU => [1, 2]
+        ];
+    }
+
     public function rules()
     {
         return [
             'md5' => ['required', 'size:32'],
             'server' => ['required', 'in:' . implode(',', self::getServersNames())],
-            'scene' => ['required', 'integer', 'in:1,2'],
+            'scene' => ['required', 'integer', 'in:1,2,3'],
             'unit_id' => ['required', 'exists:unit,id', 'imageExists:' . implode(',',
                     [$this->scene, $this->server, $this->id])],
             'google' => ['string'],
@@ -84,7 +92,8 @@ class Image extends Model
     {
         $scenes = [
             1 => 'first scene',
-            2 => 'second scene'
+            2 => 'second scene',
+            3 => 'special scene'
         ];
         return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
     }

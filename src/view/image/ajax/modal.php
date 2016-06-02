@@ -21,13 +21,13 @@ use app\core\View;
                 </div>
                 <div class="modal-body">
                     <?php
-                    foreach (Image::getServersNames() as $server):
-                        for ($scene = 1; $scene <= Image::IMAGE_PER_SERVER; $scene++):
-                            if (!$model->isImageExsists($server, $scene)):
+                    foreach (Image::getImageSchemeArray() as $server => $sceneList):
+                        foreach($sceneList as $scene):
+                            if($model->isImageRequired($server, $scene)):
                                 echo $this->render('image/ajax/modal-body',
                                     ['image' => (object) ['server' => $server, 'scene' => $scene]]);
                             endif;
-                        endfor;
+                        endforeach;
                     endforeach;
                     ?>
                 </div>
