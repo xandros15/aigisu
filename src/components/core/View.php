@@ -4,13 +4,15 @@ namespace app\core;
 
 class View
 {
+    protected $customsMethods = [];
     protected $attributes = [];
     /** @var string */
     protected $path;
 
-    public function __construct(string $path = VIEW_DIR)
+    public function __construct(string $path = VIEW_DIR, array $customCallbacks = [])
     {
         $this->path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
+        $this->addCustomsCallback($customCallbacks);
     }
 
     public function __get($name)
@@ -20,9 +22,18 @@ class View
         }
     }
 
+    public function __set($name, $value)
+    {
+        return $this->attributes[$name] = $value;
+    }
+
+
     public function __call($name, $arguments)
     {
-        dump($name,$arguments);
+        if (!isset($this->customsMethods[$name])) {
+            throw new \BadMethodCallException();
+        }
+        return call_user_func_array($this->customsMethods[$name], $arguments);
     }
 
     public function render($view, $params = [])
@@ -46,5 +57,15 @@ class View
             throw new \RuntimeException("View cannot render `{$name}` because the template does not exist");
         }
         return $name;
+    }
+
+    protected function addCustomsCallback(array $callbacks)
+    {
+        foreach ($callbacks as $name => $callback) {
+            if (!is_callable($callback)) {
+                throw new \InvalidArgumentException("Method `$name` isn't callable");
+            }
+            $this->customsMethods[$name] = $callback;
+        }
     }
 }
