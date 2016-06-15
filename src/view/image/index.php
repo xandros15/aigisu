@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Collection;
 /* @var $this View */
 /* @var $images Collection */
 /* @var $image Image */
-$this->setTitle('images');
-$this->setContainerClass('container-fluid');
+$this->title = 'images';
+$this->containerClass = 'container-fluid';
 ?>
 <?php foreach ($images as $serverName => $server): ?>
     <ul class="list-unstyled <?= $serverName ?> col-xs-12 col-md-6">

@@ -6,8 +6,10 @@ use controller\OauthController as Oauth;
 
 /* @var $this View */
 /* @var $model Unit */
+/* @var $maxPages int */
 
-$this->setTitle('Units');
+$this->title = 'Units';
+$this->containerClass = 'container';
 ?>
 <div id="units">
     <?php if (count($model) > 0): ?>
