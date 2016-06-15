@@ -52,18 +52,17 @@ class SlimConfig
 
     private function setSlimRules($rules)
     {
-        foreach ($rules as $pattern => $controllers) {
-            if (isset($controllers['methods'])) {
-                $this->slim->map($controllers['methods'], $pattern, $controllers['action'])
-                    ->setName($controllers['name']);
-            } else {
-                $this->slim->group($pattern,
-                    function () use ($controllers) {
-                    foreach ($controllers as $pattern => $controller) {
-                        $this->map($controller['methods'], $pattern, $controller['action'])
+        foreach ($rules as $controllers) {
+            if (isset($controllers['groups'])) {
+                $this->slim->group($controllers['pattern'], function () use ($controllers) {
+                    foreach ($controllers['groups'] as $controller) {
+                        $this->map($controller['methods'], $controller['pattern'], $controller['action'])
                             ->setName($controller['name']);
                     }
                 });
+            } else {
+                $this->slim->map($controllers['methods'], $controllers['pattern'], $controllers['action'])
+                    ->setName($controllers['name']);
             }
         }
     }
