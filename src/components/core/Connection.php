@@ -2,7 +2,7 @@
 
 namespace app\core;
 
-use Main;
+use Aigisu\Main;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Validation\Factory as ValidatorFactory;
 use Illuminate\Translation\Translator;
