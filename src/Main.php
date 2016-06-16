@@ -27,8 +27,12 @@ class Main extends Slim
 
     public function __construct()
     {
+        echo '<pre>';
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         $this->configuration();
         parent::__construct($this->createContainer());
+        $this->setRoutes($this->web->get('slim')['rules']);
         $this->bootstrap();
     }
 
@@ -46,8 +50,6 @@ class Main extends Slim
     private function configuration()
     {
         $this->web = Configuration::getInstance();
-        $this->setRoutes($this->web->get('slim')['rules']);
-
     }
 
     private function createContainer() : Container
@@ -64,7 +66,10 @@ class Main extends Slim
     {
         $container = $this->getContainer();
         $controllers = $this->web->get('slim')['values'];
-        $container = array_merge($container, $controllers);
+        unset($controllers['settings']);
+        foreach ($controllers as $name => $controller) {
+            $container[$name] = $controller;
+        }
     }
 
     private function createView()
