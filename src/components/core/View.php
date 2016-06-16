@@ -9,7 +9,7 @@ class View
     /** @var string */
     protected $path;
 
-    public function __construct(string $path = VIEW_DIR, array $customCallbacks = [])
+    public function __construct(string $path, array $customCallbacks = [])
     {
         $this->path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
         $this->addCustomsCallback($customCallbacks);

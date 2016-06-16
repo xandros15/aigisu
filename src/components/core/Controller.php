@@ -25,7 +25,7 @@ class Controller
     {
         $this->request      = Main::$app->request = $container->request;
         $this->response     = $container->response;
-        $this->view         = new View();
+        $this->view         = new View(VIEW_DIR);
     }
 
     public function render($view, $params = [])
@@ -47,7 +47,7 @@ class Controller
     public function getView()
     {
         if ($this->view === null) {
-            $this->view = new View();
+            $this->view = new View(VIEW_DIR);
         }
 
         return $this->view;
