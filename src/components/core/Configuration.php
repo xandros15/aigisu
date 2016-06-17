@@ -21,11 +21,13 @@ final class Configuration extends Collection
 
     private function getWebConfig() : array
     {
+        /** @noinspection PhpIncludeInspection */
         return require self::DIR_CONFIG . 'web.php';
     }
 
     private function getDBConfig() : array
     {
+        /** @noinspection PhpIncludeInspection */
         return require self::DIR_CONFIG . 'db.config.php';
     }
 }
