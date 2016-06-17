@@ -4,15 +4,19 @@ namespace app\core;
 
 class View
 {
-    protected $customsMethods = [];
     protected $attributes = [];
     /** @var string */
     protected $path;
 
-    public function __construct(string $path, array $customCallbacks = [])
+    /** @var ViewExtension */
+    private $extensions = [];
+
+    /** @var [] */
+    private $callbacks = [];
+
+    public function __construct(string $path)
     {
         $this->path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
-        $this->addCustomsCallback($customCallbacks);
     }
 
     public function __get($name)
@@ -30,10 +34,10 @@ class View
 
     public function __call($name, $arguments)
     {
-        if (!isset($this->customsMethods[$name])) {
+        if (!isset($this->callbacks[$name])) {
             throw new \BadMethodCallException();
         }
-        return call_user_func_array($this->customsMethods[$name], $arguments);
+        return call_user_func_array($this->callbacks[$name], $arguments);
     }
 
     public function render($view, $params = [])
@@ -41,13 +45,22 @@ class View
         ob_start();
         ob_implicit_flush(false);
         extract(array_merge($this->attributes, $params), EXTR_OVERWRITE);
+        /** @noinspection PhpIncludeInspection */
         include $this->getTemplateName($view);
         return ob_get_clean();
     }
 
-    public function getRouter()
+    public function addExtension(ViewExtension $extension)
     {
-        return $this->router;
+        $this->extensions[$extension->getName()] = $extension;
+    }
+
+    public function initExtensions()
+    {
+        foreach ($this->extensions as $extension) {
+            /** @var $extension ViewExtension */
+            $this->callbacks = array_merge($this->callbacks, $extension->getCallbacks());
+        }
     }
 
     protected function getTemplateName($name)
@@ -57,15 +70,5 @@ class View
             throw new \RuntimeException("View cannot render `{$name}` because the template does not exist");
         }
         return $name;
-    }
-
-    protected function addCustomsCallback(array $callbacks)
-    {
-        foreach ($callbacks as $name => $callback) {
-            if (!is_callable($callback)) {
-                throw new \InvalidArgumentException("Method `$name` isn't callable");
-            }
-            $this->customsMethods[$name] = $callback;
-        }
     }
 }
