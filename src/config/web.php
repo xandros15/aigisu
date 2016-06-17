@@ -8,10 +8,7 @@ use controller\OauthController;
 return [
     'siteUrl' => 'http://aigisu.pl',
     'locale' => 'en',
-    'debug' => false,
-    'settings' => [
-        'displayErrorDetails' => true,
-    ],
+    'debug' => true,
     'controllers' => [
         ImageController::class,
         ImageFileController::class,
