@@ -6,36 +6,26 @@ use Slim\Collection;
 
 final class Configuration extends Collection
 {
-    const WEB_BASENAME = 'web.php';
+    const DIR_SOURCE = __DIR__ . '/../../src/';
+    const DIR_CONFIG = __DIR__ . '/../../config/';
+    const DIR_VIEW = __DIR__ . '/../../view/';
 
     public function __construct(array $items = [])
     {
-        $this->defineDirs();
-        parent::__construct(array_merge($this->getWebConfig(), $this->getDBConfig(), $items));
-    }
-
-    public function all()
-    {
-        return ['configuration' => parent::all()];
-    }
-
-    private function defineDirs()
-    {
-        defined('SOURCE_DIR') || define('SOURCE_DIR', ROOT_DIR . 'src' . DIRECTORY_SEPARATOR);
-        defined('CONFIG_DIR') || define('CONFIG_DIR', SOURCE_DIR . 'config' . DIRECTORY_SEPARATOR);
-        defined('VIEW_DIR') || define('VIEW_DIR', SOURCE_DIR . 'view' . DIRECTORY_SEPARATOR);
+        parent::__construct(array_merge(
+            $this->getWebConfig(),
+            ['database' => $this->getDBConfig()],
+            $items
+        ));
     }
 
     private function getWebConfig() : array
     {
-        if (!is_file(CONFIG_DIR . self::WEB_BASENAME)) {
-            throw new \RuntimeException("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
-        }
-        return require CONFIG_DIR . self::WEB_BASENAME;
+        return require self::DIR_CONFIG . 'web.php';
     }
 
     private function getDBConfig() : array
     {
-        return ['database' => require CONFIG_DIR . 'db.config.php'];
+        return require self::DIR_CONFIG . 'db.config.php';
     }
 }
