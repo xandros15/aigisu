@@ -11,21 +11,15 @@ return [
     'debug' => false,
     'slim' => [
         'values' => [
-            ImageController::class => function ($container) {
-                return new ImageController($container);
-            },
-            ImageFileController::class => function ($container) {
-                return new ImageFileController($container);
-            },
-            UnitController::class => function ($container) {
-                return new UnitController($container);
-            },
-            OauthController::class => function ($container) {
-                return new OauthController($container);
-            },
             'settings' => [
                 'displayErrorDetails' => true,
             ],
+        ],
+        'controllers' => [
+            ImageController::class,
+            ImageFileController::class,
+            UnitController::class,
+            OauthController::class,
         ],
         'rules' => [
             [

@@ -65,10 +65,12 @@ class Main extends Slim
     private function addControllerClasses()
     {
         $container = $this->getContainer();
-        $controllers = $this->web->get('slim')['values'];
-        unset($controllers['settings']);
-        foreach ($controllers as $name => $controller) {
-            $container[$name] = $controller;
+        $controllers = $this->web->get('slim')['controllers'];
+
+        foreach ($controllers as $name) {
+            $container[$name] = function (Container $container) use ($name) {
+                return new $name($container);
+            };
         }
     }
 
@@ -114,17 +116,19 @@ class Main extends Slim
 
     private function setRoutes(array $routes)
     {
-        foreach ($routes as $controllers) {
-            if (isset($controllers['groups'])) {
-                $this->group($controllers['pattern'], function () use ($controllers) {
-                    foreach ($controllers['groups'] as $controller) {
-                        $this->map($controller['methods'], $controller['pattern'], $controller['action'])
-                            ->setName($controller['name']);
+        foreach ($routes as $route) {
+            if (isset($route['groups'])) {
+                $callback = function () use ($route) {
+                    foreach ($route['groups'] as $singleRoute) {
+                        $this->map($singleRoute['methods'],
+                            $singleRoute['pattern'], $singleRoute['action']
+                        )->setName($singleRoute['name']);
                     }
-                });
+                };
+                $this->group($route['pattern'], $callback);
             } else {
-                $this->map($controllers['methods'], $controllers['pattern'], $controllers['action'])
-                    ->setName($controllers['name']);
+                $this->map($route['methods'], $route['pattern'], $route['action'])
+                    ->setName($route['name']);
             }
         }
     }
