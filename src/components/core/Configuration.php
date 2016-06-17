@@ -38,17 +38,13 @@ class Configuration
         return $this->get($name);
     }
 
-    public function get($name, $error = true)
+    public function get($name)
     {
         if (isset($this->config[$name])) {
             return $this->config[$name];
         }
 
-        if ($error) {
-            trigger_error("Property {$name} no exists in " . self::class . ".", E_USER_WARNING);
-        }
-
-        return null;
+        throw new \InvalidArgumentException("Property `{$name}` no exists");
     }
 
     private function configurate()
