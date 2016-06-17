@@ -42,6 +42,7 @@ class View
 
     public function render($view, $params = [])
     {
+        $this->initExtensions();
         ob_start();
         ob_implicit_flush(false);
         extract(array_merge($this->attributes, $params), EXTR_OVERWRITE);
