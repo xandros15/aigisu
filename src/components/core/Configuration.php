@@ -3,55 +3,21 @@
 namespace app\core;
 
 use Exception;
+use Slim\Collection;
 
-class Configuration
+final class Configuration extends Collection
 {
     const WEB_BASENAME = 'web.php';
 
-    /** @var Configuration */
-    private static $instance;
-
-    /** @var array */
-    private $config = [];
-
-    private function __construct()
-    {
-
-    }
-
-    private function __clone()
-    {
-
-    }
-
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new Configuration();
-            self::$instance->configurate();
-        }
-        return self::$instance;
-    }
-
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    public function get($name)
-    {
-        if (isset($this->config[$name])) {
-            return $this->config[$name];
-        }
-
-        throw new \InvalidArgumentException("Property `{$name}` no exists");
-    }
-
-    private function configurate()
+    public function __construct(array $items = [])
     {
         $this->defineDirs();
-        $this->loadWebConfiguration();
-        $this->loadDatabaseConfiguration();
+        parent::__construct(array_merge($this->getWebConfig(), $this->getDBConfig(), $items));
+    }
+
+    public function all()
+    {
+        return ['configuration' => parent::all()];
     }
 
     private function defineDirs()
@@ -61,16 +27,16 @@ class Configuration
         defined('VIEW_DIR') || define('VIEW_DIR', SOURCE_DIR . 'view' . DIRECTORY_SEPARATOR);
     }
 
-    private function loadWebConfiguration()
+    private function getWebConfig() : array
     {
         if (!is_file(CONFIG_DIR . self::WEB_BASENAME)) {
             throw new Exception("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
         }
-        $this->config = require_once CONFIG_DIR . self::WEB_BASENAME;
+        return require CONFIG_DIR . self::WEB_BASENAME;
     }
 
-    private function loadDatabaseConfiguration()
+    private function getDBConfig() : array
     {
-        require CONFIG_DIR . 'db.config.php';
+        return ['database' => require CONFIG_DIR . 'db.config.php'];
     }
 }
