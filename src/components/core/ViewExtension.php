@@ -48,8 +48,8 @@ class ViewExtension
                 throw new \InvalidArgumentException("Method `{$name}` isn't callable");
             }
 
-            if($callback instanceof \Closure){
-                $callback->bindTo($this);
+            if ($callback instanceof \Closure) {
+               $callback = $callback->bindTo($this);
             }
 
             $this->callbacks[$name] = $callback;
