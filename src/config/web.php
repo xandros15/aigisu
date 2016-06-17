@@ -21,7 +21,7 @@ return [
             UnitController::class,
             OauthController::class,
         ],
-        'rules' => [
+        'routes' => [
             [
                 'pattern' => '/',
                 'methods' => ['get'],
@@ -30,7 +30,7 @@ return [
             ],
             [
                 'pattern' => '/image',
-                'groups' => [
+                'group' => [
                     [
                         'pattern' => '/upload/{id:\d+}',
                         'methods' => ['post'],
@@ -47,7 +47,7 @@ return [
             ],
             [
                 'pattern' => '/unit',
-                'groups' => [
+                'group' => [
                     [
                         'pattern' => '[/]',
                         'methods' => ['get'],
@@ -76,7 +76,7 @@ return [
             ],
             [
                 'pattern' => '/oauth',
-                'groups' => [
+                'group' => [
                     [
                         'pattern' => '[/]',
                         'methods' => ['get'],

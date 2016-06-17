@@ -117,9 +117,9 @@ class Main extends Slim
     private function setRoutes(array $routes)
     {
         foreach ($routes as $route) {
-            if (isset($route['groups'])) {
+            if (isset($route['group'])) {
                 $callback = function () use ($route) {
-                    foreach ($route['groups'] as $singleRoute) {
+                    foreach ($route['group'] as $singleRoute) {
                         $this->map($singleRoute['methods'],
                             $singleRoute['pattern'], $singleRoute['action']
                         )->setName($singleRoute['name']);
