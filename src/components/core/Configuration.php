@@ -2,7 +2,6 @@
 
 namespace app\core;
 
-use Exception;
 use Slim\Collection;
 
 final class Configuration extends Collection
@@ -30,7 +29,7 @@ final class Configuration extends Collection
     private function getWebConfig() : array
     {
         if (!is_file(CONFIG_DIR . self::WEB_BASENAME)) {
-            throw new Exception("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
+            throw new \RuntimeException("Can't find web configuration file. Searching in: " . CONFIG_DIR . self::WEB_BASENAME);
         }
         return require CONFIG_DIR . self::WEB_BASENAME;
     }
