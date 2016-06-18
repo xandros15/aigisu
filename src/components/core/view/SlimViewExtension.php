@@ -17,7 +17,7 @@ class SlimViewExtension extends ViewExtension
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->init();
+        parent::__construct();
     }
 
     public function init()
