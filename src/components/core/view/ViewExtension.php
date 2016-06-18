@@ -6,7 +6,7 @@
  * Time: 00:43
  */
 
-namespace app\core;
+namespace app\core\view;
 
 abstract class ViewExtension
 {
