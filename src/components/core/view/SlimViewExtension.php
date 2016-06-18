@@ -2,6 +2,7 @@
 namespace app\core\View;
 
 use Slim\Container;
+use Slim\Http\Request;
 use Slim\Interfaces\RouterInterface;
 
 /**
@@ -11,7 +12,11 @@ use Slim\Interfaces\RouterInterface;
  * Time: 03:11
  */
 
-/** @property RouterInterface $router */
+/**
+ * @property RouterInterface $router
+ * @property Request request
+ * @property string siteUrl
+ */
 class SlimViewExtension extends ViewExtension
 {
     /** @var Container */
@@ -50,7 +55,7 @@ class SlimViewExtension extends ViewExtension
 
     public function getSiteUrl()
     {
-        return $this->config['siteUrl'];
+        return $this->siteUrl;
     }
 
     public function getName() : string

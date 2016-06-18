@@ -11,6 +11,10 @@ use Slim\Container;
 
 class Main extends Slim
 {
+    public function __construct($items = [])
+    {
+        parent::__construct(new Configuration($items));
+    }
 
     public function debug($state = true)
     {
@@ -25,7 +29,6 @@ class Main extends Slim
     public function bootstrap()
     {
         $this->setRoutes();
-        $this->setConfiguration();
         $this->setDatabase();
         $this->createSessions();
         $this->setView();
@@ -38,19 +41,12 @@ class Main extends Slim
         require_once Configuration::DIR_CONFIG . 'routes.php';
     }
 
-    private function setConfiguration()
-    {
-        $this->getContainer()['config'] = function () {
-            return new Configuration();
-        };
-    }
-
     private function setDatabase()
     {
-        /** @var $config Configuration */
-        $config = $this->getContainer()['config'];
-        $connection = new Connection($config['database']);
-        $connection->setValidator($config->get('locale', 'en'), Configuration::DIR_CONFIG . 'langs');
+        /** @var $settings Configuration */
+        $settings = $this->getContainer();
+        $connection = new Connection($settings->database);
+        $connection->setValidator($settings->locale, Configuration::DIR_CONFIG . 'langs');
         $connection->setAsGlobal();
         $connection->bootEloquent();
     }
@@ -77,9 +73,10 @@ class Main extends Slim
 
     private function addControllerClasses()
     {
-        $controllers = $this->getContainer()->get('config')->get('controllers');
+        /** @var $settings Configuration */
+        $settings = $this->getContainer();
 
-        foreach ($controllers as $name) {
+        foreach ($settings->controllers as $name) {
             $container[$name] = function (Container $container) use ($name) {
                 return new $name($container);
             };

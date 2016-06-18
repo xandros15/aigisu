@@ -2,9 +2,14 @@
 
 namespace app\core;
 
-use Slim\Collection;
+use Slim\Container;
 
-final class Configuration extends Collection
+/**
+ * @property string locale
+ * @property array database
+ * @property array controllers
+ */
+final class Configuration extends Container
 {
     const DIR_SOURCE = __DIR__ . '/../../src/';
     const DIR_CONFIG = __DIR__ . '/../../config/';
@@ -12,11 +17,9 @@ final class Configuration extends Collection
 
     public function __construct(array $items = [])
     {
-        parent::__construct(array_merge(
-            $this->getWebConfig(),
-            ['database' => $this->getDBConfig()],
-            $items
-        ));
+        $default = $this->getWebConfig();
+        $default['database'] = $this->getDBConfig();
+        parent::__construct(array_merge($default, $items));
     }
 
     private function getWebConfig() : array
