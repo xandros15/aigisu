@@ -27,6 +27,7 @@ class SlimViewExtension extends ViewExtension
     {
         parent::init();
         $this->addCallback('pathFor', [$this, 'pathFor']);
+        $this->addCallback('siteUrl', [$this, 'getSiteUrl']);
     }
 
     public function __get($name)
@@ -40,6 +41,11 @@ class SlimViewExtension extends ViewExtension
     public function pathFor($name, $data = [], $queryParams = [])
     {
         return $this->router->pathFor($name, $data, $queryParams);
+    }
+
+    public function getSiteUrl()
+    {
+        return $this->config['siteUrl'];
     }
 
     public function getName() : string
