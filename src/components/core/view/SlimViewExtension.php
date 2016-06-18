@@ -2,6 +2,7 @@
 namespace app\core\View;
 
 use Slim\Container;
+use Slim\Interfaces\RouterInterface;
 
 /**
  * Created by PhpStorm.
@@ -9,6 +10,8 @@ use Slim\Container;
  * Date: 2016-06-18
  * Time: 03:11
  */
+
+/** @property RouterInterface $router */
 class SlimViewExtension extends ViewExtension
 {
     /** @var Container */
