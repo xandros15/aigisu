@@ -13,21 +13,12 @@ abstract class ViewExtension
     /** @var array */
     private $callbacks = [];
 
-    /** @var array */
-    private $options;
-
     abstract public function getName() : string;
 
-    public function init()
-    {
-        $this->options['initialized'] = true;
-    }
+    abstract public function init();
 
     public function __construct()
     {
-        $this->options = [
-            'initialized' => false
-        ];
         $this->init();
     }
 
