@@ -19,7 +19,7 @@ abstract class ViewExtension
         return $this->callbacks;
     }
 
-    public function addCustomsCallback(array $callbacks)
+    protected function addCallback(array $callbacks)
     {
         foreach ($callbacks as $name => $callback) {
             if (!is_callable($callback)) {
