@@ -1,107 +1,58 @@
 <?php
 namespace Aigisu;
 
-use app\core\View;
-use Slim\App as Slim;
-use Slim\Container;
-use Slim\Router;
-use Slim\Http\Request;
 use app\alert\Alert;
 use app\core\Configuration;
-use app\slim\SlimConfig;
 use app\core\Connection;
+use app\core\View\SlimViewExtension;
+use app\core\View\View;
+use Slim\App as Slim;
+use Slim\Container;
 
 class Main extends Slim
 {
-    /** @var Main */
-    static $app;
 
-    /** @var Configuration */
-    public $web;
-
-    /** @var Connection */
-    public $connection;
-
-    /** @var Slim */
-    private $slim;
-
-    public function __construct()
+    public function debug($state = true)
     {
-        echo '<pre>';
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-        $this->configuration();
-        parent::__construct($this->createContainer());
-        $this->setRoutes($this->web->get('slim')['rules']);
-        $this->bootstrap();
+        if ($state) {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+            $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
+            $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
+        }
     }
 
     public function bootstrap()
     {
-        static::$app = $this;
-        $this->dbconnect();
+        $this->setRoutes();
+        $this->setConfiguration();
+        $this->setDatabase();
         $this->createSessions();
-        $this->createView();
+        $this->setView();
         $this->addControllerClasses();
-        dump($this);
-        die();
     }
 
-    private function configuration()
+    private function setRoutes()
     {
-        $this->web = Configuration::getInstance();
+        /** @noinspection PhpIncludeInspection */
+        require_once Configuration::DIR_CONFIG . 'routes.php';
     }
 
-    private function createContainer() : Container
+    private function setConfiguration()
     {
-        $options = [];
-        $options['settings'] = [
-            'displayErrorDetails' => $this->web->get('debug')
-        ];
-
-        return new Container($options);
-    }
-
-    private function addControllerClasses()
-    {
-        $container = $this->getContainer();
-        $controllers = $this->web->get('slim')['controllers'];
-
-        foreach ($controllers as $name) {
-            $container[$name] = function (Container $container) use ($name) {
-                return new $name($container);
-            };
-        }
-    }
-
-    private function createView()
-    {
-        $container = $this->getContainer();
-        $container['view'] = function (Container $container) {
-            $router = $container->router;
-            $callbacks = [];
-            $callbacks['pathFor'] = function ($name, $data = [], $queryParams = []) use ($router) {
-                return $router->pathFor($name, $data, $queryParams);
-            };
-            return new View(VIEW_DIR, $callbacks);
+        $this->getContainer()['config'] = function () {
+            return new Configuration();
         };
-
-
     }
 
-    private function dbconnect()
+    private function setDatabase()
     {
-        $this->connection = new Connection([
-            'driver' => 'mysql',
-            'host' => DB_HOST,
-            'database' => DB_NAME,
-            'username' => DB_USER,
-            'password' => DB_PASSWORD,
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-        ]);
+        /** @var $config Configuration */
+        $config = $this->getContainer()['config'];
+        $connection = new Connection($config['database']);
+        $connection->setValidator($config->get('locale', 'en'), Configuration::DIR_CONFIG . 'langs');
+        $connection->setAsGlobal();
+        $connection->bootEloquent();
     }
 
     private function createSessions()
@@ -114,30 +65,24 @@ class Main extends Slim
         $alert->init();
     }
 
-    private function setRoutes(array $routes)
+    private function setView()
     {
-        foreach ($routes as $route) {
-            if (isset($route['group'])) {
-                $callback = function () use ($route) {
-                    foreach ($route['group'] as $singleRoute) {
-                        $this->map($singleRoute['methods'],
-                            $singleRoute['pattern'], $singleRoute['action']
-                        )->setName($singleRoute['name']);
-                    }
-                };
-                $this->group($route['pattern'], $callback);
-            } else {
-                $this->map($route['methods'], $route['pattern'], $route['action'])
-                    ->setName($route['name']);
-            }
-        }
+        $this->getContainer()['view'] = function (Container $container) {
+            $view = new View(Configuration::DIR_VIEW);
+            $slimViewExtension = new SlimViewExtension($container);
+            $view->addExtension($slimViewExtension);
+            return $view;
+        };
     }
 
-    private function setSlim()
+    private function addControllerClasses()
     {
-        $config = new SlimConfig($this->web->slim);
+        $controllers = $this->getContainer()->get('config')->get('controllers');
 
-        $this->slim = $config->getSlim();
-        $this->router = $config->getRouter();
+        foreach ($controllers as $name) {
+            $container[$name] = function (Container $container) use ($name) {
+                return new $name($container);
+            };
+        }
     }
 }
