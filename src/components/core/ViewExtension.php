@@ -8,33 +8,11 @@
 
 namespace app\core;
 
-
-use Slim\Container;
-
-class ViewExtension
+abstract class ViewExtension
 {
     private $callbacks = [];
 
-    /** @var Container */
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    public function getName()
-    {
-        return 'base-extension';
-    }
-
-    public function __get($name)
-    {
-        if ($this->container->has($name)) {
-            return $this->container->get($name);
-        }
-        throw new \InvalidArgumentException();
-    }
+    abstract public function getName() : string;
 
     public function getCallbacks()
     {
