@@ -25,6 +25,7 @@ class SlimViewExtension extends ViewExtension
 
     public function init()
     {
+        parent::init();
         $this->addCallback([$this, 'pathFor']);
     }
 
