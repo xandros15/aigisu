@@ -2,7 +2,8 @@
 
 namespace models;
 
-use Main;
+use Aigisu\Main;
+use Illuminate\Container\Container;
 use models\Unit;
 use Illuminate\Database\Eloquent\Model;
 use traits\Validator;
@@ -46,8 +47,8 @@ class Image extends Model
     public static function boot()
     {
         parent::boot();
-        Main::$app->connection->validator->extend('imageExists',
-            function($attribute, $value, $parameters, $validator) {
+        Container::getInstance()->validator->extend('imageExists',
+            function ($attribute, $value, $parameters, \Illuminate\Validation\Validator $validator) {
 
             $validator->setCustomMessages([$attribute => 'Image already exists']);
 

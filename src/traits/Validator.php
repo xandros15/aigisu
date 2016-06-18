@@ -2,14 +2,14 @@
 
 namespace traits;
 
+use Illuminate\Container\Container;
 use Illuminate\Support\MessageBag;
 use Illuminate\Database\Eloquent\Model;
 use app\alert\Alert;
-use Main;
 
 trait Validator
 {
-    /** @var  MessageBag */
+    /** @var MessageBag */
     public $errors;
 
     public function validate($attributes = [])
@@ -20,8 +20,8 @@ trait Validator
         }
 
         $attributes = ($attributes) ? array_merge($this->getAttributes(), $attributes) : $this->getAttributes();
-
-        $validator = Main::$app->connection->validator->make($attributes, $this->rules());
+        /** @var $validator \Illuminate\Validation\Validator */
+        $validator = Container::getInstance()->validator->make($attributes, $this->rules());
 
         $result = $validator->passes();
 
