@@ -12,15 +12,13 @@ use Illuminate\Validation\DatabasePresenceVerifier;
 
 class Connection extends Capsule
 {
-    public $validator;
 
-    public function __construct(array $connection, Container $container = null)
+    public function __construct(array $connection)
     {
         $container = new Container();
+        Container::setInstance($container);
         parent::__construct($container);
         $this->addConnection($connection);
-        $this->setAsGlobal();
-        $this->bootEloquent();
     }
 
     public function setValidator(string $translation, string $langDirectory)
@@ -30,6 +28,6 @@ class Connection extends Capsule
         $validator = new ValidatorFactory($translator);
         $verifier = new DatabasePresenceVerifier($this->getDatabaseManager());
         $validator->setPresenceVerifier($verifier);
-        $this->validator = $validator;
+        Container::getInstance()->offsetSet('validator', $validator);
     }
 }
