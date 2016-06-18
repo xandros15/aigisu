@@ -1,9 +1,8 @@
 <?php
 
 use models\Image;
-use app\core\View;
 
-/* @var $this View */
+/** @var $image Image */
 $name = $image->server . $image->scene;
 ?>
 <div class="row">
@@ -24,7 +23,7 @@ $name = $image->server . $image->scene;
             <label>Source URL:</label>
         </div>
         <div class="col-xs-9">
-            <input class="form-control" name="<?= $name ?>[url]" autocomplete="off" type="url"  placeholder="http://">
+            <input class="form-control" name="<?= $name ?>[url]" autocomplete="off" type="url" placeholder="http://">
         </div>
     </div>
     <input type="hidden" name="<?= $name ?>[server]" value="<?= $image->server ?>">

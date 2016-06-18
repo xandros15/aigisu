@@ -2,16 +2,14 @@
 
 use models\Image;
 use models\Unit;
-use app\core\View;
 
-/* @var $this View */
 /* @var $model Unit */
 ?>
 
 <div class="modal fade" id="modal-upload-image-<?= $model->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <form enctype="multipart/form-data" class="ws-validate" method="post" role="form" action=<?=
-        Main::$app->router->pathFor('imageUpload', ['id' => $model->id])
+        $this->pathFor('imageUpload', ['id' => $model->id])
         ?>>
             <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
             <div class="modal-content">

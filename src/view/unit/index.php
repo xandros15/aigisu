@@ -1,10 +1,8 @@
 <?php
 
 use models\Unit;
-use app\core\View;
 use controller\OauthController as Oauth;
 
-/* @var $this View */
 /* @var $model Unit */
 /* @var $maxPages int */
 
@@ -16,8 +14,9 @@ $this->containerClass = 'container';
         <div class="col-xs-12 form-group">
             <?= $this->render('image/help') ?>
             <?php if (Oauth::isLogged()): ?>
-                <button type="button" class="btn btn-primary ajax pull-right" data-target="<?= 
-                Main::$app->router->pathFor('unitCreate') ?>">Create</button>
+                <button type="button" class="btn btn-primary ajax pull-right" data-target="<?=
+                $this->pathFor('unitCreate') ?>">Create
+                </button>
             <?php endif; ?>
         </div>
         <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>

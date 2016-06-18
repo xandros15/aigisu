@@ -1,10 +1,8 @@
 <?php
 
 use models\Image;
-use app\core\View;
 use Illuminate\Database\Eloquent\Collection;
 
-/* @var $this View */
 /* @var $images Collection */
 /* @var $image Image */
 $this->title = 'images';

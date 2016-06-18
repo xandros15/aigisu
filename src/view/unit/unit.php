@@ -1,10 +1,8 @@
 <?php
 
 use models\Unit;
-use app\core\View;
 use controller\OauthController as Oauth;
 
-/* @var $this View */
 /* @var $unit Unit */
 ?>
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
@@ -12,7 +10,7 @@ use controller\OauthController as Oauth;
         <?php if (Oauth::isLogged()): ?>
             <div class="form-group text-center">
                 <button type="button" class="btn ajax btn-default" data-target="<?=
-                Main::$app->router->pathFor('unitUpdate', ['id' => $unit->id])
+                $this->pathFor('unitUpdate', ['id' => $unit->id])
                 ?>">
                     Edit
                 </button>
@@ -21,7 +19,7 @@ use controller\OauthController as Oauth;
         <?php if ($unit->isImagesRequired()): ?>
             <div class="form-group text-center">
                 <button type="button" class="btn ajax btn-default" data-target="<?=
-                Main::$app->router->pathFor('imageUpload', ['id' => $unit->id])
+                $this->pathFor('imageUpload', ['id' => $unit->id])
                 ?>">
                     Upload
                 </button>
@@ -43,6 +41,8 @@ use controller\OauthController as Oauth;
     </div>
     <?php if ($unit->isAnyImages()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
-        <input class="image-route" type="hidden" value="<?= Main::$app->router->pathFor('image', ['id' => $unit->id]) ?>">
+        <input class="image-route" type="hidden" value="<?=
+        $this->pathFor('image', ['id' => $unit->id])
+        ?>">
     <?php endif; ?>
 </li>

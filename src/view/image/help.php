@@ -1,9 +1,3 @@
-<?php
-
-use app\core\View;
-
-/* @var $this View */
-?>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-help">
     How to upload file

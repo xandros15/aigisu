@@ -1,12 +1,5 @@
-<?php
-
-use controller\OauthController as Oauth;
-use app\core\View;
-
-/* @var $this View */
-?>
 <?php if (!Oauth::isLogged()): ?>
-    <form class="form" method="post" role="form" action="<?= Main::$app->router->pathFor('login') ?>">
+    <form class="form" method="post" role="form" action="<?= $this->pathFor('login') ?>">
         <div class="form-group text-center">
             <label>PIN</label>
             <input style="max-width: 200px; margin: auto;" type="text" class="form-control" placeholder="pin" name="pin" value="">
@@ -16,7 +9,7 @@ use app\core\View;
         </div>
     </form>
 <?php else: ?>
-    <form class="form" method="post" fole="form" action="<?= Main::$app->router->pathFor('logout') ?>">
+    <form class="form" method="post" fole="form" action="<?= $this->pathFor('logout') ?>">
         <div class="col-xs-12 text-center">
             <button class="btn btn-default" type="submit">logout</button>
         </div>
