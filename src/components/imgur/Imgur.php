@@ -32,6 +32,13 @@ class Imgur extends Base implements ExtedndetServer
         parent::__construct($api_key, $api_secret);
     }
 
+    public function __get($name)
+    {
+        if ($name == 'credentials') {
+            return $this->getCredentials();
+        }
+    }
+
     /**
      * @return \app\imgur\Imgur
      * @throws Exception if token file no exist
@@ -150,6 +157,11 @@ class Imgur extends Base implements ExtedndetServer
         $this->setCredentials($response);
     }
 
+    protected function getCredentials($file = self::CREDENTIALS_PATH)
+    {
+        return $this->credentials = file_get_contents($file);
+    }
+
     private function setCredentials($credentials)
     {
         $this->credentials = json_decode($credentials);
@@ -160,7 +172,7 @@ class Imgur extends Base implements ExtedndetServer
         return ((time() - $this->credentials->created_at) > (60 * 60 * 24));
     }
 
-    private function refreshTokens()
+    public function refreshTokens()
     {
         $response = $this->auth->refreshAccessToken($this->credentials->refresh_token);
         if (!isset($response['created_at'])) {
