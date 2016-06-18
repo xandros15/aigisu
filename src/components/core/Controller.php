@@ -2,8 +2,15 @@
 
 namespace app\core;
 
+use app\core\View\View;
 use Slim\Container;
+use Slim\Http\Response;
 
+/**
+ * @property Response response
+ * @property Response request
+ * @property View view
+ */
 class Controller
 {
     public $layout = 'layout/main';
