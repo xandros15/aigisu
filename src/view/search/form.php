@@ -1,14 +1,11 @@
 <?php
 
-use controller\UnitController;
-
 ?>
 <div class="container-fluid">
     <form class="navbar-form navbar-right" action="<?= $this->pathFor('home') ?>" style="display:inline-block"
           role="search">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" name="q"
-                   value="<?= UnitController::getSearchQuery() ?>">
+            <input type="text" class="form-control" placeholder="Search" name="q" value="<?= $this->query('q') ?>">
             <div class="input-group-btn">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                 <button type="button" class="btn btn-default" data-placement="bottom" data-toggle="popover"
