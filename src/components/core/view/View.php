@@ -24,6 +24,7 @@ class View
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
+        throw new \InvalidArgumentException();
     }
 
     public function __set($name, $value)
