@@ -4,11 +4,12 @@ namespace app\core;
 
 use app\core\View\View;
 use Slim\Container;
+use Slim\Http\Request;
 use Slim\Http\Response;
 
 /**
  * @property Response response
- * @property Response request
+ * @property Request request
  * @property View view
  */
 class Controller
@@ -47,11 +48,6 @@ class Controller
         return $this->response->write($render);
     }
 
-    public function goHome()
-    {
-        return $this->response->withRedirect('/', 301);
-    }
-
     public function goBack()
     {
         if ($this->request->hasHeader('HTTP_REFERER')) {
@@ -59,5 +55,10 @@ class Controller
             return $this->response->withRedirect($referer, 301);
         }
         return $this->goHome();
+    }
+
+    public function goHome()
+    {
+        return $this->response->withRedirect('/', 301);
     }
 }
