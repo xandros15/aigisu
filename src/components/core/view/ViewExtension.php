@@ -36,18 +36,16 @@ abstract class ViewExtension
         return $this->callbacks;
     }
 
-    protected function addCallback(array $callbacks)
+    protected function addCallback($name, $callback)
     {
-        foreach ($callbacks as $name => $callback) {
-            if (!is_callable($callback)) {
-                throw new \InvalidArgumentException("Method `{$name}` isn't callable");
-            }
-
-            if ($callback instanceof \Closure) {
-                $callback = $callback->bindTo($this);
-            }
-
-            $this->callbacks[$name] = $callback;
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException("Method `{$name}` isn't callable");
         }
+
+        if ($callback instanceof \Closure) {
+            $callback = $callback->bindTo($this);
+        }
+
+        $this->callbacks[$name] = $callback;
     }
 }
