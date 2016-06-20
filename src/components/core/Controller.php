@@ -6,11 +6,13 @@ use app\core\View\View;
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 /**
  * @property Response response
  * @property Request request
  * @property View view
+ * @property Router router
  */
 class Controller
 {
