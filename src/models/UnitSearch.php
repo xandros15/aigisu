@@ -2,54 +2,23 @@
 
 namespace models;
 
-use models\Unit;
-use stdClass;
 use Illuminate\Database\Eloquent\Builder as Query;
+use stdClass;
 
 class UnitSearch extends Unit
 {
-    const UNITS_PER_PAGE = 30;
+    const UNITS_PER_PAGE = 10;
 
-    public $maxPages = 0;
+    public $count = 0;
 
     public function search(array $params)
     {
-        $query = Unit::with('images');
+        $query = Unit::with('images')->newQuery();
 
         $this->parseSearch($params, $query);
         $this->parseSort($params, $query);
         $this->parsePagination($params, $query);
-        return $query->get();
-    }
-
-    protected function parsePagination(array $params, Query $query)
-    {
-        $page = (isset($params['page'])) ? $params['page'] : 1;
-
-        $this->maxPages = (int) ceil($query->toBase()->getCountForPagination() / self::UNITS_PER_PAGE);
-
-        return $query->forPage($page, self::UNITS_PER_PAGE);
-    }
-
-    protected function parseSort(array $params, Query $query)
-    {
-        if (!isset($params['sort'])) {
-            return $query->orderBy('id', 'desc');
-        }
-
-        $column = strtolower($params['sort']);
-        $direction = 'asc';
-
-        if (strpos($params['sort'], '-') === 0) {
-            $direction = 'desc';
-            $column = ltrim($column, '-');
-        }
-
-        if (!in_array($column, Unit::getColumns())) {
-            return $query->orderBy('id', 'desc');
-        }
-
-        return $query->orderBy($column, $direction);
+        return $query;
     }
 
     protected function parseSearch(array $params, Query $query)
@@ -69,16 +38,6 @@ class UnitSearch extends Unit
         }
 
         return $query;
-    }
-
-    private function searchWithTags(Query $query, stdClass $argument)
-    {
-        return $query->where(function (Query $query) use ($argument) {
-            $query->where('unit.name', $argument->operator, $argument->value)->orWhereHas('tags',
-                function (Query $query) use ($argument) {
-                    $query->where('name', $argument->operator, $argument->value);
-                });
-        });
     }
 
     private function parseSearchQuery(array $params)
@@ -130,5 +89,44 @@ class UnitSearch extends Unit
         $param->column = $column;
 
         return $param;
+    }
+
+    private function searchWithTags(Query $query, stdClass $argument)
+    {
+        return $query->where(function (Query $query) use ($argument) {
+            $query->where('unit.name', $argument->operator, $argument->value)->orWhereHas('tags',
+                function (Query $query) use ($argument) {
+                    $query->where('name', $argument->operator, $argument->value);
+                });
+        });
+    }
+
+    protected function parseSort(array $params, Query $query)
+    {
+        if (!isset($params['sort'])) {
+            return $query->orderBy('id', 'desc');
+        }
+
+        $column = strtolower($params['sort']);
+        $direction = 'asc';
+
+        if (strpos($params['sort'], '-') === 0) {
+            $direction = 'desc';
+            $column = ltrim($column, '-');
+        }
+
+        if (!in_array($column, Unit::getColumns())) {
+            return $query->orderBy('id', 'desc');
+        }
+
+        return $query->orderBy($column, $direction);
+    }
+
+    protected function parsePagination(array $params, Query $query)
+    {
+        $this->count = $query->toBase()->getCountForPagination();
+
+        $page = (isset($params['page'])) ? $params['page'] : 1;
+        return $query->forPage($page, self::UNITS_PER_PAGE);
     }
 }

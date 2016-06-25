@@ -1,16 +1,16 @@
 <?php
 
-use models\Unit;
 use controller\OauthController as Oauth;
+use models\Unit;
 
-/* @var $model Unit */
-/* @var $maxPages int */
+/* @var $unitList \Illuminate\Database\Eloquent\Collection */
+/* @var $pagination string */
 
 $this->title = 'Units';
 $this->containerClass = 'container';
 ?>
 <div id="units">
-    <?php if (count($model) > 0): ?>
+    <?php if (!$unitList->isEmpty()): ?>
         <div class="col-xs-12 form-group">
             <?= $this->render('image/help') ?>
             <?php if (Oauth::isLogged()): ?>
@@ -19,20 +19,20 @@ $this->containerClass = 'container';
                 </button>
             <?php endif; ?>
         </div>
-        <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
+        <?= $pagination ?>
         <ul class="unit-list col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <?= $this->render('unit/sort') ?>
                 </div>
-                <?php foreach ($model as $unit): ?>
+                <?php foreach ($unitList as $unit): ?>
+                    <?php /** @var $unit Unit */ ?>
                     <?= $this->render('unit/unit', ['unit' => $unit]) ?>
                 <?php endforeach; ?>
             </div>
         </ul>
-        <?= $this->render('unit/pagination', ['maxPages' => $maxPages]) ?>
+        <?= $pagination ?>
     <?php else: ?>
         <h3 class="text-center">Nothing found</h3>
     <?php endif; ?>
 </div>
-

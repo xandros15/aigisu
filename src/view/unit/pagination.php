@@ -1,26 +1,42 @@
-<?php
-
-use controller\UnitController as Unit;
-
-/* @var $maxPages int */
-$page = Unit::getPage();
-?>
-<?php if ($maxPages > 1): ?>
-    <nav class="text-center col-xs-12">
-        <ul class="pagination">
-            <li<?= (1 == $page) ? ' class="disabled"' : '' ?>>
-                <a href="<?= Unit::generateLink(['page' => 1]) ?>" aria-label="first">
-                    <span aria-hidden="true">&laquo;</span>
+<nav class="text-center col-xs-12">
+    <ul class="pagination">
+        <?php /** @var $pagination Xandros15\SlimPagination\Pagination */ ?>
+        <?php if ($pagination->previous()['isCurrent']): ?>
+            <li class="disabled">
+                <span><?= $pagination->previous()['pageName'] ?></span>
+            </li>
+        <?php else: ?>
+            <li>
+                <a aria-label="previous" href="<?= $pagination->previous()['pathFor'] ?>">
+                    <span aria-hidden="true"><?= $pagination->previous()['pageName'] ?></span>
                 </a>
             </li>
-            <?php for ($i = 1; $i <= $maxPages; $i++): ?>
-                <li<?= ($i == $page) ? ' class="active"' : ''; ?>><a href="<?= Unit::generateLink(['page' => $i]) ?>"><?= $i ?></a></li>
-            <?php endfor; ?>
-            <li<?= ($maxPages == $page) ? ' class="disabled"' : '' ?>>
-                <a href="<?= Unit::generateLink(['page' => $maxPages]) ?>" aria-label="last">
-                    <span aria-hidden="true">&raquo;</span>
+        <?php endif ?>
+        <?php foreach ($pagination as $page): ?>
+            <?php if ($page['isSlider']): ?>
+                <li class="disabled">
+                    <span><?= $page['pageName'] ?></span>
+                </li>
+            <?php elseif ($page['isCurrent']): ?>
+                <li class="active">
+                    <span><?= $page['pageName'] ?></span>
+                </li>
+            <?php else: ?>
+                <li>
+                    <a href="<?= $page['pathFor'] ?>"><?= $page['pageName'] ?></a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <?php if ($pagination->next()['isCurrent']): ?>
+            <li class="disabled">
+                <span><?= $pagination->next()['pageName'] ?></span>
+            </li>
+        <?php else: ?>
+            <li>
+                <a aria-label="next" href="<?= $pagination->next()['pathFor'] ?>">
+                    <span aria-hidden="true"><?= $pagination->next()['pageName'] ?></span>
                 </a>
             </li>
-        </ul>
-    </nav>
-<?php endif; ?>
+        <?php endif ?>
+    </ul>
+</nav>

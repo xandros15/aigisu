@@ -2,13 +2,13 @@
 
 namespace controller;
 
-use Main;
+use app\alert\Alert;
+use app\core\Controller;
+use controller\OauthController as Oauth;
 use models\Unit;
 use models\UnitSearch;
-use app\core\Controller;
 use Slim\Http\Request;
-use app\alert\Alert;
-use controller\OauthController as Oauth;
+use Xandros15\SlimPagination\Pagination;
 
 class UnitController extends Controller
 {
@@ -16,9 +16,19 @@ class UnitController extends Controller
     public function actionIndex(Request $request)
     {
         $model = new UnitSearch();
+        $search = $model->search($request->getParams());
+        $pagination = new Pagination($request, $this->router, [
+            Pagination::OPT_TOTAL => $model->count,
+            Pagination::OPT_PER_PAGE => UnitSearch::UNITS_PER_PAGE
+        ]);
 
-        return $this->render('unit/index',
-                ['model' => $model->search($request->getParams()), 'maxPages' => $model->maxPages]);
+        $pagination = $this->view->render('unit/pagination', [
+            'pagination' => $pagination
+        ]);
+        return $this->render('unit/index', [
+            'unitList' => $search->get(),
+            'pagination' => $pagination
+        ]);
     }
 
     public function actionCreate(Request $request)
@@ -79,25 +89,18 @@ class UnitController extends Controller
         return $this->goBack();
     }
 
-    public static function getSearchQuery()
-    {
-        return Main::$app->request->getParam('q', '');
-    }
-
     public static function generateLink(array $options)
     {
-        $request = Main::$app->request;
-        $query   = $request->getParams();
 
-        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
-            $options['sort'] = '-' . $options['sort'];
-        }
+//        $request = $this->request;
+//        $request->
+//        $request = Main::$app->request;
+//        $query   = $request->getParams();
+//
+//        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
+//            $options['sort'] = '-' . $options['sort'];
+//        }
 
-        return '?' . http_build_query(array_merge($query, $options));
-    }
-
-    public static function getPage()
-    {
-        return Main::$app->request->getParam('page', 1);
+        return ''; // '?' . http_build_query(array_merge($query, $options));
     }
 }

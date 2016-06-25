@@ -6,7 +6,7 @@
             "email": "xandros@xandros.com"
         }
     ],
-    "minimum-stability": "dev",
+  "minimum-stability": "stable",
     "require": {
         "slim/slim": "^3.0",
         "illuminate/database": "5.2.*",
@@ -15,7 +15,7 @@
         "illuminate/validation": "5.2.*",
         "illuminate/translation": "5.2.*",
         "symfony/var-dumper": "^3.0",
-        "Xandros15/Slim-pagination": "dev-master"
+      "xandros15/slim-pagination": "0.0.*"
     },
     "autoload": {
         "psr-4": {

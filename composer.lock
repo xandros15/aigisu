@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d989efd9bd1127632799581b077a2772",
-    "content-hash": "46370343be29c73f13c3edf21de23ddd",
+    "hash": "556985e60497af4f10487860c368601a",
+    "content-hash": "5733660021f15db94a364f60ab3a6b25",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,16 +36,16 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "dev-master",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "803a2ed9fea02f9ca47cd45395089fe78769a392"
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/803a2ed9fea02f9ca47cd45395089fe78769a392",
-                "reference": "803a2ed9fea02f9ca47cd45395089fe78769a392",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
@@ -99,20 +99,20 @@
                 "singularize",
                 "string"
             ],
-            "time": "2016-05-12 17:23:41"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "google/apiclient",
-            "version": "dev-v1-master",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "85309a3520bb5f53368d43e35fd24f43c9556323"
+                "reference": "400f250a30ae1dd4c4a0a4f750fe973fc70e6311"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/85309a3520bb5f53368d43e35fd24f43c9556323",
-                "reference": "85309a3520bb5f53368d43e35fd24f43c9556323",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/400f250a30ae1dd4c4a0a4f750fe973fc70e6311",
+                "reference": "400f250a30ae1dd4c4a0a4f750fe973fc70e6311",
                 "shasum": ""
             },
             "require": {
@@ -125,12 +125,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-v1-master": "1.1.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
-                "files": [
-                    "src/Google/autoload.php"
+                "classmap": [
+                    "src/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -142,20 +142,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-06-06 21:22:48"
+            "time": "2016-02-02 18:50:42"
         },
         {
             "name": "illuminate/container",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "690035fa70a253a58eb955af2ca7140c6fb2238f"
+                "reference": "7ec395833738b9059f829348ddc9a59d0118ac88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/690035fa70a253a58eb955af2ca7140c6fb2238f",
-                "reference": "690035fa70a253a58eb955af2ca7140c6fb2238f",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/7ec395833738b9059f829348ddc9a59d0118ac88",
+                "reference": "7ec395833738b9059f829348ddc9a59d0118ac88",
                 "shasum": ""
             },
             "require": {
@@ -185,11 +185,11 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2016-06-14 13:38:12"
+            "time": "2016-05-29 02:18:23"
         },
         {
             "name": "illuminate/contracts",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -231,16 +231,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "e5041e3d001c9b9a4e7f3c2e91f4e88e30803317"
+                "reference": "c0746930dc6a6ff9b72945152609d61a3b3829c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/e5041e3d001c9b9a4e7f3c2e91f4e88e30803317",
-                "reference": "e5041e3d001c9b9a4e7f3c2e91f4e88e30803317",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/c0746930dc6a6ff9b72945152609d61a3b3829c6",
+                "reference": "c0746930dc6a6ff9b72945152609d61a3b3829c6",
                 "shasum": ""
             },
             "require": {
@@ -287,11 +287,11 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-06-19 17:27:13"
+            "time": "2016-06-06 13:12:46"
         },
         {
             "name": "illuminate/filesystem",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -341,16 +341,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "fe76e3a84b1010e95e5ee3a3adb0448888f30a80"
+                "reference": "6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/fe76e3a84b1010e95e5ee3a3adb0448888f30a80",
-                "reference": "fe76e3a84b1010e95e5ee3a3adb0448888f30a80",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b",
+                "reference": "6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b",
                 "shasum": ""
             },
             "require": {
@@ -393,11 +393,11 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2016-06-11 16:51:38"
+            "time": "2016-05-30 02:40:53"
         },
         {
             "name": "illuminate/translation",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -442,7 +442,7 @@
         },
         {
             "name": "illuminate/validation",
-            "version": "5.2.x-dev",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
@@ -582,16 +582,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.x-dev",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "1115ffa06bad72d01735d91f51eb022db556e205"
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/1115ffa06bad72d01735d91f51eb022db556e205",
-                "reference": "1115ffa06bad72d01735d91f51eb022db556e205",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
                 "shasum": ""
             },
             "require": {
@@ -626,20 +626,20 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-04-03 05:47:09"
+            "time": "2016-03-18 20:34:03"
         },
         {
             "name": "pimple/pimple",
-            "version": "dev-master",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "64e0f8320639b434baa073a40dd1e037e3286555"
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/64e0f8320639b434baa073a40dd1e037e3286555",
-                "reference": "64e0f8320639b434baa073a40dd1e037e3286555",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/a30f7d6e57565a2e1a316e1baf2a483f788b258a",
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a",
                 "shasum": ""
             },
             "require": {
@@ -656,7 +656,7 @@
                     "Pimple": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -672,7 +672,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:11:22"
+            "time": "2015-09-11 15:10:35"
         },
         {
             "name": "plasticbrain/php-flash-messages",
@@ -718,7 +718,7 @@
         },
         {
             "name": "psr/http-message",
-            "version": "dev-master",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
@@ -767,16 +767,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "3.x-dev",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "30cfe3c07dac28ec1129c0577e64b90ba11a54c4"
+                "reference": "a132385f736063d00632b52b3f8a389fe66fe4fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/30cfe3c07dac28ec1129c0577e64b90ba11a54c4",
-                "reference": "30cfe3c07dac28ec1129c0577e64b90ba11a54c4",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/a132385f736063d00632b52b3f8a389fe66fe4fa",
+                "reference": "a132385f736063d00632b52b3f8a389fe66fe4fa",
                 "shasum": ""
             },
             "require": {
@@ -833,11 +833,11 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-05-26 08:20:33"
+            "time": "2016-05-25 11:23:38"
         },
         {
             "name": "symfony/finder",
-            "version": "3.0.x-dev",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -886,16 +886,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "3.0.x-dev",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "a3d14ffa57652686bd61288a95a4b8f204c95268"
+                "reference": "d268a643884f85e91d6ba11ca68de96833f3f6e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a3d14ffa57652686bd61288a95a4b8f204c95268",
-                "reference": "a3d14ffa57652686bd61288a95a4b8f204c95268",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/d268a643884f85e91d6ba11ca68de96833f3f6e5",
+                "reference": "d268a643884f85e91d6ba11ca68de96833f3f6e5",
                 "shasum": ""
             },
             "require": {
@@ -935,20 +935,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-16 05:18:30"
+            "time": "2016-06-06 11:33:26"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "dev-master",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d"
+                "reference": "dff51f72b0706335131b00a7f49606168c582594"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d",
-                "reference": "f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/dff51f72b0706335131b00a7f49606168c582594",
+                "reference": "dff51f72b0706335131b00a7f49606168c582594",
                 "shasum": ""
             },
             "require": {
@@ -994,20 +994,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-06-07 08:38:42"
+            "time": "2016-05-18 14:26:46"
         },
         {
             "name": "symfony/translation",
-            "version": "3.0.x-dev",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "686bfd8ac610a45dba541ab9ab12a35515b58b71"
+                "reference": "2b0aacaa613c0ec1ad8046f972d8abdcb19c1db7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/686bfd8ac610a45dba541ab9ab12a35515b58b71",
-                "reference": "686bfd8ac610a45dba541ab9ab12a35515b58b71",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/2b0aacaa613c0ec1ad8046f972d8abdcb19c1db7",
+                "reference": "2b0aacaa613c0ec1ad8046f972d8abdcb19c1db7",
                 "shasum": ""
             },
             "require": {
@@ -1058,20 +1058,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-14 11:04:19"
+            "time": "2016-06-06 11:33:26"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "dev-master",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "64c842d6f254dd3f4327bd09b6ae574af3242bb6"
+                "reference": "436195b421e8c0493ca3e390c1fbecd8ee08c546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/64c842d6f254dd3f4327bd09b6ae574af3242bb6",
-                "reference": "64c842d6f254dd3f4327bd09b6ae574af3242bb6",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/436195b421e8c0493ca3e390c1fbecd8ee08c546",
+                "reference": "436195b421e8c0493ca3e390c1fbecd8ee08c546",
                 "shasum": ""
             },
             "require": {
@@ -1087,7 +1087,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -1121,25 +1121,30 @@
                 "debug",
                 "dump"
             ],
-            "time": "2016-05-25 08:18:05"
+            "time": "2016-05-24 10:06:56"
         },
         {
             "name": "xandros15/slim-pagination",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xandros15/SlimPagination.git",
-                "reference": "0d1e1dfe4053e972f615a9a2fae7fec862ff2a9d"
+                "reference": "6719f172035113b586508a765fa325f30686a0eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/0d1e1dfe4053e972f615a9a2fae7fec862ff2a9d",
-                "reference": "0d1e1dfe4053e972f615a9a2fae7fec862ff2a9d",
+                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/6719f172035113b586508a765fa325f30686a0eb",
+                "reference": "6719f172035113b586508a765fa325f30686a0eb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
                 "slim/slim": "^3.0"
+            },
+            "require-dev": {
+                "slim/php-view": "^2.1",
+                "slim/twig-view": "^2.1",
+                "symfony/var-dumper": "^3.1"
             },
             "type": "library",
             "autoload": {
@@ -1158,15 +1163,13 @@
                 }
             ],
             "description": "simple pagination for slim3",
-            "time": "2016-06-20 01:48:17"
+            "time": "2016-06-25 21:41:44"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "xandros15/slim-pagination": 20
-    },
+    "minimum-stability": "stable",
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
