@@ -2,25 +2,24 @@
 
 namespace app\imgur;
 
+use app\core\Configuration;
 use app\exception\ArrayException;
 use app\upload\ExtedndetServer;
 use Exception;
-use Imgur\Imgur as Base;
 use Imgur\Authorize;
+use Imgur\Imgur as Base;
 
 class Imgur extends Base implements ExtedndetServer
 {
-    const KEY_PATH         = CONFIG_DIR . 'imgur.key.json';
-    const CREDENTIALS_PATH = CONFIG_DIR . 'imgur.credentials.json';
-    const ALBUM_PATH       = CONFIG_DIR . 'imgur.albums.json';
-
+    const KEY_PATH = Configuration::DIR_CONFIG . 'imgur.key.json';
+    const CREDENTIALS_PATH = Configuration::DIR_CONFIG . 'imgur.credentials.json';
+    const ALBUM_PATH = Configuration::DIR_CONFIG . 'imgur.albums.json';
+    protected static $albums = [];
     public $description      = '';
     public $name             = '';
     public $catalog          = '';
     public $filename         = '';
     protected $credentials;
-    protected static $albums = [];
-
     /**
      * @var Authorize 
      */
@@ -37,6 +36,12 @@ class Imgur extends Base implements ExtedndetServer
         if ($name == 'credentials') {
             return $this->getCredentials();
         }
+        return null;
+    }
+
+    protected function getCredentials($file = self::CREDENTIALS_PATH)
+    {
+        return $this->credentials = file_get_contents($file);
     }
 
     /**
@@ -57,18 +62,9 @@ class Imgur extends Base implements ExtedndetServer
         return $imgur;
     }
 
-    /**
-     * @param string $key
-     * @param string $secret
-     * @return object JSON
-     */
-    public static function createKeyToken($key, $secret)
+    private static function setAlbums()
     {
-        $token = json_encode(['api_key' => $key, 'api_secret' => $secret]);
-        if (!file_exists(dirname(self::KEY_PATH))) {
-            mkdir(dirname(self::KEY_PATH), 0700, true);
-        }
-        return (file_put_contents(self::KEY_PATH, $token));
+        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH), true);
     }
 
     public function authorize($refresh_token = false, $auth_code = false)
@@ -84,6 +80,64 @@ class Imgur extends Base implements ExtedndetServer
             $this->refreshTokens();
         }
         $this->setAccessData();
+    }
+
+    private function createTokens()
+    {
+        $response = $this->auth->getAuthorizationPin();
+        if (!isset($response['created_at'])) {
+            $response['created_at'] = time();
+        }
+        if (is_array($response)) {
+            $response = json_encode($response);
+        }
+        if (!file_exists(dirname(self::CREDENTIALS_PATH))) {
+            mkdir(dirname(self::CREDENTIALS_PATH), 0700, true);
+        }
+        file_put_contents(self::CREDENTIALS_PATH, $response);
+        $this->setCredentials($response);
+    }
+
+    private function setCredentials($credentials)
+    {
+        $this->credentials = json_decode($credentials);
+    }
+
+    private function isExpired()
+    {
+        return ((time() - $this->credentials->created_at) > (60 * 60 * 24));
+    }
+
+    public function refreshTokens()
+    {
+        $response = $this->auth->refreshAccessToken($this->credentials->refresh_token);
+        if (!isset($response['created_at'])) {
+            $response['created_at'] = time();
+        }
+        if (is_array($response)) {
+            $response = json_encode($response);
+        }
+        file_put_contents(self::CREDENTIALS_PATH, $response);
+        $this->setCredentials($response);
+    }
+
+    private function setAccessData()
+    {
+        $this->conn->setAccessData($this->credentials->access_token, $this->credentials->refresh_token);
+    }
+
+    /**
+     * @param string $key
+     * @param string $secret
+     * @return object JSON
+     */
+    public static function createKeyToken($key, $secret)
+    {
+        $token = json_encode(['api_key' => $key, 'api_secret' => $secret]);
+        if (!file_exists(dirname(self::KEY_PATH))) {
+            mkdir(dirname(self::KEY_PATH), 0700, true);
+        }
+        return (file_put_contents(self::KEY_PATH, $token));
     }
 
     public function uploadFile()
@@ -110,6 +164,15 @@ class Imgur extends Base implements ExtedndetServer
         $this->description = (is_array($description)) ? self::parseDiscription($description) : $description;
     }
 
+    private static function parseDiscription(array $discription)
+    {
+        $string = '';
+        foreach ($discription as $name => $value) {
+            $string .= $name . ': ' . $value . ', ';
+        }
+        return rtrim($string, ', ');
+    }
+
     public function setName($title)
     {
         $this->name = $title;
@@ -129,68 +192,5 @@ class Imgur extends Base implements ExtedndetServer
             throw new Exception("The file: '{$filename}' no exists");
         }
         $this->filename = $filename;
-    }
-
-    private static function setAlbums()
-    {
-        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH), true);
-    }
-
-    private function setAccessData()
-    {
-        $this->conn->setAccessData($this->credentials->access_token, $this->credentials->refresh_token);
-    }
-
-    private function createTokens()
-    {
-        $response = $this->auth->getAuthorizationPin();
-        if (!isset($response['created_at'])) {
-            $response['created_at'] = time();
-        }
-        if (is_array($response)) {
-            $response = json_encode($response);
-        }
-        if (!file_exists(dirname(self::CREDENTIALS_PATH))) {
-            mkdir(dirname(self::CREDENTIALS_PATH), 0700, true);
-        }
-        file_put_contents(self::CREDENTIALS_PATH, $response);
-        $this->setCredentials($response);
-    }
-
-    protected function getCredentials($file = self::CREDENTIALS_PATH)
-    {
-        return $this->credentials = file_get_contents($file);
-    }
-
-    private function setCredentials($credentials)
-    {
-        $this->credentials = json_decode($credentials);
-    }
-
-    private function isExpired()
-    {
-        return ((time() - $this->credentials->created_at) > (60 * 60 * 24));
-    }
-
-    public function refreshTokens()
-    {
-        $response = $this->auth->refreshAccessToken($this->credentials->refresh_token);
-        if (!isset($response['created_at'])) {
-            $response['created_at'] = time();
-        }
-        if (is_array($response)) {
-            $response = json_encode($response);
-        }
-        file_put_contents(self::CREDENTIALS_PATH, $response);
-        $this->setCredentials($response);
-    }
-
-    private static function parseDiscription(array $discription)
-    {
-        $string = '';
-        foreach ($discription as $name => $value) {
-            $string .= $name . ': ' . $value . ', ';
-        }
-        return rtrim($string, ', ');
     }
 }
