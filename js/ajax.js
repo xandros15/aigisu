@@ -40,6 +40,6 @@ var ajaxModal = {
         return text;
     },
     loaded: {},
-    url: window.location
+    url: window.location.origin
 };
 $(document).ready(ajaxModal.onReady);
