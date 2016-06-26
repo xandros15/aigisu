@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "556985e60497af4f10487860c368601a",
-    "content-hash": "5733660021f15db94a364f60ab3a6b25",
+    "hash": "2b8035104ea826c0de0591a624027cb9",
+    "content-hash": "fac9833c587f3c647470cb284df7ec9f",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1061,6 +1061,50 @@
             "time": "2016-06-06 11:33:26"
         },
         {
+            "name": "xandros15/slim-pagination",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xandros15/SlimPagination.git",
+                "reference": "6719f172035113b586508a765fa325f30686a0eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/6719f172035113b586508a765fa325f30686a0eb",
+                "reference": "6719f172035113b586508a765fa325f30686a0eb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "slim/slim": "^3.0"
+            },
+            "require-dev": {
+                "slim/php-view": "^2.1",
+                "slim/twig-view": "^2.1",
+                "symfony/var-dumper": "^3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Xandros15\\SlimPagination\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "xandros",
+                    "email": "xandros92@gmail.com"
+                }
+            ],
+            "description": "simple pagination for slim3",
+            "time": "2016-06-25 21:41:44"
+        }
+    ],
+    "packages-dev": [
+        {
             "name": "symfony/var-dumper",
             "version": "v3.1.1",
             "source": {
@@ -1122,51 +1166,8 @@
                 "dump"
             ],
             "time": "2016-05-24 10:06:56"
-        },
-        {
-            "name": "xandros15/slim-pagination",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/xandros15/SlimPagination.git",
-                "reference": "6719f172035113b586508a765fa325f30686a0eb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/6719f172035113b586508a765fa325f30686a0eb",
-                "reference": "6719f172035113b586508a765fa325f30686a0eb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0",
-                "slim/slim": "^3.0"
-            },
-            "require-dev": {
-                "slim/php-view": "^2.1",
-                "slim/twig-view": "^2.1",
-                "symfony/var-dumper": "^3.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Xandros15\\SlimPagination\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "xandros",
-                    "email": "xandros92@gmail.com"
-                }
-            ],
-            "description": "simple pagination for slim3",
-            "time": "2016-06-25 21:41:44"
         }
     ],
-    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
