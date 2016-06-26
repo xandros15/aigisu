@@ -2,9 +2,7 @@
 
 namespace models;
 
-use Aigisu\Main;
 use Illuminate\Container\Container;
-use models\Unit;
 use Illuminate\Database\Eloquent\Model;
 use traits\Validator;
 
@@ -25,8 +23,13 @@ class Image extends Model
 {
 
     use Validator;
-    protected $table    = 'image';
+    const IMAGE_PER_SERVER = 2;
+    const IMAGE_SPECIAL_SCENE = 3;
+    const IMAGE_DIRECTORY = 'images';
+    const SERVER_NUTAKU = 'nutaku';
+    const SERVER_DMM = 'dmm';
     public $timestamps  = false;
+    protected $table = 'image';
     protected $fillable = [
         'md5',
         'unit_id',
@@ -37,12 +40,6 @@ class Image extends Model
         'delhash'
     ];
     protected $guarded  = [];
-
-    const IMAGE_PER_SERVER = 2;
-    const IMAGE_SPECIAL_SCENE = 3;
-    const IMAGE_DIRECTORY  = 'images';
-    const SERVER_NUTAKU    = 'nutaku';
-    const SERVER_DMM       = 'dmm';
 
     public static function boot()
     {
@@ -89,6 +86,11 @@ class Image extends Model
         ];
     }
 
+    public static function getServersNames()
+    {
+        return [self::SERVER_DMM, self::SERVER_NUTAKU];
+    }
+
     public static function imageSceneToHuman($nrOfScene)
     {
         $scenes = [
@@ -97,11 +99,6 @@ class Image extends Model
             3 => 'special scene'
         ];
         return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
-    }
-
-    public static function getServersNames()
-    {
-        return [self::SERVER_DMM, self::SERVER_NUTAKU];
     }
 
     public function unit()

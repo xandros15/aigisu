@@ -9,8 +9,6 @@
 
 namespace Imgur;
 
-use Imgur\Connect;
-
 class Authorize
 {
     const RESPONSE_PIN       = 'pin';
@@ -92,25 +90,6 @@ class Authorize
     }
 
     /**
-     * Exchange authorization code for an access token
-     * @param string $pin
-     * @return Array $response
-     */
-    function getAccessTokenByPin($pin)
-    {
-        $uri      = $this->oauth . self::ENDPOINT_TOKEN;
-        $options  = array(
-            'client_id' => $this->api_key,
-            'client_secret' => $this->api_secret,
-            'grant_type' => self::GRAND_TYPE_PIN,
-            'pin' => $pin
-        );
-        $response = ($pin) ? $this->connection->request($uri, $options, Connect::TYPE_POST) : null;
-
-        return $response;
-    }
-
-    /**
      * Exchange the refresh token for access token
      * @param string $refresh_token
      * @return Array $response
@@ -162,5 +141,24 @@ class Authorize
         $pin = trim(fgets(STDIN));
 
         return $this->getAccessTokenByPin($pin);
+    }
+
+    /**
+     * Exchange authorization code for an access token
+     * @param string $pin
+     * @return Array $response
+     */
+    function getAccessTokenByPin($pin)
+    {
+        $uri = $this->oauth . self::ENDPOINT_TOKEN;
+        $options = array(
+            'client_id' => $this->api_key,
+            'client_secret' => $this->api_secret,
+            'grant_type' => self::GRAND_TYPE_PIN,
+            'pin' => $pin
+        );
+        $response = ($pin) ? $this->connection->request($uri, $options, Connect::TYPE_POST) : null;
+
+        return $response;
     }
 }

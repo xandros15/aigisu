@@ -1,5 +1,6 @@
 <?php
 
+use Aigisu\Main;
 use app\imgur\Imgur;
 use app\upload\FileFromClient;
 use Illuminate\Database\Eloquent\Builder as Query;
@@ -9,8 +10,10 @@ use models\Tag;
 use models\Unit;
 
 defined('ROOT_DIR') || define('ROOT_DIR', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-require_once 'main.php';
-$main = new Main();
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$config = require \app\core\Configuration::DIR_CONFIG . '/web.php';
+$main = new Main($config);
 $main->bootstrap();
 
 if (php_sapi_name() != 'cli') {
