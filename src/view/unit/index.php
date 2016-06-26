@@ -23,7 +23,7 @@ $this->containerClass = 'container';
         <ul class="unit-list col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?= $this->render('unit/sort') ?>
+                    <?= $sort ?>
                 </div>
                 <?php foreach ($unitList as $unit): ?>
                     <?php /** @var $unit Unit */ ?>

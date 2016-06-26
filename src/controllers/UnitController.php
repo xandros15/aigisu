@@ -27,8 +27,30 @@ class UnitController extends Controller
         ]);
         return $this->render('unit/index', [
             'unitList' => $search->get(),
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'sort' => $this->unitSort($request)
         ]);
+    }
+
+    private function unitSort(Request $request) : string
+    {
+        $sort = $request->getQueryParam('sort', '');
+        $query = $request->getQueryParams();
+        $route = $request->getAttribute('route')->getName();
+        $attributes = $request->getAttributes();
+        $sortable = [
+            'name' => '',
+            'original' => '',
+            'rarity' => ''
+        ];
+
+        foreach ($sortable as $name => &$value) {
+            $newQuery = ['sort' => ($name == $sort) ? '-' . $name : $name];
+            $mergedQuery = ($query) ? array_merge($query, $newQuery) : $newQuery;
+            $value = $this->router->pathFor($route, $attributes, $mergedQuery);
+        }
+
+        return $this->view->render('unit/sort', ['sort' => $sortable]);
     }
 
     public function actionCreate(Request $request)
@@ -87,20 +109,5 @@ class UnitController extends Controller
         }
 
         return $this->goBack();
-    }
-
-    public static function generateLink(array $options)
-    {
-
-//        $request = $this->request;
-//        $request->
-//        $request = Main::$app->request;
-//        $query   = $request->getParams();
-//
-//        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
-//            $options['sort'] = '-' . $options['sort'];
-//        }
-
-        return ''; // '?' . http_build_query(array_merge($query, $options));
     }
 }
