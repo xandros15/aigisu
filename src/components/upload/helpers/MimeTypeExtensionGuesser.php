@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace helpers;
+namespace app\upload\helpers;
 
 /**
  * Provides a best-guess mapping of mime type to file extension.

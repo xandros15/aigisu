@@ -2,7 +2,7 @@
 
 namespace app\upload;
 
-use helpers\MimeTypeExtensionGuesser as Extension;
+use app\upload\helpers\MimeTypeExtensionGuesser as Extension;
 use Exception;
 
 abstract class Upload
@@ -58,6 +58,23 @@ abstract class Upload
         }
     }
 
+    protected function setDestination($destination)
+    {
+        $this->destination = $this->root . $destination . DIRECTORY_SEPARATOR;
+
+        return $this->isDestinationExist() ? true : $this->createDestination();
+    }
+
+    private function isDestinationExist()
+    {
+        return is_writable(dirname($this->destination));
+    }
+
+    private function createDestination()
+    {
+        return mkdir($this->root . $this->destination, self::MODE_FILE_DIR, true);
+    }
+
     public function getErrors()
     {
         return $this->errors;
@@ -90,25 +107,8 @@ abstract class Upload
         $this->errors[] = $message;
     }
 
-    protected function setDestination($destination)
-    {
-        $this->destination = $this->root . $destination . DIRECTORY_SEPARATOR;
-
-        return $this->isDestinationExist() ? true : $this->createDestination();
-    }
-
     protected function generateFilename()
     {
         return sha1(mt_rand(1, 9999) . $this->destination . uniqid()) . time() . '.tmp';
-    }
-
-    private function isDestinationExist()
-    {
-        return is_writable(dirname($this->destination));
-    }
-
-    private function createDestination()
-    {
-        return mkdir($this->root . $this->destination, self::MODE_FILE_DIR, true);
     }
 }
