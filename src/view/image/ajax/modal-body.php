@@ -1,6 +1,6 @@
 <?php
 
-use models\Image;
+use Models\Image;
 
 /** @var $image Image */
 $name = $image->server . $image->scene;

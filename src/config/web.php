@@ -1,9 +1,9 @@
 <?php
 
-use controller\ImageController;
-use controller\ImageFileController;
-use controller\UnitController;
-use controller\OauthController;
+use Controllers\ImageController;
+use Controllers\ImageFileController;
+use Controllers\OauthController;
+use Controllers\UnitController;
 
 return [
     'siteUrl' => 'http://aigisu.pl',

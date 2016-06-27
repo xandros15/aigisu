@@ -1,5 +1,5 @@
 <?php
-namespace app\core\View;
+namespace Aigisu\View;
 
 use Slim\Container;
 use Slim\Http\Request;

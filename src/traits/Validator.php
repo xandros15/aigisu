@@ -1,11 +1,10 @@
 <?php
 
-namespace traits;
+namespace Traits;
 
+use Aigisu\Alert\Alert;
 use Illuminate\Container\Container;
 use Illuminate\Support\MessageBag;
-use Illuminate\Database\Eloquent\Model;
-use app\alert\Alert;
 
 trait Validator
 {
@@ -14,14 +13,13 @@ trait Validator
 
     public function validate($attributes = [])
     {
-        /* @var $this Model */
         if (!method_exists($this, 'rules')) {
             return true;
         }
 
         $attributes = ($attributes) ? array_merge($this->getAttributes(), $attributes) : $this->getAttributes();
         /** @var $validator \Illuminate\Validation\Validator */
-        $validator = Container::getInstance()->validator->make($attributes, $this->rules());
+        $validator = Container::getInstance()->offsetGet('validator')->make($attributes, $this->rules());
 
         $result = $validator->passes();
 

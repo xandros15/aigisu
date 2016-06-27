@@ -1,14 +1,14 @@
 <?php
 
-namespace app\core;
+namespace Aigisu;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Validation\Factory as ValidatorFactory;
-use Illuminate\Translation\Translator;
-use Illuminate\Translation\FileLoader;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Translation\FileLoader;
+use Illuminate\Translation\Translator;
 use Illuminate\Validation\DatabasePresenceVerifier;
+use Illuminate\Validation\Factory as ValidatorFactory;
 
 class Connection extends Capsule
 {

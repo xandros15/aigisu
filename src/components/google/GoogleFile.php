@@ -1,12 +1,14 @@
 <?php
 
-namespace app\google;
+namespace Aigisu\Google;
 
-use app\google\GoogleServer;
-use app\upload\ExtedndetServer;
-use Exception;
+use Aigisu\Upload\ExtendedServer;
+use Google_Service_Drive;
+use Google_Service_Drive_DriveFile;
+use InvalidArgumentException;
+use RuntimeException;
 
-class GoogleFile extends GoogleServer implements ExtedndetServer
+class GoogleFile extends GoogleServer implements ExtendedServer
 {
     public $filename    = '';
     public $name        = '';
@@ -63,22 +65,36 @@ class GoogleFile extends GoogleServer implements ExtedndetServer
     private function validate()
     {
         if (!$this->mimeType || !is_string($this->mimeType)) {
-            throw new Exception('Mime type is not set or no string');
+            throw new InvalidArgumentException('Mime type is not set or no string');
         }
         if (!$this->name || !is_string($this->name)) {
-            throw new Exception('Name type is not set or no string');
+            throw new InvalidArgumentException('Name type is not set or no string');
         }
         if (!$this->extension || !is_string($this->extension)) {
-            throw new Exception('Extention is not set or no string');
+            throw new InvalidArgumentException('Extention is not set or no string');
         }
         if (!$this->filename || !is_string($this->filename)) {
-            throw new Exception('Filename is not set or no string');
+            throw new InvalidArgumentException('Filename is not set or no string');
         }
         if (!is_file($this->filename)) {
-            throw new Exception("File '{$this->filename}' no exist");
+            throw new InvalidArgumentException("File '{$this->filename}' no exist");
         }
         if (!$this->catalog || !is_string($this->catalog)) {
-            throw new Exception('Folder name is not set or no string.');
+            throw new InvalidArgumentException('Folder name is not set or no string.');
+        }
+    }
+
+    protected function setFolder()
+    {
+        $mimeType = self::FOLDER_MIME_TYPE;
+        $parentId = $this->mainFolder->id;
+        $query = "title = '{$this->catalog}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
+        $files = $this->service->files->listFiles(['q' => $query])->getItems();
+        if ($files) {
+            $this->folder = reset($files);
+        } else {
+            $this->folder = $this->createNewFolder($this->catalog, false, $parentId);
+            $this->createPermissionForFile($this->folder->id, true);
         }
     }
 
@@ -99,25 +115,12 @@ class GoogleFile extends GoogleServer implements ExtedndetServer
         }
     }
 
-    protected function setFolder()
-    {
-        $mimeType = self::FOLDER_MIME_TYPE;
-        $parentId = $this->mainFolder->id;
-        $query    = "title = '{$this->catalog}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
-        $files    = $this->service->files->listFiles(['q' => $query])->getItems();
-        if ($files) {
-            $this->folder = reset($files);
-        } else {
-            $this->folder = $this->createNewFolder($this->catalog, false, $parentId);
-            $this->createPermissionForFile($this->folder->id, true);
-        }
-    }
-
     protected function emptyTrash()
     {
         if (!($this->service instanceof Google_Service_Drive)) {
-            throw new Exception('No service set or no instance of Google_Service_Drive');
+            throw new RuntimeException('No service set or no instance of Google_Service_Drive');
         }
-        $this->service->files->trash();
+        //todo: create correct trash files
+        //$this->service->files->trash();
     }
 }

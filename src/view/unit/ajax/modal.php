@@ -1,6 +1,6 @@
 <?php
 
-use models\Unit;
+use Models\Unit;
 
 /* @var $model Unit */
 $rarities = Unit::getRarities();
@@ -23,33 +23,38 @@ $route = ($isNewUnit) ? $this->pathFor('unitCreate') :
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Original name:</label>
-                        <input class="form-control unit-original" name="original" type="text"
+                        <label for="unit-original-<?= $model->id ?>">Original name:</label>
+                        <input id="unit-original-<?= $model->id ?>" class="form-control unit-original" name="original"
+                               type="text"
                                value="<?= $model->original ?>" required>
                     </div>
                     <div class="form-group">
-                        <label>Romaji name:</label>
-                        <input class="form-control unit-name" name="name" type="text" value="<?= $model->name ?>"
+                        <label for="unit-name-<?= $model->id ?>">Romaji name:</label>
+                        <input id="unit-name-<?= $model->id ?>" class="form-control unit-name" name="name" type="text"
+                               value="<?= $model->name ?>"
                                required>
                     </div>
                     <div class="form-group">
-                        <label>Icon link:</label>
-                        <input class="form-control unit-icon" name="icon" type="url" value="<?= $model->icon ?>"
+                        <label for="unit-icon-<?= $model->id ?>">Icon link:</label>
+                        <input id="unit-icon-<?= $model->id ?>" class="form-control unit-icon" name="icon" type="url"
+                               value="<?= $model->icon ?>"
                                placeholder="http://" required>
                     </div>
                     <div class="form-group">
-                        <label>Link to seesaw:</label>
-                        <input class="form-control unit-link" name="link" type="url" value="<?= $model->link ?>"
+                        <label for="unit-link-<?= $model->id ?>">Link to seesaw:</label>
+                        <input id="unit-link-<?= $model->id ?>" class="form-control unit-link" name="link" type="url"
+                               value="<?= $model->link ?>"
                                placeholder="http://">
                     </div>
                     <div class="form-group">
-                        <label>Link to gc:</label>
-                        <input class="form-control unit-linkgc" name="linkgc" type="url" value="<?= $model->linkgc ?>"
+                        <label for="unit-linkgc-<?= $model->id ?>">Link to gc:</label>
+                        <input id="unit-linkgc-<?= $model->id ?>" class="form-control unit-linkgc" name="linkgc"
+                               type="url" value="<?= $model->linkgc ?>"
                                placeholder="http://" required>
                     </div>
                     <div class="form-group">
-                        <label>Rarity:</label>
-                        <select class="form-control unit-rarity" name="rarity">
+                        <label for="unit-rarity-<?= $model->id ?>">Rarity:</label>
+                        <select id="unit-rarity-<?= $model->id ?>" class="form-control unit-rarity" name="rarity">
                             <?php foreach ($rarities as $rarity): ?>
                                 <option
                                     value="<?= $rarity ?>" <?= ($rarity == $model->rarity) ? 'selected' : '' ?>><?= $rarity ?></option>
@@ -78,8 +83,9 @@ $route = ($isNewUnit) ? $this->pathFor('unitCreate') :
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>Tags:</label>
-                        <textarea class="form-control" name="tags" rows="3"><?= $model->getTagsString() ?></textarea>
+                        <label for="unit-tags-<?= $model->id ?>">Tags:</label>
+                        <textarea id="unit-tags-<?= $model->id ?>" class="form-control unit-tags" name="tags"
+                                  rows="3"><?= $model->getTagsString() ?></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

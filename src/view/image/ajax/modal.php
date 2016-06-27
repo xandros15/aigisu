@@ -1,7 +1,7 @@
 <?php
 
-use models\Image;
-use models\Unit;
+use Models\Image;
+use Models\Unit;
 
 /* @var $model Unit */
 ?>

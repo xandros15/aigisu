@@ -1,3 +1,4 @@
+<?php use Controllers\OauthController as Oauth; ?>
 <?php if (!Oauth::isLogged()): ?>
     <form class="form" method="post" role="form" action="<?= $this->pathFor('login') ?>">
         <div class="form-group text-center">
@@ -9,7 +10,7 @@
         </div>
     </form>
 <?php else: ?>
-    <form class="form" method="post" fole="form" action="<?= $this->pathFor('logout') ?>">
+    <form class="form" method="post" role="form" action="<?= $this->pathFor('logout') ?>">
         <div class="col-xs-12 text-center">
             <button class="btn btn-default" type="submit">logout</button>
         </div>

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace app\upload\helpers;
+namespace Aigisu\Upload\Helpers;
 
 /**
  * Provides a best-guess mapping of mime type to file extension.

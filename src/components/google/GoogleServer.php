@@ -1,23 +1,25 @@
 <?php
 
-namespace app\google;
+namespace Aigisu\Google;
 
-use Exception;
+use Aigisu\Configuration;
 use Google_Auth_Exception;
 use Google_Client;
 use Google_Service_Drive;
 use Google_Service_Drive_DriveFile;
-use Google_Service_Drive_Permission;
 use Google_Service_Drive_ParentReference;
+use Google_Service_Drive_Permission;
+use InvalidArgumentException;
+use RuntimeException;
 
 class GoogleServer
 {
-    const APPLICATION_NAME   = 'aigisu';
-    const CREDENTIALS_PATH   = CONFIG_DIR . 'credentials.json';
-    const CLIENT_SECRET_PATH = CONFIG_DIR . 'key.json';
-    const SCOPES             = Google_Service_Drive::DRIVE_FILE . ' ' . Google_Service_Drive::DRIVE_METADATA;
-    const FOLDER_MIME_TYPE   = 'application/vnd.google-apps.folder';
-    const MAIN_FOLDER_NAME   = 'aigisu';
+    const APPLICATION_NAME = 'aigisu';
+    const CREDENTIALS_PATH = Configuration::DIR_CONFIG . 'credentials.json';
+    const CLIENT_SECRET_PATH = Configuration::DIR_CONFIG . 'key.json';
+    const SCOPES = Google_Service_Drive::DRIVE_FILE . ' ' . Google_Service_Drive::DRIVE_METADATA;
+    const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
+    const MAIN_FOLDER_NAME = 'aigisu';
 
     /** @var Google_Service_Drive_DriveFile */
     public $file;
@@ -60,16 +62,51 @@ class GoogleServer
             $error[] = $e->getMessage();
         }
         if (isset($error) && $error) {
-            throw new Exception('Have some problems: ' . explode('<br>', $error));
+            throw new InvalidArgumentException('Have some problems: ' . explode('<br>', $error));
         }
+    }
+
+    /**
+     * Returns an authorized API client.
+     *
+     * @throws RuntimeException
+     * @return Google_Client
+     */
+    private function setClient()
+    {
+        $client = new Google_Client();
+        $client->setApplicationName(self::APPLICATION_NAME);
+        $client->setScopes(self::SCOPES);
+        $client->setAuthConfigFile(self::CLIENT_SECRET_PATH);
+        $client->setAccessType('offline');
+        // Load previously authorized credentials from a file.
+        $credentialsPath = self::CREDENTIALS_PATH;
+        if (file_exists($credentialsPath)) {
+            $accessToken = file_get_contents($credentialsPath);
+        } else {
+            throw new RuntimeException('You need to create access token by cli');
+        }
+        $client->setAccessToken($accessToken);
+
+        // Refresh the token if it's expired.
+        if ($client->isAccessTokenExpired()) {
+            $client->refreshToken($client->getRefreshToken());
+            file_put_contents($credentialsPath, $client->getAccessToken());
+        }
+        return $this->client = $client;
+    }
+
+    private function setService(Google_Client $client)
+    {
+        $this->service = new Google_Service_Drive($client);
     }
 
     protected function setMainFolder(Google_Service_Drive $service)
     {
         $folderName = self::MAIN_FOLDER_NAME;
-        $mimeType   = self::FOLDER_MIME_TYPE;
-        $query      = "title = '{$folderName}' and mimeType = '{$mimeType}' and trashed = false";
-        $files      = $service->files->listFiles(['q' => $query])->getItems();
+        $mimeType = self::FOLDER_MIME_TYPE;
+        $query = "title = '{$folderName}' and mimeType = '{$mimeType}' and trashed = false";
+        $files = $service->files->listFiles(['q' => $query])->getItems();
         if ($files) {
             $this->mainFolder = reset($files);
             return;
@@ -89,22 +126,6 @@ class GoogleServer
         return $this->service->files->insert($file);
     }
 
-    protected function upload(GoogleFile $googleFile)
-    {
-        $this->file = new Google_Service_Drive_DriveFile();
-        $this->file->setTitle("{$googleFile->name}.{$googleFile->extension}");
-        $this->file->setShareable(true);
-        $this->file->setCopyable(true);
-        $this->file->setDescription($googleFile->description);
-        $this->file->setMimeType($googleFile->mimeType);
-        $this->file->setParents([$this->createParent($googleFile->folder->id)]);
-        return $this->service->files->insert($this->file,
-                ['data' => file_get_contents($googleFile->filename),
-                'mimeType' => $this->mimeType,
-                'uploadType' => 'media',
-                'visibility' => 'DEFAULT']);
-    }
-
     protected function createParent($folderId)
     {
         $newParent = new Google_Service_Drive_ParentReference();
@@ -122,36 +143,21 @@ class GoogleServer
         return $this->service->permissions->insert($id, $permission);
     }
 
-    private function setService(Google_Client $client)
+    protected function upload(GoogleFile $googleFile)
     {
-        $this->service = new Google_Service_Drive($client);
-    }
-
-    /**
-     * Returns an authorized API client.
-     * @return Google_Client the authorized client object
-     */
-    private function setClient()
-    {
-        $client          = new Google_Client();
-        $client->setApplicationName(self::APPLICATION_NAME);
-        $client->setScopes(self::SCOPES);
-        $client->setAuthConfigFile(self::CLIENT_SECRET_PATH);
-        $client->setAccessType('offline');
-        // Load previously authorized credentials from a file.
-        $credentialsPath = self::CREDENTIALS_PATH;
-        if (file_exists($credentialsPath)) {
-            $accessToken = file_get_contents($credentialsPath);
-        } else {
-            throw new Exception('You need to create access token by cli');
-        }
-        $client->setAccessToken($accessToken);
-
-        // Refresh the token if it's expired.
-        if ($client->isAccessTokenExpired()) {
-            $client->refreshToken($client->getRefreshToken());
-            file_put_contents($credentialsPath, $client->getAccessToken());
-        }
-        $this->client = $client;
+        $this->file = new Google_Service_Drive_DriveFile();
+        $this->file->setTitle("{$googleFile->name}.{$googleFile->extension}");
+        $this->file->setShareable(true);
+        $this->file->setCopyable(true);
+        $this->file->setDescription($googleFile->description);
+        $this->file->setMimeType($googleFile->mimeType);
+        $this->file->setParents([$this->createParent($googleFile->folder->id)]);
+        return $this->service->files->insert($this->file,
+            [
+                'data' => file_get_contents($googleFile->filename),
+                'mimeType' => $this->file->mimeType,
+                'uploadType' => 'media',
+                'visibility' => 'DEFAULT'
+            ]);
     }
 }

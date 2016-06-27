@@ -1,9 +1,8 @@
 <?php
 
-namespace models;
+namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
-use models\Unit;
 
 /**
  * Class Tag

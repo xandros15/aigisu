@@ -1,9 +1,9 @@
 <?php
 
-namespace app\upload;
+namespace Aigisu\Upload;
 
-use app\upload\helpers\MimeTypeExtensionGuesser as Extension;
-use Exception;
+use Aigisu\Upload\Helpers\MimeTypeExtensionGuesser as Extension;
+use RuntimeException;
 
 abstract class Upload
 {
@@ -54,7 +54,7 @@ abstract class Upload
             $this->root = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR;
         }
         if (!$this->setDestination($destination)) {
-            throw new Exception("Upload: Can't create destination: {$this->destination}");
+            throw new RuntimeException("Upload: Can't create destination: {$this->destination}");
         }
     }
 

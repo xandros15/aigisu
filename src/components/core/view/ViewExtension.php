@@ -6,21 +6,21 @@
  * Time: 00:43
  */
 
-namespace app\core\View;
+namespace Aigisu\View;
 
 abstract class ViewExtension
 {
     /** @var array */
     private $callbacks = [];
 
-    abstract public function getName() : string;
-
-    abstract public function init();
-
     public function __construct()
     {
         $this->init();
     }
+
+    abstract public function init();
+
+    abstract public function getName() : string;
 
     public function getCallbacks()
     {

@@ -6,10 +6,10 @@
  * Time: 17:00
  */
 
-use controller\ImageController;
-use controller\ImageFileController;
-use controller\OauthController;
-use controller\UnitController;
+use Controllers\ImageController;
+use Controllers\ImageFileController;
+use Controllers\OauthController;
+use Controllers\UnitController;
 
 /** @var $this \Aigisu\Main */
 $this->map(['get'], '/', UnitController::class . ':actionIndex')->setName('home');
@@ -21,7 +21,7 @@ $this->group('/image', function () {
 $this->group('/unit', function () {
     /** @var $this \Aigisu\Main */
     $this->map(['get'], '[/]', UnitController::class . ':actionIndex')->setName('unit');
-    $this->map(['post'], '/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
+    $this->map(['post', 'get'], '/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
     $this->map(['post'], '/create', UnitController::class . ':actionCreate')->setName('unitCreate');
     $this->map(['get'], '/delete/{id:\d+}', UnitController::class . ':actionDelete')->setName('unitDelete');
 });

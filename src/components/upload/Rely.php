@@ -1,14 +1,12 @@
 <?php
 
-namespace app\upload;
+namespace Aigisu\Upload;
 
-use app\google\GoogleFile;
-use app\imgur\Imgur;
-use app\upload\ExtedndetServer;
-use app\upload\FileFromClient;
-use app\upload\FileFromUrl;
-use models\Image;
+use Aigisu\Google\GoogleFile;
+use Aigisu\Imgur\Imgur;
 use Exception;
+use InvalidArgumentException;
+use Models\Image;
 
 class Rely
 {
@@ -40,16 +38,16 @@ class Rely
         return $upload;
     }
 
-    public function setExtendedServer($name, ExtedndetServer $extentionServer, $method)
+    public function setExtendedServer($name, ExtendedServer $extensionServer, $method)
     {
-        $this->extendedServers[$name] = [ 'server' => $extentionServer, 'callback' => [$this, $method]];
+        $this->extendedServers[$name] = ['server' => $extensionServer, 'callback' => [$this, $method]];
     }
 
     public function uploadOnGoogleDrive(Image $model, Upload $file)
     {
         try {
             /* @var $google GoogleFile */
-            $google = $this->getExtendednServer('google');
+            $google = $this->getExtendedServer('google');
             $google->setMimeType($file->mimeType);
             $google->setExtension($file->extension);
             $google->setDescription('R18');
@@ -62,11 +60,19 @@ class Rely
         }
     }
 
+    protected function getExtendedServer($name)
+    {
+        if (!isset($this->extendedServers[$name])) {
+            throw new InvalidArgumentException("Server: '{$name}' is no implemented");
+        }
+        return $this->extendedServers[$name]['server'];
+    }
+
     public function uploadOnImgur(Image $model, Upload $file)
     {
         try {
             /* @var $imgur Imgur */
-            $imgur = $this->getExtendednServer('imgur');
+            $imgur = $this->getExtendedServer('imgur');
             $imgur->setFilename($file->filename);
             $imgur->setName($model->server . ': ' . $model->unit->name);
             $imgur->setDescription('R18');
@@ -80,13 +86,5 @@ class Rely
     public function setDirectory($directory)
     {
         $this->directory = $directory;
-    }
-
-    protected function getExtendednServer($name)
-    {
-        if (!isset($this->extendedServers[$name])) {
-            throw new Exception("Server: '{$name}' is no implemented");
-        }
-        return $this->extendedServers[$name]['server'];
     }
 }

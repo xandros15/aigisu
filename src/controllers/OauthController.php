@@ -1,28 +1,28 @@
 <?php
 
-namespace controller;
+namespace Controllers;
 
-use app\core\Controller;
+use Aigisu\Alert\Alert;
+use Aigisu\Controller;
+use Models\Oauth;
 use Slim\Http\Request;
-use models\Oauth;
-use app\alert\Alert;
 
 class OauthController extends Controller
 {
     const SESSION_NAME = 'oauth';
 
-    public static function isLogged()
-    {
-        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
-    }
-
     public function actionIndex()
     {
+        $this->view->title = 'Oauth';
+        $this->view->containerClass = 'container';
         return $this->render('oauth/index');
     }
 
     public function actionLogin(Request $request)
     {
+        $this->view->title = 'Oauth';
+        $this->view->containerClass = 'container';
+        /** @var $model Oauth */
         $model = Oauth::firstOrNew($request->getParams());
         if (!$model->id) {
             Alert::add('Wrong pin', Alert::ERROR);
@@ -34,8 +34,14 @@ class OauthController extends Controller
 
             return $this->render('oauth/index');
         }
-        $this->login();
+        $this->login($model);
         return $this->goHome();
+    }
+
+    public function login(Oauth $model)
+    {
+        $_SESSION[self::SESSION_NAME]['run'] = true;
+        $_SESSION[self::SESSION_NAME]['token'] = $model->token;
     }
 
     public function actionLogout()
@@ -47,15 +53,14 @@ class OauthController extends Controller
         return $this->goBack();
     }
 
+    public static function isLogged()
+    {
+        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
+    }
+
     public static function logout()
     {
         $_SESSION[self::SESSION_NAME] = [];
         return session_destroy();
-    }
-
-    public function login()
-    {
-        $_SESSION[self::SESSION_NAME]['run']   = true;
-        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
     }
 }

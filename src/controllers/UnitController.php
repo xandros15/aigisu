@@ -1,10 +1,10 @@
 <?php
 
-namespace controller;
+namespace Controllers;
 
-use app\alert\Alert;
-use app\core\Controller;
-use controller\OauthController as Oauth;
+use Aigisu\Alert\Alert;
+use Aigisu\Controller;
+use Controllers\OauthController as Oauth;
 use models\Unit;
 use models\UnitSearch;
 use Slim\Http\Request;

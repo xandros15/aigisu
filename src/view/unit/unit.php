@@ -1,7 +1,7 @@
 <?php
 
-use models\Unit;
-use controller\OauthController as Oauth;
+use Controllers\OauthController as Oauth;
+use Models\Unit;
 
 /* @var $unit Unit */
 ?>
@@ -33,10 +33,12 @@ use controller\OauthController as Oauth;
     </div>
     <div class="media-body">
         <div class="form-group">
-            <input class="form-control unit-name" value="<?= ($unit->name) ? $unit->name : '' ?>" readonly>
+            <input title="unit-name" class="form-control unit-name" value="<?= ($unit->name) ? $unit->name : '' ?>"
+                   readonly>
         </div>
         <div class="form-group">
-            <input class="form-control" type="text" value="<?= $unit->original ?>" readonly>
+            <input title="unit-original" class="form-control unit-original" type="text" value="<?= $unit->original ?>"
+                   readonly>
         </div>
     </div>
     <?php if ($unit->isAnyImages()): ?>

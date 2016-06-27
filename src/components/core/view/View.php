@@ -1,7 +1,11 @@
 <?php
 
-namespace app\core\View;
+namespace Aigisu\View;
 
+/**
+ * @property string title
+ * @property string containerClass
+ */
 class View
 {
     protected $attributes = [];
@@ -52,11 +56,6 @@ class View
         return ob_get_clean();
     }
 
-    public function addExtension(ViewExtension $extension)
-    {
-        $this->extensions[$extension->getName()] = $extension;
-    }
-
     public function initExtensions()
     {
         foreach ($this->extensions as $extension) {
@@ -72,5 +71,10 @@ class View
             throw new \RuntimeException("View cannot render `{$name}` because the template does not exist");
         }
         return $name;
+    }
+
+    public function addExtension(ViewExtension $extension)
+    {
+        $this->extensions[$extension->getName()] = $extension;
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace models;
+namespace Models;
 
-use traits\Validator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use models\Image;
-use models\Tag;
+use Traits\Validator;
 
 /**
  * Class Unit
@@ -21,7 +20,8 @@ use models\Tag;
  * @property bool $is_male
  * @property bool $is_only_dmm
  * @property bool $has_aw_image
- * @property Image[] $images
+ * @property Collection $images
+ * @property int $id
  */
 class Unit extends Model
 {
@@ -63,19 +63,24 @@ class Unit extends Model
         ];
     }
 
-    public static function tableName()
-    {
-        return 'unit';
-    }
-
     public static function getRarities()
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
     }
 
+    public static function tableName()
+    {
+        return 'unit';
+    }
+
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function isImagesRequired()
+    {
+        return $this->images->count() != $this->getTotalImageRequired();
     }
 
     public function getTotalImageRequired(){
@@ -92,11 +97,6 @@ class Unit extends Model
             $total++;
         }
         return $total;
-    }
-
-    public function isImagesRequired()
-    {
-        return $this->images->count() != $this->getTotalImageRequired();
     }
 
     public function isImageRequired($server, $scene)
@@ -118,14 +118,9 @@ class Unit extends Model
         return !$this->images->isEmpty();
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
-
     public function getTagsString()
     {
-        return $this->tags()->lists('name')->implode(', ');
+        return $this->belongsToMany(Tag::class);
     }
 
     public function addTagsToUnit($tagsString)
@@ -154,5 +149,10 @@ class Unit extends Model
             }
         }
         return array_unique($parsedTags);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

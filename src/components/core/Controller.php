@@ -1,8 +1,8 @@
 <?php
 
-namespace app\core;
+namespace Aigisu;
 
-use app\core\View\View;
+use Aigisu\View\View;
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -37,6 +37,7 @@ class Controller
     public function render($view, $params = [])
     {
         $content = $this->view->render($view, $params);
+
         $render = ($view === $this->layout) ? $content : $this->view->render($this->layout,
             ['content' => $content]);
 

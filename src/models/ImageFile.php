@@ -1,8 +1,6 @@
 <?php
 
-namespace models;
-
-use models\Image;
+namespace Models;
 
 class ImageFile extends Image
 {

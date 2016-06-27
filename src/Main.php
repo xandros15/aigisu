@@ -1,11 +1,9 @@
 <?php
 namespace Aigisu;
 
-use app\alert\Alert;
-use app\core\Configuration;
-use app\core\Connection;
-use app\core\View\SlimViewExtension;
-use app\core\View\View;
+use Aigisu\Alert\Alert;
+use Aigisu\View\SlimViewExtension;
+use Aigisu\View\View;
 use Slim\App as Slim;
 use Slim\Container;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace app\imgur;
+namespace Aigisu\Imgur;
 
-use app\core\Configuration;
-use app\exception\ArrayException;
-use app\upload\ExtedndetServer;
+use Aigisu\Configuration;
+use Aigisu\Upload\ExtendedServer;
 use Exception;
 use Imgur\Authorize;
 use Imgur\Imgur as Base;
+use RuntimeException;
 
-class Imgur extends Base implements ExtedndetServer
+class Imgur extends Base implements ExtendedServer
 {
     const KEY_PATH = Configuration::DIR_CONFIG . 'imgur.key.json';
     const CREDENTIALS_PATH = Configuration::DIR_CONFIG . 'imgur.credentials.json';
@@ -45,10 +45,10 @@ class Imgur extends Base implements ExtedndetServer
     }
 
     /**
-     * @return \app\imgur\Imgur
+     * @return Imgur
      * @throws Exception if token file no exist
      */
-    public static function facade()
+    public static function imgur()
     {
         if (!is_file(self::KEY_PATH)) {
             throw new Exception('The json token no exits. Create it first by createKeyToken method');
@@ -154,7 +154,7 @@ class Imgur extends Base implements ExtedndetServer
         }
         $response = $this->upload()->file($this->filename, $options);
         if (!$response || empty($response['success'])) {
-            throw new ArrayException($response);
+            throw new RuntimeException(json_encode($response));
         }
         return $response;
     }

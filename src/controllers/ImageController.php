@@ -1,10 +1,10 @@
 <?php
 
-namespace controller;
+namespace Controllers;
 
-use app\core\Controller;
+use Aigisu\Controller;
+use Models\Image;
 use Slim\Http\Request;
-use models\Image;
 
 class ImageController extends Controller
 {

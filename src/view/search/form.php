@@ -1,9 +1,5 @@
-<?php
-
-?>
-<div class="container-fluid">
-    <form class="navbar-form navbar-right" action="<?= $this->pathFor('home') ?>" style="display:inline-block"
-          role="search">
+<div class="container-fluid" role="search">
+    <form class="navbar-form navbar-right" action="<?= $this->pathFor('home') ?>" style="display:inline-block">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Search" name="q" value="<?= $this->query('q') ?>">
             <div class="input-group-btn">

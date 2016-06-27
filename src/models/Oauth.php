@@ -1,9 +1,9 @@
 <?php
 
-namespace models;
+namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
-use traits\Validator;
+use Traits\Validator;
 
 /**
  * Class Oauth
@@ -13,6 +13,7 @@ use traits\Validator;
  * @property int $time
  * @property string $pin
  * @property string $token
+ * @property int id
  */
 class Oauth extends Model
 {

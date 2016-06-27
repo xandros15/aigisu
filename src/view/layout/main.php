@@ -1,7 +1,7 @@
 <?php
 
-use app\alert\Alert;
-use app\core\View;
+use Aigisu\Alert\Alert;
+use Aigisu\View\View;
 
 /* @var $this View */
 /* @var $content string */

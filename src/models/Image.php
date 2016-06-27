@@ -1,10 +1,11 @@
 <?php
 
-namespace models;
+namespace Models;
 
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use traits\Validator;
+use Traits\Validator;
 
 /**
  * Class Image
@@ -18,6 +19,7 @@ use traits\Validator;
  * @property string $imgur
  * @property string $delhash
  * @property Unit $unit
+ * @property int $id
  */
 class Image extends Model
 {
@@ -28,7 +30,7 @@ class Image extends Model
     const IMAGE_DIRECTORY = 'images';
     const SERVER_NUTAKU = 'nutaku';
     const SERVER_DMM = 'dmm';
-    public $timestamps  = false;
+    public $timestamps = false;
     protected $table = 'image';
     protected $fillable = [
         'md5',
@@ -39,25 +41,25 @@ class Image extends Model
         'imgur',
         'delhash'
     ];
-    protected $guarded  = [];
+    protected $guarded = [];
 
     public static function boot()
     {
         parent::boot();
-        Container::getInstance()->validator->extend('imageExists',
+        Container::getInstance()->offsetGet('validator')->extend('imageExists',
             function ($attribute, $value, $parameters, \Illuminate\Validation\Validator $validator) {
 
-            $validator->setCustomMessages([$attribute => 'Image already exists']);
+                $validator->setCustomMessages([$attribute => 'Image already exists']);
 
-            list($scene, $server, $id) = $parameters;
+                list($scene, $server, $id) = $parameters;
+                /** @var $image Image */
+                $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
+                if ($id) {
+                    $image = $image->where('id', '!=', $id);
+                }
 
-            $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
-            if ($id) {
-                $image = $image->where('id', '!=', $id);
-            }
-
-            return $image->count() === 0;
-        });
+                return $image->count() === 0;
+            });
     }
 
     public static function tableName()
@@ -65,7 +67,8 @@ class Image extends Model
         return 'image';
     }
 
-    public static function getImageSchemeArray(){
+    public static function getImageSchemeArray()
+    {
         return [
             Image::SERVER_DMM => [1, 2, 3],
             Image::SERVER_NUTAKU => [1, 2]
@@ -78,8 +81,12 @@ class Image extends Model
             'md5' => ['required', 'size:32'],
             'server' => ['required', 'in:' . implode(',', self::getServersNames())],
             'scene' => ['required', 'integer', 'in:1,2,3'],
-            'unit_id' => ['required', 'exists:unit,id', 'imageExists:' . implode(',',
-                    [$this->scene, $this->server, $this->id])],
+            'unit_id' => [
+                'required',
+                'exists:unit,id',
+                'imageExists:' . implode(',',
+                    [$this->scene, $this->server, $this->id])
+            ],
             'google' => ['string'],
             'imgur' => ['string'],
             'delhash' => ['string']
@@ -118,8 +125,8 @@ class Image extends Model
 
     public static function getImageSetByUnitId($id)
     {
+        /** @var $imageSet Collection */
         $imageSet = self::where('unit_id', $id)->get();
-
         return $imageSet->sortBy('scene')->groupBy('server');
     }
 }

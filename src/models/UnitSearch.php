@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace Models;
 
 use Illuminate\Database\Eloquent\Builder as Query;
 use stdClass;

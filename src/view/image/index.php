@@ -1,7 +1,7 @@
 <?php
 
-use models\Image;
 use Illuminate\Database\Eloquent\Collection;
+use Models\Image;
 
 /* @var $images Collection */
 /* @var $image Image */

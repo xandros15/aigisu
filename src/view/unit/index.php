@@ -1,10 +1,11 @@
 <?php
 
-use controller\OauthController as Oauth;
-use models\Unit;
+use Controllers\OauthController as Oauth;
+use Models\Unit;
 
 /* @var $unitList \Illuminate\Database\Eloquent\Collection */
 /* @var $pagination string */
+/* @var $sort string */
 
 $this->title = 'Units';
 $this->containerClass = 'container';

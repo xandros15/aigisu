@@ -1,9 +1,9 @@
 <?php
 
-namespace app\upload;
+namespace Aigisu\Upload;
 
-use Slim\Http\UploadedFile;
 use Exception;
+use Slim\Http\UploadedFile;
 
 class FileFromClient extends Upload
 {
