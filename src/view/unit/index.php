@@ -12,7 +12,7 @@ $this->containerClass = 'container';
 ?>
 <div id="units">
     <?php if (!$unitList->isEmpty()): ?>
-        <div class="col-xs-12 form-group">
+        <div class="form-group">
             <?= $this->render('image/help') ?>
             <?php if (Oauth::isLogged()): ?>
                 <button type="button" class="btn btn-primary ajax pull-right" data-target="<?=
@@ -20,19 +20,21 @@ $this->containerClass = 'container';
                 </button>
             <?php endif; ?>
         </div>
-        <?= $pagination ?>
-        <ul class="unit-list col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <?= $sort ?>
-                </div>
-                <?php foreach ($unitList as $unit): ?>
-                    <?php /** @var $unit Unit */ ?>
-                    <?= $this->render('unit/unit', ['unit' => $unit]) ?>
-                <?php endforeach; ?>
-            </div>
+        <nav class="text-center">
+            <?= $pagination ?>
+        </nav>
+        <ul class="unit-list list-group panel panel-default">
+            <li class="panel-heading list-group-item">
+                <?= $sort ?>
+            </li>
+            <?php foreach ($unitList as $unit): ?>
+                <?php /** @var $unit Unit */ ?>
+                <?= $this->render('unit/unit', ['unit' => $unit]) ?>
+            <?php endforeach; ?>
         </ul>
-        <?= $pagination ?>
+        <nav class="text-center col-xs-12">
+            <?= $pagination ?>
+        </nav>
     <?php else: ?>
         <h3 class="text-center">Nothing found</h3>
     <?php endif; ?>
