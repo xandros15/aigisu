@@ -18,9 +18,7 @@ use Aigisu\View\View;
 </head>
 <body>
 <div class="wrap">
-    <nav class="navbar navbar-default navbar-inverse navbar-static-top">
-        <?= $this->render('search/form') ?>
-    </nav>
+    <?= $this->render('partials/navigation') ?>
     <main class="<?= $this->containerClass ?>">
         <?= Alert::display(); ?>
         <?= $content ?>
