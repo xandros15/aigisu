@@ -53,22 +53,21 @@ class UnitController extends Controller
         return $this->view->render('unit/sort', ['sort' => $sortable]);
     }
 
+    public function actionView(Request $request)
+    {
+        $unit = Unit::firstOrNew(['id' => $request->getAttribute('id')]);
+
+        return $this->render('unit/view', ['unit' => $unit]);
+    }
+
     public function actionCreate(Request $request)
     {
-        if (!Oauth::isLogged()) {
-            return $this->goBack();
-        }
-
         $model = new Unit($request->getParams());
-
-        if ($request->isXhr()) {
-            return $this->renderAjax('unit/ajax/modal', ['model' => $model]);
-        }
 
         if ($model->validate() && $model->save()) {
             Alert::add('Successful added ' . $model->name);
         }
-        return $this->goBack();
+        return $this->render('unit/unit');
     }
 
     public function actionUpdate(Request $request)
@@ -76,13 +75,8 @@ class UnitController extends Controller
         if (!Oauth::isLogged()) {
             return $this->goBack();
         }
-
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
-
-        if ($request->isXhr()) {
-            return $this->renderAjax('unit/ajax/modal', ['model' => $model]);
-        }
 
         $model->addTagsToUnit($request->getParam('tags'));
 
