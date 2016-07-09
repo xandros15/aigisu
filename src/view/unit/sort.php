@@ -1,11 +1,14 @@
-<?php /** @var $sort array */ ?>
-<div class="row">
+<?php
+
+use Models\UnitSort;
+
+/** @var $unitSort UnitSort */
+?>
+<div class="row sort">
     <div class="col-xs-12">
-        <label>Order by:</label>
-        <label><a href="<?= $sort['name'] ?> ">Name</a></label>
-        <span style="margin: 0 3px;">|</span>
-        <label><a href="<?= $sort['original'] ?> ">Original name</a></label>
-        <span style="margin: 0 3px;">|</span>
-        <label><a href="<?= $sort['rarity'] ?> ">Rarity</a></label>
+        <label class="title">Order by:</label>
+        <?php foreach ($unitSort->items() as $name => $label) : ?>
+            <label class="item item-<?= $name ?>"><a href="<?= $unitSort->pathFor($name) ?> "><?= $label ?></a></label>
+        <?php endforeach; ?>
     </div>
 </div>

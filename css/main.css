@@ -52,3 +52,18 @@ body > * {
 .form-group >[class*="col-"] + .ws-errorbox {
     padding: 0 15px;
 }
+
+.sort .item, .sort .title {
+    margin-right: 3px;
+}
+
+.sort .item:after {
+    margin-left: 3px;
+    font-weight: normal;
+    content: '|';
+    display: inline;
+}
+
+.sort .item:last-of-type:after {
+    display: none;
+}
