@@ -8,7 +8,10 @@ namespace Aigisu\View;
  */
 class View
 {
-    protected $attributes = [];
+    protected $attributes = [
+        'title' => '',
+        'containerClass' => ''
+    ];
     /** @var string */
     protected $path;
 
