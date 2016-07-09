@@ -9,8 +9,8 @@
 namespace Aigisu;
 
 use Aigisu\View\View;
+use Interop\Container\ContainerInterface;
 use InvalidArgumentException;
-use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -23,17 +23,17 @@ use Slim\Router;
  */
 trait AwareContainer
 {
-    /** @var Container */
-    private $container;
+    /** @var ContainerInterface */
+    public $container;
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
     public function __get($name)
     {
-        if (!$this->container instanceof Container) {
+        if (!$this->container instanceof ContainerInterface) {
             throw new InvalidArgumentException('Missing Container');
         }
 
