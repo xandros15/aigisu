@@ -22,6 +22,7 @@ use Traits\Validator;
  * @property bool $has_aw_image
  * @property Collection $images
  * @property int $id
+ * @property Collection $tags
  */
 class Unit extends Model
 {
@@ -120,7 +121,7 @@ class Unit extends Model
 
     public function getTagsString()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->tags->implode('name', ', ');
     }
 
     public function addTagsToUnit($tagsString)
