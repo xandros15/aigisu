@@ -2,37 +2,11 @@
 
 namespace Aigisu;
 
-use Aigisu\View\View;
-use Slim\Container;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Router;
-
-/**
- * @property Response response
- * @property Request request
- * @property View view
- * @property Router router
- */
 class Controller
 {
+    use AwareContainer;
+
     public $layout = 'layout/main';
-
-    /** @var Container */
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    public function __get($name)
-    {
-        if($this->container->has($name)){
-            return $this->container->get($name);
-        }
-        throw new \InvalidArgumentException();
-    }
 
     public function render($view, $params = [])
     {

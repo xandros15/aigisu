@@ -9,15 +9,8 @@
 namespace Aigisu;
 
 
-use Slim\Container;
-
 class Middleware
 {
-    /** @var Container */
-    protected $container;
+    use AwareContainer;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
 }
