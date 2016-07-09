@@ -10,6 +10,7 @@ use Controllers\ImageController;
 use Controllers\ImageFileController;
 use Controllers\OauthController;
 use Controllers\UnitController;
+use Middlewares\TrailingSlash;
 
 /** @var $this \Aigisu\Main */
 $this->map(['get'], '/', UnitController::class . ':actionIndex')->setName('home');
@@ -32,3 +33,5 @@ $this->group('/oauth', function () {
     $this->map(['post'], '/login', OauthController::class . ':actionLogin')->setName('login');
     $this->map(['post'], '/logout', OauthController::class . ':actionLogout')->setName('logout');
 });
+
+$this->add(new TrailingSlash($this->getContainer()));
