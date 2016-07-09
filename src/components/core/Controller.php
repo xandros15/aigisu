@@ -2,10 +2,8 @@
 
 namespace Aigisu;
 
-abstract class Controller
+abstract class Controller extends ActiveContainer
 {
-    use AwareContainer;
-
     public $layout = 'layout/main';
 
     public function render($view, $params = [])

@@ -21,10 +21,10 @@ use Slim\Router;
  * @property View view
  * @property Router router
  */
-trait AwareContainer
+class ActiveContainer
 {
     /** @var ContainerInterface */
-    public $container;
+    private $container;
 
     public function __construct(ContainerInterface $container)
     {

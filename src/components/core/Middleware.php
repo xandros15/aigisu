@@ -12,9 +12,8 @@ namespace Aigisu;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class Middleware
+abstract class Middleware extends ActiveContainer
 {
-    use AwareContainer;
 
     abstract public function __invoke(Request $request, Response $response, callable $next);
 }
