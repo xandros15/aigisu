@@ -9,7 +9,7 @@
 namespace Aigisu;
 
 
-class Middleware
+abstract class Middleware
 {
     use AwareContainer;
 

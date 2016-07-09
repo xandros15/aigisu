@@ -2,7 +2,7 @@
 
 namespace Aigisu;
 
-class Controller
+abstract class Controller
 {
     use AwareContainer;
 
