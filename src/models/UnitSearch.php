@@ -15,19 +15,19 @@ class UnitSearch extends Unit
     {
         $query = Unit::with('images')->newQuery();
 
-        $this->parseSearch($params, $query);
-        $this->parseSort($params, $query);
-        $this->parsePagination($params, $query);
+        $this->parseSearch($params['search'], $query);
+        $this->parseSort($params['order'], $query);
+        $this->parsePagination($params['page'], $query);
         return $query;
     }
 
-    protected function parseSearch(array $params, Query $query)
+    protected function parseSearch(string $search, Query $query)
     {
-        if (empty($params['q'])) {
-            return $query;
+        if (!$search) {
+            return;
         }
 
-        $arguments = $this->parseSearchQuery($params);
+        $arguments = $this->parseSearchQuery($search);
 
         foreach ($arguments as $argument) {
             if ($argument->column == 'tags') {
@@ -36,13 +36,11 @@ class UnitSearch extends Unit
                 $query->where($argument->column, $argument->operator, $argument->value);
             }
         }
-
-        return $query;
     }
 
-    private function parseSearchQuery(array $params)
+    private function parseSearchQuery(string $search)
     {
-        $arguments = explode(' ', trim($params['q']));
+        $arguments = explode(' ', trim($search));
         $newArguments = [];
         foreach ($arguments as $value) {
 
@@ -101,32 +99,22 @@ class UnitSearch extends Unit
         });
     }
 
-    protected function parseSort(array $params, Query $query)
+    protected function parseSort(array $orders, Query $query)
     {
-        if (!isset($params['sort'])) {
-            return $query->orderBy('id', 'desc');
+        if (!$orders) {
+            $query->orderBy('id', 'desc');
+            return;
         }
-
-        $column = strtolower($params['sort']);
-        $direction = 'asc';
-
-        if (strpos($params['sort'], '-') === 0) {
-            $direction = 'desc';
-            $column = ltrim($column, '-');
+        foreach ($orders as $column => $order) {
+            if (in_array($column, self::getColumns())) {
+                $query->orderBy($column, $order);
+            }
         }
-
-        if (!in_array($column, Unit::getColumns())) {
-            return $query->orderBy('id', 'desc');
-        }
-
-        return $query->orderBy($column, $direction);
     }
 
-    protected function parsePagination(array $params, Query $query)
+    protected function parsePagination(int $page, Query $query)
     {
+        $query->forPage($page, self::UNITS_PER_PAGE);
         $this->count = $query->toBase()->getCountForPagination();
-
-        $page = (isset($params['page'])) ? $params['page'] : 1;
-        return $query->forPage($page, self::UNITS_PER_PAGE);
     }
 }

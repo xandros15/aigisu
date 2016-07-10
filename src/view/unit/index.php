@@ -2,13 +2,15 @@
 
 use Controllers\OauthController as Oauth;
 use Models\Unit;
+use Models\UnitSort;
 
 /* @var $unitList \Illuminate\Database\Eloquent\Collection */
 /* @var $pagination string */
-/* @var $sort string */
+/* @var $unitSort UnitSort */
 
 $this->title = 'Units';
 $this->containerClass = 'container';
+$sort = $this->render('unit/sort', ['unitSort' => $unitSort]);
 ?>
 <div id="units">
     <?php if (!$unitList->isEmpty()): ?>

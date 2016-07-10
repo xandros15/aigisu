@@ -17,7 +17,13 @@ class UnitController extends Controller
     public function actionIndex(Request $request)
     {
         $model = new UnitSearch();
-        $search = $model->search($request->getParams());
+        $unitSort = new UnitSort($request, $this->router);
+        $search = $model->search([
+            'search' => $request->getParam('s', ''),
+            'page' => $request->getParam('page', 1),
+            'order' => $unitSort->getOrders()
+        ]);
+
 
         return $this->render('unit/index', [
             'unitList' => $search->get(),
@@ -27,7 +33,7 @@ class UnitController extends Controller
                     Pagination::OPT_PER_PAGE => UnitSearch::UNITS_PER_PAGE
                 ])
             ]),
-            'sort' => $this->view->render('unit/sort', ['unitSort' => new UnitSort($request, $this->router)])
+            'unitSort' => $unitSort
         ]);
     }
 
