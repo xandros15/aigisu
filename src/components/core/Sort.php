@@ -98,7 +98,7 @@ abstract class Sort
     protected function getSortParam($name) : string
     {
         if (!$this->hasParam($name)) {
-            throw new InvalidArgumentException("Unknown param: $name}");
+            throw new InvalidArgumentException("Unknown param: {$name}");
         }
 
         $directions = $this->orders;
@@ -129,7 +129,7 @@ abstract class Sort
     public function label(string $name) : string
     {
         if (!$this->hasParam($name)) {
-            throw new InvalidArgumentException("Unknown param: $name}");
+            throw new InvalidArgumentException("Unknown param: {$name}");
         }
 
         $param = $this->getParam($name);
