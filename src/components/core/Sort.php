@@ -51,8 +51,8 @@ abstract class Sort
 
     private function setOrders(Request $request)
     {
-        $sort = explode(self::SEPARATOR, $request->getQueryParam(self::PARAM, ''));
-        $sort = array_filter($sort);
+        $param = $request->getParam(self::PARAM, '');
+        $sort = ($param) ? explode(self::SEPARATOR, $param) : [];
         foreach ($sort as $item) {
             $column = trim($item, '-');
             if ($this->hasParam($column)) {
