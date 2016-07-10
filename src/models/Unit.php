@@ -29,8 +29,10 @@ class Unit extends Model
 
     use Validator;
     const SEARCH_PARAM = 'q';
+    const UNITS_PER_PAGE = 10;
     public $timestamps = false;
     protected $table = 'unit';
+
     protected $fillable = [
         'name',
         'original',
@@ -85,9 +87,10 @@ class Unit extends Model
         return $this->images->count() != $this->getTotalImageRequired();
     }
 
-    public function getTotalImageRequired(){
+    public function getTotalImageRequired()
+    {
         $total = 0;
-        if($this->is_male){
+        if ($this->is_male) {
             return $total;
         }
         if ($this->is_only_dmm) {
@@ -104,14 +107,15 @@ class Unit extends Model
     public function isImageRequired($server, $scene)
     {
         return !(($this->is_only_dmm && $server != Image::SERVER_DMM)
-        || ($scene == Image::IMAGE_SPECIAL_SCENE && !$this->has_aw_image)
-        || $this->isImageExist($server, $scene)
+            || ($scene == Image::IMAGE_SPECIAL_SCENE && !$this->has_aw_image)
+            || $this->isImageExist($server, $scene)
         );
 
     }
+
     public function isImageExist($server, $scene)
     {
-        return $this->images->where('server',$server)->contains('scene',$scene);
+        return $this->images->where('server', $server)->contains('scene', $scene);
 
     }
 
@@ -138,23 +142,23 @@ class Unit extends Model
         $this->tags()->sync($tags);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
     private function parseTags($tagsString)
     {
         $parsedTags = [];
         $tags = explode(',', $tagsString);
-        foreach($tags as $tag){
+        foreach ($tags as $tag) {
             $tag = trim($tag);
             $tag = strtolower($tag);
             $tag = str_replace(' ', '_', $tag);
-            if($tag){
+            if ($tag) {
                 $parsedTags[] = $tag;
             }
         }
         return array_unique($parsedTags);
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
     }
 }
