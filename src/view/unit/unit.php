@@ -10,7 +10,7 @@ $pathForView = $this->pathFor('unitView', ['id' => $unit->id]);
     <div class="buttons media-left ">
         <?php if (Oauth::isLogged()): ?>
             <div class="form-group text-center">
-                <a type="button" class="btn ajax btn-default" data-target="<?= $pathForView ?>"
+                <a type="button" class="btn btn-default" data-target="<?= $pathForView ?>"
                    href="<?= $pathForView ?>">>
                     Edit
                 </a>
@@ -18,7 +18,7 @@ $pathForView = $this->pathFor('unitView', ['id' => $unit->id]);
         <?php endif; ?>
         <?php if ($unit->isImagesRequired()): ?>
             <div class="form-group text-center">
-                <button type="button" class="btn ajax btn-default" data-target="<?=
+                <button type="button" class="btn btn-default" data-target="<?=
                 $this->pathFor('imageUpload', ['id' => $unit->id])
                 ?>">
                     Upload
