@@ -33,14 +33,9 @@ class ActiveContainer
 
     public function __get($name)
     {
-        if (!$this->container instanceof ContainerInterface) {
-            throw new InvalidArgumentException('Missing Container');
+        if (!$this->container->has($name)) {
+            throw new InvalidArgumentException("Attribute {$name} doesn't exist");
         }
-
-        if ($this->container->has($name)) {
-            return $this->container->get($name);
-        }
-
-        throw new InvalidArgumentException("Property {$name} doesn't exist");
+        return $this->container->get($name);
     }
 }

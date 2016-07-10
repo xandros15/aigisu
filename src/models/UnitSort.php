@@ -13,7 +13,7 @@ use Aigisu\Sort;
 
 class UnitSort extends Sort
 {
-    protected function getParams() : array
+    protected function columns() : array
     {
         return [
             'name' => [

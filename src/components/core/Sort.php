@@ -40,6 +40,37 @@ abstract class Sort
         $this->attributes = $request->getAttributes();
     }
 
+    public function items() : array
+    {
+        return array_keys($this->columns());
+    }
+
+    public function getOrders() : array
+    {
+        return $this->orders;
+    }
+
+    public function pathFor(string $name) : string
+    {
+        $this->query[self::PARAM] = $this->getSortColumn($name);
+        return $this->router->pathFor($this->route, $this->attributes, $this->query);
+    }
+
+    public function label(string $name) : string
+    {
+        $column = $this->getColumn($name);
+        return $column['label'] ?? ucfirst($name);
+    }
+
+    abstract protected function columns() : array;
+
+    protected function getDefaultOrders() : array
+    {
+        return [
+            'id' => self::SORT_DESC
+        ];
+    }
+
     private function setQuery(Request $request)
     {
         $query = $request->getQueryParams();
@@ -55,7 +86,7 @@ abstract class Sort
         $sort = ($param) ? explode(self::SEPARATOR, $param) : [];
         foreach ($sort as $item) {
             $column = trim($item, '-');
-            if ($this->hasParam($column)) {
+            if ($this->hasColumn($column)) {
                 $this->orders[$column] = (!($item[0] <=> '-')) ? self::SORT_DESC : self::SORT_ASC;
             }
         }
@@ -64,51 +95,22 @@ abstract class Sort
         }
     }
 
-    protected function hasParam(string $name) : bool
+    private function hasColumn(string $name) : bool
     {
-        $params = $this->getParams();
-        return isset($params[$name]);
+        $columns = $this->columns();
+        return isset($columns[$name]);
     }
 
-    abstract protected function getParams() : array;
-
-    protected function getDefaultOrders() : array
+    private function getSortColumn($name) : string
     {
-        return [
-            'id' => self::SORT_DESC
-        ];
-    }
-
-    public function items() : array
-    {
-        return array_keys($this->getParams());
-    }
-
-    public function getOrders()
-    {
-        return $this->orders;
-    }
-
-    public function pathFor(string $name) : string
-    {
-        $this->query[self::PARAM] = $this->getSortParam($name);
-        return $this->router->pathFor($this->route, $this->attributes, $this->query);
-    }
-
-    protected function getSortParam($name) : string
-    {
-        if (!$this->hasParam($name)) {
-            throw new InvalidArgumentException("Unknown param: {$name}");
-        }
-
         $directions = $this->orders;
 
         if (isset($directions[$name])) {
             $direction = $directions[$name] == self::SORT_ASC ? self::SORT_DESC : self::SORT_ASC;
             unset($directions[$name]);
         } else {
-            $param = $this->getParam($name);
-            $direction = $param['default'] ?? self::SORT_ASC;
+            $column = $this->getColumn($name);
+            $direction = $column['default'] ?? self::SORT_ASC;
         }
         $directions = array_merge([$name => $direction], $directions);
 
@@ -120,19 +122,13 @@ abstract class Sort
         return implode(self::SEPARATOR, $sorts);
     }
 
-    protected function getParam(string $name, $default = [])
+    private function getColumn(string $name)
     {
-        $params = $this->getParams();
-        return ($this->hasParam($name)) ? $params[$name] : $default;
-    }
-
-    public function label(string $name) : string
-    {
-        if (!$this->hasParam($name)) {
-            throw new InvalidArgumentException("Unknown param: {$name}");
+        if (!$this->hasColumn($name)) {
+            throw new InvalidArgumentException("Unknown column: {$name}");
         }
 
-        $param = $this->getParam($name);
-        return $param['label'] ?? ucfirst($name);
+        $columns = $this->columns();
+        return $columns[$name];
     }
 }
