@@ -27,11 +27,9 @@ class UnitController extends Controller
 
         return $this->render('unit/index', [
             'unitList' => $search->get(),
-            'pagination' => $this->view->render('unit/pagination', [
-                'pagination' => new Pagination($request, $this->router, [
-                    Pagination::OPT_TOTAL => $model->count,
-                    Pagination::OPT_PER_PAGE => UnitSearch::UNITS_PER_PAGE
-                ])
+            'pagination' => new Pagination($request, $this->router, [
+                Pagination::OPT_TOTAL => $model->count,
+                Pagination::OPT_PER_PAGE => UnitSearch::UNITS_PER_PAGE
             ]),
             'unitSort' => $unitSort
         ]);

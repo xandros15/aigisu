@@ -1,16 +1,21 @@
 <?php
 
 use Controllers\OauthController as Oauth;
+use Illuminate\Database\Eloquent\Collection;
 use Models\Unit;
 use Models\UnitSort;
+use Xandros15\SlimPagination\Pagination;
 
-/* @var $unitList \Illuminate\Database\Eloquent\Collection */
-/* @var $pagination string */
+/* @var $unitList Collection */
+/* @var $pagination Pagination */
 /* @var $unitSort UnitSort */
 
 $this->title = 'Units';
 $this->containerClass = 'container';
-$sort = $this->render('unit/sort', ['unitSort' => $unitSort]);
+/** @var $unitSort string */
+$unitSort = $this->render('unit/sort', ['unitSort' => $unitSort]);
+/** @var $pagination string */
+$pagination = $this->render('unit/pagination', ['pagination' => $pagination]);
 ?>
 <div id="units">
     <?php if (!$unitList->isEmpty()): ?>
@@ -27,7 +32,7 @@ $sort = $this->render('unit/sort', ['unitSort' => $unitSort]);
         </nav>
         <ul class="unit-list list-group panel panel-default">
             <li class="panel-heading list-group-item">
-                <?= $sort ?>
+                <?= $unitSort ?>
             </li>
             <?php foreach ($unitList as $unit): ?>
                 <?php /** @var $unit Unit */ ?>
