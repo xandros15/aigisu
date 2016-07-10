@@ -72,24 +72,16 @@ abstract class Sort
 
     abstract protected function getParams() : array;
 
-    private function getDefaultOrders() : array
+    protected function getDefaultOrders() : array
     {
-        $items = [];
-        foreach ($this->items() as $item) {
-            $items[$item] = $this->getParam($item)['default'] ?? self::SORT_ASC;
-        }
-        return $items;
+        return [
+            'id' => self::SORT_DESC
+        ];
     }
 
     public function items() : array
     {
         return array_keys($this->getParams());
-    }
-
-    protected function getParam(string $name, $default = [])
-    {
-        $params = $this->getParams();
-        return ($this->hasParam($name)) ? $params[$name] : $default;
     }
 
     public function getOrders()
@@ -126,6 +118,12 @@ abstract class Sort
         }
 
         return implode(self::SEPARATOR, $sorts);
+    }
+
+    protected function getParam(string $name, $default = [])
+    {
+        $params = $this->getParams();
+        return ($this->hasParam($name)) ? $params[$name] : $default;
     }
 
     public function label(string $name) : string
