@@ -19,7 +19,7 @@ class UnitController extends Controller
         $model = new UnitSearch();
         $unitSort = new UnitSort($request, $this->router);
         $search = $model->search([
-            'search' => $request->getParam('s', ''),
+            'search' => $request->getParam(Unit::SEARCH_PARAM),
             'page' => $request->getParam('page', 1),
             'order' => $unitSort->getOrders()
         ]);

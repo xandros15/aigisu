@@ -28,6 +28,7 @@ class Unit extends Model
 {
 
     use Validator;
+    const SEARCH_PARAM = 'q';
     public $timestamps = false;
     protected $table = 'unit';
     protected $fillable = [

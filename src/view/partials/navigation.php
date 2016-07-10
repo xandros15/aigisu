@@ -2,7 +2,8 @@
     <div class="container-fluid" role="search">
         <form class="navbar-form navbar-right" action="<?= $this->pathFor('home') ?>" style="display:inline-block">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" value="<?= $this->query('q') ?>">
+                <input type="text" class="form-control" placeholder="Search" name="<?= \Models\Unit::SEARCH_PARAM ?>"
+                       value="<?= $this->query(\Models\Unit::SEARCH_PARAM) ?>">
                 <div class="input-group-btn">
                     <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                     <button type="button" class="btn btn-default" data-placement="bottom" data-toggle="popover"
