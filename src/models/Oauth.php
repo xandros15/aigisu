@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Aigisu\Model;
 use Traits\Validator;
 
 /**

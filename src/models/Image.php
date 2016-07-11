@@ -2,9 +2,9 @@
 
 namespace Models;
 
+use Aigisu\Model;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Traits\Validator;
 
 /**
@@ -62,11 +62,6 @@ class Image extends Model
             });
     }
 
-    public static function tableName()
-    {
-        return 'image';
-    }
-
     public static function getImageSchemeArray()
     {
         return [
@@ -110,7 +105,6 @@ class Image extends Model
 
     public function unit()
     {
-
         return $this->belongsTo(Unit::class);
     }
 

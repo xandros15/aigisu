@@ -2,9 +2,11 @@
 
 namespace Models;
 
+use Aigisu\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Traits\Validator;
+
+//use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Unit
@@ -46,11 +48,6 @@ class Unit extends Model
     ];
     protected $guarded = [];
 
-    public static function getColumns()
-    {
-        return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm', 'has_aw_image'];
-    }
-
     public function rules()
     {
 
@@ -70,11 +67,6 @@ class Unit extends Model
     public static function getRarities()
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
-    }
-
-    public static function tableName()
-    {
-        return 'unit';
     }
 
     public function images()
