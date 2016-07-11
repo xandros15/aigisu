@@ -5,7 +5,8 @@ use Models\Image;
 
 /* @var $images Collection */
 /* @var $image Image */
-$this->title = 'images';
+$image = $images->first()->first();
+$this->title = 'CG ' . $image->unit->name;
 $this->containerClass = 'container-fluid';
 ?>
 <?php foreach ($images as $serverName => $server): ?>
