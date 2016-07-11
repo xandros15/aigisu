@@ -22,9 +22,7 @@ class UnitSearch extends Builder
     public function setSort(array $orders)
     {
         foreach ($orders as $column => $order) {
-            if (in_array($column, Unit::getColumns())) {
-                $this->orderBy($column, $order);
-            }
+            $this->orderBy($column, $order);
         }
     }
 
