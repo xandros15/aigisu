@@ -20,6 +20,8 @@ abstract class Sort
     const SORT_DESC = 'desc';
     const SORT_ASC = 'asc';
 
+    /** @var bool */
+    public $multiSort = false;
     /** @var string */
     private $route;
     /** @var array */
@@ -89,6 +91,9 @@ abstract class Sort
             if ($this->hasColumn($column)) {
                 $this->orders[$column] = (!($item[0] <=> '-')) ? self::SORT_DESC : self::SORT_ASC;
             }
+            if (!$this->multiSort && $this->orders) {
+                break;
+            }
         }
         if (!$this->orders) {
             $this->orders = $this->getDefaultOrders();
@@ -112,7 +117,8 @@ abstract class Sort
             $column = $this->getColumn($name);
             $direction = $column['default'] ?? self::SORT_ASC;
         }
-        $directions = array_merge([$name => $direction], $directions);
+        $newOrder = [$name => $direction];
+        $directions = ($this->multiSort) ? array_merge($newOrder, $directions) : $newOrder;
 
         $sorts = [];
         foreach ($directions as $attribute => $direction) {
