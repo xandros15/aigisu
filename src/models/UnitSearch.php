@@ -2,32 +2,38 @@
 
 namespace Models;
 
-use Illuminate\Database\Eloquent\Builder;
-
-class UnitSearch extends Builder
+class UnitSearch extends Unit
 {
+    /** @var \Illuminate\Database\Eloquent\Builder */
+    public $builder;
 
     public function __construct()
     {
-        $unit = new Unit();
-        parent::__construct($unit->query()->toBase());
-        $this->setModel($unit);
+        parent::__construct();
+        $this->builder = $this->newQuery();
+    }
+
+    public function newQuery()
+    {
+        if (!$this->builder) {
+            $this->builder = parent::newQuery();
+        }
+        return $this->builder;
     }
 
     public function search(array $params)
     {
-
     }
 
     public function setSort(array $orders)
     {
         foreach ($orders as $column => $order) {
-            $this->orderBy($column, $order);
+            $this->builder->orderBy($column, $order);
         }
     }
 
     public function getTotalItems() : int
     {
-        return $this->toBase()->getCountForPagination();
+        return $this->builder->toBase()->getCountForPagination();
     }
 }
