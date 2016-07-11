@@ -10,6 +10,11 @@ namespace Aigisu;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
+/**
+ * Class Model
+ * @package Aigisu
+ * @mixin \Eloquent
+ */
 class Model extends EloquentModel
 {
 }
