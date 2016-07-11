@@ -71,7 +71,7 @@ class Unit extends Model
 
     public function images()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class, 'unit_id', 'id');
     }
 
     public function isImagesRequired()
@@ -136,7 +136,7 @@ class Unit extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 
     private function parseTags($tagsString)

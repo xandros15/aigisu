@@ -25,7 +25,7 @@ class Tag extends Model
 
     public function units()
     {
-        return $this->belongsToMany(Unit::class);
+        return $this->belongsToMany(Unit::class, null, 'tag_id', 'unit_id');
     }
 
     public function createOfFindByName($name)
