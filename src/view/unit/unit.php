@@ -1,6 +1,5 @@
 <?php
 
-use Controllers\OauthController as Oauth;
 use Models\Unit;
 
 /* @var $unit Unit */
@@ -8,14 +7,12 @@ $pathForView = $this->pathFor('unitView', ['id' => $unit->id]);
 ?>
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
     <div class="buttons media-left ">
-        <?php if (Oauth::isLogged()): ?>
-            <div class="form-group text-center">
-                <a type="button" class="btn btn-default" data-target="<?= $pathForView ?>"
-                   href="<?= $pathForView ?>">>
-                    Edit
-                </a>
-            </div>
-        <?php endif; ?>
+        <div class="form-group text-center">
+            <a type="button" class="btn btn-default" data-target="<?= $pathForView ?>"
+               href="<?= $pathForView ?>">
+                Edit
+            </a>
+        </div>
         <?php if ($unit->isImagesRequired()): ?>
             <div class="form-group text-center">
                 <button type="button" class="btn btn-default" data-target="<?=

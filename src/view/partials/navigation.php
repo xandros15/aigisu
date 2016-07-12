@@ -11,8 +11,6 @@
                             data-content="You can use in search form: &lt;namespace&gt;:&lt;value&gt; || avaible namespaces: name, rarity, original || example: iris rarity:gold || You can also use: male(for male units), dmm(for only dmm units), nutaku(for nutaku units)">
                         <span class="glyphicon glyphicon-question-sign"></span>
                     </button>
-                    <a href="<?= $this->pathFor('oauth') ?>" role="button" class="btn btn-default"><span
-                            class="glyphicon glyphicon-log-in"></span></a>
                 </div>
             </div>
         </form>

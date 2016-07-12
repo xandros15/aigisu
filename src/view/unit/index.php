@@ -1,6 +1,5 @@
 <?php
 
-use Controllers\OauthController as Oauth;
 use Illuminate\Database\Eloquent\Collection;
 use Models\Unit;
 use Models\UnitSort;
@@ -21,11 +20,9 @@ $pagination = $this->render('unit/pagination', ['pagination' => $pagination]);
     <?php if (!$unitList->isEmpty()): ?>
         <div class="form-group">
             <?= $this->render('image/help') ?>
-            <?php if (Oauth::isLogged()): ?>
-                <button type="button" class="btn btn-primary ajax pull-right" data-target="<?=
-                $this->pathFor('unitCreate') ?>">Create
-                </button>
-            <?php endif; ?>
+            <button type="button" class="btn btn-primary ajax pull-right" data-target="<?=
+            $this->pathFor('unitCreate') ?>">Create
+            </button>
         </div>
         <nav class="text-center">
             <?= $pagination ?>

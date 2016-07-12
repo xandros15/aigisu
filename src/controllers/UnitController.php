@@ -4,7 +4,6 @@ namespace Controllers;
 
 use Aigisu\Alert\Alert;
 use Aigisu\Controller;
-use Controllers\OauthController as Oauth;
 use Models\Unit;
 use Models\UnitSearch;
 use Models\UnitSort;
@@ -52,9 +51,6 @@ class UnitController extends Controller
 
     public function actionUpdate(Request $request)
     {
-        if (!Oauth::isLogged()) {
-            return $this->goBack();
-        }
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
 
@@ -71,10 +67,6 @@ class UnitController extends Controller
 
     public function actionDelete(Request $request)
     {
-        if (!Oauth::isLogged()) {
-            return $this->goBack();
-        }
-
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
 
