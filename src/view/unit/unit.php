@@ -41,6 +41,11 @@ $pathForView = $this->pathFor('unitView', ['id' => $unit->id]);
             <input title="unit-original" class="form-control unit-original" type="text" value="<?= $unit->original ?>"
                    readonly>
         </div>
+        <div class="tags">
+            <?php foreach ($unit->tags as $tag): ?>
+                <span class="label label-default"><?= $tag->name ?></span>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php if ($unit->isAnyImages()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
