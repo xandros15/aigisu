@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7f6f5d9f23a19cc5c3c31db0cc74ef6a",
-    "content-hash": "674c6eba36774ad8440ecb6fb6dbf1b9",
+    "hash": "47cf963d13402eff2bb20bafe9c9c67e",
+    "content-hash": "0d8576b5a36b44011a2bc3cafedecdc6",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1062,16 +1062,16 @@
         },
         {
             "name": "xandros15/slim-pagination",
-            "version": "0.0.2",
+            "version": "0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xandros15/SlimPagination.git",
-                "reference": "9fcb375779001d0df2d3fc31e11b80287ee8e4d6"
+                "reference": "c983fc9b3d2e544465ddae359550cc347f1a71f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/9fcb375779001d0df2d3fc31e11b80287ee8e4d6",
-                "reference": "9fcb375779001d0df2d3fc31e11b80287ee8e4d6",
+                "url": "https://api.github.com/repos/xandros15/SlimPagination/zipball/c983fc9b3d2e544465ddae359550cc347f1a71f8",
+                "reference": "c983fc9b3d2e544465ddae359550cc347f1a71f8",
                 "shasum": ""
             },
             "require": {
@@ -1100,7 +1100,7 @@
                 }
             ],
             "description": "simple pagination for slim3",
-            "time": "2016-07-10 14:36:45"
+            "time": "2016-07-12 15:28:55"
         }
     ],
     "packages-dev": [

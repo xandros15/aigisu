@@ -14,7 +14,7 @@
         "plasticbrain/php-flash-messages": "^1.0",
         "illuminate/validation": "5.2.*",
         "illuminate/translation": "5.2.*",
-      "xandros15/slim-pagination": "0.0.*"
+      "xandros15/slim-pagination": "0.*"
     },
   "require-dev": {
     "symfony/var-dumper": "^3.0"
