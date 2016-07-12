@@ -10,6 +10,7 @@ use Models\Unit;
 /** @var $unit Unit */
 $rarities = Unit::getRarities();
 $isNewUnit = (!$unit->id);
+$this->title = ($isNewUnit) ? 'New Unit | Aigisu' : $unit->name . ' | Aigisu';
 $this->containerClass = 'container';
 $route = ($isNewUnit) ? $this->pathFor('unitCreate') : $this->pathFor('unitUpdate', ['id' => $unit->id]);
 
