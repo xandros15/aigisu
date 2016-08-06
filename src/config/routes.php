@@ -8,7 +8,6 @@
 
 use Controllers\ImageController;
 use Controllers\ImageFileController;
-use Controllers\OauthController;
 use Controllers\UnitController;
 use Middlewares\TrailingSlash;
 
@@ -26,12 +25,6 @@ $this->group('/unit', function () {
     $this->map(['post', 'get'], '/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
     $this->map(['post'], '/create', UnitController::class . ':actionCreate')->setName('unitCreate');
     $this->map(['get'], '/delete/{id:\d+}', UnitController::class . ':actionDelete')->setName('unitDelete');
-});
-$this->group('/oauth', function () {
-    /** @var $this \Aigisu\Main */
-    $this->map(['get'], '[/]', OauthController::class . ':actionIndex')->setName('oauth');
-    $this->map(['post'], '/login', OauthController::class . ':actionLogin')->setName('login');
-    $this->map(['post'], '/logout', OauthController::class . ':actionLogout')->setName('logout');
 });
 
 $this->add(new TrailingSlash($this->getContainer()));
