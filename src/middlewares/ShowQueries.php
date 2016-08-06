@@ -10,6 +10,7 @@ namespace Middlewares;
 
 
 use Aigisu\Middleware;
+use Slim\Http\Body;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -24,10 +25,12 @@ class ShowQueries extends Middleware
         /** @var $response Response */
         $response = $next($request, $response);
 
-        return $response->withBody($this->getBodyWithNewContent($this->getQueryContent(), $response));
+        $output = $this->getQueryContent();
+
+        return $output ? $response->withBody($this->getBodyWithNewContent($output, $response)) : $response;
     }
 
-    private function getBodyWithNewContent($newContent, Response $response)
+    private function getBodyWithNewContent($newContent, Response $response) : Body
     {
         $body = $response->getBody();
         $body->rewind();
@@ -39,12 +42,19 @@ class ShowQueries extends Middleware
         return $body;
     }
 
-    private function getQueryContent()
+    private function getQueryContent() : string
     {
-        $output = fopen('php://memory', 'r+b');
-        $dumper = new HtmlDumper();
-        $dumper->dump((new VarCloner())->cloneVar($this->connection->getQueryLog()), $output);
+        $queries = $this->connection->getQueryLog();
 
-        return stream_get_contents($output, -1, 0);
+        $output = '';
+
+        if ($queries) {
+            $output = fopen('php://memory', 'r+b');
+            $dumper = new HtmlDumper();
+            $dumper->dump((new VarCloner())->cloneVar($queries), $output);
+            $output = stream_get_contents($output, -1, 0);
+        }
+
+        return $output;
     }
 }
