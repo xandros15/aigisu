@@ -22,10 +22,11 @@ $this->group('/image', function () {
 $this->group('/unit', function () {
     /** @var $this \Aigisu\Main */
     $this->map(['get'], '[/]', UnitController::class . ':actionIndex')->setName('unit');
-    $this->map(['get'], '/{id:\d+}', UnitController::class . ':actionView')->setName('unitView');
-    $this->map(['post', 'get'], '/update/{id:\d+}', UnitController::class . ':actionUpdate')->setName('unitUpdate');
+    $this->map(['get'], '/edit/{id:\d+}', UnitController::class . ':actionView')->setName('unitView');
+    $this->map(['get'], '/create', UnitController::class . ':actionView')->setName('unitCreate');
+    $this->map(['post'], '/update/{id:\d+}/confirm', UnitController::class . ':actionUpdate')->setName('unitUpdate');
     $this->map(['post'], '/create', UnitController::class . ':actionCreate')->setName('unitCreate');
-    $this->map(['get'], '/delete/{id:\d+}', UnitController::class . ':actionDelete')->setName('unitDelete');
+    $this->map(['get'], '/delete/{id:\d+}/confirm', UnitController::class . ':actionDelete')->setName('unitDelete');
 });
 
 $this->add(new TrailingSlash($this->getContainer()));
