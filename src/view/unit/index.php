@@ -15,14 +15,17 @@ $this->containerClass = 'container';
 $unitSort = $this->render('unit/sort', ['unitSort' => $unitSort]);
 /** @var $pagination string */
 $pagination = $this->render('unit/pagination', ['pagination' => $pagination]);
+
+$createPath = $this->pathFor('unitCreate');
 ?>
 <div id="units">
     <?php if (!$unitList->isEmpty()): ?>
         <div class="form-group">
             <?= $this->render('image/help') ?>
-            <button type="button" class="btn btn-primary ajax pull-right" data-target="<?=
-            $this->pathFor('unitCreate') ?>">Create
-            </button>
+            <a type="button" class="btn btn-primary pull-right" data-target="<?= $createPath ?>"
+               href="<?= $createPath ?>">
+                Create
+            </a>
         </div>
         <nav class="text-center">
             <?= $pagination ?>
