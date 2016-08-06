@@ -32,3 +32,6 @@ phpunit.phar
 # ignore ide helper
 /laravel-ide-helper
 _ide_helper.php
+
+# Dependency Manager
+web/bower_components/
