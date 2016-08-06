@@ -9,6 +9,7 @@
 namespace Aigisu;
 
 use Aigisu\View\View;
+use Illuminate\Database\Connection;
 use Interop\Container\ContainerInterface;
 use InvalidArgumentException;
 use Slim\Http\Request;
@@ -20,6 +21,7 @@ use Slim\Router;
  * @property Request request
  * @property View view
  * @property Router router
+ * @property Connection connection
  */
 class ActiveContainer
 {
