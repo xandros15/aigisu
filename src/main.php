@@ -47,6 +47,7 @@ class Main extends Slim
         $connection->setValidator($settings->locale, Configuration::DIR_CONFIG . 'lang');
         $connection->setAsGlobal();
         $connection->bootEloquent();
+        $this->getContainer()['connection'] = $connection->connection();
     }
 
     private function createSessions()

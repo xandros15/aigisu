@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aigis Level Calculator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <style>
+            .container{
+                margin-top: 50px;
+                max-width: 600px;
+            }
+            .check-group label{
+                display: table-cell;
+                width: 1%;
+            }
+            .check-group input[type=checkbox]{
+                display: inline;
+                margin: 0;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <form class="form" id="api">
+                <div class="form-group">
+                    <label for="current">current level</label>
+                    <input type="number" class="form-control" min='1' id="current" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="target">target level</label>
+                    <input type="number" class="form-control" id="target" value="40">
+                </div>
+                <div class="form-group check-group">
+                    <label for="classChange">Class Changed:  <input type="checkbox" id="classChange"></label>
+                    <label for="awake">Awok: <input type="checkbox" id="awake"></label>
+                    <label for="princess">Princess: <input type="checkbox" id="princess"></label>
+                    <label for="max">Max: <input type="checkbox" id="max"></label>
+                </div>
+                <div class="form-group">
+                    <label for="left">left to level up</label>
+                    <input type="number" class="form-control" id="left" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="type">unit type</label>
+                    <select class="form-control" id="type">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="result">result</label>
+                    <input id="result" class="form-control" type="text" value="" readonly>
+                </div>
+            </form>
+            <button class="btn btn-default" onclick="api.calc()">Calc</button>
+        </div>
+        <script type="text/javascript">
+            var api = {
+                run: function () {
+                    api.loadTypeToForm('#type');
+                },
+                calc: function () {
+                    var current = api.form.getVal('#current');
+                    var target = api.form.getVal('#target');
+                    var type = api.form.getVal('#type');
+                    var left = api.form.getVal('#left');
+                    var message = api.toLevel(current, target, type, left);
+                    $('#result').val(message);
+                },
+                reloadApi: function () {
+                    var type = api.form.getVal("#type");
+                    var isCC = api.form.isChecked("#classChange");
+                    var isAW = api.form.isChecked("#awake");
+                    var isPS = api.form.isChecked("#princess");
+
+                    api.removeDisable(['#target', '#classChange', '#awake', '#princess']);
+
+                    if (api.form.isChecked("#max")) {
+                        api.disable(['#target']);
+                        $('#target').val(api.getMaxLevel(type, isCC, isAW, isPS));
+                    }
+                    if (type === "bronze") {
+                        api.disable(['#classChange', '#awake', '#princess']);
+                    }
+                    if (type === "silver") {
+                        api.disable(['#awake', '#princess']);
+                    }
+                    if (isPS) {
+                        api.disable(['#classChange']);
+                    }
+                    if (isCC) {
+                        api.disable(['#princess']);
+                    }
+                },
+                removeDisable: function (array) {
+                    if (!(array.constructor.toString().indexOf("Array") > -1)) {
+                        return false;
+                    }
+                    for (var i = 0; i < array.length; i++) {
+                        $(array[i]).removeAttr("disabled");
+                    }
+                    return true;
+                },
+                disable: function (array) {
+                    if (!(array.constructor.toString().indexOf("Array") > -1)) {
+                        return false;
+                    }
+                    for (var i = 0; i < array.length; i++) {
+                        $(array[i]).attr("disabled", true);
+                        if($(array[i]).is(':checkbox')){
+                            $(array[i]).attr("checked", false);
+                        }
+                    }
+                    return true;
+
+                },
+                form: {
+                    getVal: function (hookName) {
+                        var hook = $(hookName);
+                        return (hook.val() === "") ? hook.attr('placeholder') : hook.val();
+                    },
+                    isChecked: function (hookName) {
+                        return document.getElementById(hookName.substr(1)).checked;
+                    }
+                },
+                type: ["bronze", "silver", "gold", "platinum", "black"],
+                maxLevel: {
+                    bronze: {
+                        normal: 40,
+                        cc: 40,
+                        awake: 40
+                    },
+                    silver: {
+                        normal: 50,
+                        cc: 50,
+                        awake: 50
+                    },
+                    gold: {
+                        normal: 50,
+                        cc: 60,
+                        awake: 80
+                    },
+                    platinum: {
+                        normal: 50,
+                        cc: 70,
+                        awake: 90
+                    },
+                    black: {
+                        normal: 50,
+                        cc: 80,
+                        awake: 99
+                    }
+                },
+                table: {
+                    bronze: [0, 35, 37, 38, 39, 40, 43, 43, 45, 46, 94, 97, 101, 104, 108, 112, 116, 119, 123, 126, 187, 194, 201, 209, 217, 223, 231, 239, 246, 253, 312, 323, 336, 347, 361, 373, 385, 398, 409, 424],
+                    silver: [0, 38, 40, 42, 42, 44, 47, 47, 49, 51, 102, 105, 111, 114, 117, 123, 126, 129, 135, 138, 204, 211, 219, 228, 237, 243, 252, 261, 269, 276, 339, 353, 366, 379, 394, 407, 420, 434, 446, 462, 678, 705, 732, 759, 788, 812, 841, 868, 895, 922],
+                    gold: [0, 42, 43, 45, 46, 48, 50, 51, 53, 55, 110, 115, 119, 124, 127, 133, 136, 141, 145, 150, 221, 229, 238, 247, 256, 264, 273, 282, 291, 299, 368, 382, 397, 410, 427, 440, 455, 471, 484, 500, 735, 763, 793, 823, 852, 881, 911, 940, 970, 998, 1102, 1146, 1189, 1235, 1278, 1322, 1365, 1411, 1454, 1498, 1469, 1527, 1588, 1644, 1705, 1762, 1822, 1879, 1940, 1998, 1836, 1909, 1983, 2057, 2130, 2204, 2276, 2350, 2424, 2497],
+                    platinum: [0, 45, 46, 49, 49, 52, 54, 55, 57, 59, 119, 123, 129, 133, 137, 143, 147, 151, 157, 161, 238, 247, 256, 266, 276, 284, 294, 304, 313, 322, 396, 412, 427, 442, 460, 474, 490, 507, 521, 539, 791, 822, 854, 886, 918, 948, 981, 1013, 1044, 1075, 1187, 1234, 1281, 1330, 1376, 1424, 1470, 1519, 1566, 1613, 1582, 1645, 1710, 1771, 1835, 1898, 1962, 2024, 2089, 2152, 1977, 2056, 2135, 2214, 2295, 2373, 2451, 2531, 2610, 2689, 2769, 2879, 2990, 3101, 3210, 3323, 3432, 3544, 3654, 3766],
+                    black: [0, 48, 50, 52, 53, 55, 59, 68, 62, 63, 127, 132, 138, 143, 147, 153, 157, 162, 168, 173, 255, 264, 274, 285, 296, 304, 315, 326, 336, 345, 424, 441, 458, 474, 492, 508, 525, 543, 558, 578, 847, 881, 915, 949, 984, 1016, 1051, 1085, 1119, 1152, 1272, 1321, 1373, 1425, 1474, 1526, 1575, 1627, 1679, 1728, 1695, 1762, 1832, 1897, 1967, 2034, 2101, 2169, 2238, 2306, 2118, 2203, 2288, 2373, 2458, 2543, 2626, 2712, 2796, 2882, 2967, 3084, 3204, 3322, 3440, 3559, 3678, 3797, 3915, 4035, 2965, 3086, 3202, 3323, 3441, 3559, 3677, 3798, 3915]
+                },
+                toLevel: function (current, target, setType, left) {
+                    target = parseInt(target);
+                    current = parseInt(current);
+                    left = parseInt(left);
+                    if (api.type.indexOf(setType) === -1) {
+                        return "Type not found";
+                    }
+                    var currentTable = [0];
+                    for (var i = 0; i < api.type.length; i++) {
+                        if (setType === api.type[i]) {
+                            currentTable = api.table[setType];
+                            break;
+                        }
+                    }
+                    if (currentTable.length < target) {
+                        return "To high target lvl";
+                    }
+                    if (target < 0 || current < 0 || current > target || left > currentTable[current]) {
+                        return "Wrong values";
+                    }
+                    var loopCount = target - current;
+                    var expToLvl = 0;
+                    for (var i = 0; i < loopCount; i++) {
+                        expToLvl = expToLvl + currentTable[current + i];
+                    }
+                    return expToLvl - currentTable[current] + ((left === 0) ? currentTable[current] : left);
+                },
+                loadTypeToForm: function (hookName) {
+                    for (var i = 0; i < api.type.length; i++) {
+                        $(hookName).append('<option>' + api.type[i] + '</option>');
+                    }
+                },
+                getMaxLevel: function (type, isCC, isAW, isPrincess) {
+                    var object = api.maxLevel[type];
+                    var max = 0;
+                    if (isAW) {
+                        max = object.awake;
+                    } else if (isCC || isPrincess) {
+                        max = object.cc;
+                    } else {
+                        max = object.normal;
+                    }
+                    return max;
+                },
+                setMinLevel: function (hookName, currentLvl) {
+                    var min = currentLvl + 1;
+                    $(hookName).attr({"min": min});
+                },
+                setMaxLeft: function (hookName, type, currentLvl) {
+                    var max = api.table[type][currentLvl];
+                    $(hookName).attr({"max": max});
+                }
+            };
+            api.run();
+            $('#api').change(function () {
+                api.reloadApi();
+            }).change();
+
+        </script>
+    </body>
+</html>
