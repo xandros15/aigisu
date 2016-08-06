@@ -5,7 +5,6 @@ namespace Controllers;
 use Aigisu\Alert\Alert;
 use Aigisu\Controller;
 use Models\Unit;
-use Models\UnitSearch;
 use Models\UnitSort;
 use Slim\Http\Request;
 use Xandros15\SlimPagination\Pagination;
@@ -15,20 +14,22 @@ class UnitController extends Controller
 
     public function actionIndex(Request $request)
     {
-        $unitSort = new UnitSort($request, $this->router);
-        $unitSearch = new UnitSearch();
-        $unitSearch->with('images');
+        $unitSort   = new UnitSort($request, $this->router);
+        $unitSearch = Unit::with(['images', 'tags']);
+        $max        = $unitSearch->count();
         $unitSearch->forPage($request->getParam('page', 1), Unit::UNITS_PER_PAGE);
-        $unitSearch->setSort($unitSort->getOrders());
-
+        foreach ($unitSort->getOrders() as $order => $direction) {
+            $unitSearch->orderBy($order, $direction);
+        }
+        $list = $unitSearch->get();
 
         return $this->render('unit/index', [
-            'unitList' => $unitSearch->get(),
+            'unitList'   => $list,
             'pagination' => new Pagination($request, $this->router, [
-                Pagination::OPT_TOTAL => $unitSearch->getTotalItems(),
+                Pagination::OPT_TOTAL    => $max,
                 Pagination::OPT_PER_PAGE => Unit::UNITS_PER_PAGE
             ]),
-            'unitSort' => $unitSort
+            'unitSort'   => $unitSort
         ]);
     }
 
