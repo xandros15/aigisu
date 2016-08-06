@@ -30,18 +30,6 @@ class ShowQueries extends Middleware
         return $output ? $response->withBody($this->getBodyWithNewContent($output, $response)) : $response;
     }
 
-    private function getBodyWithNewContent($newContent, Response $response) : Body
-    {
-        $body = $response->getBody();
-        $body->rewind();
-        $content   = $body->getContents();
-        $endOfBody = strpos($content, '</body>');
-        $body->seek($endOfBody !== false ? $endOfBody : strlen($content));
-        $body->write($newContent);
-
-        return $body;
-    }
-
     private function getQueryContent() : string
     {
         $queries = $this->connection->getQueryLog();
@@ -56,5 +44,17 @@ class ShowQueries extends Middleware
         }
 
         return $output;
+    }
+
+    private function getBodyWithNewContent($newContent, Response $response) : Body
+    {
+        $body = $response->getBody();
+        $body->rewind();
+        $content = $body->getContents();
+        $endOfBody = strpos($content, '</body>');
+        $body->seek($endOfBody !== false ? $endOfBody : strlen($content));
+        $body->write($newContent);
+
+        return $body;
     }
 }
