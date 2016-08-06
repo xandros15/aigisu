@@ -9,6 +9,7 @@
 use Controllers\ImageController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
+use Middlewares\ShowQueries;
 use Middlewares\TrailingSlash;
 
 /** @var $this \Aigisu\Main */
@@ -28,3 +29,7 @@ $this->group('/unit', function () {
 });
 
 $this->add(new TrailingSlash($this->getContainer()));
+
+if ($this->getContainer()->get('settings')['displayErrorDetails']) {
+    $this->add(new ShowQueries($this->getContainer()));
+}
