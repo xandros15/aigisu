@@ -1,0 +1,21 @@
+{
+  "name": "aigisu",
+  "homepage": "https://github.com/xandros15/aigisu",
+  "authors": [
+    "xandros <xandros92@gmail.com>"
+  ],
+  "description": "simple webpage",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webshim": "git@github.com:aFarkas/webshim.git#^1.15.10"
+  }
+}
