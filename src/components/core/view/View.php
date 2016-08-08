@@ -2,69 +2,59 @@
 
 namespace Aigisu\View;
 
+use BadMethodCallException;
+use Slim\Container;
+
 /**
  * @property string title
  * @property string containerClass
  */
 class View
 {
-    protected $attributes = [
-        'title' => '',
-        'containerClass' => ''
-    ];
     /** @var string */
     protected $path;
 
-    /** @var ViewExtension */
-    private $extensions = [];
-
-    /** @var [] */
-    private $callbacks = [];
+    /** @var CallbackManager */
+    private $callbackManager;
 
     public function __construct(string $path)
     {
         $this->path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
+        $this->callbackManager = new CallbackManager();
     }
 
-    public function __get($name)
+    public function __invoke(Container $container)
     {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-        throw new \InvalidArgumentException();
+        $urlExtension = new UrlExtension($container);
+        $callbackManager = new CallbackManager();
+        $urlExtension->applyCallbacks($callbackManager);
+        $this->addCallbackManager($callbackManager);
+
+        return $this;
     }
 
-    public function __set($name, $value)
+    public function addCallbackManager(CallbackManager $callbackManager)
     {
-        return $this->attributes[$name] = $value;
+        $this->callbackManager = $callbackManager;
     }
-
 
     public function __call($name, $arguments)
     {
-        if (!isset($this->callbacks[$name])) {
-            throw new \BadMethodCallException();
+        if (!($this->callbackManager instanceof CallbackManager)) {
+            throw new BadMethodCallException("Mehod {$name} doesn't exist.");
         }
-        return call_user_func_array($this->callbacks[$name], $arguments);
+
+        return call_user_func_array([$this->callbackManager, $name], $arguments);
     }
 
     public function render($view, $params = [])
     {
-        $this->initExtensions();
         ob_start();
         ob_implicit_flush(false);
-        extract(array_merge($this->attributes, $params), EXTR_OVERWRITE);
+        extract($params, EXTR_OVERWRITE);
         /** @noinspection PhpIncludeInspection */
         include $this->getTemplateName($view);
         return ob_get_clean();
-    }
-
-    public function initExtensions()
-    {
-        foreach ($this->extensions as $extension) {
-            /** @var $extension ViewExtension */
-            $this->callbacks = array_merge($this->callbacks, $extension->getCallbacks());
-        }
     }
 
     protected function getTemplateName($name)
@@ -74,10 +64,5 @@ class View
             throw new \RuntimeException("View cannot render `{$name}` because the template does not exist");
         }
         return $name;
-    }
-
-    public function addExtension(ViewExtension $extension)
-    {
-        $this->extensions[$extension->getName()] = $extension;
     }
 }

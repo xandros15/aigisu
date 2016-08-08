@@ -2,7 +2,6 @@
 namespace Aigisu;
 
 use Aigisu\Alert\Alert;
-use Aigisu\View\SlimViewExtension;
 use Aigisu\View\View;
 use Slim\App as Slim;
 use Slim\Container;
@@ -80,12 +79,7 @@ class Main extends Slim
 
     private function setView()
     {
-        $this->getContainer()['view'] = function (Container $container) {
-            $view = new View(Configuration::DIR_VIEW);
-            $slimViewExtension = new SlimViewExtension($container);
-            $view->addExtension($slimViewExtension);
-            return $view;
-        };
+        $this->getContainer()['view'] = new View(Configuration::DIR_VIEW);
     }
 
     private function addControllerClasses()
