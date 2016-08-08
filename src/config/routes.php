@@ -31,6 +31,6 @@ $this->group('/unit', function () {
 
 $this->add(new TrailingSlash($this->getContainer()));
 
-if ($this->getContainer()->get('settings')['displayErrorDetails']) {
+if ($this->isDebug()) {
     $this->add(new ShowQueries($this->getContainer()));
 }

@@ -9,19 +9,37 @@ use Slim\Container;
 
 class Main extends Slim
 {
+    private $debug = false;
+
     public function __construct($items = [])
     {
         parent::__construct(new Configuration($items));
     }
 
-    public function debug($state = true)
+    public function run($silent = false)
     {
-        if ($state) {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-            $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
-            $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
+        if ($this->isDebug()) {
+            $this->runDebug();
         }
+        return parent::run($silent);
+    }
+
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    private function runDebug()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
+        $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
+    }
+
+    public function debug(bool $state = true)
+    {
+        $this->debug = $state;
     }
 
     public function bootstrap()
