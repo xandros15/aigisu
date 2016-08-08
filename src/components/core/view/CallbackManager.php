@@ -28,7 +28,7 @@ class CallbackManager
         }
     }
 
-    public function addCallback($name, callable $callback)
+    public function addCallback(string $name, callable $callback)
     {
         $this->callbacks[$name] = $callback;
     }
