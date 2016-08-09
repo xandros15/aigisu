@@ -27,6 +27,7 @@ class View
     {
         $callbackManager = new CallbackManager();
         $callbackManager->addClassCallbacks(new UrlExtension($container));
+        $callbackManager->addClassCallbacks(new LayoutExtension());
         $this->addCallbackManager($callbackManager);
 
         return $this;
