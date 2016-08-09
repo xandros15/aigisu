@@ -9,6 +9,8 @@
 namespace Aigisu\view;
 
 
+use SplPriorityQueue;
+
 class LayoutExtension implements ViewExtension
 {
 
@@ -61,6 +63,16 @@ class LayoutExtension implements ViewExtension
 
     private function render($block)
     {
+        $content = '';
+        foreach ($this->getQueue($block) as $item) {
+            $content .= (string) $item() . "\n";
+        }
+
+        return $content;
+    }
+
+    private function getQueue($block) : SplPriorityQueue
+    {
         switch ($block) {
             case self::PH_HEAD:
                 $queue = $this->queue->getHead();
@@ -72,15 +84,10 @@ class LayoutExtension implements ViewExtension
                 $queue = $this->queue->getEndBody();
                 break;
             default:
-                throw new \InvalidArgumentException("Wrong name of block to render. You should use class constants");
+                throw new \InvalidArgumentException("Wrong name of block. You should use class constants");
         }
 
-        $content = '';
-        foreach ($queue as $item) {
-            $content = (string) $item() . "\n";
-        }
-
-        return $content;
+        return $queue;
     }
 
     public function applyCallbacks(CallbackManager &$callbackManager)
@@ -97,20 +104,6 @@ class LayoutExtension implements ViewExtension
 
     public function append(\Closure $callback, $block, $priority = 10)
     {
-        switch ($block) {
-            case self::PH_HEAD:
-                $queue = $this->queue->getHead();
-                break;
-            case self::PH_BODY_BEGIN:
-                $queue = $this->queue->getBeginBody();
-                break;
-            case self::PH_BODY_END:
-                $queue = $this->queue->getEndBody();
-                break;
-            default:
-                throw new \InvalidArgumentException("Wrong name of block to append. You should use class constants");
-        }
-
-        $queue->insert($callback, $priority);
+        $this->getQueue($block)->insert($callback, $priority);
     }
 }
