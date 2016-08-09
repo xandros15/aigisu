@@ -25,9 +25,8 @@ class View
 
     public function __invoke(Container $container)
     {
-        $urlExtension = new UrlExtension($container);
         $callbackManager = new CallbackManager();
-        $urlExtension->applyCallbacks($callbackManager);
+        $callbackManager->addClassCallbacks(new UrlExtension($container));
         $this->addCallbackManager($callbackManager);
 
         return $this;

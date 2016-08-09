@@ -32,4 +32,9 @@ class CallbackManager
     {
         $this->callbacks[$name] = $callback;
     }
+
+    public function addClassCallbacks(ViewExtension $extension)
+    {
+        $extension->applyCallbacks($this);
+    }
 }
