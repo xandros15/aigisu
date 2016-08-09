@@ -18,7 +18,13 @@ class LayoutExtension implements ViewExtension
 
     const PH_BODY_END = '<![CDATA[SLIM-BLOCK-BODY-END]]>';
 
-    private $assetBundles;
+    /** @var  LayoutQueue */
+    private $queue;
+
+    public function __construct()
+    {
+        $this->queue = new LayoutQueue();
+    }
 
     public function head()
     {
@@ -40,10 +46,6 @@ class LayoutExtension implements ViewExtension
     public function endBody()
     {
         echo self::PH_BODY_END;
-
-//        foreach (array_keys($this->assetBundles) as $bundle) {
-//            $this->registerAssetFiles($bundle);
-//        }
     }
 
     public function endPage()
@@ -51,25 +53,34 @@ class LayoutExtension implements ViewExtension
         $content = ob_get_clean();
 
         echo strtr($content, [
-            self::PH_HEAD => $this->renderHeadHtml(),
-            self::PH_BODY_BEGIN => $this->renderBodyBeginHtml(),
-            self::PH_BODY_END => $this->renderBodyEndHtml(),
+            self::PH_HEAD => $this->render(self::PH_HEAD),
+            self::PH_BODY_BEGIN => $this->render(self::PH_BODY_BEGIN),
+            self::PH_BODY_END => $this->render(self::PH_BODY_END)
         ]);
     }
 
-    private function renderHeadHtml()
+    private function render($block)
     {
-        return self::PH_HEAD;
-    }
+        switch ($block) {
+            case self::PH_HEAD:
+                $queue = $this->queue->getHead();
+                break;
+            case self::PH_BODY_BEGIN:
+                $queue = $this->queue->getBeginBody();
+                break;
+            case self::PH_BODY_END:
+                $queue = $this->queue->getEndBody();
+                break;
+            default:
+                throw new \InvalidArgumentException("Wrong name of block to render. You should use class constants");
+        }
 
-    private function renderBodyBeginHtml()
-    {
-        return self::PH_BODY_BEGIN;
-    }
+        $content = '';
+        foreach ($queue as $item) {
+            $content = (string) $item() . "\n";
+        }
 
-    private function renderBodyEndHtml()
-    {
-        return self::PH_BODY_END;
+        return $content;
     }
 
     public function applyCallbacks(CallbackManager &$callbackManager)
@@ -79,11 +90,27 @@ class LayoutExtension implements ViewExtension
             'head' => [$this, 'head'],
             'beginBody' => [$this, 'beginBody'],
             'endBody' => [$this, 'endBody'],
-            'endPage' => [$this, 'endPage']
+            'endPage' => [$this, 'endPage'],
+            'append' => [$this, 'append']
         ]);
     }
 
-    private function registerAssetFiles($bundle)
+    public function append(\Closure $callback, $block, $priority = 10)
     {
+        switch ($block) {
+            case self::PH_HEAD:
+                $queue = $this->queue->getHead();
+                break;
+            case self::PH_BODY_BEGIN:
+                $queue = $this->queue->getBeginBody();
+                break;
+            case self::PH_BODY_END:
+                $queue = $this->queue->getEndBody();
+                break;
+            default:
+                throw new \InvalidArgumentException("Wrong name of block to append. You should use class constants");
+        }
+
+        $queue->insert($callback, $priority);
     }
 }
