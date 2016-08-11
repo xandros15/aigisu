@@ -35,3 +35,9 @@ _ide_helper.php
 
 # Dependency Manager
 web/bower_components/
+
+# web folder
+web/css/*
+web/fonts/*
+web/img/*
+web/js/*
