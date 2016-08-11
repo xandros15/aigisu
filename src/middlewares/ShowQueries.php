@@ -10,24 +10,27 @@ namespace Middlewares;
 
 
 use Aigisu\Middleware;
-use Slim\Http\Body;
+use Aigisu\view\LayoutExtension;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
+/**
+ * @property LayoutExtension $view
+ */
 class ShowQueries extends Middleware
 {
 
     public function __invoke(Request $request, Response $response, callable $next)
     {
         $this->connection->enableQueryLog();
-        /** @var $response Response */
-        $response = $next($request, $response);
+        $this->view->append(function () {
+            $queries = $this->getQueryContent();
+            return $queries ? $queries : '';
+        }, LayoutExtension::PH_BODY_END, 1);
 
-        $output = $this->getQueryContent();
-
-        return $output ? $response->withBody($this->getBodyWithNewContent($output, $response)) : $response;
+        return $next($request, $response);
     }
 
     private function getQueryContent() : string
@@ -44,17 +47,5 @@ class ShowQueries extends Middleware
         }
 
         return $output;
-    }
-
-    private function getBodyWithNewContent($newContent, Response $response) : Body
-    {
-        $body = $response->getBody();
-        $body->rewind();
-        $content = $body->getContents();
-        $endOfBody = strpos($content, '</body>');
-        $body->seek($endOfBody !== false ? $endOfBody : strlen($content));
-        $body->write($newContent);
-
-        return $body;
     }
 }
