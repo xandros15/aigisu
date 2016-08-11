@@ -2,7 +2,6 @@
 
 use Controllers\ImageController;
 use Controllers\ImageFileController;
-use Controllers\OauthController;
 use Controllers\UnitController;
 
 return [
@@ -11,7 +10,6 @@ return [
     'controllers' => [
         ImageController::class,
         ImageFileController::class,
-        UnitController::class,
-        OauthController::class,
+        UnitController::class
     ],
 ];
