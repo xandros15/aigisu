@@ -2,26 +2,38 @@
 namespace Aigisu;
 
 use Aigisu\Alert\Alert;
-use Aigisu\View\SlimViewExtension;
 use Aigisu\View\View;
 use Slim\App as Slim;
 use Slim\Container;
 
 class Main extends Slim
 {
+    private $debug = false;
+
     public function __construct($items = [])
     {
         parent::__construct(new Configuration($items));
     }
 
-    public function debug($state = true)
+    public function isDebug()
     {
+        return $this->debug;
+    }
+
+    public function debug(bool $state = true)
+    {
+        $this->debug = $state;
         if ($state) {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-            $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
-            $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
+            $this->runDebug();
         }
+    }
+
+    private function runDebug()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
+        $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
     }
 
     public function bootstrap()
@@ -62,12 +74,7 @@ class Main extends Slim
 
     private function setView()
     {
-        $this->getContainer()['view'] = function (Container $container) {
-            $view = new View(Configuration::DIR_VIEW);
-            $slimViewExtension = new SlimViewExtension($container);
-            $view->addExtension($slimViewExtension);
-            return $view;
-        };
+        $this->getContainer()['view'] = new View(Configuration::DIR_VIEW);
     }
 
     private function addControllerClasses()
