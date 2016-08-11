@@ -9,6 +9,7 @@
 use Controllers\ImageController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
+use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
 use Middlewares\TrailingSlash;
 
@@ -30,6 +31,7 @@ $this->group('/unit', function () {
 });
 
 $this->add(new TrailingSlash($this->getContainer()));
+$this->add(new HomeAssets($this->getContainer()));
 
 if ($this->isDebug()) {
     $this->add(new ShowQueries($this->getContainer()));
