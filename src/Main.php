@@ -15,17 +15,17 @@ class Main extends Slim
         parent::__construct(new Configuration($items));
     }
 
-    public function run($silent = false)
-    {
-        if ($this->isDebug()) {
-            $this->runDebug();
-        }
-        return parent::run($silent);
-    }
-
     public function isDebug()
     {
         return $this->debug;
+    }
+
+    public function debug(bool $state = true)
+    {
+        $this->debug = $state;
+        if ($state) {
+            $this->runDebug();
+        }
     }
 
     private function runDebug()
@@ -34,11 +34,6 @@ class Main extends Slim
         ini_set('display_errors', 1);
         $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
         $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
-    }
-
-    public function debug(bool $state = true)
-    {
-        $this->debug = $state;
     }
 
     public function bootstrap()
