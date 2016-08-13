@@ -5,9 +5,15 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require('webpack');
 module.exports = {
     entry: {
-        main: ['./js/blockDisabledLinks.js', './js/ajax.js', './js/openImages.js', './css/main.css', './js/popover.js'],
-        forms: ['./js/html5Validator.js', 'webshim'],
-        vendor: ['jquery', 'bootstrap-webpack!./bootstrap.config.js']
+        main: [
+            './js/blockDisabledLinks.js',
+            './js/ajax.js',
+            './js/openImages.js',
+            './css/main.css',
+            './js/popover.js',
+            './js/html5Validator.js',
+            'bootstrap-webpack!./bootstrap.config.js',
+        ]
     },
     output: {
         path: __dirname + '/../../web/',

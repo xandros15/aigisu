@@ -27,14 +27,8 @@ class HomeAssets extends Middleware
             return sprintf('<link rel="stylesheet" href="%s" />', $this->siteUrl . '/css/main.css');
         }, LayoutExtension::PH_HEAD, 11);
         $this->view->append(function () {
-            return sprintf('<link rel="stylesheet" href="%s" />', $this->siteUrl . '/css/vendor.css');
-        }, LayoutExtension::PH_HEAD, 10);
-        $this->view->append(function () {
             return sprintf('<script src="%s"></script>', $this->siteUrl . '/js/main.js');
         }, LayoutExtension::PH_BODY_END, 10);
-        $this->view->append(function () {
-            return sprintf('<script src="%s"></script>', $this->siteUrl . '/js/vendor.js');
-        }, LayoutExtension::PH_BODY_END, 11);
         return $next($request, $response);
     }
 }
