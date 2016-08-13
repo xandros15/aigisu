@@ -11,9 +11,9 @@ module.exports = {
             './js/openImages.js',
             './css/main.css',
             './js/popover.js',
-            './js/html5Validator.js',
             'bootstrap-webpack!./bootstrap.config.js',
-        ]
+        ],
+        form: ['bootstrap-validator']
     },
     output: {
         path: __dirname + '/../../web/',
