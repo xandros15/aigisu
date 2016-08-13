@@ -11,7 +11,7 @@ module.exports = {
             './js/openImages.js',
             './css/main.css',
             './js/popover.js',
-            'bootstrap-webpack!./bootstrap.config.js',
+            'bootstrap-webpack!./bootstrap.config.js'
         ],
         form: ['bootstrap-validator']
     },
