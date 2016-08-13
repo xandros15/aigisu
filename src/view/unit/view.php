@@ -15,7 +15,7 @@ $this->containerClass = 'container';
 $route = ($isNewUnit) ? $this->pathFor('unitCreate') : $this->pathFor('unitUpdate', ['id' => $unit->id]);
 
 ?>
-<form method="post" role="form" class="ws-validate" action="<?= $route ?>">
+<form method="post" role="form" data-toggle="validator" action="<?= $route ?>">
     <header class="form-header row">
         <div class="col-xs-12 col-sm-6">
             <h2 class="form-title">
