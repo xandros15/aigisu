@@ -18,13 +18,13 @@
                     <li><h4>Press <kbd>f12</kbd></h4></li>
                     <li><h4>Run game</h4></li>
                     <li><h4>Chose network tab and filter images</h4></li>
-                    <img alt="image" src="/src/images/1.jpg">
+                    <img alt="image" src="<?= $this->siteUrl() ?>/upload/images/1.jpg">
                     <li><h4>Go to "Reministre" and chose what event you want to upload</h4></li>
-                    <img alt="image" src="/src/images/2.jpg">
+                    <img alt="image" src="<?= $this->siteUrl() ?>/upload/images/2.jpg">
                     <li><h4>Check if load correctly</h4></li>
-                    <img alt="image" src="/src/images/3.jpg">
+                    <img alt="image" src="<?= $this->siteUrl() ?>/upload/images/3.jpg">
                     <li><h4>Them copy url address or open in new tab</h4></li>
-                    <img alt="image" src="/src/images/4.jpg">
+                    <img alt="image" src="<?= $this->siteUrl() ?>/upload/images/4.jpg">
                 </ol>
                 <p>Other browsers can have simlary options</p>
             </div>
