@@ -17,6 +17,7 @@
     "xandros15/slim-pagination": "0.*"
   },
   "require-dev": {
+    "phpspec/phpspec": "^3.0",
     "symfony/var-dumper": "^3.0"
   },
   "autoload": {
@@ -28,6 +29,12 @@
       ],
       "Imgur\\": "src/components/imgur/imgur-php-wrapper",
       "Aigisu\\Components\\": "src/components"
+    },
+    "psr-0": {
+      "": "src/"
     }
+  },
+  "config": {
+    "bin-dir": "bin"
   }
 }
