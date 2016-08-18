@@ -12,13 +12,15 @@ use Controllers\UnitController;
 use Middlewares\FormAssets;
 use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
+use Middlewares\TrailingSearch;
 use Middlewares\TrailingSlash;
 
 /** @var $this \Aigisu\Main */
 
 $formAssetMiddleware = new FormAssets($this->getContainer());
+$trailingSearchMiddleware = new TrailingSearch($this->getContainer());
 
-$this->map(['get'], '/', UnitController::class . ':actionIndex')->setName('home');
+$this->map(['get'], '/', UnitController::class . ':actionIndex')->setName('home')->add($trailingSearchMiddleware);
 $this->group('/image', function () {
     /** @var $this \Aigisu\Main */
     $this->map(['post'], '/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imageUpload');
