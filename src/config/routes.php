@@ -20,7 +20,7 @@ use Middlewares\TrailingSlash;
 $formAssetMiddleware = new FormAssets($this->getContainer());
 $trailingSearchMiddleware = new TrailingSearch($this->getContainer());
 
-$this->map(['get'], '/', UnitController::class . ':actionIndex')->setName('home')->add($trailingSearchMiddleware);
+$this->map(['get'], '/[unit]', UnitController::class . ':actionIndex')->setName('home')->add($trailingSearchMiddleware);
 $this->group('/image', function () {
     /** @var $this \Aigisu\Main */
     $this->map(['post'], '/upload/{id:\d+}', ImageFileController::class . ':actionCreate')->setName('imageUpload');
@@ -28,7 +28,6 @@ $this->group('/image', function () {
 });
 $this->group('/unit', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
-    $this->map(['get'], '[/]', UnitController::class . ':actionIndex')->setName('unit');
     $this->map(['get'], '/edit/{id:\d+}', UnitController::class . ':actionView')
         ->setName('unitView')
         ->add($formAssetMiddleware);
