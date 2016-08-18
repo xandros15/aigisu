@@ -6,12 +6,12 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         main: [
+            'bootstrap-webpack!./bootstrap.config.js',
             './js/blockDisabledLinks.js',
             './js/ajax.js',
             './js/openImages.js',
             './css/main.css',
-            './js/popover.js',
-            'bootstrap-webpack!./bootstrap.config.js'
+            './js/popover.js'
         ],
         form: ['bootstrap-validator']
     },
