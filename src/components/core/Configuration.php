@@ -25,7 +25,12 @@ final class Configuration extends Container
     private function getWebConfig() : array
     {
         /** @noinspection PhpIncludeInspection */
-        return require self::DIR_CONFIG . 'web.php';
+        $webConfig = require self::DIR_CONFIG . 'web.php';
+        if (is_file(self::DIR_CONFIG . 'web.local.php')) {
+            /** @noinspection PhpIncludeInspection */
+            $webConfig = array_merge($webConfig, require self::DIR_CONFIG . 'web.local.php');
+        }
+        return $webConfig;
     }
 
     private function getDBConfig() : array
