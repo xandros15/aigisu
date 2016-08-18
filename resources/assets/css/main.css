@@ -49,10 +49,6 @@ body > * {
     max-width: 100%;
 }
 
-.form-group >[class*="col-"] + .ws-errorbox {
-    padding: 0 15px;
-}
-
 .sort .item, .sort .title {
     margin-right: 3px;
 }
