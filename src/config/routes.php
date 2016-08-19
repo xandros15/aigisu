@@ -9,6 +9,7 @@
 use Controllers\ImageController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
+use Controllers\UserController;
 use Middlewares\FormAssets;
 use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
@@ -39,6 +40,19 @@ $this->group('/unit', function () use ($formAssetMiddleware) {
     $this->map(['get'], '/delete/{id:\d+}/confirm', UnitController::class . ':actionDelete')->setName('unitDelete');
 });
 
+$this->group('/user', function () use ($formAssetMiddleware) {
+    /** @var $this \Aigisu\Main */
+    $this->get('[/]', UserController::class . ':actionIndex')->setName('user.index');
+    $this->post('/create', UserController::class . ':actionCreate')
+        ->setName('user.create')
+        ->add($formAssetMiddleware);
+    $this->get('/view/{id:\d+}', UserController::class . ':actionView')->setName('user.view');
+    $this->get('/edit/{id:\d+}', UserController::class . ':actionEdit')
+        ->setName('user.edit')
+        ->add($formAssetMiddleware);
+    $this->post('/update/{id:\d+}', UserController::class . ':actionUpdate')->setName('user.update');
+    $this->get('/delete/{id:\d+}', UserController::class . ':actionDelete')->setName('user.delete');
+});
 $this->add(new TrailingSlash($this->getContainer()));
 $this->add(new HomeAssets($this->getContainer()));
 
