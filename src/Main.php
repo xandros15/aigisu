@@ -55,11 +55,11 @@ class Main extends Slim
     {
         /** @var $settings Configuration */
         $settings = $this->getContainer();
-        $connection = new Connection($settings->database);
-        $connection->setValidator($settings->locale, Configuration::DIR_CONFIG . 'lang');
-        $connection->setAsGlobal();
-        $connection->bootEloquent();
-        $this->getContainer()['connection'] = $connection->connection();
+        $database = new Database($settings->database);
+        $database->setValidator($settings->locale, Configuration::DIR_CONFIG . 'lang');
+        $database->setAsGlobal();
+        $database->bootEloquent();
+        $this->getContainer()['connection'] = $database->connection();
     }
 
     private function createSessions()
