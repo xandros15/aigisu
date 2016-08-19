@@ -4,7 +4,6 @@ namespace Aigisu;
 use Aigisu\Alert\Alert;
 use Aigisu\View\View;
 use Slim\App as Slim;
-use Slim\Container;
 
 class Main extends Slim
 {
@@ -42,7 +41,6 @@ class Main extends Slim
         $this->setDatabase();
         $this->createSessions();
         $this->setView();
-        $this->addControllerClasses();
     }
 
     private function setRoutes()
@@ -75,17 +73,5 @@ class Main extends Slim
     private function setView()
     {
         $this->getContainer()['view'] = new View(Configuration::DIR_VIEW);
-    }
-
-    private function addControllerClasses()
-    {
-        /** @var $settings Configuration */
-        $settings = $this->getContainer();
-
-        foreach ($settings->controllers as $name) {
-            $container[$name] = function (Container $container) use ($name) {
-                return new $name($container);
-            };
-        }
     }
 }
