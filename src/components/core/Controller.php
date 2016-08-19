@@ -34,6 +34,6 @@ abstract class Controller extends ActiveContainer
 
     public function goHome()
     {
-        return $this->response->withRedirect('/', 301);
+        return $this->response->withRedirect($this->router->pathFor('/'), 301);
     }
 }
