@@ -3,7 +3,6 @@
 namespace Models;
 
 use Aigisu\Model;
-use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 use Traits\Validator;
 
@@ -40,25 +39,6 @@ class Image extends Model
         'delhash'
     ];
     protected $guarded = [];
-
-    public static function boot()
-    {
-        parent::boot();
-        Container::getInstance()->offsetGet('validator')->extend('imageExists',
-            function ($attribute, $value, $parameters, \Illuminate\Validation\Validator $validator) {
-
-                $validator->setCustomMessages([$attribute => 'Image already exists']);
-
-                list($scene, $server, $id) = $parameters;
-                /** @var $image Image */
-                $image = Image::where([$attribute => $value, 'scene' => $scene, 'server' => $server]);
-                if ($id) {
-                    $image = $image->where('id', '!=', $id);
-                }
-
-                return $image->count() === 0;
-            });
-    }
 
     public static function getImageSchemeArray()
     {
