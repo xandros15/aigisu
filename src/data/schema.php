@@ -8,16 +8,9 @@
 namespace Aigisu;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
 
 require_once '../../vendor/autoload.php';
 
-function createSchema(Builder $builder, string $table, \Closure $schema)
-{
-    if (!$builder->hasTable($table)) {
-        $builder->create($table, $schema);
-    }
-}
 
 $settings = new Configuration();
 $database = new Database($settings->database);
@@ -26,9 +19,13 @@ $database->bootEloquent();
 
 $connection = $database->getConnection();
 $builder = $connection->getSchemaBuilder();
+$createTable = function (string $table, \Closure $schema) use ($builder) {
+    $builder->dropIfExists($table);
+    $builder->create($table, $schema);
+};
 
 //@todo change magic string 'user' to const or sth
-createSchema($builder, 'user', function (Blueprint $table) {
+$createTable('user', function (Blueprint $table) {
     $table->collation = 'utf8mb4_unicode_ci';
     $table->charset = 'utf8mb4';
     $table->engine = 'InnoDB';
