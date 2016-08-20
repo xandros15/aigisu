@@ -15,25 +15,36 @@ class UserController extends Controller
 {
     public function actionIndex()
     {
-    }
-
-    public function actionCreate()
-    {
+        return $this->render('user/index');
     }
 
     public function actionView()
     {
+        return $this->render('user/view');
     }
 
-    public function actionEdit()
+    public function actionCreate()
     {
+        if ($this->request->isPost()) {
+            //@todo redirect to created user
+            return $this->response->withRedirect('/users');
+        }
+
+        return $this->render('/user/create');
     }
 
     public function actionUpdate()
     {
+        if ($this->request->isPost()) {
+            //@todo redirect to updated user
+            return $this->response->withRedirect('/users');
+        }
+
+        return $this->render('/user/edit');
     }
 
     public function actionDelete()
     {
+        return $this->response->withRedirect('/users');
     }
 }
