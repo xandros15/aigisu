@@ -17,11 +17,13 @@ use Slim\Http\Response;
 use Slim\Router;
 
 /**
- * @property Response response
- * @property Request request
- * @property View view
- * @property Router router
- * @property Connection connection
+ * @property Response $response
+ * @property Request $request
+ * @property View $view
+ * @property Router $router
+ * @property Connection $connection
+ * @property string $siteUrl
+ * @property string $locale
  */
 class ActiveContainer
 {

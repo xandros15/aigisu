@@ -17,25 +17,20 @@ final class Configuration extends Container
 
     public function __construct(array $items = [])
     {
-        $default = $this->getWebConfig();
-        $default['database'] = $this->getDBConfig();
-        parent::__construct(array_merge($default, $items));
+        parent::__construct($items);
+        $this->createWebConfig();
+        $this->createDBConfig();
     }
 
-    private function getWebConfig() : array
+    private function createWebConfig()
     {
-        /** @noinspection PhpIncludeInspection */
-        $webConfig = require self::DIR_CONFIG . 'web.php';
-        if (is_file(self::DIR_CONFIG . 'web.local.php')) {
-            /** @noinspection PhpIncludeInspection */
-            $webConfig = array_merge($webConfig, require self::DIR_CONFIG . 'web.local.php');
-        }
-        return $webConfig;
+        $this['siteUrl'] = (string) $this->request->getUri()->withPath('')->withQuery('')->withFragment('');
+        $this['locale'] = 'en';
     }
 
-    private function getDBConfig() : array
+    private function createDBConfig()
     {
         /** @noinspection PhpIncludeInspection */
-        return require self::DIR_CONFIG . 'db.config.php';
+        $this['database'] = require self::DIR_CONFIG . 'db.config.php';
     }
 }
