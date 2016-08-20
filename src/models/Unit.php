@@ -32,8 +32,6 @@ class Unit extends Model
     use Validator;
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
-    public $timestamps = false;
-    protected $table = 'unit';
 
     protected $fillable = [
         'name',
@@ -134,11 +132,6 @@ class Unit extends Model
         $this->tags()->sync($tags);
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
-    }
-
     private function parseTags($tagsString)
     {
         $parsedTags = [];
@@ -152,5 +145,10 @@ class Unit extends Model
             }
         }
         return array_unique($parsedTags);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 }

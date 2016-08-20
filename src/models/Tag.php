@@ -15,9 +15,7 @@ use Aigisu\Model;
  */
 class Tag extends Model
 {
-    public $timestamps  = false;
 //    public $hidden = ['pivot'];
-    protected $table    = 'tag';
     protected $fillable = [
         'name'
     ];

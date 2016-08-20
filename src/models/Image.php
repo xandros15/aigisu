@@ -30,8 +30,6 @@ class Image extends Model
     const IMAGE_DIRECTORY = 'images';
     const SERVER_NUTAKU = 'nutaku';
     const SERVER_DMM = 'dmm';
-    public $timestamps = false;
-    protected $table = 'image';
     protected $fillable = [
         'md5',
         'unit_id',
@@ -70,6 +68,23 @@ class Image extends Model
         ];
     }
 
+    public static function imageSceneToHuman($nrOfScene)
+    {
+        $scenes = [
+            1 => 'first scene',
+            2 => 'second scene',
+            3 => 'special scene'
+        ];
+        return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
+    }
+
+    public static function getImageSetByUnitId($id)
+    {
+        /** @var $imageSet Collection */
+        $imageSet = self::where('unit_id', $id)->get();
+        return $imageSet->sortBy('scene')->groupBy('server');
+    }
+
     public function rules()
     {
         return [
@@ -93,16 +108,6 @@ class Image extends Model
         return [self::SERVER_DMM, self::SERVER_NUTAKU];
     }
 
-    public static function imageSceneToHuman($nrOfScene)
-    {
-        $scenes = [
-            1 => 'first scene',
-            2 => 'second scene',
-            3 => 'special scene'
-        ];
-        return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
-    }
-
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
@@ -115,12 +120,5 @@ class Image extends Model
          * https://drive.google.com/uc?export=view&id={fileId}
          */
         return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
-    }
-
-    public static function getImageSetByUnitId($id)
-    {
-        /** @var $imageSet Collection */
-        $imageSet = self::where('unit_id', $id)->get();
-        return $imageSet->sortBy('scene')->groupBy('server');
     }
 }
