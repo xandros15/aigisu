@@ -42,11 +42,11 @@ $this->group('/unit', function () use ($formAssetMiddleware) {
 
 $this->group('/user', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
-    $this->get('[/]', UserController::class . ':actionIndex')->setName('user.index');
+    $this->get('s', UserController::class . ':actionIndex')->setName('user.index');
     $this->post('/create', UserController::class . ':actionCreate')
         ->setName('user.create')
         ->add($formAssetMiddleware);
-    $this->get('/view/{id:\d+}', UserController::class . ':actionView')->setName('user.view');
+    $this->get('/{id:\d+}', UserController::class . ':actionView')->setName('user.view');
     $this->get('/edit/{id:\d+}', UserController::class . ':actionEdit')
         ->setName('user.edit')
         ->add($formAssetMiddleware);
