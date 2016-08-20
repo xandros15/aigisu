@@ -9,8 +9,11 @@
 namespace Controllers;
 
 
+use Aigisu\Alert\Alert;
 use Aigisu\Controller;
 use Models\User;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class UserController extends Controller
 {
@@ -24,13 +27,12 @@ class UserController extends Controller
         return $this->render('user/view');
     }
 
-    public function actionCreate()
+    public function actionCreate(Request $request, Response $response)
     {
-        $user = new User();
-
-        if ($this->request->isPost()) {
-            //@todo redirect to created user
-            return $this->response->withRedirect('/users');
+        $user = new User($request->getParams());
+        if ($request->isPost() && $user->save()) {
+            Alert::add("Created {$user->name} user");
+            return $response->withRedirect('/users');
         }
 
         return $this->render('/auth/register', ['user' => $user]);

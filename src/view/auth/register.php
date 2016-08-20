@@ -5,6 +5,7 @@
  * Date: 2016-08-20
  * Time: 19:26
  */
+/** @var $user \Models\User */
 $this->title = 'Register new user';
 $this->containerClass = 'container';
 ?>
@@ -16,15 +17,18 @@ $this->containerClass = 'container';
                 <form method="post" autocomplete="off" action="<?= $this->pathFor('user.create'); ?>">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name">
+                        <input type="text" name="name" value="<?= $user->name ?>" class="form-control" id="name"
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="email@domain.com">
+                        <input type="email" name="email" value="<?= $user->email ?>" class="form-control" id="email"
+                               placeholder="email@domain.com" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password">
+                        <input type="password" name="password" value="<?= $user->password ?>" class="form-control"
+                               id="password" required>
                     </div>
                     <button type="submit" class="btn btn-default">Register</button>
                 </form>
