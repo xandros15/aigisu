@@ -10,6 +10,7 @@ namespace Controllers;
 
 
 use Aigisu\Controller;
+use Models\User;
 
 class UserController extends Controller
 {
@@ -25,12 +26,14 @@ class UserController extends Controller
 
     public function actionCreate()
     {
+        $user = new User();
+
         if ($this->request->isPost()) {
             //@todo redirect to created user
             return $this->response->withRedirect('/users');
         }
 
-        return $this->render('/user/create');
+        return $this->render('/auth/register', ['user' => $user]);
     }
 
     public function actionUpdate()
