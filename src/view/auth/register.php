@@ -13,7 +13,7 @@ $this->containerClass = 'container';
         <div class="panel panel-default">
             <div class="panel-heading">Register the new user</div>
             <div class="panel-body">
-                <form method="post" action="<?= $this->pathFor('user.create'); ?>">
+                <form method="post" autocomplete="off" action="<?= $this->pathFor('user.create'); ?>">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name">
