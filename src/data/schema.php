@@ -42,9 +42,9 @@ $createTable((new User())->getTable(), function (Blueprint $table) {
     $table->engine = 'InnoDB';
 
     $table->increments('id')->unsigned();
-    $table->string('name', 15);
-    $table->string('password', 255);
-    $table->string('email', 64);
+    $table->string('name', 15)->unique();
+    $table->string('password_hash', 255);
+    $table->string('email', 64)->unique();;
     $table->string('access_token', 255)->nullable();
     $table->string('recovery_hash', 255)->nullable();
     $table->string('remember_identifier', 255)->nullable();
@@ -59,7 +59,7 @@ $createTable((new Unit())->getTable(), function (Blueprint $table) {
 
     $table->increments('id')->unsigned();
     $table->string('name', 25);
-    $table->string('original', 45);
+    $table->string('original', 45)->unique();
     $table->string('icon', 100);
     $table->string('link', 100)->nullable();
     $table->string('linkgc', 100)->nullable();
