@@ -14,7 +14,8 @@
     "plasticbrain/php-flash-messages": "^1.0",
     "illuminate/validation": "5.2.*",
     "illuminate/translation": "5.2.*",
-    "xandros15/slim-pagination": "0.*"
+    "xandros15/slim-pagination": "0.*",
+    "respect/validation": "^1.1"
   },
   "require-dev": {
     "phpspec/phpspec": "^3.0",
