@@ -51,7 +51,7 @@ class Unit extends Model
 
         return [
             'name' => ['required', 'alpha_dash'],
-            'original' => ['required', 'string', 'unique:unit,original,' . $this->id],
+            'original' => ['required', 'string', 'unique:' . $this->getTable() . ',original,' . $this->id],
             'icon' => ['required', 'url'],
             'link' => ['url'],
             'linkgc' => ['required', 'url'],
