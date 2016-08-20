@@ -8,6 +8,7 @@
 namespace Aigisu;
 
 use Illuminate\Database\Schema\Blueprint;
+use Models\User;
 
 require_once '../../vendor/autoload.php';
 
@@ -24,8 +25,7 @@ $createTable = function (string $table, \Closure $schema) use ($builder) {
     $builder->create($table, $schema);
 };
 
-//@todo change magic string 'user' to const or sth
-$createTable('user', function (Blueprint $table) {
+$createTable((new User())->getTable(), function (Blueprint $table) {
     $table->collation = 'utf8mb4_unicode_ci';
     $table->charset = 'utf8mb4';
     $table->engine = 'InnoDB';
