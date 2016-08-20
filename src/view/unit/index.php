@@ -16,7 +16,7 @@ $unitSort = $this->render('unit/sort', ['unitSort' => $unitSort]);
 /** @var $pagination string */
 $pagination = $this->render('unit/pagination', ['pagination' => $pagination]);
 
-$createPath = $this->pathFor('unitCreate');
+$createPath = $this->pathFor('unit.create');
 ?>
 <div id="units">
     <?php if (!$unitList->isEmpty()): ?>

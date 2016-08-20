@@ -24,7 +24,7 @@ final class Configuration extends Container
 
     private function createWebConfig()
     {
-        $this['siteUrl'] = (string) $this->request->getUri()->withPath('')->withQuery('')->withFragment('');
+        $this['siteUrl'] = rtrim($this->request->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
         $this['locale'] = 'en';
     }
 

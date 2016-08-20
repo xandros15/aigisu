@@ -3,8 +3,8 @@
 use Models\Unit;
 
 /* @var $unit Unit */
-$pathForView   = $this->pathFor('unitView', ['id' => $unit->id]);
-$pathForUpload = $this->pathFor('imageUpload', ['id' => $unit->id]);
+$pathForView = $this->pathFor('unit.view', ['id' => $unit->id]);
+$pathForUpload = $this->pathFor('image.create', ['id' => $unit->id]);
 ?>
 <li id="unit-<?= $unit->id ?>" class="list-group-item media unit">
     <div class="buttons media-left ">
@@ -47,7 +47,7 @@ $pathForUpload = $this->pathFor('imageUpload', ['id' => $unit->id]);
     <?php if ($unit->isAnyImages()): ?>
         <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
         <input class="image-route" type="hidden" value="<?=
-        $this->pathFor('image', ['id' => $unit->id])
+        $this->pathFor('unit.images', ['id' => $unit->id])
         ?>">
     <?php endif; ?>
 </li>

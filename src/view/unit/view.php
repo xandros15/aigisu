@@ -12,7 +12,8 @@ $rarities = Unit::getRarities();
 $isNewUnit = (!$unit->id);
 $this->title = ($isNewUnit) ? 'New Unit | Aigisu' : $unit->name . ' | Aigisu';
 $this->containerClass = 'container';
-$route = ($isNewUnit) ? $this->pathFor('unitCreate') : $this->pathFor('unitUpdate', ['id' => $unit->id]);
+$route = ($isNewUnit) ? $this->pathFor('unit.create') : $this->pathFor('unit.update', ['id' => $unit->id]);
+$deleteRoute = ($isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit->id]) : '';
 
 ?>
 <form method="post" role="form" data-toggle="validator" action="<?= $route ?>">
@@ -104,7 +105,7 @@ $route = ($isNewUnit) ? $this->pathFor('unitCreate') : $this->pathFor('unitUpdat
         <?php if (!$isNewUnit): ?>
             <div class="col-xs-3 pull-right">
                 <a role="button" class="btn btn-block btn-danger pull-left" onclick="return confirm('Are you sure');"
-                   href="<?= $this->pathFor('unitDelete', ['id' => $unit->id]) ?>">
+                   href="<?= $deleteRoute ?>">
                     delete
                 </a>
             </div>

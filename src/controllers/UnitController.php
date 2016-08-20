@@ -42,28 +42,31 @@ class UnitController extends Controller
 
     public function actionCreate(Request $request)
     {
-        $model = new Unit($request->getParams());
-
-        if ($model->validate() && $model->save()) {
-            Alert::add('Successful added ' . $model->name);
+        $unit = new Unit($request->getParams());
+        if ($request->isPost()) {
+            if ($unit->validate() && $unit->save()) {
+                Alert::add('Successful added ' . $unit->name);
+                return $this->goBack();
+            }
         }
-        return $this->render('unit/unit');
+
+        return $this->render('unit/view', ['unit' => $unit]);
     }
 
     public function actionUpdate(Request $request)
     {
-        /* @var $model Unit */
-        $model = Unit::find($request->getAttribute('id'));
+        /* @var $unit Unit */
+        $unit = Unit::find($request->getAttribute('id'));
 
-        $model->addTagsToUnit($request->getParam('tags'));
-
-        $model->fill($request->getParams());
-
-        if ($model->validate() && $model->save()) {
-            Alert::add("Successful update {$model->name}");
+        if ($request->isPost()) {
+            $unit->addTagsToUnit($request->getParam('tags'));
+            if ($unit->fill($request->getParams())->validate() && $unit->save()) {
+                Alert::add("Successful update {$unit->name}");
+                return $this->goBack();
+            }
         }
 
-        return $this->goBack();
+        return $this->render('unit/view', ['unit' => $unit]);
     }
 
     public function actionDelete(Request $request)
@@ -76,5 +79,11 @@ class UnitController extends Controller
         }
 
         return $this->goBack();
+    }
+
+    public function actionShowImages(Request $request)
+    {
+        $unit = Unit::find($request->getAttribute('id'));
+        return $this->render('image/index', ['unit' => $unit]);
     }
 }

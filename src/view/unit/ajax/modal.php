@@ -6,7 +6,7 @@ use Models\Unit;
 $rarities = Unit::getRarities();
 $isNewUnit = (!$model->id);
 
-$route = ($isNewUnit) ? $this->pathFor('unitCreate') :
+$route = ($isNewUnit) ? $this->pathFor('unit.create') :
     $this->pathFor('unitUpdate', ['id' => $model->id]);
 ?>
 <div class="modal fade" id="modal-unit-<?= ($isNewUnit) ? '0' : $model->id ?>" tabindex="-1" role="dialog"

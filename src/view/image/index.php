@@ -1,12 +1,10 @@
 <?php
 
-use Illuminate\Database\Eloquent\Collection;
-use Models\Image;
+use Models\Unit;
 
-/* @var $images Collection */
-/* @var $image Image */
-$image = $images->first()->first();
-$this->title = 'CG ' . $image->unit->name;
+/* @var $unit Unit */
+$images = $unit->images->sortBy('scene')->sortBy('server')->groupBy('server');
+$this->title = 'CG ' . $unit->name;
 $this->containerClass = 'container-fluid';
 ?>
 <?php foreach ($images as $serverName => $server): ?>
@@ -15,7 +13,8 @@ $this->containerClass = 'container-fluid';
         <?php foreach ($server as $image): ?>
             <li style="display: inline-block; position: relative;">
                 <span style="position: absolute; top: 10px; left: 10px; font-size: 20px;">#<?= $image->id ?></span>
-                <img id="<?= $image->id ?>" alt="<?= $serverName . $image->scene ?>" style="max-width: 100%;" src="<?= $image->getLink() ?>">
+                <img id="<?= $image->id ?>" alt="<?= $serverName . $image->scene ?>" style="max-width: 100%;"
+                     src="<?= $image->getLink() ?>">
             </li>
         <?php endforeach; ?>
     </ul>
