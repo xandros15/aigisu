@@ -14,9 +14,9 @@ use Traits\Validator;
  * @property string $md5
  * @property string $server
  * @property int $scene
- * @property string $google
- * @property string $imgur
- * @property string $delhash
+ * @property string $google_id
+ * @property string $imgur_id
+ * @property string $imgur_delhash
  * @property Unit $unit
  * @property int $id
  */
@@ -99,6 +99,6 @@ class Image extends Model
          * http://i.imgur.com/{fieldId}.png
          * https://drive.google.com/uc?export=view&id={fileId}
          */
-        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
+        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur_id);
     }
 }
