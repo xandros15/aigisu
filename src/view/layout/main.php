@@ -5,6 +5,8 @@ use Aigisu\View\View;
 
 /* @var $this View|\Aigisu\view\LayoutExtension */
 /* @var $content string */
+$this->containerClass = $this->containerClass ?? 'container';
+$this->title = $this->title ?? 'Aigisu';
 ?>
 <?php $this->beginPage(); ?>
     <!DOCTYPE html>
