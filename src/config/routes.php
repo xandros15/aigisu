@@ -24,13 +24,13 @@ $this->get('[/]', UnitController::class . ':actionIndex')
     ->setName('home')
     ->add($trailingSearchMiddleware);
 
-$this->group('/image', function () {
+$this->group('/images', function () {
     /** @var $this \Aigisu\Main */
     $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')
         ->setName('image.create');
 });
 
-$this->group('/unit', function () use ($formAssetMiddleware) {
+$this->group('/units', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
     $this->post('/create', UnitController::class . ':actionCreate')
         ->setName('unit.create');
@@ -38,7 +38,7 @@ $this->group('/unit', function () use ($formAssetMiddleware) {
         ->setName('unit.create')
         ->add($formAssetMiddleware);
 
-    $this->get('s', UnitController::class . ':actionIndex')
+    $this->get('', UnitController::class . ':actionIndex')
         ->setName('unit.index');
     $this->get('/{id:\d+}', UnitController::class . ':actionView')
         ->setName('unit.view');
@@ -54,7 +54,7 @@ $this->group('/unit', function () use ($formAssetMiddleware) {
         ->setName('unit.images');
 });
 
-$this->group('/user', function () use ($formAssetMiddleware) {
+$this->group('/users', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
     $this->post('/create', UserController::class . ':actionCreate')
         ->setName('user.create');
@@ -62,7 +62,7 @@ $this->group('/user', function () use ($formAssetMiddleware) {
         ->setName('user.create')
         ->add($formAssetMiddleware);
 
-    $this->get('s', UserController::class . ':actionIndex')
+    $this->get('', UserController::class . ':actionIndex')
         ->setName('user.index');
     $this->get('/{id:\d+}', UserController::class . ':actionView')
         ->setName('user.view');
