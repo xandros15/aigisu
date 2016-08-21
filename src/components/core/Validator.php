@@ -43,5 +43,13 @@ trait Validator
     /**
      * @return array
      */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return array
+     */
     abstract protected function rules() : array;
 }
