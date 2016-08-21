@@ -10,6 +10,8 @@ namespace Models;
 
 
 use Aigisu\Model;
+use Aigisu\Validator;
+use Respect\Validation\Validator as v;
 
 /**
  * @property string $name
@@ -22,7 +24,8 @@ use Aigisu\Model;
  */
 class User extends Model
 {
-    public $password;
+    use Validator;
+
     protected $fillable = [
         'name',
         'password_hash',
@@ -33,15 +36,12 @@ class User extends Model
         'remember_hash',
     ];
 
-    public function __construct(array $attributes = [])
+    public function rules() : array
     {
-        $this->password = $attributes['password'] ?? '';
-        $this->setEncryptPassword($this->password);
-        parent::__construct($attributes);
-    }
-
-    private function setEncryptPassword(string $password)
-    {
-        $this->password_hash = password_hash($password, PASSWORD_DEFAULT);
+        return [
+            'name' => v::stringType()->length(4, 15),
+            'email' => v::email(),
+            'password' => v::stringType()->length(8, 32)
+        ];
     }
 }
