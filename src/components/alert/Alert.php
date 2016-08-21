@@ -14,6 +14,26 @@ class Alert
     /** @var FlashMessages */
     private static $flashes;
 
+    public static function add($message, $type = self::SUCCESS)
+    {
+        static::$flashes->add(nl2br($message), $type);
+    }
+
+    public static function hasErrors()
+    {
+        return static::$flashes->hasErrors();
+    }
+
+    public static function hasMessages()
+    {
+        return static::$flashes->hasMessages();
+    }
+
+    public static function display()
+    {
+        return static::$flashes->display();
+    }
+
     public function init()
     {
         (session_id()) || @session_start();
@@ -42,25 +62,5 @@ HTML;
     public static function getCssClasses()
     {
         return 'alert fade in';
-    }
-
-    public static function add($message, $type = self::SUCCESS)
-    {
-        static::$flashes->add($message, $type);
-    }
-
-    public static function hasErrors()
-    {
-        return static::$flashes->hasErrors();
-    }
-
-    public static function hasMessages()
-    {
-        return static::$flashes->hasMessages();
-    }
-
-    public static function display()
-    {
-        return static::$flashes->display();
     }
 }
