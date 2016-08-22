@@ -14,21 +14,25 @@ $this->containerClass = 'container';
         <div class="panel panel-default">
             <div class="panel-heading">Register the new user</div>
             <div class="panel-body">
-                <form method="post" autocomplete="off" action="<?= $this->pathFor('user.create'); ?>">
+                <form id="form-to-valid" method="post" data-toggle="validator" autocomplete="off"
+                      action="<?= $this->pathFor('user.create'); ?>">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" name="name" value="<?= $user->name ?>" class="form-control" id="name"
-                               required>
+                               required pattern=".{4,15}">
+                        <div class="help-block with-errors"></div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email address</label>
                         <input type="email" name="email" value="<?= $user->email ?>" class="form-control" id="email"
                                placeholder="email@domain.com" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" name="password" value="<?= $user->password ?>" class="form-control"
-                               id="password" required>
+                               id="password" required pattern=".{8,32}">
+                        <div class="help-block with-errors"></div>
                     </div>
                     <button type="submit" class="btn btn-default">Register</button>
                 </form>
