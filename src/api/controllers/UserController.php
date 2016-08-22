@@ -9,7 +9,6 @@
 namespace Api\Controllers;
 
 
-use Aigisu\Alert\Alert;
 use Aigisu\Controller;
 use Models\User;
 use Slim\Http\Request;
@@ -37,18 +36,13 @@ class UserController extends Controller
 
     public function actionCreate(Request $request, Response $response)
     {
-        $user = new User([
-            'name' => $request->getParam('name'),
-            'email' => $request->getParam('email'),
-            'password_hash' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
-        ]);
+        $user = new User($request->getParams());
+        $user->encryptPassword();
 
-        if ($request->isPost() && $user->validate() && $user->save()) {
-            Alert::add("Created {$user->name} user");
-            return $response->withRedirect('/users');
+        if (!($user->validate() && $user->save())) {
+            return $response->withJson(['error' => $user->getErrors()], 404); //@todo correct message and code
         }
-
-        return $this->render('/auth/register', ['user' => $user]);
+        return $response->withJson($user->toArray(), 201);
     }
 
     public function actionUpdate()
