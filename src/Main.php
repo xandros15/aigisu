@@ -22,6 +22,9 @@ class Main extends Slim
     public function debug(bool $state = true)
     {
         $this->debug = $state;
+        $this->getContainer()['isDebug'] = function () use ($state) {
+            return $state;
+        };
         if ($state) {
             $this->runDebug();
         }
