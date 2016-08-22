@@ -29,12 +29,9 @@ class UserController extends Controller
 
     public function actionCreate(Request $request, Response $response)
     {
-        $user = new User([
-            'name' => $request->getParam('name'),
-            'email' => $request->getParam('email'),
-            'password_hash' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
-        ]);
-
+        $user = new User($request->getParams());
+        $user->encryptPassword();
+        
         if ($request->isPost() && $user->validate() && $user->save()) {
             Alert::add("Created {$user->name} user");
             return $response->withRedirect('/users');

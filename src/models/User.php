@@ -26,6 +26,7 @@ class User extends Model
 {
     use Validator;
 
+    public $password;
     protected $fillable = [
         'name',
         'password_hash',
@@ -41,7 +42,13 @@ class User extends Model
         return [
             'name' => v::stringType()->length(4, 15),
             'email' => v::email(),
-            'password' => v::stringType()->length(8, 32)
+            'password' => v::stringType()->length(8, 32),
+            'password_hash' => v::stringType()->length(32)
         ];
+    }
+
+    public function encryptPassword()
+    {
+        $this->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
     }
 }
