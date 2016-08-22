@@ -45,14 +45,21 @@ class UserController extends Controller
         return $response->withJson($user->toArray(), 201);
     }
 
-    public function actionUpdate()
+    public function actionChangePassword(Request $request, Response $response)
     {
-        if ($this->request->isPost()) {
-            //@todo redirect to updated user
-            return $this->response->withRedirect('/users');
+        $user = User::find($request->getAttribute('id'));
+        if (!$user) {
+            return $response->withJson(['error' => 'User not found'], 404);
         }
 
-        return $this->render('/user/edit');
+        $user->fill(['password' => $request->getParam('password')]);
+        $user->encryptPassword();
+
+        if (!($user->validate(['password', 'password_hash']) && $user->save())) {
+            return $response->withJson(['error' => $user->getErrors()], 404); //@todo correct message and code
+        }
+
+        return $response->withJson($user->toArray(), 200);
     }
 
     public function actionDelete()

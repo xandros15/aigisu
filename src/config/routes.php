@@ -92,8 +92,8 @@ $this->group('/api', function () use ($container) {
         $this->get('/{id:\d+}', ApiUserController::class . ':actionView')
             ->setName('api.user.view');
 
-        $this->patch('/update/{id:\d+}', ApiUserController::class . ':actionUpdate')
-            ->setName('api.user.update');
+        $this->patch('/update/{id:\d+}/password/', ApiUserController::class . ':actionChangePassword')
+            ->setName('api.user.update.password');
 
         $this->delete('/delete/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
