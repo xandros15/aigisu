@@ -22,9 +22,13 @@ class UserController extends Controller
         return $response->withJson(User::all()->toArray(), 200);
     }
 
-    public function actionView()
+    public function actionView(Request $request, Response $response)
     {
-        return $this->render('user/view');
+        $user = User::find($request->getAttribute('id'));
+        if (!$user) {
+            return $response->withJson(['error' => 'User not found'], 404);
+        }
+        return $response->withJson($user->toArray(), 200);
     }
 
     public function actionCreate(Request $request, Response $response)
