@@ -6,6 +6,7 @@
  * Time: 17:00
  */
 
+use Api\Controllers\UserController as ApiUserController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
 use Controllers\UserController;
@@ -77,3 +78,23 @@ $this->add(new HomeAssets($container));
 if ($this->isDebug()) {
     $this->add(new ShowQueries($container));
 }
+
+$this->group('/api', function () {
+    /** @var $this \Aigisu\Main */
+    $this->group('/users', function () {
+        /** @var $this \Aigisu\Main */
+        $this->post('/create', ApiUserController::class . ':actionCreate')
+            ->setName('api.user.create');
+
+        $this->get('', ApiUserController::class . ':actionIndex')
+            ->setName('api.user.index');
+        $this->get('/{id:\d+}', ApiUserController::class . ':actionView')
+            ->setName('api.user.view');
+
+        $this->patch('/update/{id:\d+}', ApiUserController::class . ':actionUpdate')
+            ->setName('api.user.update');
+
+        $this->delete('/delete/{id:\d+}', ApiUserController::class . ':actionDelete')
+            ->setName('api.user.delete');
+    });
+});
