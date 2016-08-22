@@ -24,12 +24,13 @@ class ShowQueries extends Middleware
 
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
-        $this->connection->enableQueryLog();
-        $this->view->append(function () {
-            $queries = $this->getQueryContent();
-            return $queries ? $queries : '';
-        }, LayoutExtension::PH_BODY_END, 1);
-
+        if ($this->get('isDebug')) {
+            $this->connection->enableQueryLog();
+            $this->view->append(function () {
+                $queries = $this->getQueryContent();
+                return $queries ? $queries : '';
+            }, LayoutExtension::PH_BODY_END, 1);
+        }
         return $next($request, $response);
     }
 
