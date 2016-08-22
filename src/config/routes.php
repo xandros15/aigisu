@@ -10,6 +10,7 @@ use Api\Controllers\UserController as ApiUserController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
 use Controllers\UserController;
+use Middlewares\ApiException;
 use Middlewares\FormAssets;
 use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
@@ -79,9 +80,9 @@ if ($this->isDebug()) {
     $this->add(new ShowQueries($container));
 }
 
-$this->group('/api', function () {
+$this->group('/api', function () use ($container) {
     /** @var $this \Aigisu\Main */
-    $this->group('/users', function () {
+    $this->group('/users', function () use ($container) {
         /** @var $this \Aigisu\Main */
         $this->post('/create', ApiUserController::class . ':actionCreate')
             ->setName('api.user.create');
@@ -97,4 +98,5 @@ $this->group('/api', function () {
         $this->delete('/delete/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
     });
+    $this->add(new ApiException($container));
 });
