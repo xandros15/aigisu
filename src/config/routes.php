@@ -16,9 +16,9 @@ use Middlewares\TrailingSearch;
 use Middlewares\TrailingSlash;
 
 /** @var $this \Aigisu\Main */
-
-$formAssetMiddleware = new FormAssets($this->getContainer());
-$trailingSearchMiddleware = new TrailingSearch($this->getContainer());
+$container = $this->getContainer();
+$formAssetMiddleware = new FormAssets($container);
+$trailingSearchMiddleware = new TrailingSearch($container);
 
 $this->get('[/]', UnitController::class . ':actionIndex')
     ->setName('home')
@@ -32,9 +32,7 @@ $this->group('/images', function () {
 
 $this->group('/units', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
-    $this->post('/create', UnitController::class . ':actionCreate')
-        ->setName('unit.create');
-    $this->get('/create', UnitController::class . ':actionCreate')
+    $this->map(['post', 'get'], '/create', UnitController::class . ':actionCreate')
         ->setName('unit.create')
         ->add($formAssetMiddleware);
 
@@ -56,9 +54,7 @@ $this->group('/units', function () use ($formAssetMiddleware) {
 
 $this->group('/users', function () use ($formAssetMiddleware) {
     /** @var $this \Aigisu\Main */
-    $this->post('/create', UserController::class . ':actionCreate')
-        ->setName('user.create');
-    $this->get('/create', UserController::class . ':actionCreate')
+    $this->map(['post', 'get'], '/create', UserController::class . ':actionCreate')
         ->setName('user.create')
         ->add($formAssetMiddleware);
 
@@ -67,19 +63,17 @@ $this->group('/users', function () use ($formAssetMiddleware) {
     $this->get('/{id:\d+}', UserController::class . ':actionView')
         ->setName('user.view');
 
-    $this->get('/update/{id:\d+}', UserController::class . ':actionUpdate')
+    $this->map(['post', 'get'], '/update/{id:\d+}', UserController::class . ':actionUpdate')
         ->setName('user.update')
         ->add($formAssetMiddleware);
-    $this->post('/update/{id:\d+}', UserController::class . ':actionUpdate')
-        ->setName('user.update');
 
     $this->get('/delete/{id:\d+}', UserController::class . ':actionDelete')
         ->setName('user.delete');
 });
 
-$this->add(new TrailingSlash($this->getContainer()));
-$this->add(new HomeAssets($this->getContainer()));
+$this->add(new TrailingSlash($container));
+$this->add(new HomeAssets($container));
 
 if ($this->isDebug()) {
-    $this->add(new ShowQueries($this->getContainer()));
+    $this->add(new ShowQueries($container));
 }
