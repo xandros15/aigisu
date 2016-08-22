@@ -30,12 +30,29 @@ class ActiveContainer
     /** @var ContainerInterface */
     private $container;
 
+    /**
+     * ActiveContainer constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function get($name)
     {
         if (!$this->container->has($name)) {
             throw new InvalidArgumentException("Attribute {$name} doesn't exist");
