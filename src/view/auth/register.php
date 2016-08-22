@@ -14,7 +14,7 @@ $this->containerClass = 'container';
         <div class="panel panel-default">
             <div class="panel-heading">Register the new user</div>
             <div class="panel-body">
-                <form id="form-to-valid" method="post" data-toggle="validator" autocomplete="off"
+                <form method="post" data-toggle="validator" autocomplete="off"
                       action="<?= $this->pathFor('user.create'); ?>">
                     <div class="form-group">
                         <label for="name">Name</label>
