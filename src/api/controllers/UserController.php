@@ -17,9 +17,9 @@ use Slim\Http\Response;
 
 class UserController extends Controller
 {
-    public function actionIndex()
+    public function actionIndex(Request $request, Response $response)
     {
-        return $this->render('user/index');
+        return $response->withJson(User::all()->toArray(), 200);
     }
 
     public function actionView()
