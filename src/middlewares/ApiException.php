@@ -22,7 +22,8 @@ class ApiException extends Middleware
         try {
             return $next($request, $response);
         } catch (Exception $exception) {
-            return $response->withJson(['error' => $this->get('isDebug') ? $exception : 'Server error'], 500);
+            $error = $this->get('isDebug') ? $exception->getMessage() : 'Server error';
+            return $response->withJson(['error' => $error], 500);
         }
     }
 }
