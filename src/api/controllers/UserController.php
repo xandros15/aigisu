@@ -19,7 +19,11 @@ class UserController extends Controller
 {
     public function actionIndex(Request $request, Response $response)
     {
-        return $response->withJson(User::all()->toArray(), 200);
+        $users = User::all();
+        if ($users->isEmpty()) {
+            return $response->withJson(['error' => 'Users not found'], 404);
+        }
+        return $response->withJson($users->toArray(), 200);
     }
 
     public function actionView(Request $request, Response $response)
