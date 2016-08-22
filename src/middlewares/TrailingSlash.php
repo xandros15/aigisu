@@ -16,13 +16,13 @@ use Slim\Http\Response;
 class TrailingSlash extends Middleware
 {
 
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         $uri = $request->getUri();
         $path = $uri->getPath();
         if ($path != '/' && substr($path, -1) == '/') {
             $uri = $uri->withPath(substr($path, 0, -1));
-            return $response->withRedirect((string)$uri, 301);
+            return $response->withRedirect((string) $uri, 301);
         }
 
         return $next($request, $response);

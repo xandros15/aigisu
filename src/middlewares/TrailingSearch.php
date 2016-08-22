@@ -17,7 +17,7 @@ class TrailingSearch extends Middleware
 {
     const SEARCH_PARAM = 'q'; //@todo use param from search engine
 
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         $searchParam = $request->getQueryParam(self::SEARCH_PARAM);
 

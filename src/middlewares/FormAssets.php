@@ -19,7 +19,7 @@ use Slim\Http\Response;
  */
 class FormAssets extends Middleware
 {
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         $this->view->append(function () {
             return sprintf('<script src="%s"></script>', $this->siteUrl . '/js/form.js');

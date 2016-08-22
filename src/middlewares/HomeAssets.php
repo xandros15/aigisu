@@ -21,7 +21,7 @@ use Slim\Http\Response;
 class HomeAssets extends Middleware
 {
 
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         $this->view->append(function () {
             return sprintf('<link rel="stylesheet" href="%s" />', $this->siteUrl . '/css/main.css');

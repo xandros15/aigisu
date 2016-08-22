@@ -15,5 +15,5 @@ use Slim\Http\Response;
 abstract class Middleware extends ActiveContainer
 {
 
-    abstract public function __invoke(Request $request, Response $response, callable $next);
+    abstract public function __invoke(Request $request, Response $response, callable $next) : Response;
 }

@@ -22,7 +22,7 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 class ShowQueries extends Middleware
 {
 
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         $this->connection->enableQueryLog();
         $this->view->append(function () {
