@@ -24,8 +24,6 @@ use Respect\Validation\Validator as v;
  */
 class User extends Model
 {
-    use Validator;
-
     public $password;
     protected $fillable = [
         'name',

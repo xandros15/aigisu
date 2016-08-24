@@ -39,8 +39,8 @@ class UserController extends ApiController
         $user = new User($request->getParams());
         $user->encryptPassword();
 
-        if (!($user->validate() && $user->save())) {
-            return $response->withJson([self::MESSAGE => $user->getErrors()], self::STATUS_NOT_FOUND);
+        if (!$user->save()) {
+            return $response->withJson([self::MESSAGE => 'Can\'t save a User'], self::STATUS_NOT_FOUND);
         }
         return $response->withJson($user->toArray(), self::STATUS_CREATED);
     }
@@ -57,8 +57,8 @@ class UserController extends ApiController
             $user->encryptPassword();
         }
 
-        if (!($user->validate(array_keys($request->getParams())) && $user->save())) {
-            return $response->withJson([self::MESSAGE => $user->getErrors()], self::STATUS_NOT_FOUND);
+        if (!$user->save()) {
+            return $response->withJson([self::MESSAGE => 'Can\'t save a User'], self::STATUS_SERVER_ERROR);
         }
 
         return $response->withJson($user->toArray(), self::STATUS_OK);
