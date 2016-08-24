@@ -17,7 +17,7 @@ class CreateUserValidator extends Validator
     /**
      * @return array
      */
-    public function rules() : array
+    protected function rules() : array
     {
         return [
             'name' => v::stringType()->length(4, 15),
