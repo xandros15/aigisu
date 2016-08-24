@@ -19,8 +19,6 @@ abstract class Validator extends Middleware
 {
     const OLD_PARAMS = 'old_params';
     const ERRORS = 'errors';
-    const ERROR_MESSAGES = 'messages';
-    const ERROR_MESSAGE = 'message';
 
     /**
      * @var array
