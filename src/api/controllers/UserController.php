@@ -18,19 +18,14 @@ class UserController extends ApiController
 {
     public function actionIndex(Request $request, Response $response)
     {
-        $users = User::all();
-        if ($users->isEmpty()) {
-            return $response->withJson([self::MESSAGE => 'Users not found'], self::STATUS_NOT_FOUND);
-        }
-        return $response->withJson($users->toArray(), self::STATUS_OK);
+        return $response->withJson(User::all()->toArray(), self::STATUS_OK);
     }
 
     public function actionView(Request $request, Response $response)
     {
-        $user = User::find($request->getAttribute('id'));
-        if (!$user) {
-            return $response->withJson([self::MESSAGE => 'User not found'], self::STATUS_NOT_FOUND);
-        }
+        /** @var $user User */
+        $user = User::findOrFail($request->getAttribute('id'));
+
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
@@ -38,38 +33,31 @@ class UserController extends ApiController
     {
         $user = new User($request->getParams());
         $user->encryptPassword();
+        $user->saveOrFail();
 
-        if (!$user->save()) {
-            return $response->withJson([self::MESSAGE => 'Can\'t save a User'], self::STATUS_NOT_FOUND);
-        }
         return $response->withJson($user->toArray(), self::STATUS_CREATED);
     }
 
     public function actionUpdate(Request $request, Response $response)
     {
-        $user = User::find($request->getAttribute('id'));
-        if (!$user) {
-            return $response->withJson([self::MESSAGE => 'User not found'], self::STATUS_NOT_FOUND);
-        }
+        /** @var $user User */
+        $user = User::findOrFail($request->getAttribute('id'));
 
         $user->fill($request->getParams());
         if ($request->getParam('password')) {
             $user->encryptPassword();
         }
 
-        if (!$user->save()) {
-            return $response->withJson([self::MESSAGE => 'Can\'t save a User'], self::STATUS_SERVER_ERROR);
-        }
+        $user->saveOrFail();
 
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
     public function actionDelete(Request $request, Response $response)
     {
-        $user = User::find($request->getAttribute('id'));
-        if ($user->delete()) {
-            return $response->withStatus(self::STATUS_OK);
-        }
-        return $response->withJson([self::MESSAGE => 'Can\'t delete user'], self::STATUS_BAD_REQUEST);
+        $user = User::findOrFail($request->getAttribute('id'));
+        $user->delete();
+
+        return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 }
