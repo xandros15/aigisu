@@ -17,8 +17,11 @@ use Slim\Http\Response;
 
 abstract class Validator extends Middleware
 {
-    const OLD_PARAMS = 'old';
+    const OLD_PARAMS = 'old_params';
     const ERRORS = 'errors';
+    const ERROR_MESSAGES = 'messages';
+    const ERROR_MESSAGE = 'message';
+
     /**
      * @var array
      */
@@ -60,7 +63,7 @@ abstract class Validator extends Middleware
     abstract protected function rules() : array;
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getErrors()
     {
