@@ -10,7 +10,6 @@ use Api\Controllers\UserController as ApiUserController;
 use Controllers\ImageFileController;
 use Controllers\UnitController;
 use Controllers\UserController;
-use Middlewares\ApiException;
 use Middlewares\FormAssets;
 use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
@@ -102,4 +101,4 @@ $this->group('/api', function () use ($container) {
         $this->delete('/delete/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
     });
-})->add(new ApiException($container));
+});
