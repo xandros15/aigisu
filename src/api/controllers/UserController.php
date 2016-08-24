@@ -32,7 +32,6 @@ class UserController extends ApiController
     public function actionCreate(Request $request, Response $response)
     {
         $user = new User($request->getParams());
-        $user->encryptPassword();
         $user->saveOrFail();
 
         return $response->withJson($user->toArray(), self::STATUS_CREATED);
@@ -44,9 +43,6 @@ class UserController extends ApiController
         $user = User::findOrFail($request->getAttribute('id'));
 
         $user->fill($request->getParams());
-        if ($request->getParam('password')) {
-            $user->encryptPassword();
-        }
 
         $user->saveOrFail();
 

@@ -13,7 +13,7 @@ use Aigisu\Model;
 
 /**
  * @property string $name
- * @property string $password_hash
+ * @property string $password
  * @property string $email
  * @property string $access_token
  * @property string $recovery_hash
@@ -22,14 +22,18 @@ use Aigisu\Model;
  */
 class User extends Model
 {
-    public $password;
     protected $fillable = [
         'name',
-        'email'
+        'email',
+        'password'
     ];
 
-    public function encryptPassword()
+    protected $hidden = [
+        'password'
+    ];
+
+    public function setPasswordAttribute($password)
     {
-        $this->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+        $this->attributes['password'] = password_hash($password, PASSWORD_DEFAULT);
     }
 }
