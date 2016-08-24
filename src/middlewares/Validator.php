@@ -9,10 +9,9 @@
 namespace Middlewares;
 
 
-use Aigisu\Alert\Alert;
 use Aigisu\Middleware;
+use Middlewares\Validators\Rules\Optional;
 use Respect\Validation\Exceptions\NestedValidationException;
-use Respect\Validation\Validator as v;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -49,7 +48,6 @@ abstract class Validator extends Middleware
                 $rule->setName(ucfirst($field))->assert($request->getParam($field));
             } catch (NestedValidationException $exception) {
                 $this->errors[$field] = $exception->getMessages();
-                Alert::add($exception->getFullMessage(), Alert::ERROR);
             }
         }
 
@@ -76,7 +74,7 @@ abstract class Validator extends Middleware
     protected function makeOptional(array $rules) : array
     {
         foreach ($rules as &$rule) {
-            $rule = v::optional($rule);
+            $rule = new Optional($rule);
         }
 
         return $rules;
