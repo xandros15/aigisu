@@ -10,17 +10,15 @@ namespace Middlewares;
 
 
 use Aigisu\Middleware;
-use Api\ApiController;
+use Api\ApiMessages;
 use Middlewares\Validators\Rules\Optional;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class Validator extends Middleware
+abstract class Validator extends Middleware implements ApiMessages
 {
     const OLD_PARAMS = 'old_params';
-    const MESSAGE = ApiController::MESSAGE;
-    const STATUS_BAD_REQUEST = ApiController::STATUS_BAD_REQUEST;
 
     /**
      * @var array
