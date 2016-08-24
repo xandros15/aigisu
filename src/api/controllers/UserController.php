@@ -20,18 +20,18 @@ class UserController extends ApiController
     {
         $users = User::all();
         if ($users->isEmpty()) {
-            return $response->withJson(['error' => 'Users not found'], 404);
+            return $response->withJson([self::MESSAGE => 'Users not found'], self::STATUS_NOT_FOUND);
         }
-        return $response->withJson($users->toArray(), 200);
+        return $response->withJson($users->toArray(), self::STATUS_OK);
     }
 
     public function actionView(Request $request, Response $response)
     {
         $user = User::find($request->getAttribute('id'));
         if (!$user) {
-            return $response->withJson(['error' => 'User not found'], 404);
+            return $response->withJson([self::MESSAGE => 'User not found'], self::STATUS_NOT_FOUND);
         }
-        return $response->withJson($user->toArray(), 200);
+        return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
     public function actionCreate(Request $request, Response $response)
@@ -40,16 +40,16 @@ class UserController extends ApiController
         $user->encryptPassword();
 
         if (!($user->validate() && $user->save())) {
-            return $response->withJson(['error' => $user->getErrors()], 404); //@todo correct message and code
+            return $response->withJson([self::MESSAGE => $user->getErrors()], self::STATUS_NOT_FOUND);
         }
-        return $response->withJson($user->toArray(), 201);
+        return $response->withJson($user->toArray(), self::STATUS_CREATED);
     }
 
     public function actionUpdate(Request $request, Response $response)
     {
         $user = User::find($request->getAttribute('id'));
         if (!$user) {
-            return $response->withJson(['error' => 'User not found'], 404);
+            return $response->withJson([self::MESSAGE => 'User not found'], self::STATUS_NOT_FOUND);
         }
 
         $user->fill($request->getParams());
@@ -58,10 +58,10 @@ class UserController extends ApiController
         }
 
         if (!($user->validate(array_keys($request->getParams())) && $user->save())) {
-            return $response->withJson(['error' => $user->getErrors()], 404); //@todo correct message and code
+            return $response->withJson([self::MESSAGE => $user->getErrors()], self::STATUS_NOT_FOUND);
         }
 
-        return $response->withJson($user->toArray(), 200);
+        return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
     public function actionDelete()

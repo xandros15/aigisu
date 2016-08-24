@@ -10,6 +10,7 @@ namespace Middlewares;
 
 
 use Aigisu\Middleware;
+use Api\ApiController;
 use Middlewares\Validators\Rules\Optional;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Http\Request;
@@ -18,7 +19,8 @@ use Slim\Http\Response;
 abstract class Validator extends Middleware
 {
     const OLD_PARAMS = 'old_params';
-    const ERRORS = 'errors';
+    const MESSAGE = ApiController::MESSAGE;
+    const STATUS_BAD_REQUEST = ApiController::STATUS_BAD_REQUEST;
 
     /**
      * @var array
@@ -32,9 +34,9 @@ abstract class Validator extends Middleware
         }
 
         return $response->withJson([
-            self::ERRORS => $this->getErrors(),
+            self::MESSAGE => $this->getErrors(),
             self::OLD_PARAMS => $request->getParams()
-        ], 400);
+        ], self::STATUS_BAD_REQUEST);
     }
 
     /**
