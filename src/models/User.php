@@ -29,9 +29,16 @@ class User extends Model
     ];
 
     protected $hidden = [
-        'password'
+        'password',
+        'access_token',
+        'recovery_hash',
+        'remember_identifier',
+        'remember_hash',
     ];
 
+    /**
+     * @param string $password
+     */
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = password_hash($password, PASSWORD_DEFAULT);

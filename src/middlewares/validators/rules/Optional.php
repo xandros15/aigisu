@@ -12,6 +12,11 @@ namespace Middlewares\Validators\Rules;
 use Respect\Validation\Rules\AbstractWrapper;
 use Respect\Validation\Validatable;
 
+/**
+ * Class Optional
+ * @package Middlewares\Validators\Rules
+ * @see https://github.com/Respect/Validation/blob/master/library/Rules/Optional.php
+ */
 class Optional extends AbstractWrapper
 {
 

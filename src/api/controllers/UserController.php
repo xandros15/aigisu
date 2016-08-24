@@ -16,20 +16,34 @@ use Slim\Http\Response;
 
 class UserController extends ApiController
 {
-    public function actionIndex(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionIndex(Request $request, Response $response) : Response
     {
         return $response->withJson(User::all()->toArray(), self::STATUS_OK);
     }
 
-    public function actionView(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionView(Request $request, Response $response) : Response
     {
-        /** @var $user User */
         $user = User::findOrFail($request->getAttribute('id'));
 
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
-    public function actionCreate(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response) : Response
     {
         $user = new User($request->getParams());
         $user->saveOrFail();
@@ -37,19 +51,27 @@ class UserController extends ApiController
         return $response->withJson($user->toArray(), self::STATUS_CREATED);
     }
 
-    public function actionUpdate(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionUpdate(Request $request, Response $response) : Response
     {
-        /** @var $user User */
         $user = User::findOrFail($request->getAttribute('id'));
-
         $user->fill($request->getParams());
-
         $user->saveOrFail();
 
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
-    public function actionDelete(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws \Exception
+     */
+    public function actionDelete(Request $request, Response $response) : Response
     {
         $user = User::findOrFail($request->getAttribute('id'));
         $user->delete();
