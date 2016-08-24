@@ -40,7 +40,7 @@ abstract class Validator extends Middleware
      * @param Request $request
      * @return bool
      */
-    public function validate(Request $request)
+    public function validate(Request $request) : bool
     {
         foreach ($this->rules() as $field => $rule) {
             try {
