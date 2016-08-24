@@ -64,8 +64,12 @@ class UserController extends ApiController
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
 
-    public function actionDelete()
+    public function actionDelete(Request $request, Response $response)
     {
-        return $this->response->withRedirect('/users');
+        $user = User::find($request->getAttribute('id'));
+        if ($user->delete()) {
+            return $response->withStatus(self::STATUS_OK);
+        }
+        return $response->withJson([self::MESSAGE => 'Can\'t delete user'], self::STATUS_BAD_REQUEST);
     }
 }

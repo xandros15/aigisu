@@ -98,7 +98,7 @@ $this->group('/api', function () use ($container) {
             ->setName('api.user.update')
             ->add(new UpdateUserValidator($container));
 
-        $this->delete('/delete/{id:\d+}', ApiUserController::class . ':actionDelete')
+        $this->delete('/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
     });
 });
