@@ -12,6 +12,7 @@ namespace Middlewares;
 use Aigisu\Alert\Alert;
 use Aigisu\Middleware;
 use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validator as v;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -66,5 +67,18 @@ abstract class Validator extends Middleware
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * @param array $rules
+     * @return array
+     */
+    protected function makeOptional(array $rules) : array
+    {
+        foreach ($rules as &$rule) {
+            $rule = v::optional($rule);
+        }
+
+        return $rules;
     }
 }
