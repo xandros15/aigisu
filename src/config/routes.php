@@ -16,7 +16,7 @@ use Middlewares\HomeAssets;
 use Middlewares\ShowQueries;
 use Middlewares\TrailingSearch;
 use Middlewares\TrailingSlash;
-use Middlewares\Validators\UserValidator;
+use Middlewares\Validators\CreateUserValidator;
 
 /** @var $this \Aigisu\Main */
 $container = $this->getContainer();
@@ -87,7 +87,7 @@ $this->group('/api', function () use ($container) {
         /** @var $this \Aigisu\Main */
         $this->post('', ApiUserController::class . ':actionCreate')
             ->setName('api.user.create')
-            ->add(new UserValidator($container));
+            ->add(new CreateUserValidator($container));
 
         $this->get('', ApiUserController::class . ':actionIndex')
             ->setName('api.user.index');

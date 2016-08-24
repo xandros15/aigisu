@@ -12,7 +12,7 @@ namespace Middlewares\Validators;
 use Middlewares\Validator;
 use Respect\Validation\Validator as v;
 
-class UserValidator extends Validator
+class CreateUserValidator extends Validator
 {
     /**
      * @return array
