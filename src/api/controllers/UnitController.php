@@ -3,13 +3,13 @@
 namespace Api\Controllers;
 
 use Aigisu\Alert\Alert;
-use Aigisu\Controller;
+use Api\ApiController;
 use Models\Unit;
 use Models\UnitSort;
 use Slim\Http\Request;
 use Xandros15\SlimPagination\Pagination;
 
-class UnitController extends Controller
+class UnitController extends ApiController
 {
 
     public function actionIndex(Request $request)

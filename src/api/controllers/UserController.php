@@ -9,12 +9,12 @@
 namespace Api\Controllers;
 
 
-use Aigisu\Controller;
+use Api\ApiController;
 use Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function actionIndex(Request $request, Response $response)
     {
