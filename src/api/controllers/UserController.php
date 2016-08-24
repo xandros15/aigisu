@@ -45,17 +45,19 @@ class UserController extends Controller
         return $response->withJson($user->toArray(), 201);
     }
 
-    public function actionChangePassword(Request $request, Response $response)
+    public function actionUpdate(Request $request, Response $response)
     {
         $user = User::find($request->getAttribute('id'));
         if (!$user) {
             return $response->withJson(['error' => 'User not found'], 404);
         }
 
-        $user->fill(['password' => $request->getParam('password')]);
-        $user->encryptPassword();
+        $user->fill($request->getParams());
+        if ($request->getParam('password')) {
+            $user->encryptPassword();
+        }
 
-        if (!($user->validate(['password', 'password_hash']) && $user->save())) {
+        if (!($user->validate(array_keys($request->getParams())) && $user->save())) {
             return $response->withJson(['error' => $user->getErrors()], 404); //@todo correct message and code
         }
 

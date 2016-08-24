@@ -29,12 +29,7 @@ class User extends Model
     public $password;
     protected $fillable = [
         'name',
-        'password_hash',
-        'email',
-        'access_token',
-        'recovery_hash',
-        'remember_identifier',
-        'remember_hash',
+        'email'
     ];
 
     public function rules() : array
