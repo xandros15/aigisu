@@ -2,7 +2,6 @@
 namespace Aigisu\Core;
 
 use Aigisu\Common\Components\Alert\Alert;
-use Aigisu\Common\Components\View\View;
 use Slim\App as Slim;
 
 class Main extends Slim
@@ -43,7 +42,6 @@ class Main extends Slim
         $this->setRoutes();
         $this->setDatabase();
         $this->createSessions();
-        $this->setView();
     }
 
     private function setRoutes()
@@ -71,10 +69,5 @@ class Main extends Slim
 
         $alert = new Alert();
         $alert->init();
-    }
-
-    private function setView()
-    {
-        $this->getContainer()['view'] = new View(Configuration::DIR_VIEW);
     }
 }

@@ -2,8 +2,15 @@
 
 namespace Aigisu\Common\Controllers;
 
+use Aigisu\Common\Components\View\View;
 use Aigisu\Core\ActiveContainer;
 
+/**
+ * Class Controller
+ * @package Aigisu\Common\Controllers
+ *
+ * @property View $view
+ */
 abstract class Controller extends ActiveContainer
 {
     public $layout = 'layout/main';

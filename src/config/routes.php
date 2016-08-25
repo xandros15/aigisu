@@ -18,6 +18,7 @@ use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
 use Aigisu\Common\Middlewares\TrailingSearch;
 use Aigisu\Common\Middlewares\TrailingSlash;
+use Aigisu\Common\Middlewares\View;
 
 /** @var $this \Aigisu\Core\Main */
 $container = $this->getContainer();
@@ -79,7 +80,8 @@ $this->group('', function () use ($container) {
 })
     ->add(new TrailingSlash($container))
     ->add(new HomeAssets($container))
-    ->add(new ShowQueries($container));
+    ->add(new ShowQueries($container))
+    ->add(new View($container));
 
 
 $this->group('/api', function () use ($container) {

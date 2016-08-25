@@ -8,7 +8,6 @@
 
 namespace Aigisu\Core;
 
-use Aigisu\Common\Components\View\View;
 use Illuminate\Database\Connection;
 use Interop\Container\ContainerInterface;
 use InvalidArgumentException;
@@ -19,7 +18,6 @@ use Slim\Router;
 /**
  * @property Response $response
  * @property Request $request
- * @property View $view
  * @property Router $router
  * @property Connection $connection
  * @property string $siteUrl
