@@ -13,6 +13,7 @@ use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 use Aigisu\Common\Controllers\ImageFileController;
 use Aigisu\Common\Controllers\UnitController;
 use Aigisu\Common\Controllers\UserController;
+use Aigisu\Common\Middlewares\Alert;
 use Aigisu\Common\Middlewares\FormAssets;
 use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
@@ -81,7 +82,8 @@ $this->group('', function () use ($container) {
     ->add(new TrailingSlash($container))
     ->add(new HomeAssets($container))
     ->add(new ShowQueries($container))
-    ->add(new View($container));
+    ->add(new View($container))
+    ->add(new Alert($container));
 
 
 $this->group('/api', function () use ($container) {

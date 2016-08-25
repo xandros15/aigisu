@@ -1,7 +1,6 @@
 <?php
 namespace Aigisu\Core;
 
-use Aigisu\Common\Components\Alert\Alert;
 use Slim\App as Slim;
 
 class Main extends Slim
@@ -41,7 +40,6 @@ class Main extends Slim
     {
         $this->setRoutes();
         $this->setDatabase();
-        $this->createSessions();
     }
 
     private function setRoutes()
@@ -59,15 +57,5 @@ class Main extends Slim
         $database->setAsGlobal();
         $database->bootEloquent();
         $this->getContainer()['connection'] = $database->connection();
-    }
-
-    private function createSessions()
-    {
-        if (session_status() == PHP_SESSION_NONE && !session_id()) {
-            session_start();
-        }
-
-        $alert = new Alert();
-        $alert->init();
     }
 }
