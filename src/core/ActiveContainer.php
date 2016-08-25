@@ -40,23 +40,33 @@ abstract class ActiveContainer
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->get($name);
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function get($name)
+    protected function get(string $name)
     {
         if (!$this->container->has($name)) {
             throw new InvalidArgumentException("Attribute {$name} doesn't exist");
         }
         return $this->container->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     * @return void
+     */
+    protected function set(string $name, $value)
+    {
+        $this->container[$name] = $value;
     }
 }
