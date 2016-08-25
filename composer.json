@@ -23,13 +23,8 @@
   },
   "autoload": {
     "psr-4": {
-      "": "src",
-      "Aigisu\\": [
-        "src",
-        "src/components/core"
-      ],
-      "Imgur\\": "src/components/imgur/imgur-php-wrapper",
-      "Aigisu\\Components\\": "src/components"
+      "Aigisu\\": "src",
+      "Imgur\\": "src/components/imgur/imgur-php-wrapper"
     },
     "psr-0": {
       "": "src/"

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aigisu\Upload;
+namespace Aigisu\Components\Upload;
 
 interface ExtendedServer
 {

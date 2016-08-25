@@ -1,8 +1,8 @@
 <?php
 
-namespace Aigisu\Google;
+namespace Aigisu\Components\Google;
 
-use Aigisu\Configuration;
+use Aigisu\Core\Configuration;
 use Google_Auth_Exception;
 use Google_Client;
 use Google_Service_Drive;

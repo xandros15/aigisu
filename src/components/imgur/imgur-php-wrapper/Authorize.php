@@ -73,7 +73,7 @@ class Authorize
     /**
      * Exchange authorization code for an access token
      * @param string $code
-     * @return Array $response
+     * @return array $response
      */
     function getAccessToken($code)
     {
@@ -92,7 +92,7 @@ class Authorize
     /**
      * Exchange the refresh token for access token
      * @param string $refresh_token
-     * @return Array $response
+     * @return array $response
      */
     function refreshAccessToken($refresh_token)
     {
@@ -146,7 +146,7 @@ class Authorize
     /**
      * Exchange authorization code for an access token
      * @param string $pin
-     * @return Array $response
+     * @return array $response
      */
     function getAccessTokenByPin($pin)
     {

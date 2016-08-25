@@ -1,8 +1,8 @@
 <?php
 
-namespace Aigisu\Google;
+namespace Aigisu\Components\Google;
 
-use Aigisu\Upload\ExtendedServer;
+use Aigisu\Components\Upload\ExtendedServer;
 use Google_Service_Drive;
 use Google_Service_Drive_DriveFile;
 use InvalidArgumentException;

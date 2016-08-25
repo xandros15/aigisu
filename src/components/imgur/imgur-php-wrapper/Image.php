@@ -11,9 +11,7 @@ namespace Imgur;
 class Image
 {
 
-    /**
-     * @var
-     */
+    /** @var Connect */
     protected $conn;
     /**
      * @var string

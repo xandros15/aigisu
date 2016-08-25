@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Aigisu\Main;
+use Aigisu\Core\Main;
 
 $main = new Main();
 $main->debug(true);

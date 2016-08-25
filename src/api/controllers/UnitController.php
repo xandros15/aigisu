@@ -1,18 +1,16 @@
 <?php
 
-namespace Api\Controllers;
+namespace Aigisu\Api\Controllers;
 
-use Aigisu\Alert\Alert;
-use Api\ApiController;
-use Models\Unit;
-use Models\UnitSort;
+use Aigisu\Api\Models\Unit;
+use Aigisu\Common\Models\UnitSort;
 use Slim\Http\Request;
-use Xandros15\SlimPagination\Pagination;
+use Slim\Http\Response;
 
-class UnitController extends ApiController
+class UnitController extends Controller
 {
 
-    public function actionIndex(Request $request)
+    public function actionIndex(Request $request, Response $response)
     {
         $unitSort = new UnitSort($request, $this->router);
         $unitSearch = Unit::with(['images', 'tags']);
@@ -23,37 +21,29 @@ class UnitController extends ApiController
         }
         $list = $unitSearch->get();
 
-        return $this->render('unit/index', [
-            'unitList' => $list,
-            'pagination' => new Pagination($request, $this->router, [
-                Pagination::OPT_TOTAL => $max,
-                Pagination::OPT_PER_PAGE => Unit::UNITS_PER_PAGE
-            ]),
-            'unitSort' => $unitSort
-        ]);
+        return $response;
     }
 
-    public function actionView(Request $request)
+    public function actionView(Request $request, Response $response)
     {
         $unit = Unit::firstOrNew(['id' => $request->getAttribute('id')]);
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $response;
     }
 
-    public function actionCreate(Request $request)
+    public function actionCreate(Request $request, Response $response)
     {
         $unit = new Unit($request->getParams());
         if ($request->isPost()) {
             if ($unit->validate() && $unit->save()) {
-                Alert::add('Successful added ' . $unit->name);
-                return $this->goBack();
+                return $response;
             }
         }
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $response;
     }
 
-    public function actionUpdate(Request $request)
+    public function actionUpdate(Request $request, Response $response)
     {
         /* @var $unit Unit */
         $unit = Unit::find($request->getAttribute('id'));
@@ -61,29 +51,24 @@ class UnitController extends ApiController
         if ($request->isPost()) {
             $unit->addTagsToUnit($request->getParam('tags'));
             if ($unit->fill($request->getParams())->validate() && $unit->save()) {
-                Alert::add("Successful update {$unit->name}");
-                return $this->goBack();
+                return $response;
             }
         }
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $response;
     }
 
-    public function actionDelete(Request $request)
+    public function actionDelete(Request $request, Response $response)
     {
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
 
-        if ($model->delete()) {
-            Alert::add("Successful delete {$model->name}");
-        }
-
-        return $this->goBack();
+        return $response;
     }
 
-    public function actionShowImages(Request $request)
+    public function actionShowImages(Request $request, Response $response)
     {
         $unit = Unit::find($request->getAttribute('id'));
-        return $this->render('image/index', ['unit' => $unit]);
+        return $response;
     }
 }

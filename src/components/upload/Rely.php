@@ -1,12 +1,12 @@
 <?php
 
-namespace Aigisu\Upload;
+namespace Aigisu\Components\Upload;
 
-use Aigisu\Google\GoogleFile;
-use Aigisu\Imgur\Imgur;
+use Aigisu\Api\Models\Image;
+use Aigisu\Components\Google\GoogleFile;
+use Aigisu\Components\Imgur\Imgur;
 use Exception;
 use InvalidArgumentException;
-use Models\Image;
 
 class Rely
 {
@@ -16,7 +16,7 @@ class Rely
     public function uploadFromServer($url, array &$errors)
     {
         $upload = new FileFromUrl();
-        $upload->setDirectory($this->directory, ROOT_DIR);
+        $upload->setDirectory($this->directory, __DIR__);
         $upload->setFile($url);
         if ($upload->getErrors()) {
             $errors = array_merge($errors, $upload->getErrors());
@@ -28,7 +28,7 @@ class Rely
     public function uploadFromClient($file, array &$errors)
     {
         $upload = new FileFromClient();
-        $upload->setDirectory($this->directory, ROOT_DIR);
+        $upload->setDirectory($this->directory, __DIR__);
         $upload->setFile($file);
 
         if ($upload->getErrors()) {

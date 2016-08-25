@@ -11,9 +11,7 @@ namespace Imgur;
 class Gallery
 {
 
-    /**
-     * @var
-     */
+    /** @var Connect */
     protected $conn;
 
     /**

@@ -6,15 +6,14 @@
  * Time: 23:36
  */
 
-namespace Api\Controllers;
+namespace Aigisu\Api\Controllers;
 
 
-use Api\ApiController;
-use Models\User;
+use Aigisu\Api\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UserController extends ApiController
+class UserController extends Controller
 {
     /**
      * @param Request $request

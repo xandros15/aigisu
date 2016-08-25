@@ -11,9 +11,7 @@ namespace Imgur;
 class Notification
 {
 
-    /**
-     * @var
-     */
+    /** @var Connect */
     protected $conn;
 
     /**

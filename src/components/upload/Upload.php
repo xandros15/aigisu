@@ -1,8 +1,8 @@
 <?php
 
-namespace Aigisu\Upload;
+namespace Aigisu\Components\Upload;
 
-use Aigisu\Upload\Helpers\MimeTypeExtensionGuesser as Extension;
+use Aigisu\Components\Upload\Helpers\MimeTypeExtensionGuesser as Extension;
 use RuntimeException;
 
 abstract class Upload

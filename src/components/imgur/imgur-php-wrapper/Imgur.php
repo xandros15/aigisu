@@ -42,7 +42,7 @@ class Imgur
     function __construct($api_key, $api_secret)
     {
         if (!$api_key || !$api_secret) {
-            throw \Exception("Please provided API key data");
+            throw new \Exception("Please provided API key data");
         }
 
         $this->api_key = $api_key;

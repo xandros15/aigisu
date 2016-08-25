@@ -1,9 +1,9 @@
 <?php
 
-namespace Aigisu\Imgur;
+namespace Aigisu\Components\Imgur;
 
-use Aigisu\Configuration;
-use Aigisu\Upload\ExtendedServer;
+use Aigisu\Components\Upload\ExtendedServer;
+use Aigisu\Core\Configuration;
 use Exception;
 use Imgur\Authorize;
 use Imgur\Imgur as Base;
@@ -29,19 +29,6 @@ class Imgur extends Base implements ExtendedServer
     {
 
         parent::__construct($api_key, $api_secret);
-    }
-
-    public function __get($name)
-    {
-        if ($name == 'credentials') {
-            return $this->getCredentials();
-        }
-        return null;
-    }
-
-    protected function getCredentials($file = self::CREDENTIALS_PATH)
-    {
-        return $this->credentials = file_get_contents($file);
     }
 
     /**
@@ -138,6 +125,19 @@ class Imgur extends Base implements ExtendedServer
             mkdir(dirname(self::KEY_PATH), 0700, true);
         }
         return (file_put_contents(self::KEY_PATH, $token));
+    }
+
+    public function __get($name)
+    {
+        if ($name == 'credentials') {
+            return $this->getCredentials();
+        }
+        return null;
+    }
+
+    protected function getCredentials($file = self::CREDENTIALS_PATH)
+    {
+        return $this->credentials = file_get_contents($file);
     }
 
     public function uploadFile()

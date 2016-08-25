@@ -6,20 +6,20 @@
  * Time: 17:00
  */
 
-use Api\Controllers\UserController as ApiUserController;
-use Controllers\ImageFileController;
-use Controllers\UnitController;
-use Controllers\UserController;
-use Middlewares\ApiExceptionHandler;
-use Middlewares\FormAssets;
-use Middlewares\HomeAssets;
-use Middlewares\ShowQueries;
-use Middlewares\TrailingSearch;
-use Middlewares\TrailingSlash;
-use Middlewares\Validators\CreateUserValidator;
-use Middlewares\Validators\UpdateUserValidator;
+use Aigisu\Api\Controllers\UserController as ApiUserController;
+use Aigisu\Api\Middlewares\ExceptionHandler;
+use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
+use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
+use Aigisu\Common\Controllers\ImageFileController;
+use Aigisu\Common\Controllers\UnitController;
+use Aigisu\Common\Controllers\UserController;
+use Aigisu\Common\Middlewares\FormAssets;
+use Aigisu\Common\Middlewares\HomeAssets;
+use Aigisu\Common\Middlewares\ShowQueries;
+use Aigisu\Common\Middlewares\TrailingSearch;
+use Aigisu\Common\Middlewares\TrailingSlash;
 
-/** @var $this \Aigisu\Main */
+/** @var $this \Aigisu\Core\Main */
 $container = $this->getContainer();
 
 $this->group('', function () use ($container) {
@@ -30,13 +30,13 @@ $this->group('', function () use ($container) {
         ->add($trailingSearchMiddleware);
 
     $this->group('/images', function () {
-        /** @var $this \Aigisu\Main */
+        /** @var $this \Aigisu\Core\Main */
         $this->post('/upload/{id:\d+}', ImageFileController::class . ':actionCreate')
             ->setName('image.create');
     });
 
     $this->group('/units', function () use ($formAssetMiddleware) {
-        /** @var $this \Aigisu\Main */
+        /** @var $this \Aigisu\Core\Main */
         $this->map(['post', 'get'], '/create', UnitController::class . ':actionCreate')
             ->setName('unit.create')
             ->add($formAssetMiddleware);
@@ -58,7 +58,7 @@ $this->group('', function () use ($container) {
     });
 
     $this->group('/users', function () use ($formAssetMiddleware) {
-        /** @var $this \Aigisu\Main */
+        /** @var $this \Aigisu\Core\Main */
         $this->map(['post', 'get'], '/create', UserController::class . ':actionCreate')
             ->setName('user.create')
             ->add($formAssetMiddleware);
@@ -83,9 +83,9 @@ $this->group('', function () use ($container) {
 
 
 $this->group('/api', function () use ($container) {
-    /** @var $this \Aigisu\Main */
+    /** @var $this \Aigisu\Core\Main */
     $this->group('/users', function () use ($container) {
-        /** @var $this \Aigisu\Main */
+        /** @var $this \Aigisu\Core\Main */
         $this->post('', ApiUserController::class . ':actionCreate')
             ->setName('api.user.create')
             ->add(new CreateUserValidator($container));
@@ -102,4 +102,4 @@ $this->group('/api', function () use ($container) {
         $this->delete('/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
     });
-})->add(new ApiExceptionHandler($container));
+})->add(new ExceptionHandler($container));

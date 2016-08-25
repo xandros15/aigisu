@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Aigisu\Upload\Helpers;
+namespace Aigisu\Components\Upload\Helpers;
 
 /**
  * Provides a best-guess mapping of mime type to file extension.
