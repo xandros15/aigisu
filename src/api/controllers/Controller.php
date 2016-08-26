@@ -20,11 +20,19 @@ class Controller extends ActiveContainer implements Messages
     const HEADER_LOCATION = 'Location';
     const INDEX = 'id';
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     protected function getExtendedParam(Request $request)
     {
         return $request->getQueryParam(self::EXTENDED, []);
     }
 
+    /**
+     * @param Request $request
+     * @return int
+     */
     protected function getID(Request $request) : int
     {
         return $request->getAttribute(self::INDEX, -1);

@@ -14,21 +14,36 @@ class UnitController extends Controller
     const UPDATE_ROUTE_NAME = 'api.unit.update';
     const DELETE_ROUTE_NAME = 'api.unit.delete';
 
-    public function actionIndex(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionIndex(Request $request, Response $response) : Response
     {
         $units = Unit::with($this->getExtendedParam($request))->get();
 
         return $response->withJson($units->toArray(), self::STATUS_OK);
     }
 
-    public function actionView(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionView(Request $request, Response $response): Response
     {
         $unit = Unit::with($this->getExtendedParam($request))->findOrFail($this->getID($request));
 
         return $response->withJson($unit->toArray(), self::STATUS_OK);
     }
 
-    public function actionCreate(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response): Response
     {
         $unit = new Unit($request->getParams());
 
@@ -37,7 +52,12 @@ class UnitController extends Controller
         return $this->created($response, $this->router->pathFor(self::VIEW_ROUTE_NAME, ['id' => $unit->getKey()]));
     }
 
-    public function actionUpdate(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionUpdate(Request $request, Response $response): Response
     {
         $unit = Unit::findOrFail($this->getID($request));
 
@@ -47,7 +67,12 @@ class UnitController extends Controller
         return $response->withStatus(self::STATUS_OK);
     }
 
-    public function actionDelete(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionDelete(Request $request, Response $response): Response
     {
         $unit = Unit::findOrFail($this->getID($request));
         $unit->delete();
