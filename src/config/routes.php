@@ -111,17 +111,17 @@ $this->group('/api', function () use ($container) {
     $this->group('/units', function () {
         /** @var $this \Aigisu\Core\Main */
         $this->post('', ApiUnitController::class . ':actionCreate')
-            ->setName('api.unit.create');
+            ->setName(ApiUnitController::CREATE_ROUTE_NAME);
 
         $this->get('', ApiUnitController::class . ':actionIndex')
-            ->setName('unit.index');
+            ->setName(ApiUnitController::INDEX_ROUTE_NAME);
         $this->get('/{id:\d+}', ApiUnitController::class . ':actionView')
-            ->setName('api.unit.view');
+            ->setName(ApiUnitController::VIEW_ROUTE_NAME);
 
         $this->patch('/{id:\d+}', ApiUnitController::class . ':actionUpdate')
-            ->setName('api.unit.update');
+            ->setName(ApiUnitController::UPDATE_ROUTE_NAME);
 
         $this->delete('/{id:\d+}', ApiUnitController::class . ':actionDelete')
-            ->setName('api.unit.delete');
+            ->setName(ApiUnitController::DELETE_ROUTE_NAME);
     });
 })->add(new ExceptionHandler($container));
