@@ -9,9 +9,7 @@
 namespace Aigisu\Api\Middlewares\Validators;
 
 
-use Aigisu\Api\Middlewares\Validator;
-
-class UpdateUnitValidator extends Validator
+class UpdateUnitValidator extends CreateUnitValidator
 {
 
     /**
