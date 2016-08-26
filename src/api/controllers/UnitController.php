@@ -3,7 +3,6 @@
 namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Models\Unit;
-use Aigisu\Common\Models\UnitSort;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -12,63 +11,42 @@ class UnitController extends Controller
 
     public function actionIndex(Request $request, Response $response)
     {
-        $unitSort = new UnitSort($request, $this->router);
-        $unitSearch = Unit::with(['images', 'tags']);
-        $max = $unitSearch->count();
-        $unitSearch->forPage($request->getParam('page', 1), Unit::UNITS_PER_PAGE);
-        foreach ($unitSort->getOrders() as $order => $direction) {
-            $unitSearch->orderBy($order, $direction);
-        }
-        $list = $unitSearch->get();
+        $units = Unit::with(['images', 'tags']);
 
-        return $response;
+        return $response->withJson($units->get()->toArray(), self::STATUS_OK);
     }
 
     public function actionView(Request $request, Response $response)
     {
-        $unit = Unit::firstOrNew(['id' => $request->getAttribute('id')]);
+        $unit = Unit::with(['images', 'tags'])->findOrFail($request->getAttribute('id'));
 
-        return $response;
+        return $response->withJson($unit->toArray(), self::STATUS_OK);
     }
 
     public function actionCreate(Request $request, Response $response)
     {
         $unit = new Unit($request->getParams());
-        if ($request->isPost()) {
-            if ($unit->validate() && $unit->save()) {
-                return $response;
-            }
-        }
 
-        return $response;
+        $unit->saveOrFail();
+
+        return $response->withJson($unit->toArray(), self::STATUS_CREATED);
     }
 
     public function actionUpdate(Request $request, Response $response)
     {
-        /* @var $unit Unit */
-        $unit = Unit::find($request->getAttribute('id'));
+        $unit = Unit::findOrFail($request->getAttribute('id'));
 
-        if ($request->isPost()) {
-            $unit->addTagsToUnit($request->getParam('tags'));
-            if ($unit->fill($request->getParams())->validate() && $unit->save()) {
-                return $response;
-            }
-        }
+        $unit->fill($request->getParams());
+        $unit->saveOrFail();
 
-        return $response;
+        return $response->withJson($unit->toArray(), self::STATUS_OK);
     }
 
     public function actionDelete(Request $request, Response $response)
     {
-        /* @var $model Unit */
-        $model = Unit::find($request->getAttribute('id'));
+        $unit = Unit::findOrFail($request->getAttribute('id'));
+        $unit->delete();
 
-        return $response;
-    }
-
-    public function actionShowImages(Request $request, Response $response)
-    {
-        $unit = Unit::find($request->getAttribute('id'));
-        return $response;
+        return $response->withJson($unit->toArray(), self::STATUS_OK);
     }
 }

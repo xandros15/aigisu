@@ -6,6 +6,7 @@
  * Time: 17:00
  */
 
+use Aigisu\Api\Controllers\UnitController as ApiUnitController;
 use Aigisu\Api\Controllers\UserController as ApiUserController;
 use Aigisu\Api\Middlewares\ExceptionHandler;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
@@ -105,5 +106,22 @@ $this->group('/api', function () use ($container) {
 
         $this->delete('/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
+    });
+
+    $this->group('/units', function () {
+        /** @var $this \Aigisu\Core\Main */
+        $this->post('', ApiUnitController::class . ':actionCreate')
+            ->setName('api.unit.create');
+
+        $this->get('', ApiUnitController::class . ':actionIndex')
+            ->setName('unit.index');
+        $this->get('/{id:\d+}', ApiUnitController::class . ':actionView')
+            ->setName('api.unit.view');
+
+        $this->patch('/{id:\d+}', ApiUnitController::class . ':actionUpdate')
+            ->setName('api.unit.update');
+
+        $this->delete('/{id:\d+}', ApiUnitController::class . ':actionDelete')
+            ->setName('api.unit.delete');
     });
 })->add(new ExceptionHandler($container));

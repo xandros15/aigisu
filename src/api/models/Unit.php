@@ -43,7 +43,6 @@ class Unit extends Model
         'is_only_dmm',
         'has_aw_image'
     ];
-    protected $guarded = [];
 
     public function rules()
     {
