@@ -4,6 +4,7 @@ namespace Aigisu\Api\Models;
 
 
 use Aigisu\Core\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class Tag
@@ -16,11 +17,22 @@ use Aigisu\Core\Model;
  */
 class Tag extends Model
 {
-//    public $hidden = ['pivot'];
     protected $fillable = [
         'name'
     ];
-    protected $guarded  = [];
+    protected $guarded = [];
+
+    public static function createManyByName(array $names) : Collection
+    {
+        $tags = new Collection();
+        foreach ($names as $name) {
+            $tag = new self(['name' => $name]);
+            $tag->saveOrFail();
+            $tags->add($tag);
+        }
+
+        return $tags;
+    }
 
     public function units()
     {
@@ -31,4 +43,5 @@ class Tag extends Model
     {
         return self::firstOrNew(['name' => $name]);
     }
+
 }

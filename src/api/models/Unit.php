@@ -31,7 +31,6 @@ class Unit extends Model
     use Validator;
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
-
     protected $fillable = [
         'name',
         'original',
@@ -41,8 +40,10 @@ class Unit extends Model
         'rarity',
         'is_male',
         'is_only_dmm',
-        'has_aw_image'
+        'has_aw_image',
+        'tags'
     ];
+    private $tagNames;
 
     public function rules()
     {
@@ -117,17 +118,30 @@ class Unit extends Model
         return $this->tags->implode('name', ', ');
     }
 
-    public function addTagsToUnit($tagsString)
+    public function save(array $options = [])
     {
-        $tagsArray = $this->parseTags($tagsString);
+        parent::save($options);
+        $this->syncTags($this->tagNames);
+    }
 
-        $tags = [];
+    private function syncTags(array $tagsNames)
+    {
+        /** @var $tags Collection */
+        $tags = Tag::whereIn('name', $tagsNames)->get();
 
-        foreach ($tagsArray as $tagName) {
-            $tags[] = Tag::firstOrCreate(['name' => $tagName])->id;
-        }
+        $newTags = Tag::createManyByName(array_diff($tagsNames, $tags->pluck('name')->toArray()));
 
-        $this->tags()->sync($tags);
+        $this->tags()->sync(array_merge($newTags->pluck('id')->toArray(), $tags->pluck('id')->toArray()));
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
+    }
+
+    public function setTagsAttribute(array $tagNames)
+    {
+        $this->tagNames = $tagNames;
     }
 
     private function parseTags($tagsString)
@@ -143,10 +157,5 @@ class Unit extends Model
             }
         }
         return array_unique($parsedTags);
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 }
