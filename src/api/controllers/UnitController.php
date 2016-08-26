@@ -8,6 +8,7 @@ use Slim\Http\Response;
 
 class UnitController extends Controller
 {
+    const VIEW_ROUTE = 'api.unit.view';
 
     public function actionIndex(Request $request, Response $response)
     {
@@ -28,9 +29,8 @@ class UnitController extends Controller
         $unit = new Unit($request->getParams());
 
         $unit->saveOrFail();
-        $unit->load($this->getExtendedParam($request));
 
-        return $response->withJson($unit->toArray(), self::STATUS_CREATED);
+        return $this->created($response, $this->router->pathFor(self::VIEW_ROUTE, ['id' => $unit->getKey()]));
     }
 
     public function actionUpdate(Request $request, Response $response)
@@ -39,9 +39,8 @@ class UnitController extends Controller
 
         $unit->fill($request->getParams());
         $unit->saveOrFail();
-        $unit->load($this->getExtendedParam($request));
 
-        return $response->withJson($unit->toArray(), self::STATUS_OK);
+        return $response->withStatus(self::STATUS_OK);
     }
 
     public function actionDelete(Request $request, Response $response)
@@ -49,6 +48,6 @@ class UnitController extends Controller
         $unit = Unit::findOrFail($this->getID($request));
         $unit->delete();
 
-        return $response->withJson($unit->toArray(), self::STATUS_OK);
+        return $response->withStatus(self::STATUS_OK);
     }
 }
