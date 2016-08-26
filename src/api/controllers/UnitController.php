@@ -29,7 +29,7 @@ class UnitController extends Controller
 
         $unit->saveOrFail();
 
-        return $response->withJson($unit->toArray(), self::STATUS_CREATED);
+        return $response->withJson($unit->load(['images', 'tags'])->toArray(), self::STATUS_CREATED);
     }
 
     public function actionUpdate(Request $request, Response $response)
@@ -37,9 +37,9 @@ class UnitController extends Controller
         $unit = Unit::findOrFail($request->getAttribute('id'));
 
         $unit->fill($request->getParams());
-        $unit->saveOrFail();
+        $unit->saveOrFail();;
 
-        return $response->withJson($unit->toArray(), self::STATUS_OK);
+        return $response->withJson($unit->load(['tags', 'images'])->toArray(), self::STATUS_OK);
     }
 
     public function actionDelete(Request $request, Response $response)
