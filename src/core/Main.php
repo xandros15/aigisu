@@ -53,7 +53,6 @@ class Main extends Slim
         /** @var $settings Configuration */
         $settings = $this->getContainer();
         $database = new Database($settings->database);
-        $database->setValidator($settings->locale, Configuration::DIR_CONFIG . 'lang');
         $database->setAsGlobal();
         $database->bootEloquent();
         $this->getContainer()['connection'] = $database->connection();
