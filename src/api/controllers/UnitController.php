@@ -8,11 +8,6 @@ use Slim\Http\Response;
 
 class UnitController extends Controller
 {
-    const VIEW_ROUTE_NAME = 'api.unit.view';
-    const INDEX_ROUTE_NAME = 'api.unit.index';
-    const CREATE_ROUTE_NAME = 'api.unit.create';
-    const UPDATE_ROUTE_NAME = 'api.unit.update';
-    const DELETE_ROUTE_NAME = 'api.unit.delete';
 
     /**
      * @param Request $request
@@ -49,7 +44,7 @@ class UnitController extends Controller
 
         $unit->saveOrFail();
 
-        return $this->created($response, $this->router->pathFor(self::VIEW_ROUTE_NAME, ['id' => $unit->getKey()]));
+        return $this->created($response, $this->router->pathFor('api.unit.view', ['id' => $unit->getKey()]));
     }
 
     /**
