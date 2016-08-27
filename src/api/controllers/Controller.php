@@ -14,7 +14,7 @@ use Aigisu\Core\ActiveContainer;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class Controller extends ActiveContainer implements Messages
+abstract class Controller extends ActiveContainer implements Messages
 {
     const EXTENDED = 'extended';
     const HEADER_LOCATION = 'Location';
@@ -35,7 +35,7 @@ class Controller extends ActiveContainer implements Messages
      */
     protected function getID(Request $request) : int
     {
-        return $request->getAttribute(self::INDEX, -1);
+        return $request->getAttribute(self::INDEX, 0);
     }
 
     /**

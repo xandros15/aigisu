@@ -11,6 +11,7 @@ namespace Aigisu\Api\Middlewares\Validators;
 
 use Aigisu\Api\Middlewares\Validator;
 use Aigisu\Api\Middlewares\Validators\Rules\Optional;
+use Aigisu\Api\Middlewares\Validators\Rules\UnitOriginalAvailable;
 use Aigisu\Api\Models\Unit;
 use Respect\Validation\Validator as v;
 
@@ -22,10 +23,9 @@ class CreateUnitValidator extends Validator
      */
     protected function rules() : array
     {
-        //@todo custom validator original unique record
         return [
             'name' => v::alpha('_')->noWhitespace(),
-            'original' => v::stringType(),
+            'original' => v::stringType()->addRule(new UnitOriginalAvailable()),
             'icon' => v::url(),
             'link' => new Optional(v::url()),
             'linkgc' => v::url(),
