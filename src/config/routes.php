@@ -52,7 +52,7 @@ $this->group('', function () use ($container) {
             ->setName('unit.update')
             ->add($formAssetMiddleware);
 
-        $this->get('/delete/{id:\d+}}', UnitController::class . ':actionDelete')
+        $this->get('/delete/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('unit.delete');
 
         $this->get('/images/{id:\d+}', UnitController::class . ':actionShowImages')

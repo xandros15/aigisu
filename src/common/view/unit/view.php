@@ -13,8 +13,7 @@ $isNewUnit = (!$unit->id);
 $this->title = ($isNewUnit) ? 'New Unit | Aigisu' : $unit->name . ' | Aigisu';
 $this->containerClass = 'container';
 $route = ($isNewUnit) ? $this->pathFor('unit.create') : $this->pathFor('unit.update', ['id' => $unit->id]);
-$deleteRoute = ($isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit->id]) : '';
-
+$deleteRoute = (!$isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit->id]) : '';
 ?>
 <form method="post" role="form" data-toggle="validator" action="<?= $route ?>">
     <header class="form-header row">
