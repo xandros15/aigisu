@@ -20,7 +20,6 @@ class Tag extends Model
     protected $fillable = [
         'name'
     ];
-    protected $guarded = [];
 
     public static function createManyByName(array $names) : Collection
     {

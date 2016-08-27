@@ -98,7 +98,7 @@ class ImageFileController extends Controller
     private function transaction(ImageFile $model, Upload $uploadedFile, $stuffForValidate)
     {
         $model->getConnection()->beginTransaction();
-        if ($model->validate($stuffForValidate) && $model->save()) {
+        if ($model->save()) {
             try {
                 $uploadedFile->upload($model->id);
 
@@ -142,7 +142,7 @@ class ImageFileController extends Controller
                     $model->google = $results->id;
                     break;
             }
-            if ($model->validate($stuffForValidate) && $model->save()) {
+            if ($model->save()) {
                 Alert::add(
                     sprintf("Successful uploaded %s %s %s on %s", $model->unit->name, $model->server,
                         ImageFile::imageSceneToHuman($model->scene), $name));

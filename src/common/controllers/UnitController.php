@@ -59,7 +59,7 @@ class UnitController extends Controller
     {
         $unit = new Unit($request->getParams());
         if ($request->isPost()) {
-            if ($unit->validate() && $unit->save()) {
+            if ($unit->save()) {
                 Alert::add('Successful added ' . $unit->name);
                 return $this->goBack();
             }
@@ -79,8 +79,7 @@ class UnitController extends Controller
         $unit = Unit::find($request->getAttribute('id'));
 
         if ($request->isPost()) {
-            $unit->addTagsToUnit($request->getParam('tags'));
-            if ($unit->fill($request->getParams())->validate() && $unit->save()) {
+            if ($unit->fill($request->getParams())->save()) {
                 Alert::add("Successful update {$unit->name}");
                 return $this->goBack();
             }

@@ -5,7 +5,6 @@ namespace Aigisu\Api\Models;
 
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Traits\Validator;
 
 /**
  * Class Unit
@@ -28,7 +27,6 @@ use Traits\Validator;
 class Unit extends Model
 {
 
-    use Validator;
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
     protected $fillable = [
@@ -44,22 +42,6 @@ class Unit extends Model
         'tags'
     ];
     private $tagNames;
-
-    public function rules()
-    {
-
-        return [
-            'name' => ['required', 'alpha_dash'],
-            'original' => ['required', 'string', 'unique:' . $this->getTable() . ',original,' . $this->id],
-            'icon' => ['required', 'url'],
-            'link' => ['url'],
-            'linkgc' => ['required', 'url'],
-            'rarity' => ['required_with:' . implode(',', self::getRarities())],
-            'is_male' => ['required', 'bool'],
-            'is_only_dmm' => ['required', 'bool'],
-            'has_aw_image' => ['required', 'bool']
-        ];
-    }
 
     public static function getRarities()
     {

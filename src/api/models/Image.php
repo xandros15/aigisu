@@ -4,7 +4,6 @@ namespace Aigisu\Api\Models;
 
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Traits\Validator;
 
 /**
  * Class Image
@@ -23,7 +22,6 @@ use Traits\Validator;
 class Image extends Model
 {
 
-    use Validator;
     const IMAGE_PER_SERVER = 2;
     const IMAGE_SPECIAL_SCENE = 3;
     const IMAGE_DIRECTORY = 'images';
@@ -63,24 +61,6 @@ class Image extends Model
         /** @var $imageSet Collection */
         $imageSet = self::where('unit_id', $id)->get();
         return $imageSet->sortBy('scene')->groupBy('server');
-    }
-
-    public function rules()
-    {
-        return [
-            'md5' => ['required', 'size:32'],
-            'server' => ['required', 'in:' . implode(',', self::getServersNames())],
-            'scene' => ['required', 'integer', 'in:1,2,3'],
-            'unit_id' => [
-                'required',
-                'exists:unit,id',
-                'imageExists:' . implode(',',
-                    [$this->scene, $this->server, $this->id])
-            ],
-            'google' => ['string'],
-            'imgur' => ['string'],
-            'delhash' => ['string']
-        ];
     }
 
     public static function getServersNames()
