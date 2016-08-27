@@ -9,7 +9,6 @@
 namespace Aigisu\Api\Middlewares;
 
 
-use Aigisu\Core\Middleware;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
@@ -17,7 +16,13 @@ use Slim\Http\Response;
 
 class ExceptionHandler extends Middleware
 {
-
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param callable $next
+     * @return Response
+     * @throws NotFoundException
+     */
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         try {

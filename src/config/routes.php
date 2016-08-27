@@ -6,9 +6,12 @@
  * Time: 17:00
  */
 
+use Aigisu\Api\Controllers\UnitController as ApiUnitController;
 use Aigisu\Api\Controllers\UserController as ApiUserController;
 use Aigisu\Api\Middlewares\ExceptionHandler;
+use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
+use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 use Aigisu\Common\Controllers\ImageFileController;
 use Aigisu\Common\Controllers\UnitController;
@@ -105,5 +108,24 @@ $this->group('/api', function () use ($container) {
 
         $this->delete('/{id:\d+}', ApiUserController::class . ':actionDelete')
             ->setName('api.user.delete');
+    });
+
+    $this->group('/units', function () use ($container) {
+        /** @var $this \Aigisu\Core\Main */
+        $this->post('', ApiUnitController::class . ':actionCreate')
+            ->setName(ApiUnitController::CREATE_ROUTE_NAME)
+            ->add(new CreateUnitValidator($container));
+
+        $this->get('', ApiUnitController::class . ':actionIndex')
+            ->setName(ApiUnitController::INDEX_ROUTE_NAME);
+        $this->get('/{id:\d+}', ApiUnitController::class . ':actionView')
+            ->setName(ApiUnitController::VIEW_ROUTE_NAME);
+
+        $this->patch('/{id:\d+}', ApiUnitController::class . ':actionUpdate')
+            ->setName(ApiUnitController::UPDATE_ROUTE_NAME)
+            ->add(new UpdateUnitValidator($container));
+
+        $this->delete('/{id:\d+}', ApiUnitController::class . ':actionDelete')
+            ->setName(ApiUnitController::DELETE_ROUTE_NAME);
     });
 })->add(new ExceptionHandler($container));

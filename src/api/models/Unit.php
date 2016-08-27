@@ -31,7 +31,6 @@ class Unit extends Model
     use Validator;
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
-
     protected $fillable = [
         'name',
         'original',
@@ -41,9 +40,10 @@ class Unit extends Model
         'rarity',
         'is_male',
         'is_only_dmm',
-        'has_aw_image'
+        'has_aw_image',
+        'tags'
     ];
-    protected $guarded = [];
+    private $tagNames;
 
     public function rules()
     {
@@ -118,17 +118,35 @@ class Unit extends Model
         return $this->tags->implode('name', ', ');
     }
 
-    public function addTagsToUnit($tagsString)
+    public function save(array $options = [])
     {
-        $tagsArray = $this->parseTags($tagsString);
+        parent::save($options);
+        $this->syncTags($this->tagNames);
+    }
 
-        $tags = [];
+    private function syncTags($tagsNames)
+    {
+        if ($tagsNames !== null) {
+            if ($tagsNames = array_filter($tagsNames)) {
+                $oldTags = Tag::whereIn('name', $tagsNames)->get();
+                $newTags = Tag::createManyByName(array_diff($tagsNames, $oldTags->pluck('name')->toArray()));
+                $tagsIds = array_merge($newTags->pluck('id')->toArray(), $oldTags->pluck('id')->toArray());
+            } else {
+                $tagsIds = [];
+            }
 
-        foreach ($tagsArray as $tagName) {
-            $tags[] = Tag::firstOrCreate(['name' => $tagName])->id;
+            $this->tags()->sync($tagsIds);
         }
+    }
 
-        $this->tags()->sync($tags);
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
+    }
+
+    public function setTagsAttribute(array $tagNames)
+    {
+        $this->tagNames = $tagNames;
     }
 
     private function parseTags($tagsString)
@@ -144,10 +162,5 @@ class Unit extends Model
             }
         }
         return array_unique($parsedTags);
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 }

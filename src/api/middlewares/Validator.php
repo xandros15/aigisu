@@ -11,7 +11,6 @@ namespace Aigisu\Api\Middlewares;
 
 use Aigisu\Api\Messages;
 use Aigisu\Api\Middlewares\Validators\Rules\Optional;
-use Aigisu\Core\Middleware;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Http\Request;
 use Slim\Http\Response;
