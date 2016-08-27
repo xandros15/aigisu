@@ -124,14 +124,19 @@ class Unit extends Model
         $this->syncTags($this->tagNames);
     }
 
-    private function syncTags(array $tagsNames)
+    private function syncTags($tagsNames)
     {
-        /** @var $tags Collection */
-        $tags = Tag::whereIn('name', $tagsNames)->get();
+        if ($tagsNames !== null) {
+            if ($tagsNames = array_filter($tagsNames)) {
+                $oldTags = Tag::whereIn('name', $tagsNames)->get();
+                $newTags = Tag::createManyByName(array_diff($tagsNames, $oldTags->pluck('name')->toArray()));
+                $tagsIds = array_merge($newTags->pluck('id')->toArray(), $oldTags->pluck('id')->toArray());
+            } else {
+                $tagsIds = [];
+            }
 
-        $newTags = Tag::createManyByName(array_diff($tagsNames, $tags->pluck('name')->toArray()));
-
-        $this->tags()->sync(array_merge($newTags->pluck('id')->toArray(), $tags->pluck('id')->toArray()));
+            $this->tags()->sync($tagsIds);
+        }
     }
 
     public function tags()
