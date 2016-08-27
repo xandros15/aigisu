@@ -59,7 +59,7 @@ $createTable((new Unit())->getTable(), function (Blueprint $table) {
 
     $table->increments('id')->unsigned();
     $table->string('name', 25);
-    $table->string('original', 45)->unique();
+    $table->string('original', 45);
     $table->string('icon', 100);
     $table->string('link', 100)->nullable();
     $table->string('linkgc', 100)->nullable();
@@ -104,9 +104,8 @@ $createTable($unitToTag, function (Blueprint $table) {
     $table->charset = 'utf8mb4';
     $table->engine = 'InnoDB';
 
-    $table->increments('id')->unsigned();
-    $table->integer('unit_id')->unsigned();
-    $table->integer('tag_id')->unsigned();
+    $table->integer('unit_id')->unsigned()->index();
+    $table->integer('tag_id')->unsigned()->index();
     $table->foreign('unit_id')->references('id')->on((new Unit())->getTable())->onDelete('cascade');
     $table->foreign('tag_id')->references('id')->on((new Tag())->getTable())->onDelete('cascade');
 });
