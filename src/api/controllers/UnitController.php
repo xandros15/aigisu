@@ -54,10 +54,7 @@ class UnitController extends Controller
      */
     public function actionUpdate(Request $request, Response $response): Response
     {
-        $unit = Unit::findOrFail($this->getID($request));
-
-        $unit->fill($request->getParams());
-        $unit->saveOrFail();
+        Unit::findOrFail($this->getID($request))->fill($request->getParams())->saveOrFail();
 
         return $response->withStatus(self::STATUS_OK);
     }
@@ -69,8 +66,7 @@ class UnitController extends Controller
      */
     public function actionDelete(Request $request, Response $response): Response
     {
-        $unit = Unit::findOrFail($this->getID($request));
-        $unit->delete();
+        Unit::findOrFail($this->getID($request))->delete();
 
         return $response->withStatus(self::STATUS_OK);
     }
