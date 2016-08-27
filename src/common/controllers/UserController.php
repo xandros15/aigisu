@@ -15,30 +15,56 @@ use Slim\Http\Response;
 
 class UserController extends Controller
 {
-    public function actionIndex()
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionIndex(Request $request, Response $response) : Response
     {
-        return $this->render('user/index');
+        return $this->render($response, 'user/index');
     }
 
-    public function actionView()
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionView(Request $request, Response $response) : Response
     {
-        return $this->render('user/view');
+        return $this->render($response, 'user/view');
     }
 
-    public function actionCreate(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response) : Response
     {
         $user = new User($request->getParams());
 
-        return $this->render('/auth/register', ['user' => $user]);
+        return $this->render($response, '/auth/register', ['user' => $user]);
     }
 
-    public function actionUpdate()
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionUpdate(Request $request, Response $response) : Response
     {
-        return $this->render('/user/edit');
+        return $this->render($response, '/user/edit');
     }
 
-    public function actionDelete()
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionDelete(Request $request, Response $response) : Response
     {
-        return $this->response->withRedirect('/users');
+        return $response->withRedirect('/users');
     }
 }

@@ -6,12 +6,18 @@ use Aigisu\Api\Models\Unit;
 use Aigisu\Common\Components\Alert\Alert;
 use Aigisu\Common\Models\UnitSort;
 use Slim\Http\Request;
+use Slim\Http\Response;
 use Xandros15\SlimPagination\Pagination;
 
 class UnitController extends Controller
 {
 
-    public function actionIndex(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionIndex(Request $request, Response $response) : Response
     {
         $unitSort = new UnitSort($request, $this->router);
         $unitSearch = Unit::with(['images', 'tags']);
@@ -22,7 +28,7 @@ class UnitController extends Controller
         }
         $list = $unitSearch->get();
 
-        return $this->render('unit/index', [
+        return $this->render($response, 'unit/index', [
             'unitList' => $list,
             'pagination' => new Pagination($request, $this->router, [
                 Pagination::OPT_TOTAL => $max,
@@ -32,14 +38,24 @@ class UnitController extends Controller
         ]);
     }
 
-    public function actionView(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionView(Request $request, Response $response) : Response
     {
         $unit = Unit::firstOrNew(['id' => $request->getAttribute('id')]);
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $this->render($response, 'unit/view', ['unit' => $unit]);
     }
 
-    public function actionCreate(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response) : Response
     {
         $unit = new Unit($request->getParams());
         if ($request->isPost()) {
@@ -49,10 +65,15 @@ class UnitController extends Controller
             }
         }
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $this->render($response, 'unit/view', ['unit' => $unit]);
     }
 
-    public function actionUpdate(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionUpdate(Request $request, Response $response) : Response
     {
         /* @var $unit Unit */
         $unit = Unit::find($request->getAttribute('id'));
@@ -65,24 +86,36 @@ class UnitController extends Controller
             }
         }
 
-        return $this->render('unit/view', ['unit' => $unit]);
+        return $this->render($response, 'unit/view', ['unit' => $unit]);
     }
 
-    public function actionDelete(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionDelete(Request $request, Response $response) : Response
     {
         /* @var $model Unit */
         $model = Unit::find($request->getAttribute('id'));
 
         if ($model->delete()) {
             Alert::add("Successful delete {$model->name}");
+            $indexPath = $this->router->pathFor('unit.index');
+            return $response->withRedirect($indexPath);
         }
 
         return $this->goBack();
     }
 
-    public function actionShowImages(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionShowImages(Request $request, Response $response) : Response
     {
         $unit = Unit::find($request->getAttribute('id'));
-        return $this->render('image/index', ['unit' => $unit]);
+        return $this->render($response, 'image/index', ['unit' => $unit]);
     }
 }

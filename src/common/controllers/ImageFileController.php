@@ -12,17 +12,23 @@ use Aigisu\Components\Upload\Upload;
 use Exception;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Http\Request;
+use Slim\Http\Response;
 
 class ImageFileController extends Controller
 {
     /** @var Rely */
     protected $rely;
 
-    public function actionCreate(Request $request)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response) : Response
     {
-        if($request->isXhr()){
+        if ($request->isXhr()) {
             $model = Unit::find($request->getAttribute('id'));
-            return $this->renderAjax('image/ajax/modal', ['model' => $model]);
+            return $this->renderAjax($response, 'image/ajax/modal', ['model' => $model]);
         }
         $this->uploadFiles($request->getUploadedFiles(), $request->getParams(), $request->getAttribute('id'));
 
@@ -99,7 +105,7 @@ class ImageFileController extends Controller
                 $model->getConnection()->commit();
 
                 Alert::add(sprintf("Successful uploaded %s %s %s", $model->unit->name, $model->server,
-                        ImageFile::imageSceneToHuman($model->scene)));
+                    ImageFile::imageSceneToHuman($model->scene)));
                 return true;
             } catch (Exception $exc) {
                 $model->getConnection()->rollBack();

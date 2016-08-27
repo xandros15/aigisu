@@ -4,6 +4,7 @@ namespace Aigisu\Common\Controllers;
 
 use Aigisu\Common\Components\View\View;
 use Aigisu\Core\ActiveContainer;
+use Slim\Http\Response;
 
 /**
  * Class Controller
@@ -13,26 +14,42 @@ use Aigisu\Core\ActiveContainer;
  */
 abstract class Controller extends ActiveContainer
 {
-    public $layout = 'layout/main';
+    const LAYOUT = 'layout/main';
 
-    public function render($view, $params = [])
+    /**
+     * @param Response $response
+     * @param string $view
+     * @param array $params
+     * @return Response
+     */
+    public function render(Response $response, string $view, array $params = []) : Response
     {
         $content = $this->view->render($view, $params);
 
-        $render = ($view === $this->layout) ? $content : $this->view->render($this->layout,
-            ['content' => $content]);
+        if ($view !== self::LAYOUT) {
+            $content = $this->view->render(self::LAYOUT, ['content' => $content]);
+        }
 
-        return $this->response->write($render);
+        return $response->write($content);
     }
 
-    public function renderAjax($view, $params = [])
+    /**
+     * @param Response $response
+     * @param $view
+     * @param array $params
+     * @return Response
+     */
+    public function renderAjax(Response $response, string $view, array $params = []) : Response
     {
         $render = $this->view->render($view, $params);
 
-        return $this->response->write($render);
+        return $response->write($render);
     }
 
-    public function goBack()
+    /**
+     * @return Response
+     */
+    public function goBack() : Response
     {
         if ($this->request->hasHeader('HTTP_REFERER')) {
             $referer = $this->request->getHeader('HTTP_REFERER')[0];
@@ -41,7 +58,10 @@ abstract class Controller extends ActiveContainer
         return $this->goHome();
     }
 
-    public function goHome()
+    /**
+     * @return Response
+     */
+    public function goHome() : Response
     {
         return $this->response->withRedirect($this->siteUrl, 301);
     }
