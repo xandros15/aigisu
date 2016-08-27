@@ -14,18 +14,10 @@ $pathForUpload = $this->pathFor('image.create', ['id' => $unit->id]);
                 Edit
             </a>
         </div>
-        <?php if ($unit->isImagesRequired()): ?>
-            <div class="form-group text-center">
-                <a type="button" class="btn btn-default" data-target="<?= $pathForUpload ?>"
-                   href="<?= $pathForUpload ?>">
-                    Upload
-                </a>
-            </div>
-        <?php endif; ?>
     </div>
     <div class="media-left">
         <a target="_blank" href="<?= $unit->linkgc ?>">
-            <img class="icon img-thumbnail<?= ($unit->isAnyImages()) ? ' success' : '' ?>" alt=""
+            <img class="icon img-thumbnail" alt=""
                  src="<?= $unit->icon ?>" data-bind="<?= $unit->id ?>">
         </a>
     </div>
@@ -40,14 +32,8 @@ $pathForUpload = $this->pathFor('image.create', ['id' => $unit->id]);
         </div>
         <div class="tags">
             <?php foreach ($unit->tags as $tag): ?>
-                <span class="label label-default"><?= $tag->name ?></span>
+                <span class="label label-default"><?= $tag['name'] ?></span>
             <?php endforeach; ?>
         </div>
     </div>
-    <?php if ($unit->isAnyImages()): ?>
-        <input class="is-any-images-uploaded" type="hidden" value="<?= $unit->id ?>">
-        <input class="image-route" type="hidden" value="<?=
-        $this->pathFor('unit.images', ['id' => $unit->id])
-        ?>">
-    <?php endif; ?>
 </li>

@@ -4,6 +4,7 @@ namespace Aigisu\Common\Controllers;
 
 use Aigisu\Common\Components\View\View;
 use Aigisu\Core\ActiveContainer;
+use GuzzleHttp\Client;
 use Slim\Http\Response;
 
 /**
@@ -64,5 +65,10 @@ abstract class Controller extends ActiveContainer
     public function goHome() : Response
     {
         return $this->response->withRedirect($this->siteUrl, 301);
+    }
+
+    protected function getClient() : Client
+    {
+        return new Client(['base_uri' => $this->siteUrl]);
     }
 }

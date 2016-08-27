@@ -36,7 +36,7 @@ $createPath = $this->pathFor('unit.create');
             </li>
             <?php foreach ($unitList as $unit): ?>
                 <?php /** @var $unit Unit */ ?>
-                <?= $this->render('unit/unit', ['unit' => $unit]) ?>
+                <?= $this->render('unit/unit', ['unit' => (object) $unit]) ?>
             <?php endforeach; ?>
         </ul>
         <nav class="text-center col-xs-12">
