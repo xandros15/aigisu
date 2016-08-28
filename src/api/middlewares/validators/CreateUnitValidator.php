@@ -25,7 +25,7 @@ class CreateUnitValidator extends Validator
     {
         return [
             'name' => v::alpha('_')->noWhitespace(),
-            'original' => v::stringType()->addRule(new UnitOriginalAvailable()),
+            'original' => v::stringType(),
             'icon' => v::url(),
             'link' => new Optional(v::url()),
             'linkgc' => v::url(),

@@ -44,7 +44,7 @@ class UnitController extends Controller
 
         $unit->saveOrFail();
 
-        return $this->created($response, $this->router->pathFor('api.unit.view', ['id' => $unit->getKey()]));
+        return $this->created($response, $this->router->pathFor('unit.view', ['id' => $unit->getKey()]));
     }
 
     /**

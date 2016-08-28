@@ -2,9 +2,10 @@
 
 namespace Aigisu\Common\Controllers;
 
+use Aigisu\Common\Components\Http\Client;
 use Aigisu\Common\Components\View\View;
 use Aigisu\Core\ActiveContainer;
-use GuzzleHttp\Client;
+use Slim\Http\Request;
 use Slim\Http\Response;
 
 /**
@@ -16,6 +17,7 @@ use Slim\Http\Response;
 abstract class Controller extends ActiveContainer
 {
     const LAYOUT = 'layout/main';
+    const INDEX = 'id';
 
     /**
      * @param Response $response
@@ -67,8 +69,23 @@ abstract class Controller extends ActiveContainer
         return $this->response->withRedirect($this->siteUrl, 301);
     }
 
-    protected function getClient() : Client
+    /**
+     * @param Response $response
+     * @return Client
+     */
+    protected function makeClient(Response $response) : Client
     {
-        return new Client(['base_uri' => $this->siteUrl]);
+        $client = new Client($response, ['base_uri' => $this->siteUrl,]);
+
+        return $client;
+    }
+
+    /**
+     * @param Request $request
+     * @return int
+     */
+    protected function getID(Request $request): int
+    {
+        return $request->getAttribute(self::INDEX, 0);
     }
 }

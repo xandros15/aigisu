@@ -48,6 +48,21 @@ class Unit extends Model
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
     }
 
+    public static function arrayToTags(array $tags)
+    {
+        $tags = array_map(function ($item) {
+            if ($item instanceof \stdClass) {
+                $item = $item->name;
+            } elseif (is_array($item)) {
+                $item = isset($item['name']) ? $item['name'] : reset($item);
+            }
+
+            return str_replace('_', ' ', $item);
+        }, $tags);
+
+        return implode(', ', $tags);
+    }
+
     public function images()
     {
         return $this->hasMany(Image::class, 'unit_id', 'id');
@@ -126,12 +141,12 @@ class Unit extends Model
         return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 
-    public function setTagsAttribute(array $tagNames)
+    public function setTagsAttribute($tagNames)
     {
-        $this->tagNames = $tagNames;
+        $this->tagNames = !is_array($tagNames) ? self::tagsToArray($tagNames) : $tagNames;
     }
 
-    private function parseTags($tagsString)
+    public static function tagsToArray(string $tagsString)
     {
         $parsedTags = [];
         $tags = explode(',', $tagsString);
