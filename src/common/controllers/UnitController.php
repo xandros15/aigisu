@@ -92,9 +92,8 @@ class UnitController extends Controller
             ]);
 
             if ($clientResponse->getStatusCode() === 200) {
-                $unit = json_decode($clientResponse, true);
-                Alert::add("Successful update {$unit['name']}");
-                $path = $this->router->pathFor('unit.view', ['id' => $unit['id']]);
+                Alert::add("Successful update {$params['name']}");
+                $path = $this->router->pathFor('unit.view', ['id' => $this->getID($request)]);
                 return $response->withRedirect($path);
             }
         }
