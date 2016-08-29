@@ -2,9 +2,11 @@
 
 namespace Aigisu\Common\Controllers;
 
+use Aigisu\Common\Components\Alert\Alert;
 use Aigisu\Common\Components\Http\Client;
 use Aigisu\Common\Components\View\View;
 use Aigisu\Core\ActiveContainer;
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -87,5 +89,28 @@ abstract class Controller extends ActiveContainer
     protected function getID(Request $request): int
     {
         return $request->getAttribute(self::INDEX, 0);
+    }
+
+    protected function addAlertIfError(ResponseInterface $response)
+    {
+        if ($response->getStatusCode() === 400) {
+            $json = json_decode((string) $response->getBody(), true);
+            $message = function (array $errors): string {
+                $text = '';
+                foreach ($errors as $name => $error) {
+                    $text .= $name . ':' . PHP_EOL;
+                    foreach ($error as $item) {
+                        $text .= '- ' . $item . PHP_EOL;
+                    }
+                }
+
+                return $text;
+            };
+
+            Alert::add($message($json['message']), Alert::ERROR);
+            return true;
+        }
+
+        return false;
     }
 }

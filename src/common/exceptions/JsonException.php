@@ -15,5 +15,5 @@ interface JsonException
      * @param string $json
      * @return JsonException
      */
-    public function jsonToException(string $json) : static;
+    public function jsonToException(string $json);
 }

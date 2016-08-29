@@ -19,7 +19,7 @@ class ServerException extends SlimException implements JsonException
      * @param string $json
      * @return ServerException
      */
-    public function jsonToException(string $json) : static
+    public function jsonToException(string $json)
     {
         $instance = json_decode($json, true);
         $exception = reset($instance[self::EXCEPTION]);

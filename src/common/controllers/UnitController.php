@@ -4,10 +4,13 @@ namespace Aigisu\Common\Controllers;
 
 use Aigisu\Api\Models\Unit;
 use Aigisu\Common\Components\Alert\Alert;
+use Aigisu\Common\Exceptions\FormException;
 use Aigisu\Common\Models\UnitSort;
+use finfo;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Database\Eloquent\Collection;
 use Slim\Exception\NotFoundException;
+use Slim\Http\Body;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Xandros15\SlimPagination\Pagination;
@@ -61,20 +64,25 @@ class UnitController extends Controller
      */
     public function actionCreate(Request $request, Response $response) : Response
     {
-        if ($params = $request->getParsedBody()) {
+        $unit = new \Slim\Collection($request->getParsedBody() ?? []);
+        if ($unit->count()) {
             $path = $this->router->pathFor('api.unit.create');
-            $params['tags'] = Unit::tagsToArray($params['tags']);
+            $textTags = $unit['tags'];
+            $unit->set('tags', $textTags ? Unit::tagsToArray($textTags) : ['']);
             $clientResponse = $this->makeClient($response)->post($path, [
-                RequestOptions::FORM_PARAMS => $params
+                RequestOptions::FORM_PARAMS => (array) $unit->getIterator()
             ]);
 
 
-            if ($clientResponse->getStatusCode() === 201) {
+            if ($this->addAlertIfError($clientResponse)) {
+                $unit->set('tags', $textTags);
+            } else {
+                Alert::add('Created unit ' . $unit['name']);
                 return $response->withRedirect($clientResponse->getHeaderLine('Location'));
             }
         }
 
-        return $this->render($response, 'unit/view', ['unit' => new Unit($params ?? [])]);
+        return $this->render($response, 'unit/view', ['unit' => $unit]);
     }
 
     /**
@@ -84,22 +92,30 @@ class UnitController extends Controller
      */
     public function actionUpdate(Request $request, Response $response) : Response
     {
-        if ($params = $request->getParsedBody()) {
+        $unit = new \Slim\Collection($request->getParsedBody() ?? []);
+        if ($unit->count()) {
             $path = $this->router->pathFor('api.unit.update', ['id' => $this->getID($request)]);
-            $params['tags'] = Unit::tagsToArray($params['tags']);
+
+            $textTags = $unit['tags'];
+            $unit->set('tags', $textTags ? Unit::tagsToArray($textTags) : ['']);
+
             $clientResponse = $this->makeClient($response)->patch($path, [
-                RequestOptions::FORM_PARAMS => $params
+                RequestOptions::FORM_PARAMS => (array) $unit->getIterator()
             ]);
 
+            if ($this->addAlertIfError($clientResponse)) {
+                $unit->set('tags', $textTags);
+            } else {
+                return $response->withRedirect($clientResponse->getHeaderLine('Location'));
+            }
             if ($clientResponse->getStatusCode() === 200) {
-                Alert::add("Successful update {$params['name']}");
+                Alert::add("Successful update {$unit['name']}");
                 $path = $this->router->pathFor('unit.view', ['id' => $this->getID($request)]);
                 return $response->withRedirect($path);
             }
         }
 
-        return $this->actionView($request, $response);
-
+        return $this->render($response, 'unit/view', ['unit' => $unit]);
     }
 
     /**
@@ -158,5 +174,26 @@ class UnitController extends Controller
             return $this->render($response, 'image/index', ['unit' => $unit]);
         }
         throw new NotFoundException($request, $response);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws NotFoundException
+     */
+    public function actionGetIcon(Request $request, Response $response) : Response
+    {
+        $iconFilename = $this->get('uploadDirectory') . '/icons/' . $this->getID($request);
+
+        if (!$icon = @fopen($iconFilename, 'rb')) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $body = new Body($icon);
+        $finfo = new finfo();;
+
+        return $response->withBody($body)
+            ->withHeader('Content-Type', $finfo->buffer($body, FILEINFO_MIME_TYPE));
     }
 }
