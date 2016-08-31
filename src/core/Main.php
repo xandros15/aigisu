@@ -1,6 +1,8 @@
 <?php
 namespace Aigisu\Core;
 
+use Illuminate\Container\Container;
+use Illuminate\Events\Dispatcher;
 use Slim\App as Slim;
 
 class Main extends Slim
@@ -54,6 +56,7 @@ class Main extends Slim
         $settings = $this->getContainer();
         $database = new Database($settings->database);
         $database->setAsGlobal();
+        $database->setEventDispatcher(new Dispatcher(new Container()));
         $database->bootEloquent();
         $this->getContainer()['connection'] = $database->connection();
     }
