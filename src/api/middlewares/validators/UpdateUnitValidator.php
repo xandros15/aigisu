@@ -18,4 +18,12 @@ class UpdateUnitValidator extends CreateUnitValidator
     {
         return $this->makeOptional(parent::rules());
     }
+
+    /**
+     * @return array
+     */
+    protected function fileRules() : array
+    {
+        return $this->makeOptional(parent::fileRules());
+    }
 }

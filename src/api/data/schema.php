@@ -60,7 +60,7 @@ $createTable((new Unit())->getTable(), function (Blueprint $table) {
     $table->increments('id')->unsigned();
     $table->string('name', 25);
     $table->string('original', 45);
-    $table->string('icon', 100);
+    $table->string('icon_name', 32);
     $table->string('link', 100)->nullable();
     $table->string('linkgc', 100)->nullable();
     $table->enum('rarity', Unit::getRarities());

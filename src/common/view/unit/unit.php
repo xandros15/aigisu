@@ -1,8 +1,10 @@
 <?php
 
 /* @var $unit array */
+/** @var $this \Aigisu\Common\Components\View\UrlExtension */
 $pathForView = $this->pathFor('unit.view', ['id' => $unit['id']]);
 $pathForUpload = $this->pathFor('image.create', ['id' => $unit['id']]);
+$pathForIcon = $this->pathFor('unit.icon', ['name' => $unit['icon_name']]);
 ?>
 <li id="unit-<?= $unit['id'] ?>" class="list-group-item media unit">
     <div class="buttons media-left ">
@@ -15,7 +17,7 @@ $pathForUpload = $this->pathFor('image.create', ['id' => $unit['id']]);
     </div>
     <div class="media-left">
         <a target="_blank" href="<?= $unit['linkgc'] ?>">
-            <img class="icon img-thumbnail" alt="<?= $unit['name'] ?>" src="<?= $unit['icon'] ?>"
+            <img class="icon img-thumbnail" alt="<?= $unit['name'] ?>" src="<?= $pathForIcon ?>"
                  data-bind="<?= $unit['id'] ?>">
         </a>
     </div>

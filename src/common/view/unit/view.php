@@ -8,26 +8,38 @@
 use Aigisu\Api\Models\Unit;
 use Aigisu\Common\Components\View\UrlExtension;
 use Aigisu\Common\Components\View\View;
+use Slim\Collection;
 
-/** @var $unit Unit */
+/** @var $unit Collection */
 /** @var $this View | UrlExtension */
 $rarities = Unit::getRarities();
-$isNewUnit = (!$unit['id']);
-$this->title = ($isNewUnit) ? 'New Unit | Aigisu' : $unit['name'] . ' | Aigisu';
-$this->containerClass = 'container';
-$route = ($isNewUnit) ? $this->pathFor('unit.create') : $this->pathFor('unit.update', ['id' => $unit['id']]);
-$deleteRoute = (!$isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit['id']]) : '';
+$isNewUnit = empty($unit['id']);
+
+if (!$isNewUnit) {
+    $this->title = $unit['name'] . ' | Aigisu';
+    $pathForCreateOrUpdate = $this->pathFor('unit.update', ['id' => $unit['id']]);
+    $pathForDelete = $this->pathFor('unit.delete', ['id' => $unit['id']]);
+    $pathForIcon = $unit['icon_name'] ? $this->pathFor('unit.icon', ['name' => $unit['icon_name']]) : '';
+    $unit['tags'] = Unit::arrayToTags($unit['tags']);
+} else {
+    $this->title = 'New Unit | Aigisu';
+    $pathForCreateOrUpdate = $this->pathFor('unit.create');
+    $unit['id'] = 'create';
+}
+
 ?>
-<form method="post" role="form" data-toggle="validator" action="<?= $route ?>">
+
+<form method="post" enctype="multipart/form-data" role="form" data-toggle="validator"
+      action="<?= $pathForCreateOrUpdate ?>">
     <header class="form-header row">
         <div class="col-xs-12 col-sm-6">
             <h2 class="form-title">
                 <?= ($isNewUnit) ? 'Create new unit' : 'Update ' . $unit['name'] ?>
             </h2>
         </div>
-        <?php if (!$isNewUnit) : ?>
+        <?php if (!empty($pathForIcon)) : ?>
             <div class="col-xs-12 col-sm-6">
-                <img src="<?= $unit['icon'] ?>" class="pull-right img-circle" alt="...">
+                <img src="<?= $pathForIcon ?>" class="pull-right img-circle" alt="...">
             </div>
         <?php endif; ?>
     </header>
@@ -45,10 +57,8 @@ $deleteRoute = (!$isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit['id'
                    required>
         </div>
         <div class="form-group col-xs-12 col-sm-6">
-            <label for="unit-icon-<?= $unit['id'] ?>">Icon link:</label>
-            <input id="unit-icon-<?= $unit['id'] ?>" class="form-control unit-icon" name="icon" type="url"
-                   value="<?= $unit['icon'] ?>"
-                   placeholder="http://" required>
+            <label for="unit-icon-<?= $unit['id'] ?>">Icon:</label>
+            <input id="unit-icon-<?= $unit['id'] ?>" class="form-control unit-icon" name="icon" type="file">
         </div>
         <div class="form-group col-xs-12 col-sm-6">
             <label for="unit-link-<?= $unit['id'] ?>">Link to seesaw:</label>
@@ -95,7 +105,7 @@ $deleteRoute = (!$isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit['id'
         <div class="form-group col-xs-12 col-sm-6">
             <label for="unit-tags-<?= $unit['id'] ?>">Tags:</label>
                         <textarea id="unit-tags-<?= $unit['id'] ?>" class="form-control unit-tags" name="tags"
-                                  rows="3"><?= Unit::arrayToTags($unit['tags']) ?></textarea>
+                                  rows="3"><?= $unit['tags'] ?></textarea>
         </div>
     </section>
     <footer class="form-footer row">
@@ -104,10 +114,10 @@ $deleteRoute = (!$isNewUnit) ? $this->pathFor('unit.delete', ['id' => $unit['id'
                 <?= ($isNewUnit) ? 'create' : 'update' ?>
             </button>
         </div>
-        <?php if (!$isNewUnit): ?>
+        <?php if (isset($pathForDelete)): ?>
             <div class="col-xs-3 pull-right">
                 <a role="button" class="btn btn-block btn-danger pull-left" onclick="return confirm('Are you sure');"
-                   href="<?= $deleteRoute ?>">
+                   href="<?= $pathForDelete ?>">
                     delete
                 </a>
             </div>

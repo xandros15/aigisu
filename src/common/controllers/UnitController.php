@@ -4,7 +4,6 @@ namespace Aigisu\Common\Controllers;
 
 use Aigisu\Api\Models\Unit;
 use Aigisu\Common\Components\Alert\Alert;
-use Aigisu\Common\Exceptions\FormException;
 use Aigisu\Common\Models\UnitSort;
 use finfo;
 use GuzzleHttp\RequestOptions;
@@ -184,7 +183,7 @@ class UnitController extends Controller
      */
     public function actionGetIcon(Request $request, Response $response) : Response
     {
-        $iconFilename = $this->get('uploadDirectory') . '/icons/' . $this->getID($request);
+        $iconFilename = $this->get('uploadDirectory') . '/icons/' . $request->getAttribute('name');
 
         if (!$icon = @fopen($iconFilename, 'rb')) {
             throw new NotFoundException($request, $response);

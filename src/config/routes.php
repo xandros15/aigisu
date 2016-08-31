@@ -60,6 +60,9 @@ $this->group('', function () use ($container) {
 
         $this->get('/images/{id:\d+}', UnitController::class . ':actionShowImages')
             ->setName('unit.images');
+
+        $this->get('/icon/{name:\w{32}}', UnitController::class . ':actionGetIcon')
+            ->setName('unit.icon');
     });
 
     $this->group('/users', function () use ($formAssetMiddleware) {
@@ -121,7 +124,7 @@ $this->group('/api', function () use ($container) {
         $this->get('/{id:\d+}', ApiUnitController::class . ':actionView')
             ->setName('api.unit.view');
 
-        $this->patch('/{id:\d+}', ApiUnitController::class . ':actionUpdate')
+        $this->post('/{id:\d+}', ApiUnitController::class . ':actionUpdate')
             ->setName('api.unit.update')
             ->add(new UpdateUnitValidator($container));
 

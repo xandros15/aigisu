@@ -5,6 +5,7 @@ namespace Aigisu\Api\Models;
 
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Slim\Http\UploadedFile;
 
 /**
  * Class Unit
@@ -13,12 +14,12 @@ use Illuminate\Database\Eloquent\Collection;
 /**
  * @property string $name
  * @property string $original
- * @property string $icon
  * @property string $link
  * @property string $linkgc
  * @property string $rarity
  * @property bool $is_male
  * @property bool $is_only_dmm
+ * @property string $icon_name
  * @property bool $has_aw_image
  * @property Collection $images
  * @property int $id
@@ -29,18 +30,21 @@ class Unit extends Model
 
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
+    /** @var  UploadedFile | null */
+    public $icon;
     protected $fillable = [
         'name',
         'original',
-        'icon',
         'link',
         'linkgc',
         'rarity',
         'is_male',
         'is_only_dmm',
+        'icon_name',
         'has_aw_image',
         'tags'
     ];
+    /** @var array */
     private $tagNames;
 
     public static function getRarities()
@@ -68,51 +72,13 @@ class Unit extends Model
         return $this->hasMany(Image::class, 'unit_id', 'id');
     }
 
-    public function isImagesRequired()
+    /**
+     * @param UploadedFile $icon
+     */
+    public function attachIcon(UploadedFile $icon)
     {
-        return $this->images->count() != $this->getTotalImageRequired();
-    }
-
-    public function getTotalImageRequired()
-    {
-        $total = 0;
-        if ($this->is_male) {
-            return $total;
-        }
-        if ($this->is_only_dmm) {
-            $total = Image::IMAGE_PER_SERVER;
-        } else {
-            $total = Image::IMAGE_PER_SERVER * count(Image::getImageSchemeArray());
-        }
-        if ($this->has_aw_image) {
-            $total++;
-        }
-        return $total;
-    }
-
-    public function isImageRequired($server, $scene)
-    {
-        return !(($this->is_only_dmm && $server != Image::SERVER_DMM)
-            || ($scene == Image::IMAGE_SPECIAL_SCENE && !$this->has_aw_image)
-            || $this->isImageExist($server, $scene)
-        );
-
-    }
-
-    public function isImageExist($server, $scene)
-    {
-        return $this->images->where('server', $server)->contains('scene', $scene);
-
-    }
-
-    public function isAnyImages()
-    {
-        return !$this->images->isEmpty();
-    }
-
-    public function getTagsString()
-    {
-        return $this->tags->implode('name', ', ');
+        $this->icon = $icon;
+        $this->setAttribute('icon_name', md5_file($icon->file));
     }
 
     public function save(array $options = [])
