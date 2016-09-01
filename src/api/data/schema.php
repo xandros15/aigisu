@@ -5,107 +5,131 @@
  * Date: 2016-08-19
  * Time: 20:48
  */
-namespace Aigisu\Core;
+namespace Aigisu\Api\Data;
 
-use Aigisu\Api\Models\Image;
-use Aigisu\Api\Models\Tag;
-use Aigisu\Api\Models\Unit;
-use Aigisu\Api\Models\User;
+use Aigisu\Api\Data\Tables\Images;
+use Aigisu\Api\Data\Tables\Table;
+use Aigisu\Api\Data\Tables\Tags;
+use Aigisu\Api\Data\Tables\TagsUnits;
+use Aigisu\Api\Data\Tables\Units;
+use Aigisu\Api\Data\Tables\Users;
+use Aigisu\Core\Configuration;
+use Aigisu\Core\Database;
+use Aigisu\Core\Model;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 
-require_once '../../../vendor/autoload.php';
 
+class Schema
+{
+    /** @var Builder */
+    protected $builder;
 
-$settings = new Configuration();
-$database = new Database($settings->database);
+    /**
+     * Schema constructor.
+     */
+    public function __construct()
+    {
+        $settings = new Configuration();
+        $database = new Database($settings->database);
 
-$database->bootEloquent();
+        $database->bootEloquent();
 
-$connection = $database->getConnection();
-$builder = $connection->getSchemaBuilder();
-$builder->disableForeignKeyConstraints();
-$createTable = function (string $table, \Closure $schema) use ($builder) {
-    $builder->dropIfExists($table);
-    $builder->create($table, $schema);
-};
+        $connection = $database->getConnection();
+        $this->builder = $connection->getSchemaBuilder();
+        $this->builder->disableForeignKeyConstraints();
+    }
 
-$pivot = function (Model $firstModel, Model $secondModel) : string {
-    $fistTable = rtrim($firstModel->getTable(), 's');
-    $secondTable = rtrim($secondModel->getTable(), 's');
+    /**
+     * @param Model $firstModel
+     * @param Model $secondModel
+     * @return string
+     */
+    public static function pivot(Model $firstModel, Model $secondModel) : string
+    {
+        $fistTable = rtrim($firstModel->getTable(), 's');
+        $secondTable = rtrim($secondModel->getTable(), 's');
 
-    return ($fistTable <=> $secondTable) === -1 ? $fistTable . '_' . $secondTable : $secondTable . '_' . $fistTable;
-};
+        return ($fistTable <=> $secondTable) === -1 ? $fistTable . '_' . $secondTable : $secondTable . '_' . $fistTable;
+    }
 
-$createTable((new User())->getTable(), function (Blueprint $table) {
-    $table->collation = 'utf8mb4_unicode_ci';
-    $table->charset = 'utf8mb4';
-    $table->engine = 'InnoDB';
+    /**
+     * Run schema builder
+     */
+    public function run()
+    {
+        /** @var $table Table */
+        foreach ($this->tables() as $table) {
+            if ($this->builder->hasTable($table->getTableName())) {
+                $this->backupTableData($table);
+                $this->builder->dropIfExists($table->getTableName());
+            };
 
-    $table->increments('id')->unsigned();
-    $table->string('name', 15)->unique();
-    $table->string('password_hash', 255);
-    $table->string('email', 64)->unique();;
-    $table->string('access_token', 255)->nullable();
-    $table->string('recovery_hash', 255)->nullable();
-    $table->string('remember_identifier', 255)->nullable();
-    $table->string('remember_hash', 255)->nullable();
-    $table->timestamps();
-});
+            $schema = $this->makeClosure($table);
+            try {
+                $this->builder->create($table->getTableName(), $schema);
+            } catch (\Exception $e) {
+                dump($e->getTrace());
+            }
+        }
+    }
 
-$createTable((new Unit())->getTable(), function (Blueprint $table) {
-    $table->collation = 'utf8mb4_unicode_ci';
-    $table->charset = 'utf8mb4';
-    $table->engine = 'InnoDB';
+    /**
+     * @return array
+     */
+    private function tables() : array
+    {
+        return [
+            new Units(),
+            new Users(),
+            new Images(),
+            new Tags(),
+            new TagsUnits(),
+        ];
+    }
 
-    $table->increments('id')->unsigned();
-    $table->string('name', 25);
-    $table->string('original', 45);
-    $table->string('icon_name', 32);
-    $table->string('link', 100)->nullable();
-    $table->string('linkgc', 100)->nullable();
-    $table->enum('rarity', Unit::getRarities());
-    $table->boolean('is_male');
-    $table->boolean('is_only_dmm');
-    $table->boolean('has_aw_image');
-    $table->timestamps();
-});
+    /**
+     * @param Table $table
+     */
+    private function backupTableData(Table $table)
+    {
+        $tableName = $table->getTableName();
+        /** @var $collection Collection */
+        $collection = $this->builder->getConnection()->table($tableName)->get();
+        if (!$collection->isEmpty()) {
+            $filename = __DIR__ . '/../../../backup/' . $tableName . date('_Y-m-d-hs') . '.json';
+            file_put_contents($filename, $collection->toJson(JSON_PRETTY_PRINT));
+        }
+    }
 
-$createTable((new Image())->getTable(), function (Blueprint $table) {
-    $table->collation = 'utf8mb4_unicode_ci';
-    $table->charset = 'utf8mb4';
-    $table->engine = 'InnoDB';
+    /**
+     * @param Table $table
+     * @return \Closure
+     */
+    private function makeClosure(Table $table)
+    {
+        return function (Blueprint $blueprint) use ($table) {
+            $table->onCreate($blueprint);
+        };
+    }
 
-    $table->increments('id')->unsigned();
-    $table->string('md5', 32);
-    $table->integer('unit_id', false, true);
-    $table->enum('server', Image::getServersNames());
-    $table->tinyInteger('scene', false, true);
-    $table->string('google_id', 64);
-    $table->string('imgur_id', 64);
-    $table->string('imgur_delhash', 64);
-    $table->timestamps();
-
-    $table->foreign('unit_id')->references('id')->on((new Unit())->getTable())->onDelete('cascade');
-});
-
-$createTable((new Tag())->getTable(), function (Blueprint $table) {
-    $table->collation = 'utf8mb4_unicode_ci';
-    $table->charset = 'utf8mb4';
-    $table->engine = 'InnoDB';
-
-    $table->increments('id')->unsigned();
-    $table->string('name', 25);
-    $table->timestamps();
-});
-
-$unitToTag = $pivot(new Unit(), new Tag());
-$createTable($unitToTag, function (Blueprint $table) {
-    $table->collation = 'utf8mb4_unicode_ci';
-    $table->charset = 'utf8mb4';
-    $table->engine = 'InnoDB';
-
-    $table->integer('unit_id')->unsigned()->index();
-    $table->integer('tag_id')->unsigned()->index();
-    $table->foreign('unit_id')->references('id')->on((new Unit())->getTable())->onDelete('cascade');
-    $table->foreign('tag_id')->references('id')->on((new Tag())->getTable())->onDelete('cascade');
-});
+    /**
+     * @param string $tableName
+     * @param string $filename
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function restoreTableData(string $tableName, string $filename)
+    {
+        try {
+            $this->builder->getConnection()->transaction(function (Connection $connection) use ($filename, $tableName) {
+                $data = json_decode(file_get_contents($filename), true);
+                $connection->table($tableName)->insert($data);
+            });
+        } catch (\Exception $e) {
+            dump($e->getTrace());
+        }
+    }
+}

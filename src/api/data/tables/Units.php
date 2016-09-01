@@ -1,0 +1,48 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: xandros15
+ * Date: 2016-08-31
+ * Time: 21:05
+ */
+
+namespace Aigisu\Api\Data\Tables;
+
+
+use Aigisu\Api\Models\Unit;
+use Illuminate\Database\Schema\Blueprint;
+
+class Units implements Table
+{
+    /**
+     * @return string
+     */
+    public function getTableName() : string
+    {
+        return (new Unit())->getTable();
+    }
+
+    /**
+     * @param Blueprint $table
+     * @return void
+     */
+    public function onCreate(Blueprint $table)
+    {
+        $table->collation = 'utf8mb4_unicode_ci';
+        $table->charset = 'utf8mb4';
+        $table->engine = 'InnoDB';
+
+        $table->increments('id')->unsigned();
+        $table->string('name', 25);
+        $table->string('original', 45);
+        $table->string('icon_name', 32);
+        $table->string('link', 100)->nullable();
+        $table->string('linkgc', 100)->nullable();
+        $table->enum('rarity', Unit::getRarities());
+        $table->boolean('is_male');
+        $table->boolean('is_only_dmm');
+        $table->boolean('has_aw_image');
+        $table->timestamps();
+    }
+
+}
