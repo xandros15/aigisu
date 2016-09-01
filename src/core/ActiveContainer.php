@@ -10,7 +10,6 @@ namespace Aigisu\Core;
 
 use Illuminate\Database\Connection;
 use Interop\Container\ContainerInterface;
-use InvalidArgumentException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -48,13 +47,15 @@ abstract class ActiveContainer
 
     /**
      * @param string $name
+     * @param null $default
      * @return mixed
      */
-    protected function get(string $name)
+    protected function get(string $name, $default = null)
     {
         if (!$this->container->has($name)) {
-            throw new InvalidArgumentException("Attribute {$name} doesn't exist");
+            return $default;
         }
+
         return $this->container->get($name);
     }
 
