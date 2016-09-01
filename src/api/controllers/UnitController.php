@@ -77,4 +77,14 @@ class UnitController extends Controller
 
         return $response->withStatus(self::STATUS_OK);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionRarities(Request $request, Response $response): Response
+    {
+        return $response->withJson(Unit::getRarities(), self::STATUS_OK);
+    }
 }

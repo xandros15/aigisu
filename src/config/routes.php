@@ -130,5 +130,8 @@ $this->group('/api', function () use ($container) {
 
         $this->delete('/{id:\d+}', ApiUnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
+
+        $this->get('/rarities', ApiUnitController::class . ':actionRarities')
+            ->setName('api.unit.rarities');
     });
 })->add(new ExceptionHandler($container));
