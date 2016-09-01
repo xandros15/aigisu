@@ -3,10 +3,8 @@
 namespace Aigisu\Common\Controllers;
 
 use Aigisu\Api\Models\Unit;
-use Aigisu\Common\Components\Alert\Alert;
 use Aigisu\Common\Models\UnitSort;
 use finfo;
-use GuzzleHttp\RequestOptions;
 use Illuminate\Database\Eloquent\Collection;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Body;
@@ -63,25 +61,7 @@ class UnitController extends Controller
      */
     public function actionCreate(Request $request, Response $response) : Response
     {
-        $unit = new \Slim\Collection($request->getParsedBody() ?? []);
-        if ($unit->count()) {
-            $path = $this->router->pathFor('api.unit.create');
-            $textTags = $unit['tags'];
-            $unit->set('tags', $textTags ? Unit::tagsToArray($textTags) : ['']);
-            $clientResponse = $this->makeClient($response)->post($path, [
-                RequestOptions::FORM_PARAMS => (array) $unit->getIterator()
-            ]);
-
-
-            if ($this->addAlertIfError($clientResponse)) {
-                $unit->set('tags', $textTags);
-            } else {
-                Alert::add('Created unit ' . $unit['name']);
-                return $response->withRedirect($clientResponse->getHeaderLine('Location'));
-            }
-        }
-
-        return $this->render($response, 'unit/view', ['unit' => $unit]);
+        return $response->withStatus(503);
     }
 
     /**
@@ -91,30 +71,7 @@ class UnitController extends Controller
      */
     public function actionUpdate(Request $request, Response $response) : Response
     {
-        $unit = new \Slim\Collection($request->getParsedBody() ?? []);
-        if ($unit->count()) {
-            $path = $this->router->pathFor('api.unit.update', ['id' => $this->getID($request)]);
-
-            $textTags = $unit['tags'];
-            $unit->set('tags', $textTags ? Unit::tagsToArray($textTags) : ['']);
-
-            $clientResponse = $this->makeClient($response)->patch($path, [
-                RequestOptions::FORM_PARAMS => (array) $unit->getIterator()
-            ]);
-
-            if ($this->addAlertIfError($clientResponse)) {
-                $unit->set('tags', $textTags);
-            } else {
-                return $response->withRedirect($clientResponse->getHeaderLine('Location'));
-            }
-            if ($clientResponse->getStatusCode() === 200) {
-                Alert::add("Successful update {$unit['name']}");
-                $path = $this->router->pathFor('unit.view', ['id' => $this->getID($request)]);
-                return $response->withRedirect($path);
-            }
-        }
-
-        return $this->render($response, 'unit/view', ['unit' => $unit]);
+        return $response->withStatus(503);
     }
 
     /**
@@ -142,17 +99,7 @@ class UnitController extends Controller
      */
     public function actionDelete(Request $request, Response $response) : Response
     {
-        $path = $this->router->pathFor('api.unit.delete', ['id' => $this->getID($request)]);
-
-        $clientResponse = $this->makeClient($response)->get($path);
-
-        if ($clientResponse->getStatusCode() === 200) {
-            Alert::add("Successful delete unit");
-            $indexPath = $this->router->pathFor('unit.index');
-            return $response->withRedirect($indexPath);
-        }
-
-        return $this->goBack();
+        return $response->withStatus(503);
     }
 
     /**
