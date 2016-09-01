@@ -13,6 +13,7 @@ use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
+use Aigisu\Common\Controllers\HomeController;
 use Aigisu\Common\Controllers\ImageFileController;
 use Aigisu\Common\Controllers\UnitController;
 use Aigisu\Common\Controllers\UserController;
@@ -20,7 +21,6 @@ use Aigisu\Common\Middlewares\Alert;
 use Aigisu\Common\Middlewares\FormAssets;
 use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
-use Aigisu\Common\Middlewares\TrailingSearch;
 use Aigisu\Common\Middlewares\TrailingSlash;
 use Aigisu\Common\Middlewares\View;
 
@@ -29,10 +29,8 @@ $container = $this->getContainer();
 
 $this->group('', function () use ($container) {
     $formAssetMiddleware = new FormAssets($container);
-    $trailingSearchMiddleware = new TrailingSearch($container);
-    $this->get('[/]', UnitController::class . ':actionIndex')
-        ->setName('home')
-        ->add($trailingSearchMiddleware);
+    $this->get('[/]', HomeController::class . ':actionIndex')
+        ->setName('home');
 
     $this->group('/images', function () {
         /** @var $this \Aigisu\Core\Main */
