@@ -48,6 +48,10 @@ class UnitTagsListener implements Event
         }
     }
 
+    /**
+     * @param Unit $unit
+     * @return array
+     */
     private function getTags(Unit $unit) : array
     {
         if (is_string($unit->tagNames)) {
@@ -65,7 +69,7 @@ class UnitTagsListener implements Event
      * @param string $tagsString
      * @return array
      */
-    private function tagsToArray(string $tagsString)
+    private function tagsToArray(string $tagsString) : array
     {
         $tags = explode(',', $tagsString);
         $tags = array_map(function ($tag) {
