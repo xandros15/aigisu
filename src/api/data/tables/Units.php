@@ -35,7 +35,7 @@ class Units implements Table
         $table->increments('id')->unsigned();
         $table->string('name', 25);
         $table->string('original', 45);
-        $table->string('icon_name', 32);
+        $table->string('icon_name');
         $table->string('link', 100)->nullable();
         $table->string('linkgc', 100)->nullable();
         $table->enum('rarity', Unit::getRarities());

@@ -3,8 +3,10 @@
 namespace Aigisu\Api\Controllers;
 
 
+use Aigisu\Api\Models\Events\IconUploadListener;
 use Aigisu\Api\Models\Events\UnitTagsListener;
 use Aigisu\Api\Models\Unit;
+use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -44,7 +46,7 @@ class UnitController extends Controller
     {
         $unit = new Unit($request->getParams());
         $unit->created(new UnitTagsListener());
-        $unit->attachUploadedFiles($request->getUploadedFiles());
+        $unit->created(new IconUploadListener($request, $this->get(FilesystemManager::class)));
         $unit->saveOrFail();
 
         return $this->created($response, $this->router->pathFor('unit.view', ['id' => $unit->getKey()]));
@@ -61,8 +63,7 @@ class UnitController extends Controller
         $unit = Unit::findOrFail($this->getID($request))
             ->fill($request->getParams());
         $unit->saving(new UnitTagsListener());
-
-        $unit->attachUploadedFiles($request->getUploadedFiles());
+        $unit->saving(new IconUploadListener($request, $this->get(FilesystemManager::class)));
         $unit->saveOrFail();
 
         return $response->withStatus(self::STATUS_OK);

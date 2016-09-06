@@ -62,7 +62,7 @@ $this->group('', function () use ($container) {
         $this->get('/images/{id:\d+}', UnitController::class . ':actionShowImages')
             ->setName('unit.images');
 
-        $this->get('/icon/{name:\w{32}}', UnitController::class . ':actionGetIcon')
+        $this->get('/icon', UnitController::class . ':actionGetIcon')
             ->setName('unit.icon');
     });
 

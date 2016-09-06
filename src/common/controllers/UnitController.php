@@ -130,8 +130,7 @@ class UnitController extends Controller
      */
     public function actionGetIcon(Request $request, Response $response) : Response
     {
-        $iconPath = realpath($this->get('upload') . '/public/icons/');
-        $iconFileName = $iconPath . DIRECTORY_SEPARATOR . $request->getAttribute('name');
+        $iconFileName = $this->get('public') . DIRECTORY_SEPARATOR . $request->getQueryParam('name');
 
         return $this->getImage($iconFileName, $request, $response);
 
@@ -147,11 +146,12 @@ class UnitController extends Controller
     protected function getImage(string $imageFileName, Request $request, Response $response) : Response
     {
         if (!$image = @fopen($imageFileName, 'rb')) {
+            dd($imageFileName, file_exists($imageFileName), $image);
             throw new NotFoundException($request, $response);
         }
 
         $body = new Body($image);
-        $finfo = new finfo();;
+        $finfo = new finfo();
 
         return $response->withBody($body)
             ->withHeader('Content-Type', $finfo->buffer($body, FILEINFO_MIME_TYPE));

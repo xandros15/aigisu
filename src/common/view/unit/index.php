@@ -29,7 +29,7 @@ $units = $units->map(function ($unit) {
     });
 
     /* @var $this UrlExtension */
-    $iconSrc = $this->pathFor('unit.icon', ['name' => $unit['icon_name']]);
+    $iconSrc = $this->pathFor('unit.icon', [], ['name' => $unit['icon_name']]);
     $unitPath = $this->pathFor('unit.view', ['id' => $unit['id']]);
     $params = [
         '#' => $unit['id'],

@@ -28,6 +28,8 @@ final class Configuration extends Container
         $this->applyParams(require self::DIR_CONFIG . 'db.config.php');
         /** @noinspection PhpIncludeInspection */
         $this->applyParams(require self::DIR_CONFIG . 'params.php');
+        /** @noinspection PhpIncludeInspection */
+        $this->applyParams(require self::DIR_CONFIG . 'dependencies.php');
     }
 
     /**
