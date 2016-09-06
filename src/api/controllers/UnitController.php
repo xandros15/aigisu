@@ -2,7 +2,7 @@
 
 namespace Aigisu\Api\Controllers;
 
-use Aigisu\Api\Models\Events\UnitIconUploadListener;
+
 use Aigisu\Api\Models\Events\UnitTagsListener;
 use Aigisu\Api\Models\Unit;
 use Slim\Http\Request;
@@ -43,7 +43,6 @@ class UnitController extends Controller
     public function actionCreate(Request $request, Response $response): Response
     {
         $unit = new Unit($request->getParams());
-        $unit->created(new UnitIconUploadListener($this->get('FileUploader')));
         $unit->created(new UnitTagsListener());
         $unit->attachUploadedFiles($request->getUploadedFiles());
         $unit->saveOrFail();
@@ -61,7 +60,6 @@ class UnitController extends Controller
         /** @var $unit Unit */
         $unit = Unit::findOrFail($this->getID($request))
             ->fill($request->getParams());
-        $unit->saved(new UnitIconUploadListener($this->get('FileUploader')));
         $unit->saving(new UnitTagsListener());
 
         $unit->attachUploadedFiles($request->getUploadedFiles());

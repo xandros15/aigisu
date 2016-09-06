@@ -1,6 +1,6 @@
-*
-!.gitignore
-!web.php
-!lang
-!routes.php
-!web.local.php
+credentials.json
+db.config.php
+imgur.albums.json
+imgur.credentials.json
+imgur.key.json
+key.json

@@ -130,16 +130,44 @@ class UnitController extends Controller
      */
     public function actionGetIcon(Request $request, Response $response) : Response
     {
-        $iconFilename = $this->get('uploadDirectory') . '/icons/' . $request->getAttribute('name');
+        $iconPath = realpath($this->get('upload') . '/public/icons/');
+        $iconFileName = $iconPath . DIRECTORY_SEPARATOR . $request->getAttribute('name');
 
-        if (!$icon = @fopen($iconFilename, 'rb')) {
+        return $this->getImage($iconFileName, $request, $response);
+
+    }
+
+    /**
+     * @param string $imageFileName
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws NotFoundException
+     */
+    protected function getImage(string $imageFileName, Request $request, Response $response) : Response
+    {
+        if (!$image = @fopen($imageFileName, 'rb')) {
             throw new NotFoundException($request, $response);
         }
 
-        $body = new Body($icon);
+        $body = new Body($image);
         $finfo = new finfo();;
 
         return $response->withBody($body)
             ->withHeader('Content-Type', $finfo->buffer($body, FILEINFO_MIME_TYPE));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws NotFoundException
+     */
+    public function actionGetHelpImage(Request $request, Response $response) : Response
+    {
+        $imagePath = realpath($this->get('upload') . '/public/images/');
+        $imageFileName = $imagePath . DIRECTORY_SEPARATOR . $request->getAttribute('id');
+
+        return $this->getImage($imageFileName, $request, $response);
     }
 }

@@ -38,6 +38,9 @@ $this->group('', function () use ($container) {
             ->setName('image.create');
     });
 
+    $this->get('/upload/image/{id:\d+}', UnitController::class . ':actionGetHelpImage')
+        ->setName('help.image');
+
     $this->group('/units', function () use ($formAssetMiddleware) {
         /** @var $this \Aigisu\Core\Main */
         $this->map(['post', 'get'], '/create', UnitController::class . ':actionCreate')
