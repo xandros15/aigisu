@@ -146,7 +146,6 @@ class UnitController extends Controller
     protected function getImage(string $imageFileName, Request $request, Response $response) : Response
     {
         if (!$image = @fopen($imageFileName, 'rb')) {
-            dd($imageFileName, file_exists($imageFileName), $image);
             throw new NotFoundException($request, $response);
         }
 
