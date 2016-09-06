@@ -5,7 +5,6 @@ namespace Aigisu\Api\Models;
 
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Slim\Http\UploadedFile;
 
 /**
  * Class Unit
@@ -13,13 +12,13 @@ use Slim\Http\UploadedFile;
 
 /**
  * @property string $name
- * @property string $original
- * @property string $link
- * @property string $linkgc
+ * @property string $kanji
+ * @property string $link_seesaw
+ * @property string $link_gc
  * @property string $rarity
  * @property bool $is_male
  * @property bool $is_only_dmm
- * @property string $icon_name
+ * @property string $icon
  * @property bool $has_aw_image
  * @property Collection $images
  * @property int $id
@@ -30,46 +29,51 @@ class Unit extends Model
 
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
-    /** @var  UploadedFile | null */
-    public $icon;
+
+    /** @var string|array */
     public $tagNames;
+
+    /** @var array */
     protected $fillable = [
         'name',
-        'original',
+        'kanji',
         'link',
         'linkgc',
         'rarity',
         'is_male',
         'is_only_dmm',
-        'icon_name',
+        'icon',
         'has_aw_image',
         'tags'
     ];
 
+    /**
+     * @return array
+     */
     public static function getRarities()
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function images()
     {
         return $this->hasMany(Image::class, 'unit_id', 'id');
     }
 
     /**
-     * @param UploadedFile $icon
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function attachIcon(UploadedFile $icon)
-    {
-        $this->icon = $icon;
-        $this->setAttribute('icon_name', md5_file($icon->file));
-    }
-
     public function tags()
     {
         return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
 
+    /**
+     * @param string|array $tagNames
+     */
     public function setTagsAttribute($tagNames)
     {
         $this->tagNames = $tagNames;

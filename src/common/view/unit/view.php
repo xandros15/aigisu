@@ -25,7 +25,7 @@ $tagsToString = function (array $tags) {
 /** @var $unit array */
 /** @var $this View | UrlExtension */
 $this->title = $unit['name'] . ' | Aigisu';
-$unit['icon_name'] = $unit['icon_name'] ? $this->pathFor('unit.icon', [], ['name' => $unit['icon_name']]) : '';
+$unit['icon_name'] = $unit['icon'] ? $this->pathFor('unit.icon', [], ['name' => $unit['icon']]) : '';
 $unit['tags'] = $tagsToString($unit['tags']);
 $unit['images'] = $unit['images'] ? $this->pathFor('unit.images', ['id' => $unit['id']]) : '';
 ?>

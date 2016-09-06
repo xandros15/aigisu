@@ -34,10 +34,10 @@ class Units implements Table
 
         $table->increments('id')->unsigned();
         $table->string('name', 25);
-        $table->string('original', 45);
-        $table->string('icon_name');
-        $table->string('link', 100)->nullable();
-        $table->string('linkgc', 100)->nullable();
+        $table->string('kanji', 45);
+        $table->string('icon');
+        $table->string('link_seesaw', 100)->nullable();
+        $table->string('link_gc', 100)->nullable();
         $table->enum('rarity', Unit::getRarities());
         $table->boolean('is_male');
         $table->boolean('is_only_dmm');
