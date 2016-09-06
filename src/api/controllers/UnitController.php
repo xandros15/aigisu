@@ -44,12 +44,20 @@ class UnitController extends Controller
      */
     public function actionCreate(Request $request, Response $response): Response
     {
+        $this->applyEvents($request);
         $unit = new Unit($request->getParams());
-        $unit->created(new UnitTagsListener());
-        $unit->created(new IconUploadListener($request, $this->get(FilesystemManager::class)));
         $unit->saveOrFail();
 
         return $this->created($response, $this->router->pathFor('unit.view', ['id' => $unit->getKey()]));
+    }
+
+    /**
+     * @param Request $request
+     */
+    protected function applyEvents(Request $request)
+    {
+        Unit::saving(new IconUploadListener($request, $this->get(FilesystemManager::class)));
+        Unit::saved(new UnitTagsListener());
     }
 
     /**
@@ -60,10 +68,10 @@ class UnitController extends Controller
     public function actionUpdate(Request $request, Response $response): Response
     {
         /** @var $unit Unit */
+        $this->applyEvents($request);
         $unit = Unit::findOrFail($this->getID($request))
             ->fill($request->getParams());
-        $unit->saving(new UnitTagsListener());
-        $unit->saving(new IconUploadListener($request, $this->get(FilesystemManager::class)));
+
         $unit->saveOrFail();
 
         return $response->withStatus(self::STATUS_OK);
