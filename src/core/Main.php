@@ -7,18 +7,29 @@ use Slim\App as Slim;
 
 class Main extends Slim
 {
+    /** @var bool */
     private $debug = false;
 
+    /**
+     * Main constructor.
+     * @param array $items
+     */
     public function __construct($items = [])
     {
         parent::__construct(new Configuration($items));
     }
 
+    /**
+     * @return bool
+     */
     public function isDebug()
     {
         return $this->debug;
     }
 
+    /**
+     * @param bool $state
+     */
     public function debug(bool $state = true)
     {
         $this->debug = $state;
@@ -46,8 +57,8 @@ class Main extends Slim
 
     private function setRoutes()
     {
-        /** @noinspection PhpIncludeInspection */
-        require_once Configuration::DIR_CONFIG . 'routes.php';
+        $routerProvider = new RouteProvider($this);
+        $routerProvider->map();
     }
 
     private function setDatabase()
