@@ -33,7 +33,7 @@ $unit['images'] = $unit['images'] ? $this->pathFor('unit.images', ['id' => $unit
     <?php foreach ($unit as $label => $item): ?>
         <tr>
             <th><?= $label ?></th>
-            <td><?= $item ?></td>
+            <td><?= is_array($item) ? implode('<br>', $item) : $item ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

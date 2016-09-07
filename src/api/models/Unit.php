@@ -37,14 +37,32 @@ class Unit extends Model
     protected $fillable = [
         'name',
         'kanji',
-        'link',
-        'linkgc',
+        'link_seesaw',
+        'link_gc',
         'rarity',
         'is_male',
         'is_only_dmm',
         'icon',
         'has_aw_image',
         'tags'
+    ];
+
+    /** @var array */
+    protected $hidden = [
+        'link_gc',
+        'link_seesaw',
+    ];
+
+    /** @var array */
+    protected $casts = [
+        'is_male' => 'bool',
+        'is_only_dmm' => 'bool',
+        'has_aw_image' => 'bool',
+    ];
+
+    /** @var array */
+    protected $appends = [
+        'links'
     ];
 
     /**
@@ -77,5 +95,13 @@ class Unit extends Model
     public function setTagsAttribute($tagNames)
     {
         $this->tagNames = $tagNames;
+    }
+
+    public function getLinksAttribute()
+    {
+        return [
+            'seesaw' => $this->link_seesaw,
+            'gc' => $this->link_gc
+        ];
     }
 }

@@ -36,8 +36,8 @@ $units = $units->map(function ($unit) {
         'Unit' => "<a href='{$unitPath}' >{$unit['name']}</a>",
         'Icon' => "<img style='max-width:98px;' class='img-responsive' src='{$iconSrc}' alt='{$unit['name']}'>",
         'Kanji' => $unit['kanji'],
-        'Links' => "<a class='btn btn-default' style='margin:5px;' href='{$unit['link_seesaw']}'>seesaw</a>" .
-            "<a class='btn btn-default' style='margin:5px;' href='{$unit['link_gc']}'>gc wiki</a>",
+        'Links' => "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['seesaw']}'>seesaw</a>" .
+            "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['gc']}'>gc wiki</a>",
         'Rarity' => $unit['rarity'],
         'Created' => "<time>{$unit['created_at']}</time>",
         'Updated' => "<time>{$unit['updated_at']}</time>",
