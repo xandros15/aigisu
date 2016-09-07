@@ -57,7 +57,7 @@ class IconUploadListener implements Event
     {
         $iconName = UploadedFile::file($this->request, self::FILE_NAME, $this->manager)->store(self::FILE_CATALOG);
         if ($iconName) {
-            $unit->icon_name = $iconName;
+            $unit->icon = $iconName;
         }
     }
 }
