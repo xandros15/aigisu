@@ -15,10 +15,24 @@ use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
 use Aigisu\Common\Middlewares\TrailingSlash;
 use Aigisu\Common\Middlewares\View;
+use InvalidArgumentException;
 use Slim\App;
+use Slim\Interfaces\RouteGroupInterface;
 
-class RouteProvider extends ActiveContainer
+class RouteProvider
 {
+    /** @var  array */
+    protected $webMiddlewares = [
+        TrailingSlash::class,
+        HomeAssets::class,
+        ShowQueries::class,
+        View::class,
+        Alert::class,
+    ];
+    /** @var  array */
+    protected $apiMiddlewares = [
+        ExceptionHandler::class,
+    ];
     /** @var App */
     private $app;
 
@@ -28,7 +42,6 @@ class RouteProvider extends ActiveContainer
      */
     public function __construct(App $app)
     {
-        parent::__construct($app->getContainer());
         $this->app = $app;
     }
 
@@ -52,17 +65,26 @@ class RouteProvider extends ActiveContainer
      */
     protected function mapWebRoutes()
     {
-        $container = $this->app->getContainer();
-        $this->app->group('', function () {
+        $web = $this->app->group('', function () {
             /** @var $this Main */
             /** @noinspection PhpIncludeInspection */
             require $this->getContainer()->get('root') . '/routes/web.php';
-        })
-            ->add(new TrailingSlash($container))
-            ->add(new HomeAssets($container))
-            ->add(new ShowQueries($container))
-            ->add(new View($container))
-            ->add(new Alert($container));
+        });
+
+        $this->applyMiddlewares($web, $this->webMiddlewares);
+    }
+
+    /**
+     * @param RouteGroupInterface $group
+     * @param array $middlewares
+     * @throws InvalidArgumentException
+     */
+    protected function applyMiddlewares(RouteGroupInterface $group, array $middlewares)
+    {
+        $middlewareProvider = $this->app->getContainer()->get('middlewares');
+        foreach ($middlewares as $middleware) {
+            $group->add($middlewareProvider->createMiddleware($middleware));
+        }
     }
 
     /**
@@ -74,11 +96,12 @@ class RouteProvider extends ActiveContainer
      */
     protected function mapApiRoutes()
     {
-        $container = $this->app->getContainer();
-        $this->app->group('/api', function () {
+        $api = $this->app->group('/api', function () {
             /** @var $this Main */
             /** @noinspection PhpIncludeInspection */
             require $this->getContainer()->get('root') . '/routes/api.php';
-        })->add(new ExceptionHandler($container));
+        });
+
+        $this->applyMiddlewares($api, $this->apiMiddlewares);
     }
 }

@@ -9,7 +9,7 @@
 use Aigisu\Core\Configuration;
 use Aigisu\Helpers\Filesystem;
 
-/** @var Configuration $configuration */
+/** @var Configuration $container */
 return [
     'default' => 'public',
     'cloud' => 'public',
@@ -21,7 +21,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => Filesystem::resolvePath("{$configuration['upload']}/public"),
+            'root' => Filesystem::resolvePath("{$container['upload']}/public"),
             'visibility' => 'public',
         ],
     ],
