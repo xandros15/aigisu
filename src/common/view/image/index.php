@@ -15,7 +15,7 @@ $this->containerClass = 'container-fluid';
             <li style="display: inline-block; position: relative;">
                 <span style="position: absolute; top: 10px; left: 10px; font-size: 20px;">#<?= $image['id'] ?></span>
                 <img id="<?= $image['id'] ?>" alt="<?= $serverName . $image['scene'] ?>" style="max-width: 100%;"
-                     src="<?= sprintf('%s/%s.png', 'http://i.imgur.com/', $image['imgur_id']); ?>">
+                     src="<?= $image['imgur'] ?>">
             </li>
         <?php endforeach; ?>
     </ul>

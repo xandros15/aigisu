@@ -3,7 +3,6 @@
 namespace Aigisu\Api\Models;
 
 use Aigisu\Core\Model;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class Image
@@ -27,16 +26,29 @@ class Image extends Model
     const IMAGE_DIRECTORY = 'images';
     const SERVER_NUTAKU = 'nutaku';
     const SERVER_DMM = 'dmm';
+    /** @var array */
     protected $fillable = [
         'md5',
         'unit_id',
         'server',
         'scene',
+        'google_id',
+        'imgur_id',
+        'imgur_delhash',
+    ];
+    /** @var array */
+    protected $hidden = [
+        'unit_id',
+        'google_id',
+        'imgur_id',
+        'imgur_delhash',
+    ];
+    /** @var array */
+    protected $appends = [
         'google',
         'imgur',
-        'delhash'
+        'local',
     ];
-    protected $guarded = [];
 
     public static function getImageSchemeArray()
     {
@@ -56,13 +68,6 @@ class Image extends Model
         return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
     }
 
-    public static function getImageSetByUnitId($id)
-    {
-        /** @var $imageSet Collection */
-        $imageSet = self::where('unit_id', $id)->get();
-        return $imageSet->sortBy('scene')->groupBy('server');
-    }
-
     public static function getServersNames()
     {
         return [self::SERVER_DMM, self::SERVER_NUTAKU];
@@ -73,12 +78,18 @@ class Image extends Model
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
 
-    public function getLink()
+    public function getGoogleAttribute()
     {
-        /**
-         * http://i.imgur.com/{fieldId}.png
-         * https://drive.google.com/uc?export=view&id={fileId}
-         */
-        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur_id);
+        return sprintf('https://drive.google.com/uc?export=view&id=%s', $this->google_id);
+    }
+
+    public function getImgurAttribute()
+    {
+        return sprintf('http://i.imgur.com/%s.png', $this->imgur_id);
+    }
+
+    public function getLocalAttribute()
+    {
+        return $this->id; //todo url for local image
     }
 }
