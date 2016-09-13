@@ -6,6 +6,7 @@ use Aigisu\Api\Models\Unit;
 use Aigisu\Common\Models\UnitSort;
 use finfo;
 use Illuminate\Database\Eloquent\Collection;
+use League\Flysystem\Util;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Body;
 use Slim\Http\Request;
@@ -130,9 +131,7 @@ class UnitController extends Controller
      */
     public function actionGetIcon(Request $request, Response $response) : Response
     {
-        $iconFileName = $this->get('public') . DIRECTORY_SEPARATOR . $request->getQueryParam('name');
-
-        return $this->getImage($iconFileName, $request, $response);
+        return $this->getImage($request->getQueryParam('name'), $request, $response);
 
     }
 
@@ -145,6 +144,12 @@ class UnitController extends Controller
      */
     protected function getImage(string $imageFileName, Request $request, Response $response) : Response
     {
+        try {
+            $imageFileName = $this->get('public') . DIRECTORY_SEPARATOR . Util::normalizePath($imageFileName);
+        } catch (\LogicException $e) {
+            throw new NotFoundException($request, $response);
+        }
+
         if (!$image = @fopen($imageFileName, 'rb')) {
             throw new NotFoundException($request, $response);
         }
@@ -164,9 +169,6 @@ class UnitController extends Controller
      */
     public function actionGetHelpImage(Request $request, Response $response) : Response
     {
-        $imagePath = realpath($this->get('upload') . '/public/images/');
-        $imageFileName = $imagePath . DIRECTORY_SEPARATOR . $request->getAttribute('id');
-
-        return $this->getImage($imageFileName, $request, $response);
+        return $this->getImage('/images/' . $request->getAttribute('id'), $request, $response);
     }
 }
