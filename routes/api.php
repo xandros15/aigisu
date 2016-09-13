@@ -7,6 +7,7 @@
  */
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
+use Aigisu\Api\Middlewares\UnitEventMiddleware;
 use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
@@ -54,4 +55,4 @@ $this->group('/units', function () use ($middlewares) {
 
     $this->get('/rarities', UnitController::class . ':actionRarities')
         ->setName('api.unit.rarities');
-});
+})->add($middlewares->createMiddleware(UnitEventMiddleware::class));

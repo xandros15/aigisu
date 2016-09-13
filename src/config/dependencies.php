@@ -5,6 +5,7 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
+use Aigisu\Components\Url\UrlManager;
 use Aigisu\Core\MiddlewareProvider;
 use Interop\Container\ContainerInterface;
 
@@ -15,4 +16,7 @@ return [
     'middlewares' => function (ContainerInterface $container) {
         return new MiddlewareProvider($container);
     },
+    UrlManager::class => function (ContainerInterface $container) {
+        return new UrlManager($container);
+    }
 ];
