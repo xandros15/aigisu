@@ -3,6 +3,7 @@
 namespace Aigisu\Api\Models;
 
 
+use Aigisu\Components\Url\UrlModelHelper;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Unit extends Model
 {
+    use UrlModelHelper;
 
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
@@ -104,4 +106,14 @@ class Unit extends Model
             'gc' => $this->link_gc
         ];
     }
+
+    public function getIconAttribute()
+    {
+        if ($url = $this->urlTo('unit.icon', [], ['name' => $this->attributes['icon']])) {
+            return $url;
+        }
+
+        return $this->attributes['icon'];
+    }
+
 }
