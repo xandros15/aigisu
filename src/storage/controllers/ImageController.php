@@ -18,7 +18,7 @@ use Slim\Http\Response;
 
 class ImageController extends Controller
 {
-    const CACHE_LIFETIME = 3600;
+    const CACHE_LIFETIME = 60 * 60 * 24; // sec * min * h = day
 
     /**
      * @param Request $request
@@ -58,7 +58,7 @@ class ImageController extends Controller
 
         return $response->withBody($body)
             ->withHeader('Content-Type', $mimeType)
-            ->withHeader('Cache-Control', 'max-age=' . (self::CACHE_LIFETIME * 60) . ', public')
+            ->withHeader('Cache-Control', 'max-age=' . self::CACHE_LIFETIME . ', public')
             ->withHeader('Etag', md5($body));
     }
 
