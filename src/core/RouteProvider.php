@@ -33,6 +33,11 @@ class RouteProvider
     protected $apiMiddlewares = [
         ExceptionHandler::class,
     ];
+
+    /** @var  array */
+    protected $storageMiddlewares = [];
+
+
     /** @var App */
     private $app;
 
@@ -54,6 +59,7 @@ class RouteProvider
     {
         $this->mapWebRoutes();
         $this->mapApiRoutes();
+        $this->mapStorageRoutes();
     }
 
     /**
@@ -103,5 +109,21 @@ class RouteProvider
         });
 
         $this->applyMiddlewares($api, $this->apiMiddlewares);
+    }
+
+    /**
+     * Define the "storage" routes for the application.
+     *
+     * @return void
+     */
+    protected function mapStorageRoutes()
+    {
+        $storage = $this->app->group('/storage', function () {
+            /** @var $this Main */
+            /** @noinspection PhpIncludeInspection */
+            require $this->getContainer()->get('root') . '/routes/storage.php';
+        });
+
+        $this->applyMiddlewares($storage, $this->storageMiddlewares);
     }
 }

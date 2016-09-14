@@ -109,7 +109,7 @@ class Unit extends Model
 
     public function getIconAttribute()
     {
-        if ($url = $this->urlTo('unit.icon', [], ['name' => $this->attributes['icon']])) {
+        if ($url = $this->urlTo('storage.images', ['path' => $this->attributes['icon']])) {
             return $url;
         }
 

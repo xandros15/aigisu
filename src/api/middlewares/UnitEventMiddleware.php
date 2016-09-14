@@ -13,6 +13,7 @@ use Aigisu\Api\Models\Events\IconUploadListener;
 use Aigisu\Api\Models\Events\UnitTagsListener;
 use Aigisu\Api\Models\Unit;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Url\UrlManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -45,6 +46,7 @@ class UnitEventMiddleware extends Middleware
     {
         Unit::saving(new IconUploadListener($request, $this->get(FilesystemManager::class)));
         Unit::saved(new UnitTagsListener());
+        Unit::setUrlManager(new UrlManager($this->get('router'), $this->get('siteUrl')));
     }
 
     public function ready()

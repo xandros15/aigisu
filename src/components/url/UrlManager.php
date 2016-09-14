@@ -9,7 +9,6 @@
 namespace Aigisu\Components\Url;
 
 
-use Interop\Container\ContainerInterface;
 use Slim\Router;
 
 class UrlManager
@@ -22,12 +21,13 @@ class UrlManager
 
     /**
      * UrlManager constructor.
-     * @param ContainerInterface $container
+     * @param Router $router
+     * @param string $url
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Router $router, string $url)
     {
-        $this->url = (string) $container->get('siteUrl');
-        $this->router = $container->get('router');
+        $this->router = $router;
+        $this->url = $url;
     }
 
     /**
