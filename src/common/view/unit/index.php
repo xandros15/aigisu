@@ -28,12 +28,13 @@ $units = $units->map(function ($unit) {
         }
     });
 
+    $icon = $unit['icon'] ?: 'data:image/png;base64,' . base64_encode(file_get_contents(__DIR__ . '/assets/non_icon'));
     /* @var $this UrlExtension */
     $unitPath = $this->pathFor('unit.view', ['id' => $unit['id']]);
     $params = [
         '#' => $unit['id'],
         'Unit' => "<a href='{$unitPath}' >{$unit['name']}</a>",
-        'Icon' => "<img style='max-width:98px;' class='img-responsive' src='{$unit['icon']}' alt='{$unit['name']}'>",
+        'Icon' => "<img style='max-width:98px;' class='img-responsive' src='{$icon}' alt='{$unit['name']}'>",
         'Kanji' => $unit['kanji'],
         'Links' => "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['seesaw']}'>seesaw</a>" .
             "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['gc']}'>gc wiki</a>",

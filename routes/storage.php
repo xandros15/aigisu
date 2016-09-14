@@ -10,5 +10,5 @@ use Aigisu\Storage\Controllers\ImageController;
 /** @var $this \Aigisu\Core\Main */
 /** @var $middlewares \Aigisu\Core\MiddlewareProvider */
 
-$this->get('/images/{path:\w+/\w{32}}', ImageController::class . ':actionView')
+$this->get('/images/{path:\w+/\w+}', ImageController::class . ':actionView')
     ->setName('storage.images');

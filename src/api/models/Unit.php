@@ -109,11 +109,13 @@ class Unit extends Model
 
     public function getIconAttribute()
     {
-        if ($url = $this->urlTo('storage.images', ['path' => $this->attributes['icon']])) {
-            return $url;
+        $url = null;
+        $icon = $this->attributes['icon'];
+        if ($icon && $local = $this->urlTo('storage.images', ['path' => $icon])) {
+            $url = $local;
         }
 
-        return $this->attributes['icon'];
+        return $url;
     }
 
 }
