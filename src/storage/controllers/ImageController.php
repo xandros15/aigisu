@@ -18,6 +18,8 @@ use Slim\Http\Response;
 
 class ImageController extends Controller
 {
+    const CACHE_LIFETIME = 3600;
+
     /**
      * @param Request $request
      * @param Response $response
@@ -54,7 +56,10 @@ class ImageController extends Controller
             throw new NotFoundException($request, $response);
         }
 
-        return $response->withBody($body)->withHeader('Content-Type', $mimeType);
+        return $response->withBody($body)
+            ->withHeader('Content-Type', $mimeType)
+            ->withHeader('Cache-Control', 'max-age=' . (self::CACHE_LIFETIME * 60) . ', public')
+            ->withHeader('Etag', md5($body));
     }
 
     /**
