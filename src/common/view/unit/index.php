@@ -29,12 +29,11 @@ $units = $units->map(function ($unit) {
     });
 
     /* @var $this UrlExtension */
-    $iconSrc = $this->pathFor('unit.icon', [], ['name' => $unit['icon']]);
     $unitPath = $this->pathFor('unit.view', ['id' => $unit['id']]);
     $params = [
         '#' => $unit['id'],
         'Unit' => "<a href='{$unitPath}' >{$unit['name']}</a>",
-        'Icon' => "<img style='max-width:98px;' class='img-responsive' src='{$iconSrc}' alt='{$unit['name']}'>",
+        'Icon' => "<img style='max-width:98px;' class='img-responsive' src='{$unit['icon']}' alt='{$unit['name']}'>",
         'Kanji' => $unit['kanji'],
         'Links' => "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['seesaw']}'>seesaw</a>" .
             "<a class='btn btn-default' style='margin:5px;' href='{$unit['links']['gc']}'>gc wiki</a>",
