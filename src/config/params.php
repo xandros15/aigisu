@@ -25,6 +25,12 @@ return [
     'siteUrl' => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
     },
+    'resources' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->root}/resources");
+    },
+    'viewPath' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->resources}/view");
+    },
     FilesystemManager::class => function (Configuration $container) {
         return new FilesystemManager($container);
     }

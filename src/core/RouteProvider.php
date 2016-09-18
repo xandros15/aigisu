@@ -14,7 +14,6 @@ use Aigisu\Common\Middlewares\Alert;
 use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
 use Aigisu\Common\Middlewares\TrailingSlash;
-use Aigisu\Common\Middlewares\View;
 use InvalidArgumentException;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
@@ -26,7 +25,6 @@ class RouteProvider
         TrailingSlash::class,
         HomeAssets::class,
         ShowQueries::class,
-        View::class,
         Alert::class,
     ];
     /** @var  array */

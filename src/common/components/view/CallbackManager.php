@@ -16,7 +16,7 @@ class CallbackManager
     public function __call($name, $arguments)
     {
         if (!isset($this->callbacks[$name])) {
-            throw new \BadMethodCallException();
+            throw new \BadMethodCallException("Method {$name} doesn't exist");
         }
         return call_user_func_array($this->callbacks[$name], $arguments);
     }
