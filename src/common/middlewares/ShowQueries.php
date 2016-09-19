@@ -10,6 +10,7 @@ namespace Aigisu\Common\Middlewares;
 
 
 use Aigisu\Common\Components\View\LayoutExtension;
+use Aigisu\Common\Components\View\View;
 use Aigisu\Core\Middleware;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -26,7 +27,7 @@ class ShowQueries extends Middleware
     {
         if ($this->get('isDebug')) {
             $this->connection->enableQueryLog();
-            $this->view->append(function () {
+            $this->get(View::class)->append(function () {
                 $queries = $this->getQueryContent();
                 return $queries ? $queries : '';
             }, LayoutExtension::PH_BODY_END, 1);

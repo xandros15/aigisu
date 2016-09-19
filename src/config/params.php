@@ -5,7 +5,6 @@
  * Date: 2016-09-05
  * Time: 21:43
  */
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Core\Configuration;
 use Aigisu\Helpers\Filesystem;
 
@@ -31,7 +30,4 @@ return [
     'viewPath' => function (Configuration $container) {
         return Filesystem::resolvePath("{$container->resources}/view");
     },
-    FilesystemManager::class => function (Configuration $container) {
-        return new FilesystemManager($container);
-    }
 ];

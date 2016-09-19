@@ -29,10 +29,11 @@ abstract class Controller extends ActiveContainer
      */
     public function render(Response $response, string $view, array $params = []) : Response
     {
-        $content = $this->view->render($view, $params);
+        $renderer = $this->get(View::class);
+        $content = $renderer->render($view, $params);
 
         if ($view !== self::LAYOUT) {
-            $content = $this->view->render(self::LAYOUT, ['content' => $content]);
+            $content = $renderer->render(self::LAYOUT, ['content' => $content]);
         }
 
         return $response->write($content);
@@ -46,7 +47,7 @@ abstract class Controller extends ActiveContainer
      */
     public function renderAjax(Response $response, string $view, array $params = []) : Response
     {
-        $render = $this->view->render($view, $params);
+        $render = $this->get(View::class)->render($view, $params);
 
         return $response->write($render);
     }

@@ -9,6 +9,7 @@ namespace Aigisu\Components\Http\Filesystem;
 
 
 use Aigisu\Core\Configuration;
+use Interop\Container\ContainerInterface;
 use InvalidArgumentException;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
@@ -35,9 +36,9 @@ class FilesystemManager
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  Configuration $config
+     * @param  ContainerInterface $config
      */
-    public function __construct(Configuration $config)
+    public function __construct(ContainerInterface $config)
     {
         $this->config = $config;
     }
