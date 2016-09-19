@@ -85,9 +85,8 @@ class RouteProvider
      */
     protected function applyMiddlewares(RouteGroupInterface $group, array $middlewares)
     {
-        $middlewareProvider = $this->app->getContainer()->get('middlewares');
         foreach ($middlewares as $middleware) {
-            $group->add($middlewareProvider->createMiddleware($middleware));
+            $group->add(new $middleware($this->app->getContainer()));
         }
     }
 

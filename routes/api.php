@@ -14,13 +14,11 @@ use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 
 /** @var $this \Aigisu\Core\Main */
-/** @var $middlewares \Aigisu\Core\MiddlewareProvider */
-$middlewares = $this->getContainer()->get('middlewares');
-$this->group('/users', function () use ($middlewares) {
+$this->group('/users', function () {
     /** @var $this \Aigisu\Core\Main */
     $this->post('', UserController::class . ':actionCreate')
         ->setName('api.user.create')
-        ->add($middlewares->createMiddleware(CreateUserValidator::class));
+        ->add(new CreateUserValidator($this->getContainer()));
 
     $this->get('', UserController::class . ':actionIndex')
         ->setName('api.user.index');
@@ -29,17 +27,17 @@ $this->group('/users', function () use ($middlewares) {
 
     $this->patch('/{id:\d+}', UserController::class . ':actionUpdate')
         ->setName('api.user.update')
-        ->add($middlewares->createMiddleware(UpdateUserValidator::class));
+        ->add(new UpdateUserValidator($this->getContainer()));
 
     $this->delete('/{id:\d+}', UserController::class . ':actionDelete')
         ->setName('api.user.delete');
 });
 
-$this->group('/units', function () use ($middlewares) {
+$this->group('/units', function () {
     /** @var $this \Aigisu\Core\Main */
     $this->post('', UnitController::class . ':actionCreate')
         ->setName('api.unit.create')
-        ->add($middlewares->createMiddleware(CreateUnitValidator::class));
+        ->add(new CreateUnitValidator($this->getContainer()));
 
     $this->get('', UnitController::class . ':actionIndex')
         ->setName('api.unit.index');
@@ -48,11 +46,11 @@ $this->group('/units', function () use ($middlewares) {
 
     $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
         ->setName('api.unit.update')
-        ->add($middlewares->createMiddleware(UpdateUnitValidator::class));
+        ->add(new UpdateUnitValidator($this->getContainer()));
 
     $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
         ->setName('api.unit.delete');
 
     $this->get('/rarities', UnitController::class . ':actionRarities')
         ->setName('api.unit.rarities');
-})->add($middlewares->createMiddleware(UnitEventMiddleware::class));
+})->add(new UnitEventMiddleware($this->getContainer()));

@@ -13,9 +13,8 @@ use Aigisu\Common\Controllers\UserController;
 use Aigisu\Common\Middlewares\FormAssets;
 
 /** @var $this \Aigisu\Core\Main */
-/** @var $middlewares \Aigisu\Core\MiddlewareProvider */
-$middlewares = $this->getContainer()->get('middlewares');
-$formAssetMiddleware = $middlewares->createMiddleware(FormAssets::class);
+
+$formAssetMiddleware = new FormAssets($this->getContainer());
 
 $this->get('[/]', HomeController::class . ':actionIndex')
     ->setName('home');

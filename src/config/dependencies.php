@@ -16,9 +16,6 @@ return [
     'filesystems' => function (ContainerInterface $container) {
         return require 'filesystems.php';
     },
-    'middlewares' => function (ContainerInterface $container) {
-        return new MiddlewareProvider($container);
-    },
     'view' => function (ContainerInterface $container) {
         $callbackManager = new CallbackManager();
         $callbackManager->addClassCallbacks(new UrlExtension($container));
