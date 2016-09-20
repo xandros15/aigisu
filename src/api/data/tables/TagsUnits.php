@@ -10,8 +10,8 @@ namespace Aigisu\Api\Data\Tables;
 
 
 use Aigisu\Api\Data\Schema;
-use Aigisu\Api\Models\Tag;
 use Aigisu\Api\Models\Unit;
+use Aigisu\Api\Models\Unit\Tag;
 use Illuminate\Database\Schema\Blueprint;
 
 class TagsUnits implements Table

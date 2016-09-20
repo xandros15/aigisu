@@ -3,6 +3,7 @@
 namespace Aigisu\Api\Models;
 
 
+use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Components\Url\UrlModelHelper;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;

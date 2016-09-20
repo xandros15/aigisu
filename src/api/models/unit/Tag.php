@@ -1,8 +1,9 @@
 <?php
 
-namespace Aigisu\Api\Models;
+namespace Aigisu\Api\Models\Unit;
 
 
+use Aigisu\Api\Models\Unit;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
 
