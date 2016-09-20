@@ -21,6 +21,7 @@ use Aigisu\Core\Model;
 class Image extends Model
 {
 
+    const UNIT_RELATION_COLUMN = 'unit_id';
     const IMAGE_PER_SERVER = 2;
     const IMAGE_SPECIAL_SCENE = 3;
     const IMAGE_DIRECTORY = 'images';
@@ -75,7 +76,7 @@ class Image extends Model
 
     public function unit()
     {
-        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+        return $this->belongsTo(Unit::class, self::UNIT_RELATION_COLUMN, 'id');
     }
 
     public function getGoogleAttribute()

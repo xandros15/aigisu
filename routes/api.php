@@ -5,6 +5,7 @@
  * Date: 2016-09-07
  * Time: 23:36
  */
+use Aigisu\Api\Controllers\Images\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\UnitEventMiddleware;
@@ -53,4 +54,21 @@ $this->group('/units', function () {
 
     $this->get('/rarities', UnitController::class . ':actionRarities')
         ->setName('api.unit.rarities');
+
+    $this->group('/{unitId:\d+}/cg', function () {
+        /** @var $this \Aigisu\Core\Main */
+        $this->post('', CGController::class . ':actionCreate')
+            ->setName('api.unit.create');
+
+        $this->get('', CGController::class . ':actionIndex')
+            ->setName('api.unit.cg.index');
+        $this->get('/{id:\d+}', CGController::class . ':actionView')
+            ->setName('api.unit.cg.view');
+
+        $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
+            ->setName('api.unit.cg.update');
+
+        $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
+            ->setName('api.unit.cg.delete');
+    });
 })->add(new UnitEventMiddleware($this->getContainer()));
