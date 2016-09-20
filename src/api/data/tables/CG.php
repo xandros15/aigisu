@@ -9,17 +9,17 @@
 namespace Aigisu\Api\Data\Tables;
 
 
-use Aigisu\Api\Models\Image;
+use Aigisu\Api\Models\Unit\CG as CGModel;
 use Illuminate\Database\Schema\Blueprint;
 
-class Images implements Table
+class CG implements Table
 {
     /**
      * @return string
      */
     public function getTableName() : string
     {
-        return (new Image())->getTable();
+        return (new CGModel())->getTable();
     }
 
     /**
@@ -44,7 +44,7 @@ class Images implements Table
         $table->increments('id')->unsigned();
         $table->string('md5', 32);
         $table->integer('unit_id', false, true);
-        $table->enum('server', Image::getServersNames());
+        $table->enum('server', CGModel::getServersNames());
         $table->tinyInteger('scene', false, true);
         $table->string('google_id', 64);
         $table->string('imgur_id', 64);

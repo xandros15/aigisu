@@ -6,11 +6,11 @@
  * Time: 12:53
  */
 
-namespace Aigisu\Api\Controllers\Images;
+namespace Aigisu\Api\Controllers\Unit;
 
 
 use Aigisu\Api\Controllers\Controller;
-use Aigisu\Api\Models\Image;
+use Aigisu\Api\Models\Unit\CG;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -25,7 +25,7 @@ class CGController extends Controller
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        $images = Image::where(Image::UNIT_RELATION_COLUMN, $this->getUnitID($request))
+        $images = CG::where(CG::UNIT_RELATION_COLUMN, $this->getUnitID($request))
             ->with($this->getExtendedParam($request))
             ->get();
 
@@ -48,7 +48,7 @@ class CGController extends Controller
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $image = Image::where(Image::UNIT_RELATION_COLUMN, $this->getUnitID($request))
+        $image = CG::where(CG::UNIT_RELATION_COLUMN, $this->getUnitID($request))
             ->with($this->getExtendedParam($request))
             ->findOrFail($this->getID($request));
 

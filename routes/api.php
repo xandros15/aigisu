@@ -5,7 +5,7 @@
  * Date: 2016-09-07
  * Time: 23:36
  */
-use Aigisu\Api\Controllers\Images\CGController;
+use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\UnitEventMiddleware;

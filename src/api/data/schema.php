@@ -7,7 +7,7 @@
  */
 namespace Aigisu\Api\Data;
 
-use Aigisu\Api\Data\Tables\Images;
+use Aigisu\Api\Data\Tables\CG;
 use Aigisu\Api\Data\Tables\Table;
 use Aigisu\Api\Data\Tables\Tags;
 use Aigisu\Api\Data\Tables\TagsUnits;
@@ -84,7 +84,7 @@ class Schema
         return [
             new Units(),
             new Users(),
-            new Images(),
+            new CG(),
             new Tags(),
             new TagsUnits(),
         ];

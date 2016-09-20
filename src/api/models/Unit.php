@@ -3,6 +3,7 @@
 namespace Aigisu\Api\Models;
 
 
+use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Components\Url\UrlModelHelper;
 use Aigisu\Core\Model;
@@ -81,7 +82,7 @@ class Unit extends Model
      */
     public function images()
     {
-        return $this->hasMany(Image::class, 'unit_id', 'id');
+        return $this->hasMany(CG::class, 'unit_id', 'id');
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 
-namespace Aigisu\Api\Models;
+namespace Aigisu\Api\Models\Unit;
 
+use Aigisu\Api\Models\Unit;
 use Aigisu\Core\Model;
 
 /**
@@ -18,15 +19,15 @@ use Aigisu\Core\Model;
  * @property Unit $unit
  * @property int $id
  */
-class Image extends Model
+class CG extends Model
 {
-
     const UNIT_RELATION_COLUMN = 'unit_id';
     const IMAGE_PER_SERVER = 2;
     const IMAGE_SPECIAL_SCENE = 3;
     const IMAGE_DIRECTORY = 'images';
     const SERVER_NUTAKU = 'nutaku';
     const SERVER_DMM = 'dmm';
+    protected $table = 'cg';
     /** @var array */
     protected $fillable = [
         'md5',
@@ -54,8 +55,8 @@ class Image extends Model
     public static function getImageSchemeArray()
     {
         return [
-            Image::SERVER_DMM => [1, 2, 3],
-            Image::SERVER_NUTAKU => [1, 2]
+            self::SERVER_DMM => [1, 2, 3],
+            self::SERVER_NUTAKU => [1, 2]
         ];
     }
 
