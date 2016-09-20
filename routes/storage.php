@@ -9,5 +9,5 @@ use Aigisu\Storage\Controllers\ImageController;
 
 /** @var $this \Aigisu\Core\Main */
 
-$this->get('/images/{path:\w+/\w+}', ImageController::class . ':actionView')
+$this->get('/images/{path:[\w/]+}', ImageController::class . ':actionView')
     ->setName('storage.images');
