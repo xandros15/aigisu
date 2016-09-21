@@ -10,6 +10,7 @@ use Aigisu\Common\Components\View\LayoutExtension;
 use Aigisu\Common\Components\View\UrlExtension;
 use Aigisu\Common\Components\View\View;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Url\UrlManager;
 use Interop\Container\ContainerInterface;
 
 return [
@@ -24,5 +25,8 @@ return [
     },
     FilesystemManager::class => function (ContainerInterface $container) {
         return new FilesystemManager($container);
+    },
+    UrlManager::class => function (ContainerInterface $container) {
+        return new UrlManager($container->get('router'), $container->get('siteUrl'));
     }
 ];

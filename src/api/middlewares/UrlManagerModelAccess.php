@@ -25,7 +25,7 @@ class UrlManagerModelAccess extends Middleware
      */
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
-        Model::setUrlManager(new UrlManager($this->get('router'), $this->get('siteUrl')));
+        Model::setUrlManager($this->get(UrlManager::class));
         return $next($request, $response);
     }
 }
