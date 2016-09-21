@@ -10,6 +10,7 @@ namespace Aigisu\Core;
 
 
 use Aigisu\Api\Middlewares\ExceptionHandler;
+use Aigisu\Api\Middlewares\UrlManagerModelAccess;
 use Aigisu\Common\Middlewares\Alert;
 use Aigisu\Common\Middlewares\HomeAssets;
 use Aigisu\Common\Middlewares\ShowQueries;
@@ -30,6 +31,7 @@ class RouteProvider
     /** @var  array */
     protected $apiMiddlewares = [
         ExceptionHandler::class,
+        UrlManagerModelAccess::class,
     ];
 
     /** @var  array */

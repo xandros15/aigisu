@@ -18,7 +18,7 @@ use Aigisu\Core\Model;
 trait UrlModelHelper
 {
     /** @var UrlManager|null */
-    private static $urlManager;
+    protected static $urlManager;
 
     /**
      * @param UrlManager $urlManager

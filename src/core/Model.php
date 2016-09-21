@@ -8,6 +8,7 @@
 
 namespace Aigisu\Core;
 
+use Aigisu\Components\Url\UrlModelHelper;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
@@ -17,4 +18,5 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 abstract class Model extends EloquentModel
 {
+    use UrlModelHelper;
 }
