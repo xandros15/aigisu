@@ -22,12 +22,13 @@ use Aigisu\Core\Model;
 class CG extends Model
 {
     const UNIT_RELATION_COLUMN = 'unit_id';
-    const IMAGE_PER_SERVER = 2;
-    const IMAGE_SPECIAL_SCENE = 3;
     const UPLOAD_DIRECTORY = 'cg';
-    const SERVER_NUTAKU = 'nutaku';
-    const SERVER_DMM = 'dmm';
+    const
+        SERVER_NUTAKU = 'nutaku',
+        SERVER_DMM = 'dmm';
+
     protected $table = 'cg';
+
     /** @var array */
     protected $fillable = [
         'md5',
@@ -58,16 +59,6 @@ class CG extends Model
             self::SERVER_DMM => [1, 2, 3],
             self::SERVER_NUTAKU => [1, 2]
         ];
-    }
-
-    public static function imageSceneToHuman($nrOfScene)
-    {
-        $scenes = [
-            1 => 'first scene',
-            2 => 'second scene',
-            3 => 'special scene'
-        ];
-        return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
     }
 
     public static function getServersNames()
