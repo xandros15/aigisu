@@ -77,7 +77,7 @@ class Unit extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function images()
+    public function cg()
     {
         return $this->hasMany(CG::class, 'unit_id', 'id');
     }
