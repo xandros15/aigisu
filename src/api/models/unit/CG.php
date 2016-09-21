@@ -13,9 +13,6 @@ use Aigisu\Core\Model;
  * @property string $md5
  * @property string $server
  * @property int $scene
- * @property string $google_id
- * @property string $imgur_id
- * @property string $imgur_delhash
  * @property Unit $unit
  * @property int $id
  */
@@ -73,16 +70,16 @@ class CG extends Model
 
     public function getGoogleAttribute()
     {
-        return sprintf('http://drive.google.com/uc?export=view&id=%s', $this->google_id);
+        return sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
     }
 
     public function getImgurAttribute()
     {
-        return sprintf('http://i.imgur.com/%s.png', $this->imgur_id);
+        return sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
     }
 
     public function getLocalAttribute()
     {
-        return $this->urlTo('storage.images', ['path' => sprintf('%s/%s', self::UPLOAD_DIRECTORY, $this->md5)]);
+        return $this->urlTo('storage.images', ['path' => self::UPLOAD_DIRECTORY . '/' . $this->attributes['md5']]);
     }
 }
