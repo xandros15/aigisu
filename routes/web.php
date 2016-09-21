@@ -46,8 +46,8 @@ $this->group('/units', function () use ($formAssetMiddleware) {
     $this->get('/delete/{id:\d+}', UnitController::class . ':actionDelete')
         ->setName('unit.delete');
 
-    $this->get('/images/{id:\d+}', UnitController::class . ':actionShowImages')
-        ->setName('unit.images');
+    $this->get('/{id:\d+}/cg', UnitController::class . ':actionShowImages')
+        ->setName('unit.cg');
 
     $this->get('/icon', UnitController::class . ':actionGetIcon')
         ->setName('unit.icon');
