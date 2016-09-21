@@ -15,6 +15,7 @@ use Aigisu\Core\Model;
  * @property int $scene
  * @property Unit $unit
  * @property int $id
+ * @property bool $archival
  */
 class CG extends Model
 {
@@ -30,11 +31,16 @@ class CG extends Model
     protected $fillable = [
         'md5',
         'unit_id',
+        'archival',
         'server',
         'scene',
         'google_id',
         'imgur_id',
         'imgur_delhash',
+    ];
+    /** @var array */
+    protected $casts = [
+        'archival' => 'bool'
     ];
     /** @var array */
     protected $hidden = [
