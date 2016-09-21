@@ -85,7 +85,7 @@ class UnitController extends Controller
         $path = $this->router->pathFor('api.unit.view', ['id' => $this->getID($request)]);
 
         $clientResponse = $this->makeClient($response)->get($path, [
-            'query' => ['extended' => ['images', 'tags']],
+            'query' => ['extended' => ['cg', 'tags']],
         ]);
 
         $unit = json_decode($clientResponse->getBody(), true);
@@ -111,16 +111,13 @@ class UnitController extends Controller
      */
     public function actionShowImages(Request $request, Response $response) : Response
     {
-        $path = $this->router->pathFor('api.unit.view', ['id' => $this->getID($request)]);
+        $path = $this->router->pathFor('api.unit.cg.index', ['unitId' => $this->getID($request)]);
 
-        $clientRequest = $this->makeClient($response)->get($path, ['query' => ['extended' => ['images']]]);
-        $unit = json_decode($clientRequest->getBody(), true);
+        $clientRequest = $this->makeClient($response)->get($path, ['query' => ['extended' => ['unit']]]);
+        $cg = json_decode($clientRequest->getBody(), true);
 
-        if ($unit['images']) {
-            $unit['images'] = new Collection($unit['images']);
-            return $this->render($response, 'image/index', ['unit' => $unit]);
-        }
-        throw new NotFoundException($request, $response);
+        return $this->render($response, 'unit/cg/index', ['cg' => $cg]);
+
     }
 
     /**
