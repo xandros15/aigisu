@@ -24,7 +24,7 @@ class CG extends Model
     const UNIT_RELATION_COLUMN = 'unit_id';
     const IMAGE_PER_SERVER = 2;
     const IMAGE_SPECIAL_SCENE = 3;
-    const IMAGE_DIRECTORY = 'images';
+    const UPLOAD_DIRECTORY = 'cg';
     const SERVER_NUTAKU = 'nutaku';
     const SERVER_DMM = 'dmm';
     protected $table = 'cg';
@@ -92,6 +92,6 @@ class CG extends Model
 
     public function getLocalAttribute()
     {
-        return $this->id; //todo url for local image
+        return $this->urlTo('storage.images', ['path' => sprintf('%s/%s', self::UPLOAD_DIRECTORY, $this->md5)]);
     }
 }
