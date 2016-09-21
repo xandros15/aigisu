@@ -73,7 +73,7 @@ class CG extends Model
 
     public function getGoogleAttribute()
     {
-        return sprintf('https://drive.google.com/uc?export=view&id=%s', $this->google_id);
+        return sprintf('http://drive.google.com/uc?export=view&id=%s', $this->google_id);
     }
 
     public function getImgurAttribute()
