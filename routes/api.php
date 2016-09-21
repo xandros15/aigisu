@@ -58,7 +58,7 @@ $this->group('/units', function () {
     $this->group('/{unitId:\d+}/cg', function () {
         /** @var $this \Aigisu\Core\Main */
         $this->post('', CGController::class . ':actionCreate')
-            ->setName('api.unit.create');
+            ->setName('api.unit.cg.create');
 
         $this->get('', CGController::class . ':actionIndex')
             ->setName('api.unit.cg.index');
