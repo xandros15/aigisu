@@ -18,8 +18,14 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Tag extends Model
 {
+    /** @var array */
     protected $fillable = [
         'name'
+    ];
+
+    /** @var array */
+    protected $hidden = [
+        'pivot'
     ];
 
     public static function createManyByName(array $names) : Collection
