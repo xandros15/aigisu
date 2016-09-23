@@ -8,6 +8,7 @@
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
+use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\UnitEventMiddleware;
 use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
@@ -38,7 +39,8 @@ $this->group('/units', function () {
     /** @var $this \Aigisu\Core\Main */
     $this->post('', UnitController::class . ':actionCreate')
         ->setName('api.unit.create')
-        ->add(new CreateUnitValidator($this->getContainer()));
+        ->add(new CreateUnitValidator($this->getContainer()))
+        ->add(new ParserUnitTagsMiddleware($this->getContainer()));
 
     $this->get('', UnitController::class . ':actionIndex')
         ->setName('api.unit.index');
@@ -47,7 +49,8 @@ $this->group('/units', function () {
 
     $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
         ->setName('api.unit.update')
-        ->add(new UpdateUnitValidator($this->getContainer()));
+        ->add(new UpdateUnitValidator($this->getContainer()))
+        ->add(new ParserUnitTagsMiddleware($this->getContainer()));
 
     $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
         ->setName('api.unit.delete');
