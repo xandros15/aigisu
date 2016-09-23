@@ -32,7 +32,7 @@ class CreateUnitValidator extends Validator
             'is_male' => v::boolVal(),
             'is_only_dmm' => v::boolVal(),
             'has_aw_image' => v::boolVal(),
-            'tags' => v::arrayType(),
+            'tags' => new Optional(v::arrayType()),
         ];
     }
 
