@@ -10,7 +10,6 @@ namespace Aigisu\Api\Middlewares;
 
 
 use Aigisu\Api\Models\Events\IconUploadListener;
-use Aigisu\Api\Models\Events\UnitTagsListener;
 use Aigisu\Api\Models\Unit;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Slim\Http\Request;
@@ -44,7 +43,6 @@ class UnitEventMiddleware extends Middleware
     private function applyEvents(Request $request)
     {
         Unit::saving(new IconUploadListener($request, $this->get(FilesystemManager::class)));
-        Unit::saved(new UnitTagsListener());
     }
 
     public function ready()

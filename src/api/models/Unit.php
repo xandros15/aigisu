@@ -3,6 +3,7 @@
 namespace Aigisu\Api\Models;
 
 
+use Aigisu\Api\Models\Handlers\UnitTagsHandler;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Core\Model;
@@ -104,6 +105,12 @@ class Unit extends Model
             'seesaw' => $this->link_seesaw,
             'gc' => $this->link_gc
         ];
+    }
+
+    public function syncTags()
+    {
+        $handler = new UnitTagsHandler($this);
+        $handler->syncTags();
     }
 
     public function getIconAttribute()

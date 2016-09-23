@@ -42,6 +42,7 @@ class UnitController extends Controller
     {
         $unit = new Unit($request->getParams());
         $unit->saveOrFail();
+        $unit->syncTags();
 
         return $this->created($response, $this->router->pathFor('unit.view', ['id' => $unit->getKey()]));
     }
@@ -57,6 +58,7 @@ class UnitController extends Controller
         $unit = Unit::findOrFail($this->getID($request))->fill($request->getParams());
 
         $unit->saveOrFail();
+        $unit->syncTags();
 
         return $response->withStatus(self::STATUS_OK);
     }

@@ -6,36 +6,35 @@
  * Time: 21:44
  */
 
-namespace Aigisu\Api\Models\Events;
+namespace Aigisu\Api\Models\Handlers;
 
 
-use Aigisu\Api\Models\Tag;
 use Aigisu\Api\Models\Unit;
-use Aigisu\Core\Model;
-use InvalidArgumentException;
+use Aigisu\Api\Models\Unit\Tag;
 
-class UnitTagsListener implements Event
+class UnitTagsHandler
 {
 
-    /**
-     * @param Model $model
-     * @return void
-     */
-    public function __invoke(Model $model)
-    {
-        if ($model instanceof Unit) {
-            $this->syncTags($model);
-        }
-    }
+    /** @var array|null */
+    private $tags;
+
+    /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany */
+    private $relationModel;
 
     /**
+     * UnitTagsHandler constructor.
      * @param Unit $unit
-     * @throws InvalidArgumentException
      */
-    private function syncTags(Unit $unit)
+    public function __construct(Unit $unit)
     {
-        if ($unit->tagNames !== null) {
-            $tagsNames = $this->getTags($unit);
+        $this->tags = $unit->tagNames;
+        $this->relationModel = $unit->tags();
+    }
+
+    public function syncTags()
+    {
+        if ($this->tags !== null) {
+            $tagsNames = $this->parseTags($this->tags);
             if ($tagsNames) {
                 $oldTags = Tag::whereIn('name', $tagsNames)->get();
                 $newTags = Tag::createManyByName(array_diff($tagsNames, $oldTags->pluck('name')->toArray()));
@@ -44,21 +43,19 @@ class UnitTagsListener implements Event
                 $tagsIds = [];
             }
 
-            $unit->tags()->sync($tagsIds);
+            $this->relationModel->sync($tagsIds);
         }
     }
 
     /**
-     * @param Unit $unit
+     * @param $tags
      * @return array
      */
-    private function getTags(Unit $unit) : array
+    private function parseTags($tags) : array
     {
-        if (is_string($unit->tagNames)) {
-            $tags = $this->tagsToArray($unit->tagNames);
-        } elseif (is_array($unit->tagNames)) {
-            $tags = $unit->tagNames;
-        } else {
+        if (is_string($tags)) {
+            $tags = $this->tagsToArray($tags);
+        } elseif (!is_array($tags)) {
             $tags = [];
         }
 
