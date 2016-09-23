@@ -4,6 +4,7 @@ namespace Aigisu\Api\Models\Unit;
 
 use Aigisu\Api\Models\Unit;
 use Aigisu\Core\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Image
@@ -56,35 +57,42 @@ class CG extends Model
         'local',
     ];
 
-    public static function getImageSchemeArray()
-    {
-        return [
-            self::SERVER_DMM => [1, 2, 3],
-            self::SERVER_NUTAKU => [1, 2]
-        ];
-    }
-
-    public static function getServersNames()
+    /**
+     * @return array
+     */
+    public static function getServersNames() : array
     {
         return [self::SERVER_DMM, self::SERVER_NUTAKU];
     }
 
-    public function unit()
+    /**
+     * @return BelongsTo
+     */
+    public function unit() : BelongsTo
     {
         return $this->belongsTo(Unit::class, self::UNIT_RELATION_COLUMN, 'id');
     }
 
-    public function getGoogleAttribute()
+    /**
+     * @return string
+     */
+    public function getGoogleAttribute() : string
     {
         return sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
     }
 
-    public function getImgurAttribute()
+    /**
+     * @return string
+     */
+    public function getImgurAttribute() : string
     {
         return sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
     }
 
-    public function getLocalAttribute()
+    /**
+     * @return string
+     */
+    public function getLocalAttribute() : string
     {
         return $this->urlTo('storage.images', ['path' => self::UPLOAD_DIRECTORY . '/' . $this->attributes['md5']]);
     }

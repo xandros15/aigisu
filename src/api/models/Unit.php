@@ -8,6 +8,8 @@ use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Unit
@@ -23,7 +25,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property bool $is_only_dmm
  * @property string $icon
  * @property bool $has_aw_image
- * @property Collection $images
+ * @property Collection $cg
  * @property int $id
  * @property Collection $tags
  */
@@ -70,23 +72,23 @@ class Unit extends Model
     /**
      * @return array
      */
-    public static function getRarities()
+    public static function getRarities() : array
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function cg()
+    public function cg() : HasMany
     {
         return $this->hasMany(CG::class, 'unit_id', 'id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function tags()
+    public function tags() : BelongsToMany
     {
         return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
@@ -99,7 +101,10 @@ class Unit extends Model
         $this->tagNames = $tagNames;
     }
 
-    public function getLinksAttribute()
+    /**
+     * @return array
+     */
+    public function getLinksAttribute() : array
     {
         return [
             'seesaw' => $this->link_seesaw,
@@ -113,6 +118,9 @@ class Unit extends Model
         $handler->syncTags();
     }
 
+    /**
+     * @return null|string
+     */
     public function getIconAttribute()
     {
         $url = null;
