@@ -34,6 +34,7 @@ class TagsUnits implements Table
         $table->charset = 'utf8mb4';
         $table->engine = 'InnoDB';
 
+        $table->increments('id')->unsigned();
         $table->integer('unit_id')->unsigned()->index();
         $table->integer('tag_id')->unsigned()->index();
         $table->foreign('unit_id')->references('id')->on((new Units())->getTableName())->onDelete('cascade');
