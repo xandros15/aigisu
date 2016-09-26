@@ -27,7 +27,7 @@ class UnitController extends Controller
         $path = $this->router->pathFor('api.unit.index');
 
         $clientResponse = $this->makeClient($response)->get($path, [
-            'query' => ['extended' => ['images', 'tags']],
+            'query' => ['extended' => ['cg', 'tags']],
         ]);
 
         $units = new Collection(json_decode($clientResponse->getBody(), true));
