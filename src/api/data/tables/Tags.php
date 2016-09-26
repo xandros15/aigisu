@@ -33,7 +33,7 @@ class Tags implements Table
         $table->engine = 'InnoDB';
 
         $table->increments('id')->unsigned();
-        $table->string('name', 25);
+        $table->string('name', 25)->unique();
         $table->timestamps();
     }
 }

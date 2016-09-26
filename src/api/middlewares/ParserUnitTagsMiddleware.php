@@ -45,7 +45,7 @@ class ParserUnitTagsMiddleware extends Middleware
             $tags = [];
         }
 
-        return array_filter($tags);
+        return array_filter(array_unique($tags));
     }
 
     /**
@@ -61,7 +61,6 @@ class ParserUnitTagsMiddleware extends Middleware
             $tag = str_replace(' ', '_', $tag);
             return $tag;
         }, $tags);
-        $tags = array_unique($tags);
 
         return $tags;
     }
