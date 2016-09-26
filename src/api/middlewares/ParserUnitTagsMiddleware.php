@@ -41,7 +41,7 @@ class ParserUnitTagsMiddleware extends Middleware
     {
         if (is_string($tags)) {
             $tags = $this->tagsToArray($tags);
-        } else {
+        } elseif (!is_array($tags)) {
             $tags = [];
         }
 
