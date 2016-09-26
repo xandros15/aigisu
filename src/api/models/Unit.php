@@ -5,6 +5,8 @@ namespace Aigisu\Api\Models;
 
 use Aigisu\Api\Models\Handlers\UnitTagsHandler;
 use Aigisu\Api\Models\Unit\CG;
+use Aigisu\Api\Models\Unit\MissingCG;
+use Aigisu\Api\Models\Unit\PredefinedTags;
 use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -66,7 +68,8 @@ class Unit extends Model
 
     /** @var array */
     protected $appends = [
-        'links'
+        'links',
+        'missingCG'
     ];
 
     /**
@@ -132,4 +135,29 @@ class Unit extends Model
         return $url;
     }
 
+    /**
+     * @return array
+     */
+    public function getMissingCGAttribute() : array
+    {
+        $missing = new MissingCG();
+        if ($this->tags->contains('name', PredefinedTags::IS_FEMALE)) {
+            $missing->attachCGCollection($this->cg);
+            $missing->filterArchival();
+
+            if ($this->tags->contains('name', PredefinedTags::HAS_DMM_IMAGES)) {
+                $missing->applyDmm();
+            }
+
+            if ($this->tags->contains('name', PredefinedTags::HAS_DMM_SPECIAL_IMAGES)) {
+                $missing->applySpecialDmm();
+            }
+
+            if ($this->tags->contains('name', PredefinedTags::HAS_NUTAKU_IMAGES)) {
+                $missing->applyNutaku();
+            }
+        }
+
+        return $missing->toArray();
+    }
 }
