@@ -28,6 +28,13 @@ function prepareUnit($unit, $router)
         return "<a href=\"{$item}\">{$item}</a>";
     }, $unit['links']);
 
+    $unit['missing'] = '';
+    foreach ($unit['missingCG'] as $cg) {
+        $unit['missing'] .= "Server: {$cg['server']} Scene: {$cg['scene']}<br>";
+    }
+
+    unset($unit['missingCG']);
+
     if (!empty($unit['cg'])) {
         /** @var $router UrlExtension */
         $CGPath = $router->pathFor('unit.cg', ['id' => $unit['id']]);
