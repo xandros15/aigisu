@@ -29,9 +29,10 @@ class CreateUnitValidator extends Validator
             'link_seesaw' => new Optional(v::url()),
             'link_gc' => v::url(),
             'rarity' => v::in(Unit::getRarities()),
-            'is_male' => v::boolVal(),
-            'is_only_dmm' => v::boolVal(),
-            'has_aw_image' => v::boolVal(),
+            'gender' => v::in(Unit::getGenders()),
+            'dmm' => v::boolVal(),
+            'nutaku' => v::boolVal(),
+            'special_cg' => v::boolVal(),
             'tags' => new Optional(v::arrayType()),
         ];
     }
