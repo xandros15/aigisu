@@ -115,6 +115,13 @@ class Schema
         };
     }
 
+    public function backupTables()
+    {
+        foreach ($this->tables() as $table) {
+            $this->backupTableData($table);
+        }
+    }
+
     /**
      * @param string $tableName
      * @param string $filename
