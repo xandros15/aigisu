@@ -125,7 +125,7 @@ class Schema
     {
         try {
             $this->builder->getConnection()->transaction(function (Connection $connection) use ($filename, $tableName) {
-                $data = json_decode(file_get_contents($filename), true);
+                $data = json_decode(file_get_contents(__DIR__ . '/../../../backup/' . $filename), true);
                 $connection->table($tableName)->insert($data);
             });
         } catch (\Exception $e) {
