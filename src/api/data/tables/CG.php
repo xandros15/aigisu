@@ -46,6 +46,7 @@ class CG implements Table
         $table->integer('unit_id', false, true);
         $table->enum('server', CGModel::getServersNames());
         $table->tinyInteger('scene', false, true);
+        $table->boolean('archival')->default(false);
         $table->string('google_id', 64);
         $table->string('imgur_id', 64);
         $table->string('imgur_delhash', 64);
