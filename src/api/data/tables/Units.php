@@ -39,9 +39,10 @@ class Units implements Table
         $table->string('link_seesaw', 100)->nullable();
         $table->string('link_gc', 100)->nullable();
         $table->enum('rarity', Unit::getRarities());
-        $table->boolean('is_male');
-        $table->boolean('is_only_dmm');
-        $table->boolean('has_aw_image');
+        $table->enum('gender', Unit::getGenders());
+        $table->boolean('dmm');
+        $table->boolean('nutaku');
+        $table->boolean('special_cg');
         $table->timestamps();
     }
 

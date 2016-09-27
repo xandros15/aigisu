@@ -23,10 +23,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $link_seesaw
  * @property string $link_gc
  * @property string $rarity
- * @property bool $is_male
- * @property bool $is_only_dmm
+ * @property string $gender
+ * @property bool $dmm
+ * @property bool $nutaku
+ * @property bool $special_cg
  * @property string $icon
- * @property bool $has_aw_image
  * @property Collection $cg
  * @property int $id
  * @property Collection $tags
@@ -35,6 +36,9 @@ class Unit extends Model
 {
     const SEARCH_PARAM = 'q';
     const UNITS_PER_PAGE = 10;
+    const GENDER_FEMALE = 'female';
+    const GENDER_MALE = 'male';
+
 
     /** @var string|array */
     public $tagNames;
@@ -46,10 +50,11 @@ class Unit extends Model
         'link_seesaw',
         'link_gc',
         'rarity',
-        'is_male',
-        'is_only_dmm',
+        'gender',
+        'dmm',
+        'nutaku',
         'icon',
-        'has_aw_image',
+        'special_cg',
         'tags'
     ];
 
@@ -61,9 +66,9 @@ class Unit extends Model
 
     /** @var array */
     protected $casts = [
-        'is_male' => 'bool',
-        'is_only_dmm' => 'bool',
-        'has_aw_image' => 'bool',
+        'dmm' => 'bool',
+        'nutaku' => 'bool',
+        'special_cg' => 'bool',
     ];
 
     /** @var array */
@@ -78,6 +83,14 @@ class Unit extends Model
     public static function getRarities() : array
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getGenders() : array
+    {
+        return [self::GENDER_FEMALE, self::GENDER_MALE];
     }
 
     /**
@@ -141,19 +154,19 @@ class Unit extends Model
     public function getMissingCGAttribute() : array
     {
         $missing = new MissingCG();
-        if ($this->tags->contains('name', PredefinedTags::IS_FEMALE)) {
+        if ($this->gender === self::GENDER_FEMALE) {
             $missing->attachCGCollection($this->cg);
             $missing->filterArchival();
 
-            if ($this->tags->contains('name', PredefinedTags::HAS_DMM_IMAGES)) {
+            if ($this->dmm) {
                 $missing->applyDmm();
             }
 
-            if ($this->tags->contains('name', PredefinedTags::HAS_DMM_SPECIAL_IMAGES)) {
+            if ($this->special_cg) {
                 $missing->applySpecialDmm();
             }
 
-            if ($this->tags->contains('name', PredefinedTags::HAS_NUTAKU_IMAGES)) {
+            if ($this->nutaku) {
                 $missing->applyNutaku();
             }
         }
