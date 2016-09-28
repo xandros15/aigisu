@@ -6,6 +6,7 @@
  * Time: 23:36
  */
 use Aigisu\Api\Controllers\Unit\CGController;
+use Aigisu\Api\Controllers\Unit\ExtendedUploader;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
@@ -76,6 +77,9 @@ $this->group('/units', function () {
             ->setName('api.unit.cg.update')
             ->add(new MissingCGValidator($this->getContainer()))
             ->add(new UpdateCGValidator($this->getContainer()));
+
+        $this->post('/{id:\d+}/{server:google|imgur}', ExtendedUploader::class . ':actionUpload')
+            ->setName('api.unit.cg.upload.extended');
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
             ->setName('api.unit.cg.delete');
