@@ -24,7 +24,6 @@ use Slim\Http\Request;
  */
 class CG extends Model
 {
-    const UNIT_RELATION_COLUMN = 'unit_id';
     const
         CG_UPLOAD_FILE_NAME = 'cg',
         CG_UPLOAD_CATALOG = 'cg';
@@ -76,7 +75,7 @@ class CG extends Model
      */
     public function unit() : BelongsTo
     {
-        return $this->belongsTo(Unit::class, self::UNIT_RELATION_COLUMN, 'id');
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
 
     /**

@@ -12,7 +12,6 @@ namespace Aigisu\Api\Controllers\Unit;
 use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
-use Illuminate\Database\Eloquent\Collection;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -27,18 +26,11 @@ class CGController extends Controller
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        return $response->withJson($this->findCGList($request)->toArray(), self::STATUS_OK);
-    }
-
-    /**
-     * @param Request $request
-     * @return Collection
-     */
-    protected function findCGList(Request $request): Collection
-    {
-        return CG::where(CG::UNIT_RELATION_COLUMN, $this->getUnitID($request))
+        $cgs = CG::where('unit_id', $this->getUnitID($request))
             ->with($this->getExtendedParam($request))
             ->get();
+
+        return $response->withJson($cgs->toArray(), self::STATUS_OK);
     }
 
     /**
@@ -66,7 +58,7 @@ class CGController extends Controller
      */
     protected function findCGOrFail(Request $request) : CG
     {
-        return CG::where(CG::UNIT_RELATION_COLUMN, $this->getUnitID($request))
+        return CG::where('unit_id', $this->getUnitID($request))
             ->with($this->getExtendedParam($request))
             ->findOrFail($this->getID($request));
     }
@@ -78,7 +70,7 @@ class CGController extends Controller
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        $cg = new CG(array_merge([CG::UNIT_RELATION_COLUMN => $this->getUnitID($request)], $request->getParams()));
+        $cg = new CG(array_merge(['unit_id' => $this->getUnitID($request)], $request->getParams()));
         $cg->uploadCG($request, $this->get(FilesystemManager::class));
         $cg->saveOrFail();
 
