@@ -62,7 +62,10 @@ class CGController extends Controller
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        return $response->withStatus(self::STATUS_METHOD_NOT_ALLOWED);
+        $cg = new CG(array_merge([CG::UNIT_RELATION_COLUMN => $this->getUnitID($request)], $request->getParams()));
+        $cg->saveOrFail();
+
+        return $response->withStatus(self::STATUS_CREATED);
     }
 
     /**

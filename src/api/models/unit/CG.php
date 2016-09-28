@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Unit $unit
  * @property int $id
  * @property bool $archival
+ * @property string $local
  */
 class CG extends Model
 {
@@ -35,13 +36,14 @@ class CG extends Model
         'archival',
         'server',
         'scene',
+        'local',
         'google_id',
         'imgur_id',
         'imgur_delhash',
     ];
     /** @var array */
     protected $casts = [
-        'archival' => 'bool'
+        'archival' => 'bool',
     ];
     /** @var array */
     protected $hidden = [
@@ -54,7 +56,6 @@ class CG extends Model
     protected $appends = [
         'google',
         'imgur',
-        'local',
     ];
 
     /**
@@ -78,7 +79,13 @@ class CG extends Model
      */
     public function getGoogleAttribute() : string
     {
-        return sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
+        if (!empty($this->attributes['google_id'])) {
+            $url = sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
+        } else {
+            $url = $this->getAttribute('local');
+        }
+
+        return $url;
     }
 
     /**
@@ -86,14 +93,17 @@ class CG extends Model
      */
     public function getImgurAttribute() : string
     {
-        return sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
+        if (!empty($this->attributes['imgur_id'])) {
+            $url = sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
+        } else {
+            $url = $this->getAttribute('google');
+        }
+
+        return $url;
     }
 
-    /**
-     * @return string
-     */
     public function getLocalAttribute() : string
     {
-        return $this->urlTo('storage.images', ['path' => self::UPLOAD_DIRECTORY . '/' . $this->attributes['md5']]);
+        return $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
     }
 }
