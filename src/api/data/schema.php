@@ -93,7 +93,7 @@ class Schema
     /**
      * @param Table $table
      */
-    private function backupTableData(Table $table)
+    public function backupTableData(Table $table)
     {
         $tableName = $table->getTableName();
         /** @var $collection Collection */
