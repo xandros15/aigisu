@@ -9,8 +9,11 @@ use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
+use Aigisu\Api\Middlewares\Validators\CreateCGValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
+use Aigisu\Api\Middlewares\Validators\MissingCGValidator;
+use Aigisu\Api\Middlewares\Validators\UpdateCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 
@@ -60,7 +63,9 @@ $this->group('/units', function () {
     $this->group('/{unitId:\d+}/cg', function () {
         /** @var $this \Aigisu\Core\Main */
         $this->post('', CGController::class . ':actionCreate')
-            ->setName('api.unit.cg.create');
+            ->setName('api.unit.cg.create')
+            ->add(new MissingCGValidator($this->getContainer()))
+            ->add(new CreateCGValidator($this->getContainer()));
 
         $this->get('', CGController::class . ':actionIndex')
             ->setName('api.unit.cg.index');
@@ -68,7 +73,9 @@ $this->group('/units', function () {
             ->setName('api.unit.cg.view');
 
         $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
-            ->setName('api.unit.cg.update');
+            ->setName('api.unit.cg.update')
+            ->add(new MissingCGValidator($this->getContainer()))
+            ->add(new UpdateCGValidator($this->getContainer()));
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
             ->setName('api.unit.cg.delete');
