@@ -3,8 +3,11 @@
 namespace Aigisu\Api\Models\Unit;
 
 use Aigisu\Api\Models\Unit;
+use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slim\Http\Request;
 
 /**
  * Class Image
@@ -22,7 +25,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CG extends Model
 {
     const UNIT_RELATION_COLUMN = 'unit_id';
-    const UPLOAD_DIRECTORY = 'cg';
+    const
+        CG_UPLOAD_FILE_NAME = 'cg',
+        CG_UPLOAD_CATALOG = 'cg';
     const
         SERVER_NUTAKU = 'nutaku',
         SERVER_DMM = 'dmm';
@@ -105,5 +110,18 @@ class CG extends Model
     public function getLocalAttribute() : string
     {
         return $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
+    }
+
+    /**
+     * @param Request $request
+     * @param FilesystemManager $manager
+     */
+    public function uploadCG(Request $request, FilesystemManager $manager)
+    {
+        $iconName = UploadedFile::file($request, self::CG_UPLOAD_FILE_NAME, $manager)
+            ->store(self::CG_UPLOAD_CATALOG);
+        if ($iconName) {
+            $this->setAttribute('local', $iconName);
+        }
     }
 }

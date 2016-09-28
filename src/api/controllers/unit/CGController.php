@@ -11,6 +11,7 @@ namespace Aigisu\Api\Controllers\Unit;
 
 use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
+use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -63,6 +64,7 @@ class CGController extends Controller
     public function actionCreate(Request $request, Response $response): Response
     {
         $cg = new CG(array_merge([CG::UNIT_RELATION_COLUMN => $this->getUnitID($request)], $request->getParams()));
+        $cg->uploadCG($request, $this->get(FilesystemManager::class));
         $cg->saveOrFail();
 
         return $response->withStatus(self::STATUS_CREATED);

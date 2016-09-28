@@ -6,12 +6,14 @@ namespace Aigisu\Api\Models;
 use Aigisu\Api\Models\Handlers\UnitTagsHandler;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\MissingCG;
-use Aigisu\Api\Models\Unit\PredefinedTags;
 use Aigisu\Api\Models\Unit\Tag;
+use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Slim\Http\Request;
 
 /**
  * Class Unit
@@ -38,6 +40,9 @@ class Unit extends Model
     const UNITS_PER_PAGE = 10;
     const GENDER_FEMALE = 'female';
     const GENDER_MALE = 'male';
+    const
+        ICON_UPLOAD_FILE_NAME = 'icon',
+        ICON_UPLOAD_CATALOG = 'icons';
 
 
     /** @var string|array */
@@ -172,5 +177,18 @@ class Unit extends Model
         }
 
         return $missing->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @param FilesystemManager $manager
+     */
+    public function uploadIcon(Request $request, FilesystemManager $manager)
+    {
+        $iconName = UploadedFile::file($request, self::ICON_UPLOAD_FILE_NAME, $manager)
+            ->store(self::ICON_UPLOAD_CATALOG);
+        if ($iconName) {
+            $this->setAttribute('icon', $iconName);
+        }
     }
 }

@@ -8,9 +8,7 @@
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
-use Aigisu\Api\Middlewares\CGEventMiddleware;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
-use Aigisu\Api\Middlewares\UnitEventMiddleware;
 use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
@@ -74,5 +72,5 @@ $this->group('/units', function () {
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
             ->setName('api.unit.cg.delete');
-    })->add(new CGEventMiddleware($this->getContainer()));
-})->add(new UnitEventMiddleware($this->getContainer()));
+    });
+});
