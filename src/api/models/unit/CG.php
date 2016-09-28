@@ -14,7 +14,6 @@ use Slim\Http\Request;
  */
 
 /**
- * @property string $md5
  * @property string $server
  * @property int $scene
  * @property Unit $unit
@@ -106,6 +105,9 @@ class CG extends Model
         return $url;
     }
 
+    /**
+     * @return string
+     */
     public function getLocalAttribute() : string
     {
         return $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
