@@ -9,6 +9,7 @@ use Aigisu\Common\Components\View\CallbackManager;
 use Aigisu\Common\Components\View\LayoutExtension;
 use Aigisu\Common\Components\View\UrlExtension;
 use Aigisu\Common\Components\View\View;
+use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Components\Url\UrlManager;
 use Interop\Container\ContainerInterface;
@@ -28,5 +29,8 @@ return [
     },
     UrlManager::class => function (ContainerInterface $container) {
         return new UrlManager($container->get('router'), $container->get('siteUrl'));
-    }
+    },
+    GoogleDriveFilesystem::class => function (ContainerInterface $container) {
+        return new GoogleDriveFilesystem(require __DIR__ . '/google.php');
+    },
 ];

@@ -16,7 +16,7 @@
     "guzzlehttp/guzzle": "^6.2",
     "illuminate/events": "^5.3",
     "league/flysystem": "^1.0",
-    "superbalist/flysystem-google-storage": "^3.0"
+    "google/apiclient": "2.*"
   },
   "require-dev": {
     "symfony/var-dumper": "^3.0"
