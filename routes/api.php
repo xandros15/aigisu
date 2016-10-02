@@ -5,8 +5,8 @@
  * Date: 2016-09-07
  * Time: 23:36
  */
+use Aigisu\Api\Controllers\Unit\CG\GoogleUploader;
 use Aigisu\Api\Controllers\Unit\CGController;
-use Aigisu\Api\Controllers\Unit\ExtendedUploader;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
@@ -78,8 +78,14 @@ $this->group('/units', function () {
             ->add(new MissingCGValidator($this->getContainer()))
             ->add(new UpdateCGValidator($this->getContainer()));
 
-        $this->post('/{id:\d+}/{server:google|imgur}', ExtendedUploader::class . ':actionUpload')
-            ->setName('api.unit.cg.upload.extended');
+        $this->group('/{id:\d+}/google', function () {
+            $this->post('', GoogleUploader::class . ':actionCreate')
+                ->setName('api.unit.cg.google.create');
+            $this->patch('', GoogleUploader::class . ':actionUpdate')
+                ->setName('api.unit.cg.google.update');
+            $this->delete('', GoogleUploader::class . ':actionDelete')
+                ->setName('api.unit.cg.google.delete');
+        });
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
             ->setName('api.unit.cg.delete');
