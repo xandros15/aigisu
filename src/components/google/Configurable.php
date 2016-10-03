@@ -6,7 +6,7 @@
  * Time: 21:14
  */
 
-namespace Aigisu\components\google;
+namespace Aigisu\Components\Google;
 
 
 use InvalidArgumentException;

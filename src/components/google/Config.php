@@ -8,7 +8,7 @@
  * @see credits by http://flysystem.thephpleague.com/
  */
 
-namespace Aigisu\components\google;
+namespace Aigisu\Components\Google;
 
 use Traversable;
 

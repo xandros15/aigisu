@@ -6,7 +6,7 @@
  * Time: 21:05
  */
 
-namespace Aigisu\components\google;
+namespace Aigisu\Components\Google;
 
 use Google_Service_Drive as GoogleDrive;
 use Google_Service_Drive_DriveFile as GoogleDriveFile;

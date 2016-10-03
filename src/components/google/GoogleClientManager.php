@@ -6,7 +6,7 @@
  * Time: 21:09
  */
 
-namespace Aigisu\components\google;
+namespace Aigisu\Components\Google;
 
 
 class GoogleClientManager extends Configurable
