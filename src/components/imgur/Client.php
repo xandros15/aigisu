@@ -29,6 +29,8 @@ class Client
     private $config;
     /** @var array */
     private $token;
+    /** @var array */
+    private $authKeys;
 
     public function __construct(array $config = [])
     {
@@ -52,7 +54,7 @@ class Client
     public function authorize(RequestInterface $request)
     {
         if (!$token = $this->getAccessToken()) {
-            $token = $this->setAccessToken($this->config['access_token_file']);
+            $token = $this->setAccessToken($this->config['access-file']);
             // add refresh subscriber to request a new token
             if ($this->isAccessTokenExpired() && isset($this->token['refresh_token'])) {
                 $token = $this->fetchAccessTokenWithRefreshToken();
@@ -155,13 +157,48 @@ class Client
     public function getAuthorization() : AbstractProvider
     {
         if (is_null($this->authorization)) {
+            $keys = $this->getAuthKey();
             $this->authorization = new Imgur([
-                'clientId' => $this->config['client_id'],
-                'clientSecret' => $this->config['client_secret'],
+                'clientId' => $keys['client_id'],
+                'clientSecret' => $keys['client_secret'],
             ]);
         }
 
         return $this->authorization;
+    }
+
+    /**
+     * Parsing auth form config
+     *
+     * @return array
+     */
+    public function getAuthKey() : array
+    {
+        if (!$this->authKeys) {
+            $auth = $this->config['auth'];
+            if (is_string($auth)) {
+                if (file_exists($auth)) {
+                    $auth = file_get_contents($auth);
+                }
+
+                if (!$keys = json_decode($auth, true)) {
+                    throw new InvalidArgumentException('Invalid format of auth keys file');
+                }
+            } elseif (is_array($auth)) {
+                $keys = $auth;
+            } else {
+                throw new InvalidArgumentException('Invalid format of keys. Expect array, filename, or json string');
+            }
+
+            if (!isset($keys['client_id'], $keys['client_secret'])) {
+                throw new LogicException('Missing client keys');
+            }
+
+            $this->authKeys = $keys;
+        }
+
+
+        return $this->authKeys;
     }
 
     /**
@@ -173,7 +210,7 @@ class Client
     public function saveAccessToken(string $filename = '', array $token = [])
     {
         if (!$filename) {
-            $filename = $this->config['access_token_file'];
+            $filename = $this->config['access-file'];
         }
 
         if (!$filename) {
