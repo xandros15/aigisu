@@ -84,10 +84,9 @@ class CG extends Model
      */
     public function getGoogleAttribute() : string
     {
+        $url = null;
         if (!empty($this->attributes['google_id'])) {
             $url = sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
-        } else {
-            $url = $this->getAttribute('local');
         }
 
         return $url;
@@ -98,10 +97,9 @@ class CG extends Model
      */
     public function getImgurAttribute() : string
     {
+        $url = null;
         if (!empty($this->attributes['imgur_id'])) {
             $url = sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
-        } else {
-            $url = $this->getAttribute('google');
         }
 
         return $url;
@@ -112,7 +110,12 @@ class CG extends Model
      */
     public function getLocalAttribute() : string
     {
-        return $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
+        $url = null;
+        if (!empty($this->attributes['local'])) {
+            $url = $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
+        }
+
+        return $url;
     }
 
     /**
