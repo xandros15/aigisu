@@ -12,7 +12,7 @@ use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\components\google\GoogleDriveManager;
-use Google_Service_Exception as GooGleServiceException;
+use Google_Service_Exception as GoogleServiceException;
 use RuntimeException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
@@ -39,7 +39,7 @@ class GoogleUploader extends Controller
             $driveManager->delete($id);
             $cg->setAttribute('google_id', null)->saveOrFail();
             $response = $response->withStatus(self::STATUS_OK);
-        } catch (GooGleServiceException $e) {
+        } catch (GoogleServiceException $e) {
             $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
         }
 
@@ -82,7 +82,7 @@ class GoogleUploader extends Controller
             $cg->saveOrFail();
 
             $response = $response->withStatus(self::STATUS_OK);
-        } catch (GooGleServiceException $e) {
+        } catch (GoogleServiceException $e) {
             $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
         }
 
@@ -140,7 +140,7 @@ class GoogleUploader extends Controller
             ]);
 
             $response = $response->withStatus(self::STATUS_OK);
-        } catch (GooGleServiceException $e) {
+        } catch (GoogleServiceException $e) {
             $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
         }
 
