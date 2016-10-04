@@ -11,6 +11,7 @@ use Aigisu\Common\Components\View\UrlExtension;
 use Aigisu\Common\Components\View\View;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Imgur\Imgur;
 use Aigisu\Components\Url\UrlManager;
 use Interop\Container\ContainerInterface;
 
@@ -32,5 +33,8 @@ return [
     },
     GoogleDriveFilesystem::class => function (ContainerInterface $container) {
         return new GoogleDriveFilesystem(require __DIR__ . '/google.php');
+    },
+    Imgur::class => function (ContainerInterface $container) {
+        return new Imgur(require __DIR__ . '/imgur.php');
     },
 ];
