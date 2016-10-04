@@ -82,7 +82,7 @@ class CG extends Model
     /**
      * @return string
      */
-    public function getGoogleAttribute() : string
+    public function getGoogleAttribute()
     {
         $url = null;
         if (!empty($this->attributes['google_id'])) {
@@ -95,7 +95,7 @@ class CG extends Model
     /**
      * @return string
      */
-    public function getImgurAttribute() : string
+    public function getImgurAttribute()
     {
         $url = null;
         if (!empty($this->attributes['imgur_id'])) {
@@ -108,7 +108,7 @@ class CG extends Model
     /**
      * @return string
      */
-    public function getLocalAttribute() : string
+    public function getLocalAttribute()
     {
         $url = null;
         if (!empty($this->attributes['local'])) {
