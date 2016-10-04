@@ -4,9 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f8dc22d6b862e48914c882c29de2146f",
-    "content-hash": "dc1d8782e625766094d8650a5f4220d3",
+    "hash": "16cf5d166dda76386eb8e10f4c556e36",
+    "content-hash": "e24a0ff9b0fc8c35b7e3feff84a63251",
     "packages": [
+        {
+            "name": "adam-paterson/oauth2-imgur",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adam-paterson/oauth2-imgur.git",
+                "reference": "0943c15139952c3225abaa065bd60f666da27b16"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adam-paterson/oauth2-imgur/zipball/0943c15139952c3225abaa065bd60f666da27b16",
+                "reference": "0943c15139952c3225abaa065bd60f666da27b16",
+                "shasum": ""
+            },
+            "require": {
+                "league/oauth2-client": "^1.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AdamPaterson\\OAuth2\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Paterson",
+                    "email": "hello@adampaterson.co.uk"
+                }
+            ],
+            "description": "Imgur OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+            "keywords": [
+                "Authentication",
+                "SSO",
+                "authorization",
+                "identity",
+                "idp",
+                "imgur",
+                "imgur api",
+                "oauth",
+                "oauth2",
+                "single sign on"
+            ],
+            "time": "2015-09-22 19:05:48"
+        },
         {
             "name": "container-interop/container-interop",
             "version": "1.1.0",
