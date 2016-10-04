@@ -6,6 +6,7 @@
  * Time: 23:36
  */
 use Aigisu\Api\Controllers\Unit\CG\GoogleUploader;
+use Aigisu\Api\Controllers\Unit\CG\ImgurUploader;
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
@@ -86,6 +87,16 @@ $this->group('/units', function () {
             $this->delete('', GoogleUploader::class . ':actionDelete')
                 ->setName('api.unit.cg.google.delete');
         });
+
+        $this->group('/{id:\d+}/imgur', function () {
+            $this->post('', ImgurUploader::class . ':actionCreate')
+                ->setName('api.unit.cg.imgur.create');
+            $this->patch('', ImgurUploader::class . ':actionUpdate')
+                ->setName('api.unit.cg.imgur.update');
+            $this->delete('', ImgurUploader::class . ':actionDelete')
+                ->setName('api.unit.cg.imgur.delete');
+        });
+
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
             ->setName('api.unit.cg.delete');
