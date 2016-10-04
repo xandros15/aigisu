@@ -20,6 +20,8 @@ use Slim\Http\Request;
  * @property int $id
  * @property bool $archival
  * @property string $local
+ * @property string $google
+ * @property string $imgur
  */
 class CG extends Model
 {
