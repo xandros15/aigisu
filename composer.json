@@ -16,7 +16,8 @@
     "guzzlehttp/guzzle": "^6.2",
     "illuminate/events": "^5.3",
     "league/flysystem": "^1.0",
-    "google/apiclient": "2.*"
+    "google/apiclient": "2.*",
+    "league/oauth2-client": "^1.4"
   },
   "require-dev": {
     "symfony/var-dumper": "^3.0"
