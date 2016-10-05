@@ -9,37 +9,17 @@
 namespace Aigisu\Core;
 
 
-use Aigisu\Api\Middlewares\ExceptionHandler;
-use Aigisu\Api\Middlewares\UrlManagerModelAccess;
-use Aigisu\Common\Middlewares\Alert;
-use Aigisu\Common\Middlewares\HomeAssets;
-use Aigisu\Common\Middlewares\ShowQueries;
-use Aigisu\Common\Middlewares\TrailingSlash;
 use InvalidArgumentException;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
 
 class RouteProvider
 {
-    /** @var  array */
-    protected $webMiddlewares = [
-        TrailingSlash::class,
-        HomeAssets::class,
-        ShowQueries::class,
-        Alert::class,
-    ];
-    /** @var  array */
-    protected $apiMiddlewares = [
-        ExceptionHandler::class,
-        UrlManagerModelAccess::class,
-    ];
-
-    /** @var  array */
-    protected $storageMiddlewares = [];
-
-
     /** @var App */
     private $app;
+
+    /** @var array */
+    private $middlewares;
 
     /**
      * RouteProvider constructor.
@@ -48,6 +28,7 @@ class RouteProvider
     public function __construct(App $app)
     {
         $this->app = $app;
+        $this->middlewares = $app->getContainer()->get('middlewares');
     }
 
     /**
@@ -77,7 +58,7 @@ class RouteProvider
             require $this->getContainer()->get('root') . '/routes/web.php';
         });
 
-        $this->applyMiddlewares($web, $this->webMiddlewares);
+        $this->applyMiddlewares($web, $this->middlewares['web']);
     }
 
     /**
@@ -107,7 +88,7 @@ class RouteProvider
             require $this->getContainer()->get('root') . '/routes/api.php';
         });
 
-        $this->applyMiddlewares($api, $this->apiMiddlewares);
+        $this->applyMiddlewares($api, $this->middlewares['api']);
     }
 
     /**
@@ -123,6 +104,6 @@ class RouteProvider
             require $this->getContainer()->get('root') . '/routes/storage.php';
         });
 
-        $this->applyMiddlewares($storage, $this->storageMiddlewares);
+        $this->applyMiddlewares($storage, $this->middlewares['storage']);
     }
 }

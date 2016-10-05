@@ -30,4 +30,7 @@ return [
     'viewPath' => function (Configuration $container) {
         return Filesystem::resolvePath("{$container->resources}/view");
     },
+    'middlewares' => function () {
+        return require __DIR__ . '/middlewares.php';
+    },
 ];
