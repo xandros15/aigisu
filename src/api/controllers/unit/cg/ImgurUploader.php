@@ -9,7 +9,6 @@
 namespace Aigisu\Api\Controllers\Unit\CG;
 
 
-use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Imgur\Imgur;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +17,7 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ImgurUploader extends Controller
+class ImgurUploader extends AbstractUploader
 {
     /**
      * @param Request $request
@@ -73,7 +72,7 @@ class ImgurUploader extends Controller
             'imgur_delhash' => $imgurFile['deletehash'],
         ])->saveOrFail();
 
-        return $response->withStatus(self::STATUS_OK);
+        return $response->withStatus(self::STATUS_CREATED)->withHeader('Location', $this->getLocation($request));
     }
 
     /**
@@ -155,7 +154,6 @@ class ImgurUploader extends Controller
      */
     public function actionUpdate(Request $request, Response $response) : Response
     {
-
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
         if (!$id = $cg->getAttribute('imgur_id')) {

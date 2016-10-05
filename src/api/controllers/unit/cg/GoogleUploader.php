@@ -8,7 +8,6 @@
 
 namespace Aigisu\Api\Controllers\Unit\CG;
 
-use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\components\google\GoogleDriveManager;
@@ -17,7 +16,7 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class GoogleUploader extends Controller
+class GoogleUploader extends AbstractUploader
 {
     /**
      * @param Request $request
@@ -37,7 +36,7 @@ class GoogleUploader extends Controller
         $driveManager->delete($id);
         $cg->setAttribute('google_id', null)->saveOrFail();
 
-        return $response = $response->withStatus(self::STATUS_OK);;
+        return $response->withStatus(self::STATUS_OK);
     }
 
     /**
@@ -73,7 +72,7 @@ class GoogleUploader extends Controller
 
         $cg->setAttribute('google_id', $driveFile->getId())->saveOrFail();
 
-        return $response->withStatus(self::STATUS_OK);
+        return $response->withStatus(self::STATUS_CREATED)->withHeader('Location', $this->getLocation($request));
     }
 
     /**
