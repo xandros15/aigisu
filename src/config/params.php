@@ -33,4 +33,7 @@ return [
     'middlewares' => function () {
         return require __DIR__ . '/middlewares.php';
     },
+    'database' => function(){
+        return require __DIR__ . '/db/params.php';
+    }
 ];
