@@ -19,11 +19,7 @@ use League\Flysystem\FilesystemInterface;
 
 class FilesystemManager
 {
-    /**
-     * The application instance.
-     *
-     * @var Configuration
-     */
+    /** @var array*/
     protected $config;
 
     /**
@@ -36,9 +32,9 @@ class FilesystemManager
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  ContainerInterface $config
+     * @param  array $config
      */
-    public function __construct(ContainerInterface $config)
+    public function __construct(array $config)
     {
         $this->config = $config;
     }
@@ -74,7 +70,7 @@ class FilesystemManager
      */
     public function getDefaultDriver() : string
     {
-        return $this->config['filesystems']['default'];
+        return $this->config['default'];
     }
 
     /**
@@ -117,7 +113,7 @@ class FilesystemManager
      */
     protected function getConfig(string $name) : array
     {
-        return $this->config['filesystems']['disks'][$name];
+        return $this->config['disks'][$name];
     }
 
     /**
@@ -139,7 +135,7 @@ class FilesystemManager
      */
     public function getDefaultCloudDriver() : string
     {
-        return $this->config['filesystems']['cloud'];
+        return $this->config['cloud'];
     }
 
     /**

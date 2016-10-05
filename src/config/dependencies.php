@@ -16,9 +16,6 @@ use Aigisu\Components\Url\UrlManager;
 use Interop\Container\ContainerInterface;
 
 return [
-    'filesystems' => function (ContainerInterface $container) {
-        return require 'filesystems.php';
-    },
     View::class => function (ContainerInterface $container) {
         $callbackManager = new CallbackManager();
         $callbackManager->addClassCallbacks(new UrlExtension($container));
@@ -26,7 +23,7 @@ return [
         return new View($container->get('viewPath'), $callbackManager);
     },
     FilesystemManager::class => function (ContainerInterface $container) {
-        return new FilesystemManager($container);
+        return new FilesystemManager(require __DIR__ . '/filesystems.php');
     },
     UrlManager::class => function (ContainerInterface $container) {
         return new UrlManager($container->get('router'), $container->get('siteUrl'));
