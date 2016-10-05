@@ -12,7 +12,6 @@ namespace Aigisu\Api\Controllers\Unit\CG;
 use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Imgur\Imgur;
-use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Slim\Exception\NotFoundException;
@@ -35,19 +34,14 @@ class ImgurUploader extends Controller
             throw new NotFoundException($request, $response);
         }
 
-        try {
-            $imgur = $this->getImgurManager();
-            $imgur->deleteImage($id);
-            $cg->fill([
-                'imgur_id' => null,
-                'imgur_delhash' => null
-            ])->saveOrFail();
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (BadResponseException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
+        $imgur = $this->getImgurManager();
+        $imgur->deleteImage($id);
+        $cg->fill([
+            'imgur_id' => null,
+            'imgur_delhash' => null
+        ])->saveOrFail();
 
-        return $response;
+        return $response->withStatus(self::STATUS_OK);
     }
 
     /**
@@ -72,20 +66,14 @@ class ImgurUploader extends Controller
             throw new RuntimeException('CG has image on imgur, at first try to delete.');
         }
 
-        try {
-            $imgur = $this->getImgurManager();
-            $imgurFile = $this->uploadImage($cg, $imgur);
-            $cg->fill([
-                'imgur_id' => $imgurFile['id'],
-                'imgur_delhash' => $imgurFile['deletehash'],
-            ])->saveOrFail();
+        $imgur = $this->getImgurManager();
+        $imgurFile = $this->uploadImage($cg, $imgur);
+        $cg->fill([
+            'imgur_id' => $imgurFile['id'],
+            'imgur_delhash' => $imgurFile['deletehash'],
+        ])->saveOrFail();
 
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (BadResponseException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
-
-        return $response;
+        return $response->withStatus(self::STATUS_OK);
     }
 
     /**
@@ -174,19 +162,14 @@ class ImgurUploader extends Controller
             throw new NotFoundException($request, $response);
         }
 
-        try {
-            $imgur = $this->getImgurManager();
-            $imgurFile = $this->uploadImage($cg, $imgur);
-            $cg->fill([
-                'imgur_id' => $imgurFile['id'],
-                'imgur_delhash' => $imgurFile['deletehash'],
-            ])->saveOrFail();
-            $imgur->deleteImage($id);
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (BadResponseException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
+        $imgur = $this->getImgurManager();
+        $imgurFile = $this->uploadImage($cg, $imgur);
+        $cg->fill([
+            'imgur_id' => $imgurFile['id'],
+            'imgur_delhash' => $imgurFile['deletehash'],
+        ])->saveOrFail();
+        $imgur->deleteImage($id);
 
-        return $response;
+        return $response->withStatus(self::STATUS_OK);
     }
 }

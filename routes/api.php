@@ -10,6 +10,7 @@ use Aigisu\Api\Controllers\Unit\CG\ImgurUploader;
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
+use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\Validators\CreateCGValidator;
 use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
@@ -86,7 +87,7 @@ $this->group('/units', function () {
                 ->setName('api.unit.cg.google.update');
             $this->delete('', GoogleUploader::class . ':actionDelete')
                 ->setName('api.unit.cg.google.delete');
-        });
+        })->add(new ExtendedServerExceptionHandler($this->getContainer()));
 
         $this->group('/{id:\d+}/imgur', function () {
             $this->post('', ImgurUploader::class . ':actionCreate')
@@ -95,7 +96,7 @@ $this->group('/units', function () {
                 ->setName('api.unit.cg.imgur.update');
             $this->delete('', ImgurUploader::class . ':actionDelete')
                 ->setName('api.unit.cg.imgur.delete');
-        });
+        })->add(new ExtendedServerExceptionHandler($this->getContainer()));
 
 
         $this->delete('/{id:\d+}', CGController::class . ':actionDelete')

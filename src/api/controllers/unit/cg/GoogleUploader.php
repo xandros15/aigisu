@@ -12,7 +12,6 @@ use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\components\google\GoogleDriveManager;
-use Google_Service_Exception as GoogleServiceException;
 use RuntimeException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
@@ -35,15 +34,10 @@ class GoogleUploader extends Controller
         }
         $driveManager = $this->getGoogleDriveManager();
 
-        try {
-            $driveManager->delete($id);
-            $cg->setAttribute('google_id', null)->saveOrFail();
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (GoogleServiceException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
+        $driveManager->delete($id);
+        $cg->setAttribute('google_id', null)->saveOrFail();
 
-        return $response;
+        return $response = $response->withStatus(self::STATUS_OK);;
     }
 
     /**
@@ -71,22 +65,15 @@ class GoogleUploader extends Controller
         }
 
         $driveManager = $this->getGoogleDriveManager();
-        try {
-            $driveFile = $driveManager->create([
-                'name' => $this->generateName($cg),
-                'filename' => $this->getImageFileName($cg)
-            ]);
+        $driveFile = $driveManager->create([
+            'name' => $this->generateName($cg),
+            'filename' => $this->getImageFileName($cg)
+        ]);
+        $driveManager->anyoneWithLinkCan($driveFile, 'view');
 
-            $driveManager->anyoneWithLinkCan($driveFile, 'view');
-            $cg->setAttribute('google_id', $driveFile->getId());
-            $cg->saveOrFail();
+        $cg->setAttribute('google_id', $driveFile->getId())->saveOrFail();
 
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (GoogleServiceException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
-
-        return $response;
+        return $response->withStatus(self::STATUS_OK);
     }
 
     /**
@@ -125,7 +112,6 @@ class GoogleUploader extends Controller
      */
     public function actionUpdate(Request $request, Response $response) : Response
     {
-
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
         if (!$id = $cg->getAttribute('google_id')) {
@@ -133,17 +119,11 @@ class GoogleUploader extends Controller
         }
 
         $driveManager = $this->getGoogleDriveManager();
-        try {
-            $driveManager->update($id, [
-                'name' => $this->generateName($cg),
-                'filename' => $this->getImageFileName($cg),
-            ]);
+        $driveManager->update($id, [
+            'name' => $this->generateName($cg),
+            'filename' => $this->getImageFileName($cg),
+        ]);
 
-            $response = $response->withStatus(self::STATUS_OK);
-        } catch (GoogleServiceException $e) {
-            $response = $response->withJson(json_decode($e->getMessage(), true), $e->getCode());
-        }
-
-        return $response;
+        return $response->withStatus(self::STATUS_OK);
     }
 }
