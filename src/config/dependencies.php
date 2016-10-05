@@ -22,16 +22,16 @@ return [
         $callbackManager->addClassCallbacks(new LayoutExtension());
         return new View($container->get('viewPath'), $callbackManager);
     },
-    FilesystemManager::class => function (ContainerInterface $container) {
+    FilesystemManager::class => function () {
         return new FilesystemManager(require __DIR__ . '/filesystems.php');
     },
     UrlManager::class => function (ContainerInterface $container) {
         return new UrlManager($container->get('router'), $container->get('siteUrl'));
     },
-    GoogleDriveFilesystem::class => function (ContainerInterface $container) {
+    GoogleDriveFilesystem::class => function () {
         return new GoogleDriveFilesystem(require __DIR__ . '/google.php');
     },
-    Imgur::class => function (ContainerInterface $container) {
+    Imgur::class => function () {
         return new Imgur(require __DIR__ . '/imgur.php');
     },
 ];
