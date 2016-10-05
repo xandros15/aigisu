@@ -10,9 +10,9 @@ namespace Aigisu\Common\Components\Http;
 
 
 use Aigisu\Common\Exceptions\ServerException;
+use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\RequestOptions;
 use Slim\Exception\NotFoundException;
-use Slim\Http\Response;
 
 class Client extends \GuzzleHttp\Client
 {
@@ -27,14 +27,11 @@ class Client extends \GuzzleHttp\Client
         STATUS_METHOD_NOT_ALLOWED = 405,
         STATUS_SERVER_ERROR = 500;
 
-    private $response;
-
     /**
      * Client constructor.
-     * @param Response $response
      * @param array $config
      */
-    public function __construct(Response $response, array $config)
+    public function __construct(array $config)
     {
         $options = [
             RequestOptions::HEADERS => [
@@ -43,8 +40,6 @@ class Client extends \GuzzleHttp\Client
             RequestOptions::HTTP_ERRORS => false,
         ];
 
-        $this->response = $response;
-
         parent::__construct(array_merge($config, $options));
     }
 
@@ -52,25 +47,24 @@ class Client extends \GuzzleHttp\Client
      * @param string $method
      * @param string $uri
      * @param array $options
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      * @throws NotFoundException
      * @throws ServerException
      */
     public function request($method, $uri = '', array $options = [])
     {
-        $request = parent::request($method, $uri, $options);
+        $response = parent::request($method, $uri, $options);
 
-        switch ($request->getStatusCode()) {
+        switch ($response->getStatusCode()) {
             case self::STATUS_NOT_FOUND:
-                throw new NotFoundException($request, $this->response);
+                throw new NotFoundException(new ServerRequest($method, $uri), $response);
             case self::STATUS_UNAUTHORIZED:
             case self::STATUS_FORBIDDEN:
             case self::STATUS_METHOD_NOT_ALLOWED:
             case self::STATUS_SERVER_ERROR:
-                $response = $this->response->withStatus($request->getStatusCode());
-                throw (new ServerException($request, $response))->jsonToException($request->getBody());
+                throw new ServerException($response->getBody(), $response->getStatusCode());
         }
 
-        return $request;
+        return $response;
     }
 }

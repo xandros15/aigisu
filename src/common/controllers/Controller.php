@@ -73,12 +73,11 @@ abstract class Controller extends ActiveContainer
     }
 
     /**
-     * @param Response $response
      * @return Client
      */
-    protected function makeClient(Response $response) : Client
+    protected function makeClient() : Client
     {
-        $client = new Client($response, ['base_uri' => $this->siteUrl,]);
+        $client = new Client(['base_uri' => $this->siteUrl,]);
 
         return $client;
     }

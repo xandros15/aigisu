@@ -26,7 +26,7 @@ class UnitController extends Controller
     {
         $path = $this->router->pathFor('api.unit.index');
 
-        $clientResponse = $this->makeClient($response)->get($path, [
+        $clientResponse = $this->makeClient()->get($path, [
             'query' => ['extended' => ['cg', 'tags']],
         ]);
 
@@ -84,7 +84,7 @@ class UnitController extends Controller
     {
         $path = $this->router->pathFor('api.unit.view', ['id' => $this->getID($request)]);
 
-        $clientResponse = $this->makeClient($response)->get($path, [
+        $clientResponse = $this->makeClient()->get($path, [
             'query' => ['extended' => ['cg', 'tags']],
         ]);
 
@@ -113,7 +113,7 @@ class UnitController extends Controller
     {
         $path = $this->router->pathFor('api.unit.cg.index', ['unitId' => $this->getID($request)]);
 
-        $clientRequest = $this->makeClient($response)->get($path, ['query' => ['extended' => ['unit']]]);
+        $clientRequest = $this->makeClient()->get($path, ['query' => ['extended' => ['unit']]]);
         $cg = json_decode($clientRequest->getBody(), true);
 
         return $this->render($response, 'unit/cg/index', ['cg' => $cg]);
