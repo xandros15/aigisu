@@ -9,27 +9,48 @@
 namespace Aigisu\Common\Exceptions;
 
 
-use Slim\Exception\SlimException;
+use Exception;
+use RuntimeException;
 
-class ServerException extends SlimException implements JsonException
+class ServerException extends RuntimeException
 {
     const EXCEPTION = 'exception';
+    const MESSAGE = 'message';
+
+    public function __construct($message, $code, Exception $previous = null)
+    {
+        if (!$this->jsonArrayToException($message, $code)) {
+            parent::__construct($message, $code, $previous);
+        }
+    }
 
     /**
-     * @param string $json
-     * @return ServerException
+     * @param string $message
+     * @param int $code
+     * @return bool
      */
-    public function jsonToException(string $json)
+    private function jsonArrayToException(string $message, int $code) : bool
     {
-        $instance = json_decode($json, true);
-        $exception = reset($instance[self::EXCEPTION]);
+        $isJson = false;
+        if ($message = json_decode($message, true)) {
+            if (isset($message[self::EXCEPTION])) {
+                $exception = reset($message[self::EXCEPTION]);
+                $this->fillException(array_merge($exception, ['code' => $code]));
+            } elseif (isset($message[self::MESSAGE])) {
+                $this->fillException(['message' => $message[self::MESSAGE], 'code' => $code]);
+            }
+            $isJson = true;
+        }
 
-        if (is_array($exception)) {
-            foreach ($exception as $name => $value) {
+        return $isJson;
+    }
+
+    private function fillException(array $exception)
+    {
+        foreach ($exception as $name => $value) {
+            if (property_exists($this, $name)) {
                 $this->{$name} = $value;
             }
         }
-
-        return $this;
     }
 }
