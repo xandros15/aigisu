@@ -1,8 +1,7 @@
 <?php
 namespace Aigisu\Core;
 
-use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Slim\App as Slim;
 
 class Main extends Slim
@@ -63,12 +62,9 @@ class Main extends Slim
 
     private function setDatabase()
     {
-        /** @var $settings Configuration */
-        $settings = $this->getContainer();
-        $database = new Database($settings->database);
+        /** @var $database CapsuleManager */
+        $database = $this->getContainer()->get(CapsuleManager::class);
         $database->setAsGlobal();
-        $database->setEventDispatcher(new Dispatcher(new Container()));
         $database->bootEloquent();
-        $this->getContainer()['connection'] = $database->connection();
     }
 }

@@ -18,11 +18,24 @@ use Aigisu\Components\Oauth\RefreshTokenRepository;
 use Aigisu\Components\Oauth\ScopeRepository;
 use Aigisu\Components\Oauth\UserRepository;
 use Aigisu\Components\Url\UrlManager;
+use Illuminate\Container\Container as LaravelContainer;
+use Illuminate\Database\Capsule\Manager as CapsuleManager;
+use Illuminate\Database\Connection;
+use Illuminate\Events\Dispatcher;
 use Interop\Container\ContainerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 
 return [
+    Connection::class => function (ContainerInterface $container) {
+        return $container->get(CapsuleManager::class)->connection();
+    },
+    CapsuleManager::class => function (ContainerInterface $container) {
+        $database = new CapsuleManager();
+        $database->addConnection($container->get('database'));
+        $database->setEventDispatcher(new Dispatcher(new LaravelContainer()));
+        return $database;
+    },
     View::class => function (ContainerInterface $container) {
         $callbackManager = new CallbackManager();
         $callbackManager->addClassCallbacks(new UrlExtension($container));
