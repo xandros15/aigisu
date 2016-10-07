@@ -21,6 +21,7 @@ use Aigisu\Components\Url\UrlManager;
 use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Events\Dispatcher;
 use Interop\Container\ContainerInterface;
 use League\OAuth2\Server\AuthorizationServer;
@@ -28,7 +29,8 @@ use League\OAuth2\Server\Grant\PasswordGrant;
 
 return [
     Connection::class => function (ContainerInterface $container) {
-        return $container->get(CapsuleManager::class)->connection();
+        $factory = new ConnectionFactory(new LaravelContainer());
+        return $factory->make($container->get('database'));
     },
     CapsuleManager::class => function (ContainerInterface $container) {
         $database = new CapsuleManager();

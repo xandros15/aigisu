@@ -14,7 +14,6 @@ use Aigisu\Api\Data\Tables\TagsUnits;
 use Aigisu\Api\Data\Tables\Units;
 use Aigisu\Api\Data\Tables\Users;
 use Aigisu\Core\Configuration;
-use Aigisu\Core\Database;
 use Aigisu\Core\Model;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,11 +32,8 @@ class Schema
     public function __construct()
     {
         $settings = new Configuration();
-        $database = new Database($settings->database);
-
-        $database->bootEloquent();
-
-        $connection = $database->getConnection();
+        /** @var $connection Connection*/
+        $connection = $settings->get(Connection::class);
         $this->builder = $connection->getSchemaBuilder();
         $this->builder->disableForeignKeyConstraints();
     }
