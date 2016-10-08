@@ -13,7 +13,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends AbstractClient implements UserRepositoryInterface
 {
 
     /**
@@ -32,6 +32,8 @@ class UserRepository implements UserRepositoryInterface
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        // TODO: Implement getUserEntityByUserCredentials() method.
+        $user = $this->getUserByNameOrEmail($username);
+
+        return $user && $user->validatePassword($password) ? new UserEntity($user->getKey()) : null;
     }
 }

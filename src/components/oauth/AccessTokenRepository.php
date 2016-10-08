@@ -9,13 +9,16 @@
 namespace Aigisu\Components\Oauth;
 
 
+use DateTime;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-class AccessTokenRepository implements AccessTokenRepositoryInterface
+class AccessTokenRepository extends AbstractOauthConnection implements AccessTokenRepositoryInterface
 {
+
+    use FormatsScopesForStorage;
 
     /**
      * Create a new access token
@@ -28,13 +31,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        $accessToken = new AccessTokenEntity();
-        $accessToken->setClient($clientEntity);
-        foreach ($scopes as $scope) {
-            $accessToken->addScope($scope);
-        }
-        $accessToken->setUserIdentifier($userIdentifier);
-        return $accessToken;
+        return new AccessTokenEntity($userIdentifier, $scopes);
     }
 
     /**
@@ -44,7 +41,15 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        // TODO: Implement persistNewAccessToken() method.
+        $this->database->table('oauth_access_tokens')->insert([
+            'id' => $accessTokenEntity->getIdentifier(),
+            'client_id' => $accessTokenEntity->getClient()->getIdentifier(),
+            'scopes' => $this->formatScopesForStorage($accessTokenEntity->getScopes()),
+            'revoked' => false,
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
+            'expires_at' => $accessTokenEntity->getExpiryDateTime(),
+        ]);
     }
 
     /**
@@ -54,7 +59,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        // TODO: Implement revokeAccessToken() method.
+        $this->database->table('oauth_access_tokens')->where('id', $tokenId)->update(['revoked' => true]);
     }
 
     /**
@@ -66,6 +71,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        // TODO: Implement isAccessTokenRevoked() method.
+        return $this->database->table('oauth_access_tokens')->where('id', $tokenId)->where('revoked', 1)->exists();
     }
 }

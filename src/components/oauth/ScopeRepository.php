@@ -16,6 +16,13 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 class ScopeRepository implements ScopeRepositoryInterface
 {
 
+    protected $scopes;
+
+    public function __construct(array $scopes)
+    {
+        $this->scopes = $scopes;
+    }
+
     /**
      * Return information about a scope.
      *
@@ -25,7 +32,7 @@ class ScopeRepository implements ScopeRepositoryInterface
      */
     public function getScopeEntityByIdentifier($identifier)
     {
-        // TODO: Implement getScopeEntityByIdentifier() method.
+        return in_array($identifier, $this->scopes) ? new ScopeEntity($identifier) : null;
     }
 
     /**
@@ -45,6 +52,6 @@ class ScopeRepository implements ScopeRepositoryInterface
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        // TODO: Implement finalizeScopes() method.
+        return $scopes;
     }
 }

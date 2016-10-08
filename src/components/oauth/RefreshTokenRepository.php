@@ -9,10 +9,11 @@
 namespace Aigisu\Components\Oauth;
 
 
+use Aigisu\Api\Models\User;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
-class RefreshTokenRepository implements RefreshTokenRepositoryInterface
+class RefreshTokenRepository extends AbstractOauthConnection implements RefreshTokenRepositoryInterface
 {
 
     /**
@@ -22,7 +23,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function getNewRefreshToken()
     {
-        // TODO: Implement getNewRefreshToken() method.
+        return new RefreshTokenEntity();
     }
 
     /**
@@ -32,7 +33,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        // TODO: Implement persistNewRefreshToken() method.
+        $this->database->table('oauth_refresh_tokens')->insert([
+            'id' => $refreshTokenEntity->getIdentifier(),
+            'access_token_id' => $refreshTokenEntity->getAccessToken()->getIdentifier(),
+            'revoked' => false,
+            'expires_at' => $refreshTokenEntity->getExpiryDateTime()->getTimestamp(),
+        ]);
     }
 
     /**
@@ -42,7 +48,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-        // TODO: Implement revokeRefreshToken() method.
+        /** @var $user User */
+        $this->database->table('oauth_refresh_tokens')->where('id', $tokenId)->update(['revoked' => true]);
     }
 
     /**
@@ -54,6 +61,6 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        // TODO: Implement isRefreshTokenRevoked() method.
+        return $this->database->table('oauth_refresh_tokens')->where('id', $tokenId)->where('revoked', 1)->exists();
     }
 }

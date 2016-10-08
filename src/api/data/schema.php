@@ -8,6 +8,8 @@
 namespace Aigisu\Api\Data;
 
 use Aigisu\Api\Data\Tables\CG;
+use Aigisu\Api\Data\Tables\OauthAccessTokens;
+use Aigisu\Api\Data\Tables\OauthRefreshTokens;
 use Aigisu\Api\Data\Tables\Table;
 use Aigisu\Api\Data\Tables\Tags;
 use Aigisu\Api\Data\Tables\TagsUnits;
@@ -32,7 +34,7 @@ class Schema
     public function __construct()
     {
         $settings = new Configuration();
-        /** @var $connection Connection*/
+        /** @var $connection Connection */
         $connection = $settings->get(Connection::class);
         $this->builder = $connection->getSchemaBuilder();
         $this->builder->disableForeignKeyConstraints();
@@ -83,6 +85,8 @@ class Schema
             new CG(),
             new Tags(),
             new TagsUnits(),
+            new OauthAccessTokens(),
+            new OauthRefreshTokens(),
         ];
     }
 

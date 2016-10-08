@@ -16,6 +16,16 @@ class ScopeEntity implements ScopeEntityInterface
 {
     use EntityTrait;
 
+    /**
+     * Create a new scope instance.
+     *
+     * @param  string $name
+     */
+    public function __construct(string $name)
+    {
+        $this->setIdentifier($name);
+    }
+
     public function jsonSerialize()
     {
         return $this->getIdentifier();

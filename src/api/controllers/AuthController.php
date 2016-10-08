@@ -9,39 +9,48 @@
 namespace Aigisu\Api\Controllers;
 
 
-use Aigisu\Api\Models\User;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 class AuthController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function actionCreate(Request $request, Response $response) : Response
     {
-        $login = $request->getParam('login');
-        $password = $request->getParam('password');
-        if (filter_var($login, FILTER_VALIDATE_EMAIL) !== false) {
-            $user = User::where(['email' => $login])->get()->first();
-        } else {
-            $user = User::where(['name' => $login])->get()->first();
+        /* @var \League\OAuth2\Server\AuthorizationServer $server */
+        $server = $this->get(AuthorizationServer::class);
+        $request = $this->prepareParams($request);
+        try {
+            // Try to respond to the access token request
+            return $server->respondToAccessTokenRequest($request, $response);
+        } catch (OAuthServerException $exception) {
+            // All instances of OAuthServerException can be converted to a PSR-7 response
+            return $exception->generateHttpResponse($response);
+        } catch (\Exception $exception) {
+            // Catch unexpected exceptions
+            $body = $response->getBody();
+            $body->write($exception->getMessage());
+            return $response->withStatus(500)->withBody($body);
         }
-
-        /** @var $user User */
-        if ($user && password_verify($password, $user->password)) {
-            $response = $response->withJson($user->generateNewToken())->withStatus(self::STATUS_OK);
-        } else {
-            $response = $response->withStatus(self::STATUS_BAD_REQUEST);
-        }
-
-        return $response;
     }
 
-    public function actionDelete(Request $request, Response $response) : Response
+    /**
+     * @param Request $request
+     * @return Request
+     */
+    protected function prepareParams(Request $request) : Request
     {
-
-    }
-
-    private function logout(User $user, Response $response)
-    {
-
+        $parsedBody = $request->getParsedBody();
+        if (!isset($parsedBody['client_id']) && isset($parsedBody['username'])) {
+            $parsedBody['client_id'] = $parsedBody['username'];
+        }
+        
+        return $request->withParsedBody($parsedBody);
     }
 }

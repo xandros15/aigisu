@@ -9,18 +9,19 @@
 namespace Aigisu\Components\Oauth;
 
 
+use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
 class UserEntity implements UserEntityInterface
 {
+    use EntityTrait;
 
     /**
-     * Return the user's identifier.
-     *
-     * @return mixed
+     * UserEntity constructor.
+     * @param $identifier
      */
-    public function getIdentifier()
+    public function __construct($identifier)
     {
-        return 1;
+        $this->setIdentifier($identifier);
     }
 }

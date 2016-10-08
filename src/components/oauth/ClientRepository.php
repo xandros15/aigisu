@@ -12,8 +12,15 @@ namespace Aigisu\Components\Oauth;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
-class ClientRepository implements ClientRepositoryInterface
+class ClientRepository extends AbstractClient implements ClientRepositoryInterface
 {
+
+    protected $redirectUrl;
+
+    public function __construct(string $redirectUrl)
+    {
+        $this->redirectUrl = $redirectUrl;
+    }
 
     /**
      * Get a client.
@@ -24,10 +31,16 @@ class ClientRepository implements ClientRepositoryInterface
      * @param bool $mustValidateSecret If true the client must attempt to validate the secret if the client
      *                                        is confidential
      *
-     * @return ClientEntityInterface
+     * @return ClientEntityInterface|null
      */
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
-        // TODO: Implement getClientEntity() method.
+        $user = $this->getUserByNameOrEmail($clientIdentifier);
+
+        return !$user ? null : new ClientEntity([
+            'identifier' => $user->getKey(),
+            'name' => $user->name,
+            'redirectUri' => $this->redirectUrl,
+        ]);
     }
 }
