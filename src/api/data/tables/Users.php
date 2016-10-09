@@ -10,10 +10,13 @@ namespace Aigisu\Api\Data\Tables;
 
 
 use Aigisu\Api\Models\User;
+use Aigisu\Core\Configuration;
+use Google\Auth\Cache\InvalidArgumentException;
 use Illuminate\Database\Schema\Blueprint;
 
 class Users implements Table
 {
+    private $roles = [];
 
     /**
      * @return string
@@ -36,11 +39,28 @@ class Users implements Table
         $table->increments('id')->unsigned();
         $table->string('name', 15)->unique();
         $table->string('password', 255);
-        $table->string('email', 64)->unique();;
+        $table->string('email', 64)->unique();
+        $table->enum('role', $this->getEnumRoles());
         $table->string('recovery_hash', 255)->nullable();
         $table->string('remember_identifier', 255)->nullable();
         $table->string('remember_hash', 255)->nullable();
         $table->timestamps();
+    }
+
+    private function getEnumRoles() : array
+    {
+        $accesses = (new Configuration())->get('access');
+        $roles = [];
+        foreach ($accesses as $access) {
+            $roles[] = $access['role'];
+        }
+
+        if (!$roles) {
+            throw new InvalidArgumentException('Missing roles in access param. Check configuration params');
+        }
+
+
+        return $roles;
     }
 
 }

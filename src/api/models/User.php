@@ -15,6 +15,7 @@ use Aigisu\Core\Model;
  * @property string $name
  * @property string $password
  * @property string $email
+ * @property string $role
  * @property string $recovery_hash
  * @property string $remember_identifier
  * @property string $remember_hash
