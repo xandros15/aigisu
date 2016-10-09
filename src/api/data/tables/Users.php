@@ -16,7 +16,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Users implements Table
 {
-    private $roles = [];
 
     /**
      * @return string
@@ -47,6 +46,9 @@ class Users implements Table
         $table->timestamps();
     }
 
+    /**
+     * @return array
+     */
     private function getEnumRoles() : array
     {
         $accesses = (new Configuration())->get('access');
@@ -59,8 +61,6 @@ class Users implements Table
             throw new InvalidArgumentException('Missing roles in access param. Check configuration params');
         }
 
-
         return $roles;
     }
-
 }
