@@ -102,7 +102,7 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
     private function getLvlByRole(string $role) : int
     {
         foreach ($this->getAccessList() as $access) {
-            if ($access['role'] === $role) {
+            if (strtoupper($access['role']) === strtoupper($role)) {
                 return $access['level'];
             }
         }
