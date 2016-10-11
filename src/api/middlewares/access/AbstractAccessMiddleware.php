@@ -77,7 +77,7 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
      */
     protected function compareAccess(string $role, string $class) : bool
     {
-        return $this->getLvlByClass($class) <= $this->getLvlByRole($role);
+        return $this->getLvlByRole($role) <= $this->getLvlByClass($class);
     }
 
     /**
