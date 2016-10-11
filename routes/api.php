@@ -64,13 +64,14 @@ $this->group('/units', function () {
         $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
             ->setName('api.unit.update')
             ->add(new UpdateUnitValidator($this->getContainer()))
-            ->add(new ParserUnitTagsMiddleware($this->getContainer()))
-            ->add(new AdminAccessMiddleware($this->getContainer()));
+            ->add(new ParserUnitTagsMiddleware($this->getContainer()));
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
 
-    })->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
+    })
+        ->add(new AdminAccessMiddleware($this->getContainer()))
+        ->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
 
     $this->get('', UnitController::class . ':actionIndex')
         ->setName('api.unit.index');
