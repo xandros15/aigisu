@@ -50,7 +50,7 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
         $user = null;
         $isGuest = true;
 
-        if ($id = $request->getAttribute('oauth_user_id')) {
+        if ($id = $request->getAttribute('oauth_client_id')) {
             if ($user = User::find($id)) {
                 $isGuest = false;
             }
