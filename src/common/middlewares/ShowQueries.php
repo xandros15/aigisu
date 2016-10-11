@@ -12,6 +12,7 @@ namespace Aigisu\Common\Middlewares;
 use Aigisu\Common\Components\View\LayoutExtension;
 use Aigisu\Common\Components\View\View;
 use Aigisu\Core\Middleware;
+use Illuminate\Database\Connection;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -26,18 +27,20 @@ class ShowQueries extends Middleware
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         if ($this->get('isDebug')) {
-            $this->connection->enableQueryLog();
-            $this->get(View::class)->append(function () {
-                $queries = $this->getQueryContent();
+            /** @var $connection Connection */
+            $connection = $this->get(Connection::class);
+            $connection->enableQueryLog();
+            $this->get(View::class)->append(function () use ($connection) {
+                $queries = $this->getQueryContent($connection);
                 return $queries ? $queries : '';
             }, LayoutExtension::PH_BODY_END, 1);
         }
         return $next($request, $response);
     }
 
-    private function getQueryContent() : string
+    private function getQueryContent(Connection $connection) : string
     {
-        $queries = $this->connection->getQueryLog();
+        $queries = $connection->getQueryLog();
 
         $output = '';
 
