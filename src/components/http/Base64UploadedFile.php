@@ -35,6 +35,10 @@ class Base64UploadedFile extends UploadedFile
             throw new \RuntimeException('No contents uploaded');
         }
 
+        register_shutdown_function(function () use ($file) {
+            @unlink($file);
+        });
+
         return $file;
     }
 }
