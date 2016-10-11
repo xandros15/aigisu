@@ -47,7 +47,7 @@ return [
         $callbackManager->addClassCallbacks(new LayoutExtension());
         return new View($container->get('viewPath'), $callbackManager);
     },
-    FilesystemManager::class => function () {
+    FilesystemManager::class => function (ContainerInterface $container) {
         return new FilesystemManager(require __DIR__ . '/filesystems.php');
     },
     UrlManager::class => function (ContainerInterface $container) {
