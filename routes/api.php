@@ -14,6 +14,7 @@ use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
+use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\Validators\CreateCGValidator;
@@ -137,3 +138,4 @@ $this->group('/units', function () {
 });
 
 $this->post('/auth', AuthController::class . ':actionCreate');
+$this->add(new Base64FileMiddleware($this->getContainer()));
