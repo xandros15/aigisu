@@ -19,7 +19,6 @@ use SplFileInfo;
 
 abstract class Validator extends Middleware implements Messages
 {
-    const OLD_PARAMS = 'old_params';
 
     /**
      * @var array
@@ -38,9 +37,9 @@ abstract class Validator extends Middleware implements Messages
             return $next($request, $response);
         }
 
+        //@todo correct response message
         return $response->withJson([
             self::MESSAGE => $this->getErrors(),
-            self::OLD_PARAMS => $request->getParams()
         ], self::STATUS_BAD_REQUEST);
     }
 
@@ -48,7 +47,7 @@ abstract class Validator extends Middleware implements Messages
      * @param Request $request
      * @return bool
      */
-    public function validate(Request $request) : bool
+    protected function validate(Request $request) : bool
     {
         foreach ($this->rules() as $field => $rule) {
             try {
@@ -74,7 +73,7 @@ abstract class Validator extends Middleware implements Messages
      * @param Request $request
      * @return bool
      */
-    public function validateFiles(Request $request) : bool
+    protected function validateFiles(Request $request) : bool
     {
         foreach ($this->fileRules() as $field => $rule) {
             try {
@@ -100,7 +99,7 @@ abstract class Validator extends Middleware implements Messages
      * @param $key
      * @return SplFileInfo|null
      */
-    private function getUploadedFile(Request $request, $key)
+    protected function getUploadedFile(Request $request, $key)
     {
         $file = null;
 
@@ -116,7 +115,7 @@ abstract class Validator extends Middleware implements Messages
     /**
      * @return array|null
      */
-    public function getErrors()
+    protected function getErrors()
     {
         return $this->errors;
     }
