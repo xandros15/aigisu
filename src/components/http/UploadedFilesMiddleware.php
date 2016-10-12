@@ -19,8 +19,7 @@ class UploadedFilesMiddleware extends Middleware
 {
     const
         METHOD_POST = 'POST',
-        METHOD_PUT = 'PUT',
-        METHOD_PATCH = 'PATCH';
+        METHOD_PUT = 'PUT';
 
     /**
      * @param Request $request
@@ -31,8 +30,6 @@ class UploadedFilesMiddleware extends Middleware
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
         switch (strtoupper($request->getMethod())) {
-            case self::METHOD_PATCH: //@todo file PATCH parser
-                break;
             case self::METHOD_PUT:
                 $request = $this->withPutFiles($request);
                 break;
