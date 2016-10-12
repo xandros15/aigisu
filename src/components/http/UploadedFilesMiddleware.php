@@ -90,7 +90,7 @@ class UploadedFilesMiddleware extends Middleware
         $newFiles = [];
         $manager = $this->get(FilesystemManager::class);
 
-        foreach ($oldFiles as $value => $file) {
+        foreach ($oldFiles as $name => $file) {
             /** @var $file SlimUploadedFile */
             $newFile = new UploadedFile(
                 $file->file,
@@ -100,7 +100,7 @@ class UploadedFilesMiddleware extends Middleware
                 $file->getError()
             );
             $newFile->setManager($manager);
-            $newFiles[] = $newFile;
+            $newFiles[$name] = $newFile;
         }
 
         return $request->withUploadedFiles($newFiles);
