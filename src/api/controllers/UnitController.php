@@ -3,7 +3,6 @@
 namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Models\Unit;
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -42,7 +41,7 @@ class UnitController extends Controller
     public function actionCreate(Request $request, Response $response): Response
     {
         $unit = new Unit($request->getParams());
-        $unit->uploadIcon($request, $this->get(FilesystemManager::class));
+        $unit->uploadIcon($request);
         $unit->saveOrFail();
         $unit->syncTags();
 
@@ -58,7 +57,7 @@ class UnitController extends Controller
     {
         /** @var $unit Unit */
         $unit = Unit::findOrFail($this->getID($request))->fill($request->getParams());
-        $unit->uploadIcon($request, $this->get(FilesystemManager::class));
+        $unit->uploadIcon($request);
         $unit->saveOrFail();
         $unit->syncTags();
 
@@ -76,7 +75,7 @@ class UnitController extends Controller
 
         return $response->withStatus(self::STATUS_OK);
     }
-
+    
     /**
      * @param Request $request
      * @param Response $response

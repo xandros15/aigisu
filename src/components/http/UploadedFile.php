@@ -10,7 +10,6 @@ namespace Aigisu\Components\Http;
 
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use League\Flysystem\AdapterInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\UploadedFile as SlimUploadedFile;
 
 class UploadedFile extends SlimUploadedFile
@@ -23,56 +22,6 @@ class UploadedFile extends SlimUploadedFile
 
     /** @var FilesystemManager|null */
     protected $manager;
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param string $key
-     * @param null $manager
-     * @return UploadedFile
-     */
-    public static function file(ServerRequestInterface $request, string $key, $manager = null)
-    {
-        $target = $request->getUploadedFiles();
-        $key = explode('.', $key);
-
-        while (($segment = array_shift($key)) !== null) {
-            if (array_key_exists($segment, $target)) {
-                $target = $target[$segment];
-            } else {
-                $target = null;
-                break;
-            }
-        }
-
-        return is_null($target) ? self::createFakeFile() : self::createFromBase($target, $manager);
-    }
-
-    /**
-     * @return UploadedFile
-     */
-    public static function createFakeFile() : UploadedFile
-    {
-        return new static('', null, null, null, UPLOAD_ERR_NO_FILE);
-    }
-
-    /**
-     *
-     * Create a new file instance from a base instance.
-     *
-     * @param SlimUploadedFile $file
-     * @param FilesystemManager|null $manager
-     * @return UploadedFile
-     */
-    public static function createFromBase(SlimUploadedFile $file, $manager = null) : UploadedFile
-    {
-        if (!$file instanceof static) {
-            $file = new static($file->file, $file->name, $file->type, $file->size, $file->error, $file->sapi);
-        }
-
-        $file->setManager($manager);
-
-        return $file;
-    }
 
     /**
      * @param null|FilesystemManager $manager

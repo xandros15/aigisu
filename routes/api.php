@@ -24,6 +24,7 @@ use Aigisu\Api\Middlewares\Validators\MissingCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
+use Aigisu\Components\Http\UploadedFilesMiddleware;
 use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
 use League\OAuth2\Server\ResourceServer;
 
@@ -139,3 +140,4 @@ $this->group('/units', function () {
 
 $this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware($this->getContainer()));
+$this->add(new UploadedFilesMiddleware($this->getContainer()));

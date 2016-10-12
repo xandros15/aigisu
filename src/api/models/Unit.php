@@ -181,13 +181,13 @@ class Unit extends Model
 
     /**
      * @param Request $request
-     * @param FilesystemManager $manager
      */
-    public function uploadIcon(Request $request, FilesystemManager $manager)
+    public function uploadIcon(Request $request)
     {
-        $iconName = UploadedFile::file($request, self::ICON_UPLOAD_FILE_NAME, $manager)
-            ->store(self::ICON_UPLOAD_CATALOG);
-        if ($iconName) {
+        $files = $request->getUploadedFiles();
+        /** @var $icon UploadedFile */
+        $icon = reset($files);
+        if ($iconName = $icon->store(self::ICON_UPLOAD_CATALOG)) {
             $this->setAttribute('icon', $iconName);
         }
     }
