@@ -93,11 +93,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storePublicly(string $path, string $disk = '')
     {
-        if ($this->exist()) {
-            return $this->storeAs($path, $this->hashName(), $disk, self::VISIBILITY_PUBLIC);
-        }
-
-        return false;
+        return $this->storeAs($path, '', $disk, self::VISIBILITY_PUBLIC);
     }
 
     /**
@@ -117,10 +113,14 @@ class UploadedFile extends SlimUploadedFile
      * @param  string $visibility
      * @return string|false
      */
-    public function storeAs(string $path, string $name, string $disk = '', string $visibility = self::VISIBILITY_PUBLIC)
-    {
+    public function storeAs(
+        string $path,
+        string $name = '',
+        string $disk = '',
+        string $visibility = self::VISIBILITY_PUBLIC
+    ) {
         if ($this->exist() && $this->manager instanceof FilesystemManager) {
-            $path = trim($path . DIRECTORY_SEPARATOR . $name, DIRECTORY_SEPARATOR);
+            $path = $name ? $path . DIRECTORY_SEPARATOR . $name : $this->hashName($path);
             $result = $this->manager->disk($disk)->putStream($path, $this->getStream()->detach(), [
                 'visibility' => $this->prepareVisibility($visibility)
             ]);
@@ -155,7 +155,7 @@ class UploadedFile extends SlimUploadedFile
     public function hashName(string $path = '')
     {
         if ($path) {
-            $path = rtrim($path, '/') . '/';
+            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
         $path .= md5_file($this->file);
 
@@ -171,10 +171,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function store(string $path, string $disk = '')
     {
-        if ($this->exist()) {
-            return $this->storeAs($path, $this->hashName(), $disk);
-        }
-        return false;
+        return $this->storeAs($path, '', $disk);
     }
 
     /**
@@ -187,9 +184,6 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storePubliclyAs(string $path, string $name, string $disk = '')
     {
-        if ($this->exist()) {
-            return $this->storeAs($path, $name, $disk, self::VISIBILITY_PUBLIC);
-        }
-        return false;
+        return $this->storeAs($path, $name, $disk, self::VISIBILITY_PUBLIC);
     }
 }
