@@ -9,6 +9,8 @@
 namespace Aigisu\Api\Middlewares\Validators;
 
 
+use Respect\Validation\Validator as v;
+
 class UpdateUserValidator extends CreateUserValidator
 {
     /**
@@ -16,6 +18,10 @@ class UpdateUserValidator extends CreateUserValidator
      */
     protected function rules() : array
     {
-        return $this->makeOptional(parent::rules());
+        return $this->makeOptional([
+            'name' => v::stringType()->length(4, 15),
+            'email' => v::email(),
+            'role' => v::in($this->getEnumRoles()),
+        ]);
     }
 }
