@@ -43,7 +43,7 @@ $this->group('/users', function () {
             ->setName('api.user.create')
             ->add(new CreateUserValidator($this->getContainer()));
 
-        $this->patch('/{id:\d+}', UserController::class . ':actionUpdate')
+        $this->post('/{id:\d+}', UserController::class . ':actionUpdate')
             ->setName('api.user.update')
             ->add(new UpdateUserValidator($this->getContainer()));
 
@@ -70,7 +70,7 @@ $this->group('/units', function () {
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
-        
+
     })
         ->add(new AdminAccessMiddleware($this->getContainer()))
         ->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
