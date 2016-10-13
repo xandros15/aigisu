@@ -184,10 +184,9 @@ class Unit extends Model
      */
     public function uploadIcon(Request $request)
     {
-        $files = $request->getUploadedFiles();
         /** @var $icon UploadedFile */
-        $icon = reset($files);
-        if ($iconName = $icon->store(self::ICON_UPLOAD_CATALOG)) {
+        $icon = $request->getUploadedFiles()['icon'] ?? null;
+        if ($icon && $iconName = $icon->store(self::ICON_UPLOAD_CATALOG)) {
             $this->setAttribute('icon', $iconName);
         }
     }

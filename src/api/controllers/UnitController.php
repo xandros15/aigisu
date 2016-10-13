@@ -81,21 +81,6 @@ class UnitController extends Controller
      * @param Response $response
      * @return Response
      */
-    public function actionIconUpload(Request $request, Response $response): Response
-    {
-        /** @var $unit Unit */
-        $unit = Unit::findOrFail($this->getID($request));
-        $unit->uploadIcon($request);
-        $unit->update();
-
-        return $response->withStatus(self::STATUS_OK);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
     public function actionRarities(Request $request, Response $response): Response
     {
         return $response->withJson(Unit::getRarities(), self::STATUS_OK);

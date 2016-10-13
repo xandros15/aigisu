@@ -24,7 +24,6 @@ use Aigisu\Api\Middlewares\Validators\MissingCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
-use Aigisu\Api\Middlewares\Validators\UploadUnitIconValidator;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
 use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
 use League\OAuth2\Server\ResourceServer;
@@ -71,11 +70,7 @@ $this->group('/units', function () {
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
-
-        $this->put('/{id:\d+}/icon', UnitController::class . ':actionIconUpload')
-            ->setName('api.unit.icon.upload')
-            ->add(new UploadUnitIconValidator($this->getContainer()));
-
+        
     })
         ->add(new AdminAccessMiddleware($this->getContainer()))
         ->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
