@@ -5,10 +5,6 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
-use Aigisu\Common\Components\View\CallbackManager;
-use Aigisu\Common\Components\View\LayoutExtension;
-use Aigisu\Common\Components\View\UrlExtension;
-use Aigisu\Common\Components\View\View;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Components\Imgur\Imgur;
@@ -40,12 +36,6 @@ return [
         $database->addConnection($container->get('database'));
         $database->setEventDispatcher(new Dispatcher(new LaravelContainer()));
         return $database;
-    },
-    View::class => function (ContainerInterface $container) {
-        $callbackManager = new CallbackManager();
-        $callbackManager->addClassCallbacks(new UrlExtension($container));
-        $callbackManager->addClassCallbacks(new LayoutExtension());
-        return new View($container->get('viewPath'), $callbackManager);
     },
     FilesystemManager::class => function (ContainerInterface $container) {
         return new FilesystemManager(require __DIR__ . '/filesystems.php');

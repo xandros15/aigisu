@@ -24,12 +24,6 @@ return [
     'siteUrl' => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
     },
-    'resources' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->root}/resources");
-    },
-    'viewPath' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->resources}/view");
-    },
     'middlewares' => function () {
         return require __DIR__ . '/middlewares.php';
     },
