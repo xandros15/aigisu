@@ -14,6 +14,7 @@ use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
+use Aigisu\Api\Middlewares\AddCurrentUserMiddleware;
 use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
@@ -26,8 +27,6 @@ use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
 use Aigisu\Components\Oauth\ClientToUserMiddleware;
-use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
-use League\OAuth2\Server\ResourceServer;
 
 /** @var $this \Aigisu\Core\Main */
 $this->group('/users', function () {
@@ -53,7 +52,7 @@ $this->group('/users', function () {
 
     })->add(new OwnerAccessMiddleware($this->getContainer()));
 
-})->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
+})->add(new ModeratorAccessMiddleware($this->getContainer()));
 
 $this->group('/units', function () {
     /** @var $this \Aigisu\Core\Main */
@@ -73,8 +72,7 @@ $this->group('/units', function () {
             ->setName('api.unit.delete');
 
     })
-        ->add(new AdminAccessMiddleware($this->getContainer()))
-        ->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
+        ->add(new AdminAccessMiddleware($this->getContainer()));
 
     $this->get('', UnitController::class . ':actionIndex')
         ->setName('api.unit.index');
@@ -127,8 +125,7 @@ $this->group('/units', function () {
             $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
                 ->setName('api.unit.cg.delete');
 
-        })->add(new ModeratorAccessMiddleware($this->getContainer()))
-            ->add(new ResourceServerMiddleware($this->getContainer()->get(ResourceServer::class)));
+        })->add(new ModeratorAccessMiddleware($this->getContainer()));
 
         $this->get('', CGController::class . ':actionIndex')
             ->setName('api.unit.cg.index');
@@ -142,3 +139,4 @@ $this->group('/units', function () {
 $this->post('/auth', AuthController::class . ':actionCreate')->add(new ClientToUserMiddleware());
 $this->add(new Base64FileMiddleware($this->getContainer()));
 $this->add(new UploadedFilesMiddleware($this->getContainer()));
+$this->add(new AddCurrentUserMiddleware($this->getContainer()));
