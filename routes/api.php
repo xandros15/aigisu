@@ -37,6 +37,10 @@ $this->group('/users', function () {
     $this->get('/{id:\d+}', UserController::class . ':actionView')
         ->setName('api.user.view');
 
+
+    $this->get('/current', UserController::class . ':actionGetCurrent')
+        ->setName('api.user.current');
+
     $this->group('', function () {
         /** @var $this \Aigisu\Core\Main */
         $this->post('', UserController::class . ':actionCreate')

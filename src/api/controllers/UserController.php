@@ -77,4 +77,20 @@ class UserController extends Controller
 
         return $response->withJson($user->toArray(), self::STATUS_OK);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionGetCurrent(Request $request, Response $response) : Response
+    {
+        if ($request->getAttribute('is_guest')) {
+            $response = $response->withStatus(403);
+        } else {
+            $response = $response->withJson($request->getAttribute('user')->toArray());
+        }
+
+        return $response;
+    }
 }
