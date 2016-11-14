@@ -26,7 +26,7 @@ use Slim\Http\Request;
 class CG extends Model
 {
     const
-        CG_UPLOAD_FILE_NAME = 'cg',
+        CG_UPLOAD_KEY_NAME = 'cg',
         CG_UPLOAD_CATALOG = 'cg';
     const
         SERVER_NUTAKU = 'nutaku',
@@ -120,14 +120,14 @@ class CG extends Model
 
     /**
      * @param Request $request
-     * @param FilesystemManager $manager
      */
-    public function uploadCG(Request $request, FilesystemManager $manager)
+    public function uploadCG(Request $request)
     {
-        $iconName = UploadedFile::file($request, self::CG_UPLOAD_FILE_NAME, $manager)
-            ->store(self::CG_UPLOAD_CATALOG);
-        if ($iconName) {
-            $this->setAttribute('local', $iconName);
+        /** @var $cg UploadedFile */
+        $cg = $request->getUploadedFiles()[self::CG_UPLOAD_KEY_NAME] ?? null;
+
+        if ($cg && $storagePath = $cg->store(self::CG_UPLOAD_CATALOG)) {
+            $this->setAttribute('local', $storagePath);
         }
     }
 }

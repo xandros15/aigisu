@@ -71,7 +71,7 @@ class CGController extends Controller
     public function actionCreate(Request $request, Response $response): Response
     {
         $cg = new CG(array_merge(['unit_id' => $this->getUnitID($request)], $request->getParams()));
-        $cg->uploadCG($request, $this->get(FilesystemManager::class));
+        $cg->uploadCG($request);
         $cg->saveOrFail();
 
         return $this->created($response, $cg->getKey());
@@ -86,7 +86,7 @@ class CGController extends Controller
     {
         /** @var $cg CG */
         $cg = $this->findCGOrFail($request)->fill($request->getParams());
-        $cg->uploadCG($request, $this->get(FilesystemManager::class));
+        $cg->uploadCG($request);
         $cg->saveOrFail();
 
         return $response->withStatus(self::STATUS_OK);
