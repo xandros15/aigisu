@@ -13,14 +13,15 @@ abstract class Filesystem
 {
     public static function resolvePath(string $path) : string
     {
-        if (!$path = realpath($path)) {
+        if (!$newPath = realpath($path)) {
             $umask = umask(0);
             if (!@mkdir($path, 0755, true)) {
                 throw new \Exception(sprintf('Impossible to create the root directory "%s".', $path));
             }
             umask($umask);
+            $newPath = realpath($path);
         }
 
-        return $path;
+        return $newPath;
     }
 }
