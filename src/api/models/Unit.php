@@ -7,7 +7,7 @@ use Aigisu\Api\Models\Handlers\UnitTagsHandler;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\MissingCG;
 use Aigisu\Api\Models\Unit\Tag;
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
+use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -181,6 +181,7 @@ class Unit extends Model
 
     /**
      * @param Request $request
+     * @return bool
      */
     public function uploadIcon(Request $request)
     {
@@ -188,6 +189,22 @@ class Unit extends Model
         $icon = $request->getUploadedFiles()['icon'] ?? null;
         if ($icon && $iconName = $icon->store(self::ICON_UPLOAD_CATALOG)) {
             $this->setAttribute('icon', $iconName);
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * @param Request $request
+     * @param Dispatcher $dispatcher
+     */
+    public function saveUnitModel(Request $request, Dispatcher $dispatcher)
+    {
+        $this->fill($request->getParams());
+        if ($this->uploadIcon($request)) {
+            $dispatcher->call('spriteGenerator');
+        }
+        $this->saveOrFail();
+        $this->syncTags();
     }
 }

@@ -144,3 +144,13 @@ $this->post('/auth', AuthController::class . ':actionCreate')->add(new ClientToU
 $this->add(new Base64FileMiddleware($this->getContainer()));
 $this->add(new UploadedFilesMiddleware($this->getContainer()));
 $this->add(new AddCurrentUserMiddleware($this->getContainer()));
+
+
+    
+$this->add(function ($request, $response, $next) {
+    /** @var $response \Slim\Http\Response */
+    $response = $next($request, $response);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+});

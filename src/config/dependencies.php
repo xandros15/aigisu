@@ -5,6 +5,7 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
+use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Components\Imgur\Imgur;
@@ -19,7 +20,7 @@ use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Events\Dispatcher as EloquentDispatcher;
 use Interop\Container\ContainerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
@@ -34,7 +35,7 @@ return [
     CapsuleManager::class => function (ContainerInterface $container) {
         $database = new CapsuleManager();
         $database->addConnection($container->get('database'));
-        $database->setEventDispatcher(new Dispatcher(new LaravelContainer()));
+        $database->setEventDispatcher(new EloquentDispatcher(new LaravelContainer()));
         return $database;
     },
     FilesystemManager::class => function (ContainerInterface $container) {
@@ -82,5 +83,9 @@ return [
         );
 
         return $server;
+    },
+    Dispatcher::class => function (ContainerInterface $container) {
+        $callbacks = require_once __DIR__ . '/callbacks.php';
+        return new Dispatcher($callbacks, $container);
     },
 ];

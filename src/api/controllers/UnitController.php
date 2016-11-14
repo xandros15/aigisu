@@ -3,6 +3,7 @@
 namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Models\Unit;
+use Aigisu\Components\Dispatcher;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -40,10 +41,8 @@ class UnitController extends Controller
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        $unit = new Unit($request->getParams());
-        $unit->uploadIcon($request);
-        $unit->saveOrFail();
-        $unit->syncTags();
+        $unit = new Unit();
+        $unit->saveUnitModel($request, $this->get(Dispatcher::class));
 
         return $this->created($response, $this->router->pathFor('unit.view', ['id' => $unit->getKey()]));
     }
@@ -56,10 +55,8 @@ class UnitController extends Controller
     public function actionUpdate(Request $request, Response $response): Response
     {
         /** @var $unit Unit */
-        $unit = Unit::findOrFail($this->getID($request))->fill($request->getParams());
-        $unit->uploadIcon($request);
-        $unit->saveOrFail();
-        $unit->syncTags();
+        $unit = Unit::findOrFail($this->getID($request));
+        $unit->saveUnitModel($request, $this->get(Dispatcher::class));
 
         return $response->withStatus(self::STATUS_OK);
     }

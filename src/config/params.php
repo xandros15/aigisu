@@ -24,6 +24,9 @@ return [
     'siteUrl' => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
     },
+    'sprite.icons' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->public}/sprite/icons");
+    },
     'middlewares' => function () {
         return require __DIR__ . '/middlewares.php';
     },
