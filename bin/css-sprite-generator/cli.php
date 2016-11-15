@@ -22,7 +22,7 @@ if ($files) {
     }
     $spriter = new Spriter($files, [
         Spriter::OPT_SPRITE_FORMAT => Spriter::FORMAT_JPG,
-        Spriter::OPT_CSS_IMAGE_URL => $url
+        Spriter::OPT_CSS_IMAGE_URL => str_replace(['http://', 'https://'], '//', $url),
     ]);
 
     $spriter->save($output . '/sprite.css', $output . '/sprite');
