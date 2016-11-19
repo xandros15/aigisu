@@ -28,7 +28,9 @@
         </main>
     </section>
 </div>
-{% include 'footer.twig' %}
+{% block footer %}
+    {% include 'footer.twig' %}
+{% endblock %}
 {% include 'scripts.twig' %}
 {% block scripts %}{% endblock %}
 </body>
