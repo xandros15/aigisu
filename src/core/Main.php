@@ -6,8 +6,6 @@ use Slim\App as Slim;
 
 class Main extends Slim
 {
-    /** @var bool */
-    private $debug = false;
 
     /**
      * Main constructor.
@@ -19,23 +17,12 @@ class Main extends Slim
     }
 
     /**
-     * @return bool
-     */
-    public function isDebug()
-    {
-        return $this->debug;
-    }
-
-    /**
      * @param bool $state
      */
     public function debug(bool $state = true)
     {
-        $this->debug = $state;
-        $this->getContainer()['isDebug'] = function () use ($state) {
-            return $state;
-        };
-        if ($state) {
+        defined('__DEBUG__') || define('__DEBUG__', $state);
+        if ($this->getContainer()->get('isDebug')) {
             $this->runDebug();
         }
     }
