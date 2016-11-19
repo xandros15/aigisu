@@ -2,14 +2,17 @@
 
 {% block title %}Units | Aigisu{% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ base_url() }}/storage/icons/sprite.css" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
     <section>
         {% include 'unit/options/index.twig' %}
         <div class="grid text-center">
             <div id="unit-1" class="unit unit-container element-item iron male">
                 <figure class="image-container">
-                    <span class="image img-circle sprite sprite-d559d534968a328c93774bc8cf29513e"
-                    ></span>
+                    <div class="image img-circle sprite sprite-d559d534968a328c93774bc8cf29513e"></div>
                     <figcaption class="text-center">
                         <div><span class="name label label-primary">Prince</span></div>
                         <div><span class="kanji label label-primary">王子</span></div>
@@ -17,9 +20,8 @@
                 </figure>
             </div>
             <div id="unit-2" class="unit unit-container element-item iron male">
-                <figure class="image-container"><span
-                            class="image img-circle sprite sprite-684de1ae157de7e2f2b40ad9939cf525"
-                    ></span>
+                <figure class="image-container">
+                    <div class="image img-circle sprite sprite-684de1ae157de7e2f2b40ad9939cf525"></div>
                     <figcaption class="text-center">
                         <div><span class="name label label-primary">Soldier_A</span></div>
                         <div><span class="kanji label label-primary">一般兵A</span></div>
@@ -27,9 +29,8 @@
                 </figure>
             </div>
             <div id="unit-3" class="unit unit-container element-item iron male">
-                <figure class="image-container"><span
-                            class="image img-circle sprite sprite-1c5cdff2dcf821c16d0ec3e4cf3f9af7"
-                    ></span>
+                <figure class="image-container">
+                    <div class="image img-circle sprite sprite-1c5cdff2dcf821c16d0ec3e4cf3f9af7"></div>
                     <figcaption class="text-center">
                         <div><span class="name label label-primary">Soldier_B</span></div>
                         <div><span class="kanji label label-primary">一般兵B</span></div>
