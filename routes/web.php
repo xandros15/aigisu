@@ -11,4 +11,4 @@ $this->get('[/]', function () {
     return $response->withRedirect('/units');
 });
 
-$this->get('/units', UnitController::class . ':actionIndex');
+$this->get('/units', UnitController::class . ':actionIndex')->setName('web.units');
