@@ -1,33 +1,12 @@
-{% extends '/index.twig' %}
+{% extends 'index.twig' %}
+
+{% block title %}
+    Units | Aigisu
+{% endblock %}
+
 {% block content %}
     <section>
-        <aside class="aside-options">
-            <div class="toggle-button-container">
-                <button class="toggle-button btn btn-default"><span
-                            class="glyphicon glyphicon-chevron-right"></span></button>
-            </div>
-            <div class="aside-options-container">
-                <div>
-                    <div>
-                        <label for="filter-rarities">Rarities</label>
-                        <select id="filter-rarities" class="form-control">
-                            <option value="all">all</option>
-                            <option value="black">black</option>
-                            <option value="sapphire">sapphire</option>
-                            <option value="platinum">platinum</option>
-                            <option value="gold">gold</option>
-                            <option value="silver">silver</option>
-                            <option value="bronze">bronze</option>
-                            <option value="iron">iron</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="filter-name">name</label>
-                        <input type="text" id="filter-name" class="form-control">
-                    </div>
-                </div>
-            </div>
-        </aside>
+        {% include 'unit/options/index.twig' %}
         <div class="grid text-center">
             <div id="unit-1" class="unit unit-container element-item iron male">
                 <figure class="image-container">
