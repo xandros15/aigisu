@@ -26,6 +26,8 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 return [
     Connection::class => function (ContainerInterface $container) {
@@ -88,4 +90,13 @@ return [
         $callbacks = require_once __DIR__ . '/callbacks.php';
         return new Dispatcher($callbacks, $container);
     },
+    Twig::class => function (ContainerInterface $container) {
+        $view = new Twig($container->get('root') . '/src/web/templates', [
+            'cache' => $container->get('root') . '/cache'
+        ]);
+
+        $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
+
+        return $view;
+    }
 ];
