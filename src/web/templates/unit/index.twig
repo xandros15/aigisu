@@ -1,0 +1,64 @@
+{% extends '/index.twig' %}
+{% block content %}
+    <section>
+        <aside class="aside-options">
+            <div class="toggle-button-container">
+                <button class="toggle-button btn btn-default"><span
+                            class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
+            <div class="aside-options-container">
+                <div>
+                    <div>
+                        <label for="filter-rarities">Rarities</label>
+                        <select id="filter-rarities" class="form-control">
+                            <option value="all">all</option>
+                            <option value="black">black</option>
+                            <option value="sapphire">sapphire</option>
+                            <option value="platinum">platinum</option>
+                            <option value="gold">gold</option>
+                            <option value="silver">silver</option>
+                            <option value="bronze">bronze</option>
+                            <option value="iron">iron</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-name">name</label>
+                        <input type="text" id="filter-name" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="grid text-center">
+            <div id="unit-1" class="unit unit-container element-item iron male">
+                <figure class="image-container">
+                    <span class="image img-circle sprite sprite-d559d534968a328c93774bc8cf29513e"
+                    ></span>
+                    <figcaption class="text-center">
+                        <div><span class="name label label-primary">Prince</span></div>
+                        <div><span class="kanji label label-primary">王子</span></div>
+                    </figcaption>
+                </figure>
+            </div>
+            <div id="unit-2" class="unit unit-container element-item iron male">
+                <figure class="image-container"><span
+                            class="image img-circle sprite sprite-684de1ae157de7e2f2b40ad9939cf525"
+                    ></span>
+                    <figcaption class="text-center">
+                        <div><span class="name label label-primary">Soldier_A</span></div>
+                        <div><span class="kanji label label-primary">一般兵A</span></div>
+                    </figcaption>
+                </figure>
+            </div>
+            <div id="unit-3" class="unit unit-container element-item iron male">
+                <figure class="image-container"><span
+                            class="image img-circle sprite sprite-1c5cdff2dcf821c16d0ec3e4cf3f9af7"
+                    ></span>
+                    <figcaption class="text-center">
+                        <div><span class="name label label-primary">Soldier_B</span></div>
+                        <div><span class="kanji label label-primary">一般兵B</span></div>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+{% endblock %}
