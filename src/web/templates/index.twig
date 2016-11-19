@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Simple Sidebar - Start Bootstrap Template</title>
-    <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cyborg/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="dist/style.css" rel="stylesheet">
-
+    <title>{% block title %}Aigisu{% endblock %}</title>
+    {% include 'stylesheets.twig' %}
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -33,9 +28,7 @@
         </main>
     </section>
 </div>
-<footer class="sticky-footer">
-    <div class="container"><p class="text-muted">Place sticky footer content here.</p></div>
-</footer>
-<script src="dist/main.js"></script>
+{% include 'footer.twig' %}
+{% include 'scripts.twig' %}
 </body>
 </html>
