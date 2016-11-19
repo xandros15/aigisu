@@ -91,9 +91,11 @@ return [
         return new Dispatcher($callbacks, $container);
     },
     Twig::class => function (ContainerInterface $container) {
-        $view = new Twig($container->get('root') . '/src/web/templates', [
+        $settings = ($container->get('isDebug')) ? [] : [
             'cache' => $container->get('root') . '/cache'
-        ]);
+        ];
+
+        $view = new Twig($container->get('root') . '/src/web/templates', $settings);
 
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
