@@ -61,6 +61,7 @@
                     rarity: 'all',
                     name: '',
                 },
+                sort: 'created_at',
             };
             var template = _.template(document.getElementById('unit-template').innerHTML);
             axios.get('{{ path_for('api.unit.index') }}').then(function (response) {
@@ -75,9 +76,19 @@
             document.getElementById('filter-name').addEventListener('input', debounce(function (e) {
                 updateFilter('name', e.target.value)
             }, 300));
+
             document.getElementById('filter-missing-cg').addEventListener('change', function (e) {
                 updateFilter('missingCG', e.target.checked)
             });
+
+            document.getElementById('sort-units').addEventListener('change', function (e) {
+                updateSort(e.target.value)
+            });
+
+            function updateSort(value) {
+                storage.sort = value;
+                updateUnitList();
+            }
 
             function updateFilter(name, value) {
                 storage.filter[name] = value;
@@ -112,7 +123,9 @@
                     var missingCGFilter = !filter.missingCG || unit.missingCG.length > 0;
                     return rarityFilter && nameFilter && missingCGFilter;
                 });
-                console.log(newUnits);
+
+                newUnits = _.sortBy(newUnits, storage.sort);
+
                 document.getElementById('units-index').innerHTML = template({
                     units: newUnits
                 });
