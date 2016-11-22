@@ -60,6 +60,7 @@
                     missingCG: false,
                     rarity: 'all',
                     name: '',
+                    server: 'all',
                 },
                 sort: 'created_at',
             };
@@ -79,6 +80,10 @@
 
             document.getElementById('filter-missing-cg').addEventListener('change', function (e) {
                 updateFilter('missingCG', e.target.checked)
+            });
+
+            document.getElementById('filter-server').addEventListener('change', function (e) {
+                updateFilter('server', e.target.value)
             });
 
             document.getElementById('sort-units').addEventListener('change', function (e) {
@@ -121,7 +126,9 @@
                     var rarityFilter = filter.rarity == 'all' || filter.rarity == unit.rarity;
                     var nameFilter = filter.name.length == 0 || unit.name.toLowerCase().indexOf(filter.name.toLowerCase()) != -1;
                     var missingCGFilter = !filter.missingCG || unit.missingCG.length > 0;
-                    return rarityFilter && nameFilter && missingCGFilter;
+                    var serverFilter = filter.server == 'all' || unit[filter.server];
+
+                    return rarityFilter && nameFilter && missingCGFilter && serverFilter;
                 });
 
                 newUnits = _.sortBy(newUnits, storage.sort);
