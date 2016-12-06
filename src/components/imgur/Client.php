@@ -9,7 +9,7 @@
 namespace Aigisu\Components\Imgur;
 
 
-use AdamPaterson\OAuth2\Client\Provider\Imgur;
+use AdamPaterson\OAuth2\Client\Provider\Imgur as ImgurProvider;
 use InvalidArgumentException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use LogicException;
@@ -158,7 +158,7 @@ class Client
     {
         if (is_null($this->authorization)) {
             $keys = $this->getAuthKey();
-            $this->authorization = new Imgur([
+            $this->authorization = new ImgurProvider([
                 'clientId' => $keys['client_id'],
                 'clientSecret' => $keys['client_secret'],
             ]);
