@@ -4,29 +4,10 @@
 
 {% block stylesheets %}
     <link href="{{ base_url() }}/storage/icons/sprite.css" rel="stylesheet">
-    <style>
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg)
-            }
-            100% {
-                transform: rotate(360deg)
-            }
-        }
-    </style>
+    <link href="{{ base_url() }}/dist/units.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-
     <section>
         {% include 'unit/options/index.twig' %}
         <div id="units-index" class="grid text-center">
@@ -36,9 +17,11 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.min.js"></script>
+    <script>
+        var API = {
+            UNITS: '{{  base_url() ~ path_for('api.unit.index') }}'
+        }
+    </script>
     <script id="unit-template" type="text/html">
         <% _.each(units, function(unit){ %>
         <div id="unit-<%= unit.id %>" class="unit unit-container element-item">
@@ -52,91 +35,7 @@
         </div>
         <% }); %>
     </script>
-    <script>
-        (function () {
-            var storage = {
-                units: [],
-                filter: {
-                    missingCG: false,
-                    rarity: 'all',
-                    name: '',
-                    server: 'all',
-                },
-                sort: 'created_at',
-            };
-            var template = _.template(document.getElementById('unit-template').innerHTML);
-            axios.get('{{ path_for('api.unit.index') }}').then(function (response) {
-                storage.units = response.data;
-                updateUnitList();
-            });
-
-            document.getElementById('filter-rarities').addEventListener('change', function (e) {
-                updateFilter('rarity', e.target.value);
-            });
-
-            document.getElementById('filter-name').addEventListener('input', debounce(function (e) {
-                updateFilter('name', e.target.value)
-            }, 300));
-
-            document.getElementById('filter-missing-cg').addEventListener('change', function (e) {
-                updateFilter('missingCG', e.target.checked)
-            });
-
-            document.getElementById('filter-server').addEventListener('change', function (e) {
-                updateFilter('server', e.target.value)
-            });
-
-            document.getElementById('sort-units').addEventListener('change', function (e) {
-                updateSort(e.target.value)
-            });
-
-            function updateSort(value) {
-                storage.sort = value;
-                updateUnitList();
-            }
-
-            function updateFilter(name, value) {
-                storage.filter[name] = value;
-                updateUnitList();
-            }
-
-            function debounce(callback, wait, immediate) {
-                var timeout;
-                return function () {
-                    var context = this, args = arguments;
-                    var later = function () {
-                        timeout = null;
-                        if (!immediate) {
-                            callback.apply(context, args);
-                        }
-                    };
-                    var callNow = immediate && !timeout;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                    if (callNow) {
-                        callback.apply(context, args);
-                    }
-                };
-            }
-
-            function updateUnitList() {
-                var newUnits = Object.assign({}, storage.units);
-                var filter = storage.filter;
-                newUnits = _.filter(newUnits, function (unit) {
-                    var rarityFilter = filter.rarity == 'all' || filter.rarity == unit.rarity;
-                    var nameFilter = filter.name.length == 0 || unit.name.toLowerCase().indexOf(filter.name.toLowerCase()) != -1;
-                    var missingCGFilter = !filter.missingCG || unit.missingCG.length > 0;
-                    var serverFilter = filter.server == 'all' || unit[filter.server];
-
-                    return rarityFilter && nameFilter && missingCGFilter && serverFilter;
-                });
-
-                newUnits = _.sortBy(newUnits, storage.sort);
-
-                document.getElementById('units-index').innerHTML = template({
-                    units: newUnits
-                });
-            }
-        })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.min.js"></script>
+    <script src="{{ base_url() }}/dist/units.js"></script>
 {% endblock %}
