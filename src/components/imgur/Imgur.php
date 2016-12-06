@@ -36,7 +36,7 @@ class Imgur
     public function uploadDmmImage($file, array $params = []) : ResponseInterface
     {
         $image = new Image($this->client);
-        $params = array_merge($params, ['album' => $this->config['albums']['nutaku']]);
+        $params = array_merge($params, ['album' => $this->config['albums']['dmm']]);
 
         return $image->upload($file, $params);
     }
@@ -49,7 +49,7 @@ class Imgur
     public function uploadNutakuImage($file, array $params = []) : ResponseInterface
     {
         $image = new Image($this->client);
-        $params = array_merge($params, ['album' => $this->config['albums']['dmm']]);
+        $params = array_merge($params, ['album' => $this->config['albums']['nutaku']]);
 
         return $image->upload($file, $params);
     }
