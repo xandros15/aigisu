@@ -37,6 +37,6 @@ return [
         return require __DIR__ . '/access.php';
     },
     'isDebug' => function () {
-        return defined('__DEBUG__') && __DEBUG__;
+        return true;
     },
 ];

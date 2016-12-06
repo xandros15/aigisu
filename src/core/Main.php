@@ -14,25 +14,14 @@ class Main extends Slim
     public function __construct($items = [])
     {
         parent::__construct(new Configuration($items));
-    }
 
-    /**
-     * @param bool $state
-     */
-    public function debug(bool $state = true)
-    {
-        defined('__DEBUG__') || define('__DEBUG__', $state);
         if ($this->getContainer()->get('isDebug')) {
-            $this->runDebug();
+            error_reporting(E_ALL);
+            $this->getContainer()->get('settings')->replace([
+                'displayErrorDetails' => true,
+                'addContentLengthHeader' => false
+            ]);
         }
-    }
-
-    private function runDebug()
-    {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-        $this->getContainer()->get('settings')->replace(['displayErrorDetails' => true]);
-        $this->getContainer()->get('settings')->replace(['addContentLengthHeader' => false]);
     }
 
     public function bootstrap()
