@@ -42,5 +42,3 @@ try {
             '[Got access]' . PHP_EOL;
     }
 }
-
-exit();
