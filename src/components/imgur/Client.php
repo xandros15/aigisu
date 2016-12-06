@@ -217,8 +217,8 @@ class Client
             throw new RuntimeException('No filename is set');
         }
 
-        if (!realpath(basename($filename))) {
-            throw new RuntimeException('Can\'t create/update file. Path no exist');
+        if (!realpath($dirname = dirname($filename))) {
+            throw new RuntimeException("Can't create/update credentials file. Path {$dirname} no exist");
         }
 
         if (!$token = json_encode($token ?: $this->token)) {
