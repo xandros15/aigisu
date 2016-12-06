@@ -29,11 +29,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Aigisu\\": "src",
-      "Imgur\\": "src/components/imgur/imgur-php-wrapper"
-    },
-    "psr-0": {
-      "": "src/"
+      "Aigisu\\": "src"
     }
   },
   "config": {
