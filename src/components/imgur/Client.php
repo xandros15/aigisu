@@ -92,7 +92,7 @@ class Client
             }
         }
 
-        if ($token == null) {
+        if (empty($token)) {
             throw new InvalidArgumentException('invalid json token');
         }
 
