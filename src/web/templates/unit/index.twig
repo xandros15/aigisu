@@ -3,7 +3,6 @@
 {% block title %}Units | Aigisu{% endblock %}
 
 {% block stylesheets %}
-    <link href="{{ base_url() }}/storage/icons/sprite.css" rel="stylesheet">
     <link href="{{ base_url() }}/dist/units.css" rel="stylesheet">
 {% endblock %}
 
@@ -26,7 +25,7 @@
         <% _.each(units, function(unit){ %>
         <div id="unit-<%= unit.id %>" class="unit unit-container element-item">
             <figure class="image-container">
-                <div class="image img-circle sprite sprite-<%= unit.icon.replace('{{ base_url() }}/storage/images/icons/', '') %>"></div>
+                <img class="image img-circle" src="<%= unit.icon %>">
                 <figcaption class="text-center">
                     <div><span class="name label label-primary"><%= unit.name %></span></div>
                     <div><span class="kanji label label-primary"><%= unit.kanji %></span></div>
