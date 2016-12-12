@@ -23,6 +23,10 @@ class GoogleClientManager extends Configurable
         $this->createClient($config);
     }
 
+    /**
+     * @param $config
+     * @return GoogleClient
+     */
     public function createClient($config = []) : GoogleClient
     {
         $this->client = new GoogleClient($config);

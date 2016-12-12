@@ -17,21 +17,33 @@ class GoogleDriveManager extends Configurable
 {
 
     const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
+
     /** @var GoogleDrive */
-    protected $service;
     private $drive;
 
+    /**
+     * GoogleDriveManager constructor.
+     * @param GoogleClient $googleClient
+     * @param array $config
+     */
     public function __construct(GoogleClient $googleClient, $config = [])
     {
         $this->drive = new GoogleDrive($googleClient);
         parent::__construct($config);
     }
 
+    /**
+     * @return GoogleDrive
+     */
     public function getDrive() : GoogleDrive
     {
         return $this->drive;
     }
 
+    /**
+     * @param array $params
+     * @return GoogleDriveFile
+     */
     public function create(array $params = [])
     {
         $file = new GoogleDriveFile($params);
@@ -39,7 +51,6 @@ class GoogleDriveManager extends Configurable
 
         if (isset($params['filename'])) {
             $optParams = array_merge($optParams, $this->prepareMediaFile($params['filename']));
-            unset($params['filename']);
         }
 
         if ($rootId = $this->config->get('rootId')) {
@@ -71,6 +82,11 @@ class GoogleDriveManager extends Configurable
         return $mediaFile;
     }
 
+    /**
+     * @param $id
+     * @param array $params
+     * @return GoogleDriveFile
+     */
     public function update($id, array $params = [])
     {
 
@@ -85,9 +101,12 @@ class GoogleDriveManager extends Configurable
         return $this->drive->files->update($id, $file, $optParams);
     }
 
+    /**
+     * @param $id
+     */
     public function delete($id)
     {
-        return $this->drive->files->delete($id);
+        $this->drive->files->delete($id);
     }
 
     /**
@@ -98,6 +117,11 @@ class GoogleDriveManager extends Configurable
         return $this->drive->files->emptyTrash();
     }
 
+    /**
+     * @param $id
+     * @param array $fields
+     * @return GoogleDriveFile
+     */
     public function get($id, array $fields = [])
     {
         if ($fields) {
@@ -107,6 +131,11 @@ class GoogleDriveManager extends Configurable
         return $this->drive->files->get($id, $fields ? ['fields' => $fields] : []);
     }
 
+    /**
+     * @param GoogleDriveFile $file
+     * @param string $can
+     * @return GoogleDrivePermission
+     */
     public function anyoneWithLinkCan(GoogleDriveFile $file, string $can = 'view')
     {
         $permission = new GoogleDrivePermission([
@@ -118,6 +147,10 @@ class GoogleDriveManager extends Configurable
         return $this->drive->permissions->create($file->getId(), $permission);
     }
 
+    /**
+     * @param string $can
+     * @return mixed
+     */
     protected function getRole(string $can)
     {
         $roles = [
