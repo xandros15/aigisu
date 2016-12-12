@@ -10,6 +10,7 @@ namespace Aigisu\Components\Imgur;
 
 
 use AdamPaterson\OAuth2\Client\Provider\Imgur as ImgurProvider;
+use Aigisu\Components\Configure\Configurable;
 use InvalidArgumentException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use LogicException;
@@ -17,7 +18,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-class Client
+class Client extends Configurable
 {
     const ENDPOINT = 'https://api.imgur.com/3/';
 
@@ -25,17 +26,10 @@ class Client
     private $http;
     /** @var Imgur */
     private $authorization;
-    /** @var Config */
-    private $config;
     /** @var array */
     private $token;
     /** @var array */
     private $authKeys;
-
-    public function __construct(array $config = [])
-    {
-        $this->config = new Config($config);
-    }
 
     /**
      * @param RequestInterface $request

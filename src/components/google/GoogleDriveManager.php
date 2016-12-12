@@ -8,6 +8,7 @@
 
 namespace Aigisu\Components\Google;
 
+use Aigisu\Components\Configure\Configurable;
 use Google_Service_Drive as GoogleDrive;
 use Google_Service_Drive_DriveFile as GoogleDriveFile;
 use Google_Service_Drive_Permission as GoogleDrivePermission;

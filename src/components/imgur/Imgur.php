@@ -9,12 +9,11 @@
 namespace Aigisu\Components\Imgur;
 
 
+use Aigisu\Components\Configure\Configurable;
 use Psr\Http\Message\ResponseInterface;
 
-class Imgur
+class Imgur extends Configurable
 {
-    /** @var Config */
-    private $config;
     /** @var Client */
     private $client;
 
@@ -24,7 +23,7 @@ class Imgur
      */
     public function __construct(array $params = [])
     {
-        $this->config = new Config($params);
+        parent::__construct($params);
         $this->client = new Client($this->config['client']);
     }
 

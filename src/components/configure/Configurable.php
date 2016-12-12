@@ -6,7 +6,7 @@
  * Time: 21:14
  */
 
-namespace Aigisu\Components\Google;
+namespace Aigisu\Components\Configure;
 
 
 use InvalidArgumentException;
@@ -29,12 +29,8 @@ abstract class Configurable
      * @param array $config
      * @throws InvalidArgumentException
      */
-    public function setConfig($config = null)
+    public function setConfig($config)
     {
-        if (!$config) {
-            $config = [];
-        }
-
         $this->config = is_array($config) ? new Config($config) : $config;
 
         if (!$this->config instanceof Config) {

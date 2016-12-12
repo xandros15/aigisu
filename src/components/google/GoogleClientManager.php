@@ -9,6 +9,8 @@
 namespace Aigisu\Components\Google;
 
 
+use Aigisu\Components\Configure\Configurable;
+
 class GoogleClientManager extends Configurable
 {
 
@@ -18,7 +20,7 @@ class GoogleClientManager extends Configurable
     public function __construct($config = [])
     {
         parent::__construct($config);
-        $this->createClient($this->config->getIterator());
+        $this->createClient($config);
     }
 
     public function createClient($config = []) : GoogleClient
@@ -66,14 +68,14 @@ class GoogleClientManager extends Configurable
     /**
      * @param array $access
      */
-    public function getAccess(array $access = [])
+    public function getAccess($access = [])
     {
         if ($access) {
             $this->config['access-file'] = $access['file'];
             $this->config['access-type'] = $access['type'];
         }
 
-        $this->client->setAccessConfig((array) $this->config->getIterator());
+        $this->client->setAccessConfig($this->config);
     }
 
     /**

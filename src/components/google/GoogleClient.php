@@ -26,9 +26,9 @@ class GoogleClient extends \Google_Client
     }
 
     /**
-     * @param array $config
+     * @param $config
      */
-    public function setAccessConfig(array $config)
+    public function setAccessConfig($config)
     {
         if (!isset($config['access-type'], $config['access-file'])) {
             throw new InvalidArgumentException('Missing access access-type or access-file');

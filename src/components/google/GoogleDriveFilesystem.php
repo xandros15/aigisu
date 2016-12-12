@@ -2,7 +2,7 @@
 
 namespace Aigisu\Components\Google;
 
-use Google_Service_Drive as GoogleDrive;
+use Aigisu\Components\Configure\Configurable;
 
 class GoogleDriveFilesystem extends Configurable
 {
@@ -19,36 +19,9 @@ class GoogleDriveFilesystem extends Configurable
      */
     public function __construct($config = [])
     {
-        $this->setConfig($config);
+        parent::__construct($config);
         $this->clientManager = new GoogleClientManager($this->config['client']);
         $this->driveManager = new GoogleDriveManager($this->clientManager->getClient(), $this->config['drive']);
-    }
-
-    /**
-     * @param array $config
-     * @throws \InvalidArgumentException
-     */
-    public function setConfig($config = [])
-    {
-        parent::setConfig($config);
-        $this->config->setFallback(new Config(static::getDefaultConfig()));
-    }
-
-    /**
-     * @return array
-     */
-    public static function getDefaultConfig() : array
-    {
-        return [
-            'client' => [
-                'application_name' => 'my app',
-                'access-type' => 'offline',
-                'redirect_uri' => 'http://localhost',
-                'scopes' => [
-                    GoogleDrive::DRIVE_METADATA
-                ],
-            ]
-        ];
     }
 
     /**
