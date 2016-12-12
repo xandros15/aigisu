@@ -46,14 +46,6 @@ class UploadedFile extends SlimUploadedFile
     }
 
     /**
-     * @return bool
-     */
-    public function exist() : bool
-    {
-        return $this->getError() === UPLOAD_ERR_OK;
-    }
-
-    /**
      * Store the uploaded file on a filesystem disk.
      *
      * @param  string $path
@@ -81,18 +73,11 @@ class UploadedFile extends SlimUploadedFile
     }
 
     /**
-     * @param string $value
-     * @return string
+     * @return bool
      */
-    private function prepareVisibility(string $value) : string
+    public function exist() : bool
     {
-        switch ($value) {
-            case self::VISIBILITY_PRIVATE:
-                return AdapterInterface::VISIBILITY_PRIVATE;
-            case self::VISIBILITY_PUBLIC:
-            default:
-                return AdapterInterface::VISIBILITY_PUBLIC;
-        }
+        return $this->getError() === UPLOAD_ERR_OK;
     }
 
     /**
@@ -109,6 +94,21 @@ class UploadedFile extends SlimUploadedFile
         $path .= md5_file($this->file);
 
         return $path;
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    private function prepareVisibility(string $value) : string
+    {
+        switch ($value) {
+            case self::VISIBILITY_PRIVATE:
+                return AdapterInterface::VISIBILITY_PRIVATE;
+            case self::VISIBILITY_PUBLIC:
+            default:
+                return AdapterInterface::VISIBILITY_PUBLIC;
+        }
     }
 
     /**

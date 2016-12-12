@@ -13,5 +13,4 @@ use Aigisu\Core\ActiveContainer;
 
 abstract class Controller extends ActiveContainer
 {
-
 }

@@ -40,14 +40,6 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
     protected abstract function hasAccess(Request $request) : bool;
 
     /**
-     * @return array
-     */
-    protected function getAccessList() : array
-    {
-        return $this->get('access');
-    }
-
-    /**
      * @param string $role
      * @param string $class
      * @return bool
@@ -55,21 +47,6 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
     protected function compareAccess(string $role, string $class) : bool
     {
         return $this->getLvlByRole($role) <= $this->getLvlByClass($class);
-    }
-
-    /**
-     * @param string $class
-     * @return int
-     */
-    private function getLvlByClass(string $class) : int
-    {
-        foreach ($this->getAccessList() as $access) {
-            if ($access['class'] === $class) {
-                return $access['level'];
-            }
-        }
-
-        throw new \RuntimeException('Access class not found');
     }
 
     /**
@@ -85,5 +62,28 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
         }
 
         throw new \RuntimeException('Access role not found');
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAccessList() : array
+    {
+        return $this->get('access');
+    }
+
+    /**
+     * @param string $class
+     * @return int
+     */
+    private function getLvlByClass(string $class) : int
+    {
+        foreach ($this->getAccessList() as $access) {
+            if ($access['class'] === $class) {
+                return $access['level'];
+            }
+        }
+
+        throw new \RuntimeException('Access class not found');
     }
 }

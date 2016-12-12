@@ -3,7 +3,6 @@
 namespace Aigisu\Api\Models\Unit;
 
 use Aigisu\Api\Models\Unit;
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

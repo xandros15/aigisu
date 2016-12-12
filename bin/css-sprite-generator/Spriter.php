@@ -46,6 +46,14 @@ class Spriter
         file_put_contents($cssFilename, $this->generateCss());
     }
 
+    private function generateSprite()
+    {
+        $this->imagick->resetIterator();
+        $sprite = $this->imagick->appendImages(true);
+        $sprite->setFormat($this->options[self::OPT_SPRITE_FORMAT]);
+        return $sprite;
+    }
+
     private function generateCss()
     {
         $imagesCss = '';
@@ -66,14 +74,4 @@ class Spriter
         return "{$imagesCss} .{$className}" .
         "{background-image:url('{$imageUrl}');background-repeat:no-repeat;}";
     }
-
-    private function generateSprite()
-    {
-        $this->imagick->resetIterator();
-        $sprite = $this->imagick->appendImages(true);
-        $sprite->setFormat($this->options[self::OPT_SPRITE_FORMAT]);
-        return $sprite;
-    }
 }
-
-

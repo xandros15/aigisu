@@ -11,7 +11,6 @@ namespace Aigisu\Api\Controllers\Unit;
 
 use Aigisu\Api\Controllers\Controller;
 use Aigisu\Api\Models\Unit\CG;
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

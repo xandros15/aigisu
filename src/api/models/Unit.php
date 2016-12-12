@@ -133,12 +133,6 @@ class Unit extends Model
         ];
     }
 
-    public function syncTags()
-    {
-        $handler = new UnitTagsHandler($this);
-        $handler->syncTags();
-    }
-
     /**
      * @return null|string
      */
@@ -181,6 +175,20 @@ class Unit extends Model
 
     /**
      * @param Request $request
+     * @param Dispatcher $dispatcher
+     */
+    public function saveUnitModel(Request $request, Dispatcher $dispatcher)
+    {
+        $this->fill($request->getParams());
+        if ($this->uploadIcon($request)) {
+            $dispatcher->call('spriteGenerator');
+        }
+        $this->saveOrFail();
+        $this->syncTags();
+    }
+
+    /**
+     * @param Request $request
      * @return bool
      */
     public function uploadIcon(Request $request)
@@ -194,17 +202,9 @@ class Unit extends Model
         return false;
     }
 
-    /**
-     * @param Request $request
-     * @param Dispatcher $dispatcher
-     */
-    public function saveUnitModel(Request $request, Dispatcher $dispatcher)
+    public function syncTags()
     {
-        $this->fill($request->getParams());
-        if ($this->uploadIcon($request)) {
-            $dispatcher->call('spriteGenerator');
-        }
-        $this->saveOrFail();
-        $this->syncTags();
+        $handler = new UnitTagsHandler($this);
+        $handler->syncTags();
     }
 }
