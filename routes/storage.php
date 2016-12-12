@@ -7,7 +7,6 @@
  */
 use Aigisu\Storage\Controllers\ImageController;
 use Aigisu\Storage\Controllers\SpriteController;
-use League\Flysystem\Util;
 
 /** @var $this \Aigisu\Core\Main */
 

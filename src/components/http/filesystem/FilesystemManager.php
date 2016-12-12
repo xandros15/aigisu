@@ -8,8 +8,6 @@
 namespace Aigisu\Components\Http\Filesystem;
 
 
-use Aigisu\Core\Configuration;
-use Interop\Container\ContainerInterface;
 use InvalidArgumentException;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
@@ -19,7 +17,7 @@ use League\Flysystem\FilesystemInterface;
 
 class FilesystemManager
 {
-    /** @var array*/
+    /** @var array */
     protected $config;
 
     /**

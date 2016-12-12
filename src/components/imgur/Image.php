@@ -12,8 +12,6 @@ namespace Aigisu\Components\Imgur;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
-use function GuzzleHttp\Psr7\build_query;
-use function GuzzleHttp\Psr7\stream_for;
 
 class Image extends AbstractApi
 {
