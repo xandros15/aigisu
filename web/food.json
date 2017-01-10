@@ -1,0 +1,64 @@
+{
+  "rarities": [
+    {
+      "id": 1,
+      "name": "iron",
+      "maleBase": 40,
+      "classBonus": 10,
+      "perLvl": 5,
+      "hasFemale": false,
+      "femaleBase": 0
+    },
+    {
+      "id": 2,
+      "name": "bronze",
+      "maleBase": 70,
+      "classBonus": 30,
+      "perLvl": 7,
+      "hasFemale": false,
+      "femaleBase": 0
+    },
+    {
+      "id": 3,
+      "name": "silver",
+      "maleBase": 300,
+      "classBonus": 50,
+      "perLvl": 7,
+      "hasFemale": true,
+      "femaleBase": 150
+    },
+    {
+      "id": 4,
+      "name": "gold",
+      "maleBase": 750,
+      "classBonus": 80,
+      "perLvl": 7,
+      "hasFemale": true,
+      "femaleBase": 250
+    },
+    {
+      "id": 5,
+      "name": "platinum",
+      "maleBase": 1500,
+      "classBonus": 100,
+      "perLvl": 7,
+      "hasFemale": true,
+      "femaleBase": 500
+    },
+    {
+      "id": 6,
+      "name": "black",
+      "maleBase": 2000,
+      "classBonus": 300,
+      "perLvl": 7,
+      "hasFemale": true,
+      "femaleBase": 1000
+    }
+  ],
+  "cc": {
+    "perLvl": 20
+  },
+  "special": {
+    "bonus": 30
+  }
+}

@@ -2,13 +2,13 @@
 
 namespace app\core;
 
-use Main;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Validation\Factory as ValidatorFactory;
-use Illuminate\Translation\Translator;
-use Illuminate\Translation\FileLoader;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Translation\FileLoader;
+use Illuminate\Translation\Translator;
 use Illuminate\Validation\DatabasePresenceVerifier;
+use Illuminate\Validation\Factory as ValidatorFactory;
+use Main;
 
 class Connection
 {
@@ -24,6 +24,14 @@ class Connection
         $this->setValidator();
     }
 
+    protected function setConnection(array $connection)
+    {
+        $this->capsule = new Capsule();
+        $this->capsule->addConnection($connection);
+        $this->capsule->setAsGlobal();
+        $this->capsule->bootEloquent();
+    }
+
     protected function setValidator()
     {
         $filesystem = new FileLoader(new Filesystem(), CONFIG_DIR . DIRECTORY_SEPARATOR . 'langs');
@@ -34,13 +42,5 @@ class Connection
 
         $verifier = new DatabasePresenceVerifier($this->capsule->getDatabaseManager());
         $this->validator->setPresenceVerifier($verifier);
-    }
-
-    protected function setConnection(array $connection)
-    {
-        $this->capsule = new Capsule();
-        $this->capsule->addConnection($connection);
-        $this->capsule->setAsGlobal();
-        $this->capsule->bootEloquent();
     }
 }

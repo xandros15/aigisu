@@ -2,11 +2,11 @@
 
 use controller\ImageController;
 use controller\ImageFileController;
-use controller\UnitController;
 use controller\OauthController;
+use controller\UnitController;
 
 return [
-    'siteUrl' => 'http://aigisu.pl',
+    'siteUrl' => 'https://aigisu.ovh/',
     'locale' => 'en',
     'debug' => false,
     'slim' => [
@@ -28,80 +28,61 @@ return [
             ],
         ],
         'rules' => [
-            [
-                'pattern' => '/',
+            '/' => [
                 'methods' => ['get'],
                 'action' => UnitController::class . ':actionIndex',
                 'name' => 'home'
             ],
-            [
-                'pattern' => '/image',
-                'groups' => [
-                    [
-                        'pattern' => '/upload/{id:\d+}',
-                        'methods' => ['post'],
-                        'action' => ImageFileController::class . ':actionCreate',
-                        'name' => 'imageUpload'
-                    ],
-                    [
-                        'pattern' => '/{id:\d+}',
-                        'methods' => ['get'],
-                        'action' => ImageController::class . ':actionIndex',
-                        'name' => 'image'
-                    ]
+            '/image' => [
+                '/upload/{id:\d+}' => [
+                    'methods' => ['post'],
+                    'action' => ImageFileController::class . ':actionCreate',
+                    'name' => 'imageUpload'
+                ],
+                '/{id:\d+}' => [
+                    'methods' => ['get'],
+                    'action' => ImageController::class . ':actionIndex',
+                    'name' => 'image'
                 ]
             ],
-            [
-                'pattern' => '/unit',
-                'groups' => [
-                    [
-                        'pattern' => '[/]',
-                        'methods' => ['get'],
-                        'action' => UnitController::class . ':actionIndex',
-                        'name' => 'unit'
-                    ],
-                    [
-                        'pattern' => '/update/{id:\d+}',
-                        'methods' => ['post'],
-                        'action' => UnitController::class . ':actionUpdate',
-                        'name' => 'unitUpdate'
-                    ],
-                    [
-                        'pattern' => '/create',
-                        'methods' => ['post'],
-                        'action' => UnitController::class . ':actionCreate',
-                        'name' => 'unitCreate'
-                    ],
-                    [
-                        'pattern' => '/delete/{id:\d+}',
-                        'methods' => ['get'],
-                        'action' => UnitController::class . ':actionDelete',
-                        'name' => 'unitDelete'
-                    ]
+            '/unit' => [
+                '[/]' => [
+                    'methods' => ['get'],
+                    'action' => UnitController::class . ':actionIndex',
+                    'name' => 'unit'
+                ],
+                '/update/{id:\d+}' => [
+                    'methods' => ['post'],
+                    'action' => UnitController::class . ':actionUpdate',
+                    'name' => 'unitUpdate'
+                ],
+                '/create' => [
+                    'methods' => ['post'],
+                    'action' => UnitController::class . ':actionCreate',
+                    'name' => 'unitCreate'
+                ],
+                '/delete/{id:\d+}' => [
+                    'methods' => ['get'],
+                    'action' => UnitController::class . ':actionDelete',
+                    'name' => 'unitDelete'
                 ]
             ],
-            [
-                'pattern' => '/oauth',
-                'groups' => [
-                    [
-                        'pattern' => '[/]',
-                        'methods' => ['get'],
-                        'action' => OauthController::class . ':actionIndex',
-                        'name' => 'oauth'
-                    ],
-                    [
-                        'pattern' => '/login',
-                        'methods' => ['post'],
-                        'action' => OauthController::class . ':actionLogin',
-                        'name' => 'login'
-                    ],
-                    [
-                        'pattern' => '/logout',
-                        'methods' => ['post'],
-                        'action' => OauthController::class . ':actionLogout',
-                        'name' => 'logout'
-                    ]
-                ]
+            '/oauth' => [
+                '[/]' => [
+                    'methods' => ['get'],
+                    'action' => OauthController::class . ':actionIndex',
+                    'name' => 'oauth'
+                ],
+                '/login' => [
+                    'methods' => ['post'],
+                    'action' => OauthController::class . ':actionLogin',
+                    'name' => 'login'
+                ],
+                '/logout' => [
+                    'methods' => ['post'],
+                    'action' => OauthController::class . ':actionLogout',
+                    'name' => 'logout'
+                ],
             ],
         ],
     ],

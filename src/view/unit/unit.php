@@ -1,8 +1,8 @@
 <?php
 
-use models\Unit;
 use app\core\View;
 use controller\OauthController as Oauth;
+use models\Unit;
 
 /* @var $this View */
 /* @var $unit Unit */

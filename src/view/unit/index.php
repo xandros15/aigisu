@@ -1,15 +1,13 @@
 <?php
 
-use models\Unit;
 use app\core\View;
 use controller\OauthController as Oauth;
+use models\Unit;
 
 /* @var $this View */
 /* @var $model Unit */
-/* @var $maxPages int */
 
-$this->title = 'Units';
-$this->containerClass = 'container';
+$this->setTitle('Units');
 ?>
 <div id="units">
     <?php if (count($model) > 0): ?>

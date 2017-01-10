@@ -2,16 +2,38 @@
 
 namespace controller;
 
+use app\alert\Alert;
+use app\core\Controller;
+use controller\OauthController as Oauth;
 use Main;
 use models\Unit;
 use models\UnitSearch;
-use app\core\Controller;
 use Slim\Http\Request;
-use app\alert\Alert;
-use controller\OauthController as Oauth;
 
 class UnitController extends Controller
 {
+
+    public static function getSearchQuery()
+    {
+        return Main::$app->request->getParam('q', '');
+    }
+
+    public static function generateLink(array $options)
+    {
+        $request = Main::$app->request;
+        $query = $request->getParams();
+
+        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
+            $options['sort'] = '-' . $options['sort'];
+        }
+
+        return '?' . http_build_query(array_merge($query, $options));
+    }
+
+    public static function getPage()
+    {
+        return Main::$app->request->getParam('page', 1);
+    }
 
     public function actionIndex(Request $request)
     {
@@ -77,27 +99,5 @@ class UnitController extends Controller
         }
 
         return $this->goBack();
-    }
-
-    public static function getSearchQuery()
-    {
-        return Main::$app->request->getParam('q', '');
-    }
-
-    public static function generateLink(array $options)
-    {
-        $request = Main::$app->request;
-        $query   = $request->getParams();
-
-        if (isset($options['sort']) && ($options['sort'] === $request->getParam('sort', ''))) {
-            $options['sort'] = '-' . $options['sort'];
-        }
-
-        return '?' . http_build_query(array_merge($query, $options));
-    }
-
-    public static function getPage()
-    {
-        return Main::$app->request->getParam('page', 1);
     }
 }

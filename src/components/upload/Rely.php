@@ -4,11 +4,8 @@ namespace app\upload;
 
 use app\google\GoogleFile;
 use app\imgur\Imgur;
-use app\upload\ExtedndetServer;
-use app\upload\FileFromClient;
-use app\upload\FileFromUrl;
-use models\Image;
 use Exception;
+use models\Image;
 
 class Rely
 {
@@ -62,6 +59,14 @@ class Rely
         }
     }
 
+    protected function getExtendednServer($name)
+    {
+        if (!isset($this->extendedServers[$name])) {
+            throw new Exception("Server: '{$name}' is no implemented");
+        }
+        return $this->extendedServers[$name]['server'];
+    }
+
     public function uploadOnImgur(Image $model, Upload $file)
     {
         try {
@@ -80,13 +85,5 @@ class Rely
     public function setDirectory($directory)
     {
         $this->directory = $directory;
-    }
-
-    protected function getExtendednServer($name)
-    {
-        if (!isset($this->extendedServers[$name])) {
-            throw new Exception("Server: '{$name}' is no implemented");
-        }
-        return $this->extendedServers[$name]['server'];
     }
 }

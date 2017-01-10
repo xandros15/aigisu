@@ -2,19 +2,14 @@
 
 namespace controller;
 
-use app\core\Controller;
-use Slim\Http\Request;
-use models\Oauth;
 use app\alert\Alert;
+use app\core\Controller;
+use models\Oauth;
+use Slim\Http\Request;
 
 class OauthController extends Controller
 {
     const SESSION_NAME = 'oauth';
-
-    public static function isLogged()
-    {
-        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
-    }
 
     public function actionIndex()
     {
@@ -38,6 +33,12 @@ class OauthController extends Controller
         return $this->goHome();
     }
 
+    public function login()
+    {
+        $_SESSION[self::SESSION_NAME]['run'] = true;
+        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
+    }
+
     public function actionLogout()
     {
         if (self::isLogged()) {
@@ -47,15 +48,14 @@ class OauthController extends Controller
         return $this->goBack();
     }
 
+    public static function isLogged()
+    {
+        return (isset($_SESSION[self::SESSION_NAME]['run']) && $_SESSION[self::SESSION_NAME]['run']);
+    }
+
     public static function logout()
     {
         $_SESSION[self::SESSION_NAME] = [];
         return session_destroy();
-    }
-
-    public function login()
-    {
-        $_SESSION[self::SESSION_NAME]['run']   = true;
-        $_SESSION[self::SESSION_NAME]['token'] = $this->token;
     }
 }

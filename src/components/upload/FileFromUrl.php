@@ -2,19 +2,41 @@
 
 namespace app\upload;
 
-use app\upload\Upload;
 use Exception;
 
 class FileFromUrl extends Upload
 {
+    const MAX_FILE_SIZE = 2 * 1024 * 1024 + 1;
     public $url;
     protected $ctx;
-
-    const MAX_FILE_SIZE = 2 * 1024 * 1024 + 1;
 
     public function __construct()
     {
         $this->setCtx();
+    }
+
+    protected function setCtx()
+    {
+        $header = [
+            'Accept-Language: en-US,en;q=0.8',
+            'Accept-Charset:UTF-8,*;q=0.5',
+            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) ' .
+            'AppleWebKit/537.36 (KHTML, like Gecko) ' .
+            'Ubuntu Chromium/36.0.1985.125 ' .
+            'Chrome/36.0.1985.125 Safari/537.36'
+        ];
+        $opts = [
+            'http' => [
+                'timeout' => 15,
+                'header' => implode("\r\n", $header),
+                'ignore_errors' => true,
+            ],
+            'ssl' => [
+                'verify_peer' => false
+            ]
+        ];
+
+        $this->ctx = stream_context_create($opts);
     }
 
     public function upload($name)
@@ -48,6 +70,17 @@ class FileFromUrl extends Upload
         }
     }
 
+    private function validateUrl($url)
+    {
+        $urlRegex = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})'
+            . '(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3})'
+            . '{2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
+            . '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))'
+            . '|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)'
+            . '*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS';
+        return (preg_match($urlRegex, $url));
+    }
+
     protected function setFileFromUrl()
     {
         $file = @fopen($this->url, 'r', false, $this->ctx);
@@ -65,30 +98,6 @@ class FileFromUrl extends Upload
             throw new Exception("Uploaded file is empty");
         }
         return $this->filename = $filename;
-    }
-
-    protected function setCtx()
-    {
-        $header = [
-            'Accept-Language: en-US,en;q=0.8',
-            'Accept-Charset:UTF-8,*;q=0.5',
-            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) ' .
-            'AppleWebKit/537.36 (KHTML, like Gecko) ' .
-            'Ubuntu Chromium/36.0.1985.125 ' .
-            'Chrome/36.0.1985.125 Safari/537.36'
-        ];
-        $opts   = [
-            'http' => [
-                'timeout' => 15,
-                'header' => implode("\r\n", $header),
-                'ignore_errors' => true,
-            ],
-            'ssl' => [
-                'verify_peer' => false
-            ]
-        ];
-
-        $this->ctx = stream_context_create($opts);
     }
 
     private function httpParseHeaders(array $header)
@@ -118,16 +127,5 @@ class FileFromUrl extends Upload
             case 'identity':
                 return $content;
         }
-    }
-
-    private function validateUrl($url)
-    {
-        $urlRegex = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})'
-            . '(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3})'
-            . '{2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])'
-            . '(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))'
-            . '|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)'
-            . '*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS';
-        return (preg_match($urlRegex, $url));
     }
 }

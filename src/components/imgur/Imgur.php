@@ -5,22 +5,20 @@ namespace app\imgur;
 use app\exception\ArrayException;
 use app\upload\ExtedndetServer;
 use Exception;
-use Imgur\Imgur as Base;
 use Imgur\Authorize;
+use Imgur\Imgur as Base;
 
 class Imgur extends Base implements ExtedndetServer
 {
     const KEY_PATH         = CONFIG_DIR . 'imgur.key.json';
     const CREDENTIALS_PATH = CONFIG_DIR . 'imgur.credentials.json';
     const ALBUM_PATH       = CONFIG_DIR . 'imgur.albums.json';
-
+    protected static $albums = [];
     public $description      = '';
     public $name             = '';
     public $catalog          = '';
     public $filename         = '';
     protected $credentials;
-    protected static $albums = [];
-
     /**
      * @var Authorize 
      */
@@ -50,18 +48,9 @@ class Imgur extends Base implements ExtedndetServer
         return $imgur;
     }
 
-    /**
-     * @param string $key
-     * @param string $secret
-     * @return object JSON
-     */
-    public static function createKeyToken($key, $secret)
+    private static function setAlbums()
     {
-        $token = json_encode(['api_key' => $key, 'api_secret' => $secret]);
-        if (!file_exists(dirname(self::KEY_PATH))) {
-            mkdir(dirname(self::KEY_PATH), 0700, true);
-        }
-        return (file_put_contents(self::KEY_PATH, $token));
+        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH), true);
     }
 
     public function authorize($refresh_token = false, $auth_code = false)
@@ -77,61 +66,6 @@ class Imgur extends Base implements ExtedndetServer
             $this->refreshTokens();
         }
         $this->setAccessData();
-    }
-
-    public function uploadFile()
-    {
-        $options = ['type' => 'file'];
-        if ($this->name) {
-            $options['title'] = $this->name;
-        }
-        if ($this->catalog) {
-            $options['album'] = $this->catalog;
-        }
-        if ($this->description) {
-            $options['description'] = $this->description;
-        }
-        $response = $this->upload()->file($this->filename, $options);
-        if (!$response || empty($response['success'])) {
-            throw new ArrayException($response);
-        }
-        return $response;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = (is_array($description)) ? self::parseDiscription($description) : $description;
-    }
-
-    public function setName($title)
-    {
-        $this->name = $title;
-    }
-
-    public function setCatalog($album)
-    {
-        if (!isset(self::$albums[$album])) {
-            throw new Exception("The album: '{$album}' no exists");
-        }
-        $this->catalog = self::$albums[$album]['deletehash'];
-    }
-
-    public function setFilename($filename)
-    {
-        if (!is_file($filename)) {
-            throw new Exception("The file: '{$filename}' no exists");
-        }
-        $this->filename = $filename;
-    }
-
-    private static function setAlbums()
-    {
-        static::$albums = json_decode(file_get_contents(self::ALBUM_PATH), true);
-    }
-
-    private function setAccessData()
-    {
-        $this->conn->setAccessData($this->credentials->access_token, $this->credentials->refresh_token);
     }
 
     private function createTokens()
@@ -160,7 +94,7 @@ class Imgur extends Base implements ExtedndetServer
         return ((time() - $this->credentials->created_at) > (60 * 60 * 24));
     }
 
-    private function refreshTokens()
+    public function refreshTokens()
     {
         $response = $this->auth->refreshAccessToken($this->credentials->refresh_token);
         if (!isset($response['created_at'])) {
@@ -173,6 +107,61 @@ class Imgur extends Base implements ExtedndetServer
         $this->setCredentials($response);
     }
 
+    private function setAccessData()
+    {
+        $this->conn->setAccessData($this->credentials->access_token, $this->credentials->refresh_token);
+    }
+
+    /**
+     * @param string $key
+     * @param string $secret
+     * @return object JSON
+     */
+    public static function createKeyToken($key, $secret)
+    {
+        $token = json_encode(['api_key' => $key, 'api_secret' => $secret]);
+        if (!file_exists(dirname(self::KEY_PATH))) {
+            mkdir(dirname(self::KEY_PATH), 0700, true);
+        }
+        return (file_put_contents(self::KEY_PATH, $token));
+    }
+
+    public function __get($name)
+    {
+        if ($name == 'credentials') {
+            return $this->getCredentials();
+        }
+    }
+
+    protected function getCredentials($file = self::CREDENTIALS_PATH)
+    {
+        return $this->credentials = file_get_contents($file);
+    }
+
+    public function uploadFile()
+    {
+        $options = ['type' => 'file'];
+        if ($this->name) {
+            $options['title'] = $this->name;
+        }
+        if ($this->catalog) {
+            $options['album'] = $this->catalog;
+        }
+        if ($this->description) {
+            $options['description'] = $this->description;
+        }
+        $response = $this->upload()->file($this->filename, $options);
+        if (!$response || empty($response['success'])) {
+            throw new ArrayException($response);
+        }
+        return $response;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = (is_array($description)) ? self::parseDiscription($description) : $description;
+    }
+
     private static function parseDiscription(array $discription)
     {
         $string = '';
@@ -180,5 +169,26 @@ class Imgur extends Base implements ExtedndetServer
             $string .= $name . ': ' . $value . ', ';
         }
         return rtrim($string, ', ');
+    }
+
+    public function setName($title)
+    {
+        $this->name = $title;
+    }
+
+    public function setCatalog($album)
+    {
+        if (!isset(self::$albums[$album])) {
+            throw new Exception("The album: '{$album}' no exists");
+        }
+        $this->catalog = self::$albums[$album]['deletehash'];
+    }
+
+    public function setFilename($filename)
+    {
+        if (!is_file($filename)) {
+            throw new Exception("The file: '{$filename}' no exists");
+        }
+        $this->filename = $filename;
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-use models\Image;
 use app\core\View;
 use Illuminate\Database\Eloquent\Collection;
+use models\Image;
 
 /* @var $this View */
 /* @var $images Collection */
 /* @var $image Image */
-$this->title = 'images';
-$this->containerClass = 'container-fluid';
+$this->setTitle('images');
+$this->setContainerClass('container-fluid');
 ?>
 <?php foreach ($images as $serverName => $server): ?>
     <ul class="list-unstyled <?= $serverName ?> col-xs-12 col-md-6">

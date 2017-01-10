@@ -2,9 +2,8 @@
 
 namespace models;
 
-use Main;
-use models\Unit;
 use Illuminate\Database\Eloquent\Model;
+use Main;
 use traits\Validator;
 
 /**
@@ -24,8 +23,13 @@ class Image extends Model
 {
 
     use Validator;
-    protected $table    = 'image';
+    const IMAGE_PER_SERVER = 2;
+    const IMAGE_SPECIAL_SCENE = 3;
+    const IMAGE_DIRECTORY = 'images';
+    const SERVER_NUTAKU = 'nutaku';
+    const SERVER_DMM = 'dmm';
     public $timestamps  = false;
+    protected $table = 'image';
     protected $fillable = [
         'md5',
         'unit_id',
@@ -36,12 +40,6 @@ class Image extends Model
         'delhash'
     ];
     protected $guarded  = [];
-
-    const IMAGE_PER_SERVER = 2;
-    const IMAGE_SPECIAL_SCENE = 3;
-    const IMAGE_DIRECTORY  = 'images';
-    const SERVER_NUTAKU    = 'nutaku';
-    const SERVER_DMM       = 'dmm';
 
     public static function boot()
     {
@@ -74,6 +72,23 @@ class Image extends Model
         ];
     }
 
+    public static function imageSceneToHuman($nrOfScene)
+    {
+        $scenes = [
+            1 => 'first scene',
+            2 => 'second scene',
+            3 => 'special scene'
+        ];
+        return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
+    }
+
+    public static function getImageSetByUnitId($id)
+    {
+        $imageSet = self::where('unit_id', $id)->get();
+
+        return $imageSet->sortBy('scene')->groupBy('server');
+    }
+
     public function rules()
     {
         return [
@@ -86,16 +101,6 @@ class Image extends Model
             'imgur' => ['string'],
             'delhash' => ['string']
         ];
-    }
-
-    public static function imageSceneToHuman($nrOfScene)
-    {
-        $scenes = [
-            1 => 'first scene',
-            2 => 'second scene',
-            3 => 'special scene'
-        ];
-        return (isset($scenes[$nrOfScene])) ? $scenes[$nrOfScene] : '';
     }
 
     public static function getServersNames()
@@ -115,13 +120,7 @@ class Image extends Model
          * http://i.imgur.com/{fieldId}.png
          * https://drive.google.com/uc?export=view&id={fileId}
          */
-        return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
-    }
-
-    public static function getImageSetByUnitId($id)
-    {
-        $imageSet = self::where('unit_id', $id)->get();
-
-        return $imageSet->sortBy('scene')->groupBy('server');
+        //return sprintf('%s/%s.png', 'http://i.imgur.com/', $this->imgur);
+        return sprintf('https://drive.google.com/uc?export=view&id=%s', $this->google);
     }
 }

@@ -2,10 +2,8 @@
 
 namespace models;
 
-use traits\Validator;
 use Illuminate\Database\Eloquent\Model;
-use models\Image;
-use models\Tag;
+use traits\Validator;
 
 /**
  * Class Unit
@@ -47,6 +45,11 @@ class Unit extends Model
         return ['id', 'name', 'original', 'icon', 'link', 'linkgc', 'rarity', 'is_male', 'is_only_dmm', 'has_aw_image'];
     }
 
+    public static function tableName()
+    {
+        return 'unit';
+    }
+
     public function rules()
     {
 
@@ -63,11 +66,6 @@ class Unit extends Model
         ];
     }
 
-    public static function tableName()
-    {
-        return 'unit';
-    }
-
     public static function getRarities()
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
@@ -76,6 +74,11 @@ class Unit extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function isImagesRequired()
+    {
+        return $this->images->count() != $this->getTotalImageRequired();
     }
 
     public function getTotalImageRequired(){
@@ -92,11 +95,6 @@ class Unit extends Model
             $total++;
         }
         return $total;
-    }
-
-    public function isImagesRequired()
-    {
-        return $this->images->count() != $this->getTotalImageRequired();
     }
 
     public function isImageRequired($server, $scene)
@@ -118,14 +116,14 @@ class Unit extends Model
         return !$this->images->isEmpty();
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
-
     public function getTagsString()
     {
         return $this->tags()->lists('name')->implode(', ');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 
     public function addTagsToUnit($tagsString)

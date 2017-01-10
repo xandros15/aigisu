@@ -2,7 +2,6 @@
 
 namespace app\google;
 
-use app\google\GoogleServer;
 use app\upload\ExtedndetServer;
 use Exception;
 
@@ -82,6 +81,20 @@ class GoogleFile extends GoogleServer implements ExtedndetServer
         }
     }
 
+    protected function setFolder()
+    {
+        $mimeType = self::FOLDER_MIME_TYPE;
+        $parentId = $this->mainFolder->id;
+        $query = "title = '{$this->catalog}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
+        $files = $this->service->files->listFiles(['q' => $query])->getItems();
+        if ($files) {
+            $this->folder = reset($files);
+        } else {
+            $this->folder = $this->createNewFolder($this->catalog, false, $parentId);
+            $this->createPermissionForFile($this->folder->id, true);
+        }
+    }
+
     public function getFilesInfo()
     {
         // Print the names and IDs for up to 10 files.
@@ -96,20 +109,6 @@ class GoogleFile extends GoogleServer implements ExtedndetServer
                 /* @var $file Google_Service_Drive_DriveFile */
                 printf("%s (%s)\n", $file->getTitle(), $file->getId());
             }
-        }
-    }
-
-    protected function setFolder()
-    {
-        $mimeType = self::FOLDER_MIME_TYPE;
-        $parentId = $this->mainFolder->id;
-        $query    = "title = '{$this->catalog}' and mimeType = '{$mimeType}' and '{$parentId}' in parents and trashed = false";
-        $files    = $this->service->files->listFiles(['q' => $query])->getItems();
-        if ($files) {
-            $this->folder = reset($files);
-        } else {
-            $this->folder = $this->createNewFolder($this->catalog, false, $parentId);
-            $this->createPermissionForFile($this->folder->id, true);
         }
     }
 

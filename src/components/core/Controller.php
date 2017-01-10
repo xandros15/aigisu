@@ -3,7 +3,6 @@
 namespace app\core;
 
 use Main;
-use app\core\View;
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -25,7 +24,7 @@ class Controller
     {
         $this->request      = Main::$app->request = $container->request;
         $this->response     = $container->response;
-        $this->view         = new View(VIEW_DIR);
+        $this->view = new View(Configuration::getInstance()->siteUrl);
     }
 
     public function render($view, $params = [])
@@ -37,20 +36,20 @@ class Controller
         return $this->response->write($render);
     }
 
+    public function getView()
+    {
+        if ($this->view === null) {
+            $this->view = new View(['basePath' => Configuration::getInstance()->siteUrl]);
+        }
+
+        return $this->view;
+    }
+
     public function renderAjax($view, $params = [])
     {
         $render = $this->getView()->render($view, $params);
 
         return $this->response->write($render);
-    }
-
-    public function getView()
-    {
-        if ($this->view === null) {
-            $this->view = new View(VIEW_DIR);
-        }
-
-        return $this->view;
     }
 
     public function getLayout()
@@ -63,11 +62,6 @@ class Controller
         $this->layout = $layout;
     }
 
-    public function goHome()
-    {
-        return $this->response->withRedirect('/', 301);
-    }
-
     public function goBack()
     {
         if ($this->request->hasHeader('HTTP_REFERER')) {
@@ -75,5 +69,10 @@ class Controller
             return $this->response->withRedirect($referer, 301);
         }
         return $this->goHome();
+    }
+
+    public function goHome()
+    {
+        return $this->response->withRedirect(Configuration::getInstance()->siteUrl, 301);
     }
 }

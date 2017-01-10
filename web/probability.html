@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Probability</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style>
+        .results {
+            background-color: #000 !important;
+            color: lime;
+            resize: none;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-group">
+        <label>Number of rolls</label>
+        <input id="number-rolls" class="form-control" type="number">
+    </div>
+    <div class="form-group">
+        <label>Success need</label>
+        <input id="success-rolls" class="form-control" type="number">
+    </div>
+    <div class="form-group">
+        <label>Chance to success</label>
+        <input id="success-chance" class="form-control" type="number" placeholder="%">
+    </div>
+    <div>
+        <button type="button" onclick="probability.run()" class="btn btn-primary">submit</button>
+    </div>
+    <div class="form-group">
+        <label>result</label>
+        <textarea rows="1" class="form-control results" id="results" disabled></textarea>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.4/math.min.js"></script>
+<script type="text/javascript">
+    var probability = {
+                run: function () {
+                    probability.resetData();
+                    probability.count();
+                    probability.showData();
+                },
+                pushData: function (data) {
+                    probability.nrOfRows++;
+                    probability.results += data;
+                },
+                resetData: function () {
+                    probability.nrOfRows = 0;
+                    probability.results = '';
+                },
+                parseData: function (nr, data) {
+                    return nr + ': ' + data + '%' + "\r\n";
+                },
+                showData: function () {
+                    var container = document.getElementById('results');
+                    container.rows = probability.nrOfRows;
+                    container.innerHTML = probability.results;
+                },
+                count: function () {
+                    try {
+                        probability.pushData(probability.stochasticTree() * 100 + '%');
+                    } catch (error) {
+                        probability.resetData();
+                        probability.pushData(error);
+                    }
+                },
+                stochasticTree: function (results, nesting, chance, isSuccessful) {
+
+
+                    if (typeof nesting == 'undefined') {
+                        return probability.stochasticTree(probability.successChance(), 0, 0, true) + probability.stochasticTree(probability.failureChance(), 0, 0, false);
+                    }
+
+                    nesting++;
+
+                    if (isSuccessful) {
+                        chance++;
+                    }
+
+                    if (chance >= probability.successRolls()) {
+                        return results;
+                    }
+
+                    if (nesting >= probability.numberRolls()) {
+                        return 0;
+                    }
+
+                    return results * probability.stochasticTree(probability.successChance(), nesting, chance, true) + results * probability.stochasticTree(probability.failureChance(), nesting, chance, false);
+                },
+                numberRolls: function () {
+                    var value = document.getElementById('number-rolls').value;
+                    if (typeof value == 'undefined') {
+                        throw "Number of rolls must be typed";
+                    } else {
+                        value = parseInt(value);
+                    }
+                    if (value <= 0) {
+                        throw "Number of rolls must be integer and over 0";
+                    }
+                    return value;
+                },
+                successRolls: function () {
+                    var value = document.getElementById('success-rolls').value;
+                    if (typeof value == 'undefined') {
+                        throw "Success rolls must be typed";
+                    } else {
+                        value = parseInt(value);
+                    }
+                    if (value == 0 || value > probability.numberRolls()) {
+                        throw 'Success rolls must be integer and over 0 and not be greater than number of rolls';
+                    }
+                    return value;
+                },
+                successChance: function () {
+                    var value = document.getElementById('success-chance').value;
+                    if (typeof value == 'undefined') {
+                        throw "Number of rolls must be typed";
+                    } else {
+                        value = parseInt(value);
+                    }
+                    return value * 0.01;
+                },
+                failureChance: function () {
+                    return 1 - probability.successChance();
+                },
+                nrOfRows: 0,
+                results: ''
+            }
+            ;
+
+</script>
+</html>

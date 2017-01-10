@@ -3,7 +3,6 @@
 namespace models;
 
 use Illuminate\Database\Eloquent\Model;
-use models\Unit;
 
 /**
  * Class Tag

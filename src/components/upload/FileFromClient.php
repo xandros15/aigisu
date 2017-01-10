@@ -2,8 +2,8 @@
 
 namespace app\upload;
 
-use Slim\Http\UploadedFile;
 use Exception;
+use Slim\Http\UploadedFile;
 
 class FileFromClient extends Upload
 {

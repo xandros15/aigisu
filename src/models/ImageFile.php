@@ -2,8 +2,6 @@
 
 namespace models;
 
-use models\Image;
-
 class ImageFile extends Image
 {
     const MAX_WIDTH    = 961;

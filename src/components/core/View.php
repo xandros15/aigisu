@@ -4,68 +4,44 @@ namespace app\core;
 
 class View
 {
-    protected $customsMethods = [];
-    protected $attributes = [];
-    /** @var string */
-    protected $path;
+    const VIEW_DIR = VIEW_DIR;
 
-    public function __construct(string $path, array $customCallbacks = [])
+    public $title;
+    public $containerClass = 'container';
+    private $baseUrl;
+
+    public function __construct($baseUrl = '/')
     {
-        $this->path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
-        $this->addCustomsCallback($customCallbacks);
+        $this->baseUrl = $baseUrl ?: '/';
     }
 
-    public function __get($name)
+    public function getBaseUrl()
     {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-    }
-
-    public function __set($name, $value)
-    {
-        return $this->attributes[$name] = $value;
-    }
-
-
-    public function __call($name, $arguments)
-    {
-        if (!isset($this->customsMethods[$name])) {
-            throw new \BadMethodCallException();
-        }
-        return call_user_func_array($this->customsMethods[$name], $arguments);
+        return $this->baseUrl;
     }
 
     public function render($view, $params = [])
     {
+        $filename = str_replace('/', DIRECTORY_SEPARATOR, $view);
         ob_start();
         ob_implicit_flush(false);
-        extract(array_merge($this->attributes, $params), EXTR_OVERWRITE);
-        include $this->getTemplateName($view);
+        extract($params, EXTR_OVERWRITE);
+        require(self::VIEW_DIR . $filename . '.php');
         return ob_get_clean();
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    public function setContainerClass($containerClass)
+    {
+        $this->containerClass = $containerClass;
     }
 
     public function getRouter()
     {
         return $this->router;
-    }
-
-    protected function getTemplateName($name)
-    {
-        $name = $this->path . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $name) . '.php';
-        if (!is_file($name) || !is_readable($name)) {
-            throw new \RuntimeException("View cannot render `{$name}` because the template does not exist");
-        }
-        return $name;
-    }
-
-    protected function addCustomsCallback(array $callbacks)
-    {
-        foreach ($callbacks as $name => $callback) {
-            if (!is_callable($callback)) {
-                throw new \InvalidArgumentException("Method `$name` isn't callable");
-            }
-            $this->customsMethods[$name] = $callback;
-        }
     }
 }

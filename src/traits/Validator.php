@@ -2,9 +2,9 @@
 
 namespace traits;
 
-use Illuminate\Support\MessageBag;
-use Illuminate\Database\Eloquent\Model;
 use app\alert\Alert;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\MessageBag;
 use Main;
 
 trait Validator

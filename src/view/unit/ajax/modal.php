@@ -1,7 +1,7 @@
 <?php
 
-use models\Unit;
 use app\core\View;
+use models\Unit;
 
 /* @var $this View */
 /* @var $model Unit */
