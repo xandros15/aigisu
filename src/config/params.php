@@ -12,6 +12,12 @@ return [
     'root' => Filesystem::resolvePath(Configuration::DIR_ROOT),
     'web' => Filesystem::resolvePath(Configuration::DIR_WEB),
     'locale' => 'en',
+    'templates' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->root}/templates");
+    },
+    'cache' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->root}/cache");
+    },
     'storage' => function (Configuration $container) {
         return Filesystem::resolvePath("{$container->root}/storage");
     },

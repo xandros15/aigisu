@@ -92,10 +92,10 @@ return [
     },
     Twig::class => function (ContainerInterface $container) {
         $settings = ($container->get('isDebug')) ? [] : [
-            'cache' => $container->get('root') . '/cache'
+            'cache' => $container->get('cache')
         ];
 
-        $view = new Twig($container->get('root') . '/templates', $settings);
+        $view = new Twig($container->get('templates'), $settings);
 
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
