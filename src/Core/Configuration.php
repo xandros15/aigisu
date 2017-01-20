@@ -11,8 +11,6 @@ use Slim\Container;
  */
 final class Configuration extends Container
 {
-    const DIR_SOURCE = __DIR__ . '/../../src/';
-    const DIR_VIEW = __DIR__ . '/../common/view/';
     const DIR_WEB = __DIR__ . '/../../web/';
     const DIR_ROOT = __DIR__ . '/../../';
 
