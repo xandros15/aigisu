@@ -4,11 +4,6 @@ namespace Aigisu\Core;
 
 use Slim\Container;
 
-/**
- * @property string locale
- * @property array database
- * @property array controllers
- */
 final class Configuration extends Container
 {
     const DIR_WEB = __DIR__ . '/../../web/';
