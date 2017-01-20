@@ -95,7 +95,7 @@ return [
             'cache' => $container->get('root') . '/cache'
         ];
 
-        $view = new Twig($container->get('root') . '/src/web/templates', $settings);
+        $view = new Twig($container->get('root') . '/templates', $settings);
 
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
