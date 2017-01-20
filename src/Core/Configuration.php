@@ -12,7 +12,6 @@ use Slim\Container;
 final class Configuration extends Container
 {
     const DIR_SOURCE = __DIR__ . '/../../src/';
-    const DIR_CONFIG = __DIR__ . '/../config/';
     const DIR_VIEW = __DIR__ . '/../common/view/';
     const DIR_WEB = __DIR__ . '/../../web/';
     const DIR_ROOT = __DIR__ . '/../../';
@@ -25,9 +24,9 @@ final class Configuration extends Container
     {
         parent::__construct($items);
         /** @noinspection PhpIncludeInspection */
-        $this->applyParams(require self::DIR_CONFIG . 'params.php');
+        $this->applyParams(require self::DIR_ROOT . '/config/params.php');
         /** @noinspection PhpIncludeInspection */
-        $this->applyParams(require self::DIR_CONFIG . 'dependencies.php');
+        $this->applyParams(require self::DIR_ROOT . '/config/dependencies.php');
     }
 
     /**
