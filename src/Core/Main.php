@@ -15,19 +15,21 @@ class Main extends Slim
     {
         parent::__construct(new Configuration($items));
 
-        if ($this->getContainer()->get('isDebug')) {
-            error_reporting(E_ALL);
-            $this->getContainer()->get('settings')->replace([
-                'displayErrorDetails' => true,
-                'addContentLengthHeader' => false
-            ]);
-        }
     }
 
     public function bootstrap()
     {
+        !$this->getContainer()->get('isDebug') || $this->runSlimDebug();
         $this->setRoutes();
         $this->setDatabase();
+    }
+
+    public function runSlimDebug()
+    {
+        $this->getContainer()->get('settings')->replace([
+            'displayErrorDetails' => true,
+            'addContentLengthHeader' => false
+        ]);
     }
 
     private function setRoutes()
