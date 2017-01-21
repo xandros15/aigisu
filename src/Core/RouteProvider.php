@@ -53,9 +53,9 @@ class RouteProvider
     protected function mapWebRoutes()
     {
         $web = $this->app->group('', function () {
-            /** @var $this Main */
+            /** @var $this App */
             /** @noinspection PhpIncludeInspection */
-            require $this->getContainer()->get('root') . '/routes/web.php';
+            require $this->getContainer()->get('routes') . '/web.php';
         });
 
         $this->applyMiddlewares($web, $this->middlewares['web']);
@@ -83,9 +83,9 @@ class RouteProvider
     protected function mapApiRoutes()
     {
         $api = $this->app->group('/api', function () {
-            /** @var $this Main */
+            /** @var $this App */
             /** @noinspection PhpIncludeInspection */
-            require $this->getContainer()->get('root') . '/routes/api.php';
+            require $this->getContainer()->get('routes') . '/api.php';
         });
 
         $this->applyMiddlewares($api, $this->middlewares['api']);
@@ -99,9 +99,9 @@ class RouteProvider
     protected function mapStorageRoutes()
     {
         $storage = $this->app->group('/storage', function () {
-            /** @var $this Main */
+            /** @var $this App */
             /** @noinspection PhpIncludeInspection */
-            require $this->getContainer()->get('root') . '/routes/storage.php';
+            require $this->getContainer()->get('routes') . '/storage.php';
         });
 
         $this->applyMiddlewares($storage, $this->middlewares['storage']);

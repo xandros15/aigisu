@@ -15,6 +15,9 @@ return [
     'templates' => function (Configuration $container) {
         return Filesystem::resolvePath("{$container->root}/templates");
     },
+    'routes' => function (Configuration $container) {
+        return Filesystem::resolvePath("{$container->root}/routes");
+    },
     'cache' => function (Configuration $container) {
         return Filesystem::resolvePath("{$container->root}/cache");
     },
