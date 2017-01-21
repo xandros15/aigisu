@@ -15,11 +15,12 @@ final class Configuration extends Container
      */
     public function __construct(array $items = [])
     {
-        parent::__construct($items);
         /** @noinspection PhpIncludeInspection */
         $this->applyParams(require self::DIR_ROOT . '/config/params.php');
         /** @noinspection PhpIncludeInspection */
         $this->applyParams(require self::DIR_ROOT . '/config/dependencies.php');
+        /** @noinspection PhpIncludeInspection */
+        parent::__construct((array) (require self::DIR_ROOT . '/config/settings.php') + $items);
     }
 
     /**

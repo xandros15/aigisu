@@ -42,10 +42,6 @@ return [
     'access' => function () {
         return require __DIR__ . '/access.php';
     },
-    'settings' => [
-        'displayErrorDetails' => true,
-        'addContentLengthHeader' => false
-    ],
     'isDebug' => function (Configuration $container) {
         return $container->get('settings')->get('displayErrorDetails');
     },
