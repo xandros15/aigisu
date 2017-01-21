@@ -1,7 +1,7 @@
 <?php
 //silence is golden
 
-/** @var $this \Aigisu\Core\Main */
+/** @var $this \Slim\App */
 
 use Aigisu\Web\Controllers\UnitController;
 

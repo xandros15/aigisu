@@ -28,9 +28,9 @@ use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
 use Aigisu\Components\Oauth\ClientToUserMiddleware;
 
-/** @var $this \Aigisu\Core\Main */
+/** @var $this \Slim\App */
 $this->group('/users', function () {
-    /** @var $this \Aigisu\Core\Main */
+    /** @var $this \Slim\App */
     $this->get('', UserController::class . ':actionIndex')
         ->setName('api.user.index');
 
@@ -42,7 +42,7 @@ $this->group('/users', function () {
         ->setName('api.user.current');
 
     $this->group('', function () {
-        /** @var $this \Aigisu\Core\Main */
+        /** @var $this \Slim\App */
         $this->post('', UserController::class . ':actionCreate')
             ->setName('api.user.create')
             ->add(new CreateUserValidator($this->getContainer()));
@@ -59,9 +59,9 @@ $this->group('/users', function () {
 })->add(new ModeratorAccessMiddleware($this->getContainer()));
 
 $this->group('/units', function () {
-    /** @var $this \Aigisu\Core\Main */
+    /** @var $this \Slim\App */
     $this->group('', function () {
-        /** @var $this \Aigisu\Core\Main */
+        /** @var $this \Slim\App */
         $this->post('', UnitController::class . ':actionCreate')
             ->setName('api.unit.create')
             ->add(new CreateUnitValidator($this->getContainer()))
@@ -88,9 +88,9 @@ $this->group('/units', function () {
         ->setName('api.unit.rarities');
 
     $this->group('/{unitId:\d+}/cg', function () {
-        /** @var $this \Aigisu\Core\Main */
+        /** @var $this \Slim\App */
         $this->group('', function () {
-            /** @var $this \Aigisu\Core\Main */
+            /** @var $this \Slim\App */
             $this->post('', CGController::class . ':actionCreate')
                 ->setName('api.unit.cg.create')
                 ->add(new MissingCGValidator($this->getContainer()))
@@ -102,7 +102,7 @@ $this->group('/units', function () {
                 ->add(new UpdateCGValidator($this->getContainer()));
 
             $this->group('/{id:\d+}/google', function () {
-                /** @var $this \Aigisu\Core\Main */
+                /** @var $this \Slim\App */
                 $this->post('', GoogleUploader::class . ':actionCreate')
                     ->setName('api.unit.cg.google.create');
 
@@ -146,7 +146,6 @@ $this->add(new UploadedFilesMiddleware($this->getContainer()));
 $this->add(new AddCurrentUserMiddleware($this->getContainer()));
 
 
-    
 $this->add(function ($request, $response, $next) {
     /** @var $response \Slim\Http\Response */
     $response = $next($request, $response);
