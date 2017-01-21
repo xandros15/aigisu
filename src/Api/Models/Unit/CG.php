@@ -111,7 +111,7 @@ class CG extends Model
     {
         $url = null;
         if (!empty($this->attributes['local'])) {
-            $url = $this->urlTo('storage.images', ['path' => $this->attributes['local']]);
+            $url = $this->urlTo('storage.images.cg', ['id' => $this->attributes['id']]);
         }
 
         return $url;
