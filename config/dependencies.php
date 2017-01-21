@@ -26,6 +26,8 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
+use Slim\Http\Headers;
+use Slim\Http\Uri;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
@@ -102,5 +104,13 @@ return [
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
         return $view;
+    },
+    'response' => function (ContainerInterface $container) {
+        $headers = new Headers(['Content-Type' => 'text/html; charset=UTF-8']);
+        $response = new \Aigisu\Core\Response(200, $headers);
+        $basePath = Uri::createFromEnvironment($container->get('environment'))->getBasePath();
+        $response->setBaseUri($basePath);
+
+        return $response->withProtocolVersion($container->get('settings')['httpVersion']);
     }
 ];
