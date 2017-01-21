@@ -30,7 +30,7 @@ return [
         return "{$container->upload}/public";
     },
     'siteUrl' => function (Configuration $container) {
-        return rtrim($container->get('request')->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
+        return rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
     },
     'sprite.icons' => function (Configuration $container) {
         return "{$container->public}/sprite/icons";
