@@ -7,7 +7,6 @@
  * Time: 22:17
  */
 use Aigisu\Core\Configuration;
-use Aigisu\Helpers\Filesystem;
 
 /** @var Configuration $container */
 return [
@@ -21,7 +20,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => Filesystem::resolvePath("{$container['upload']}/public"),
+            'root' => "{$container['upload']}/public",
             'visibility' => 'public',
         ],
     ],

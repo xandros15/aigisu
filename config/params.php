@@ -6,35 +6,34 @@
  * Time: 21:43
  */
 use Aigisu\Core\Configuration;
-use Aigisu\Helpers\Filesystem;
 
 return [
-    'root' => Filesystem::resolvePath(Configuration::DIR_ROOT),
-    'web' => Filesystem::resolvePath(Configuration::DIR_WEB),
+    'root' => Configuration::DIR_ROOT,
+    'web' => Configuration::DIR_WEB,
     'locale' => 'en',
     'templates' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->root}/templates");
+        return "{$container->root}/templates";
     },
     'routes' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->root}/routes");
+        return "{$container->root}/routes";
     },
     'cache' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->root}/cache");
+        return "{$container->root}/cache";
     },
     'storage' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->root}/storage");
+        return "{$container->root}/storage";
     },
     'upload' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->storage}/app");
+        return "{$container->storage}/app";
     },
     'public' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->upload}/public");
+        return "{$container->upload}/public";
     },
     'siteUrl' => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->withPath('')->withQuery('')->withFragment(''), '/');
     },
     'sprite.icons' => function (Configuration $container) {
-        return Filesystem::resolvePath("{$container->public}/sprite/icons");
+        return "{$container->public}/sprite/icons";
     },
     'middlewares' => function () {
         return require __DIR__ . '/middlewares.php';
