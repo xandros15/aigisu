@@ -38,6 +38,8 @@ return [
         $database = new CapsuleManager();
         $database->addConnection($container->get('database'));
         $database->setEventDispatcher(new EloquentDispatcher(new LaravelContainer()));
+        $database->setAsGlobal();
+        $database->bootEloquent();
         return $database;
     },
     FilesystemManager::class => function (ContainerInterface $container) {
