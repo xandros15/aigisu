@@ -40,16 +40,6 @@ class GoogleUploader extends AbstractUploader
     }
 
     /**
-     * @return GoogleDriveManager
-     */
-    private function getGoogleDriveManager() : GoogleDriveManager
-    {
-        $googleSystem = $this->get(GoogleDriveFilesystem::class);
-        $googleSystem->getClientManager()->getAccess();
-        return $googleSystem->getDriveManager();
-    }
-
-    /**
      * @param Request $request
      * @param Response $response
      * @throws RuntimeException
@@ -76,20 +66,6 @@ class GoogleUploader extends AbstractUploader
     }
 
     /**
-     * @param CG $cg
-     * @return string
-     */
-    private function generateName(CG $cg) : string
-    {
-        $name = "{$cg->unit->name} - {$cg->server}{$cg->scene}";
-        if ($cg->archival) {
-            $name .= ' Archival';
-        }
-
-        return $name;
-    }
-
-    /**
      * @param Request $request
      * @param Response $response
      * @return Response
@@ -110,5 +86,29 @@ class GoogleUploader extends AbstractUploader
         ]);
 
         return $response->withStatus(self::STATUS_OK);
+    }
+
+    /**
+     * @return GoogleDriveManager
+     */
+    private function getGoogleDriveManager() : GoogleDriveManager
+    {
+        $googleSystem = $this->get(GoogleDriveFilesystem::class);
+        $googleSystem->getClientManager()->getAccess();
+        return $googleSystem->getDriveManager();
+    }
+
+    /**
+     * @param CG $cg
+     * @return string
+     */
+    private function generateName(CG $cg) : string
+    {
+        $name = "{$cg->unit->name} - {$cg->server}{$cg->scene}";
+        if ($cg->archival) {
+            $name .= ' Archival';
+        }
+
+        return $name;
     }
 }

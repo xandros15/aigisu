@@ -44,14 +44,6 @@ class ImgurUploader extends AbstractUploader
     }
 
     /**
-     * @return Imgur
-     */
-    private function getImgurManager() : Imgur
-    {
-        return $this->get(Imgur::class);
-    }
-
-    /**
      * @param Request $request
      * @param Response $response
      * @throws RuntimeException
@@ -73,6 +65,39 @@ class ImgurUploader extends AbstractUploader
         ])->saveOrFail();
 
         return $response->withStatus(self::STATUS_CREATED)->withHeader('Location', $this->getLocation($request));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws NotFoundException
+     */
+    public function actionUpdate(Request $request, Response $response) : Response
+    {
+        /** @var $cg CG */
+        $cg = CG::with('unit')->findOrFail($this->getID($request));
+        if (!$id = $cg->getAttribute('imgur_id')) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $imgur = $this->getImgurManager();
+        $imgurFile = $this->uploadImage($cg, $imgur);
+        $cg->fill([
+            'imgur_id' => $imgurFile['id'],
+            'imgur_delhash' => $imgurFile['deletehash'],
+        ])->saveOrFail();
+        $imgur->deleteImage($id);
+
+        return $response->withStatus(self::STATUS_OK);
+    }
+
+    /**
+     * @return Imgur
+     */
+    private function getImgurManager() : Imgur
+    {
+        return $this->get(Imgur::class);
     }
 
     /**
@@ -98,8 +123,6 @@ class ImgurUploader extends AbstractUploader
 
         return $this->responseToDataArray($response);
     }
-
-
 
     /**
      * @param CG $cg
@@ -132,30 +155,5 @@ class ImgurUploader extends AbstractUploader
         $json = (string) $response->getBody();
         $jsonArray = json_decode($json, true);
         return $jsonArray['data'];
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     * @throws NotFoundException
-     */
-    public function actionUpdate(Request $request, Response $response) : Response
-    {
-        /** @var $cg CG */
-        $cg = CG::with('unit')->findOrFail($this->getID($request));
-        if (!$id = $cg->getAttribute('imgur_id')) {
-            throw new NotFoundException($request, $response);
-        }
-
-        $imgur = $this->getImgurManager();
-        $imgurFile = $this->uploadImage($cg, $imgur);
-        $cg->fill([
-            'imgur_id' => $imgurFile['id'],
-            'imgur_delhash' => $imgurFile['deletehash'],
-        ])->saveOrFail();
-        $imgur->deleteImage($id);
-
-        return $response->withStatus(self::STATUS_OK);
     }
 }
