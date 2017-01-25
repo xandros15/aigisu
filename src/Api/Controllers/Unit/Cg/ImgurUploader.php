@@ -99,19 +99,7 @@ class ImgurUploader extends AbstractUploader
         return $this->responseToDataArray($response);
     }
 
-    /**
-     * @param CG $cg
-     * @throws RuntimeException
-     * @return string
-     */
-    private function getImageFileName(CG $cg) : string
-    {
-        if (!file_exists($filename = $this->get('public') . '/' . $cg->getOriginal('local'))) {
-            throw new RuntimeException("File {$filename} doesn't exist");
-        }
 
-        return $filename;
-    }
 
     /**
      * @param CG $cg
