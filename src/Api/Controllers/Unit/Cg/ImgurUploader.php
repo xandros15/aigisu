@@ -46,7 +46,7 @@ class ImgurUploader extends AbstractUploader
     /**
      * @param Request $request
      * @param Response $response
-     * @throws RuntimeException
+     * @throws FileExistException
      * @return Response
      */
     public function actionCreate(Request $request, Response $response) : Response
@@ -54,7 +54,7 @@ class ImgurUploader extends AbstractUploader
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
         if ($cg->getAttribute('imgur_id')) {
-            throw new RuntimeException('CG has image on imgur, at first try to delete.');
+            throw new FileExistException('CG has image on imgur, at first try to delete.');
         }
 
         $imgur = $this->getImgurManager();

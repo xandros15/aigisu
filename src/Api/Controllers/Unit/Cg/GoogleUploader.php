@@ -11,7 +11,6 @@ namespace Aigisu\Api\Controllers\Unit\CG;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\components\google\GoogleDriveManager;
-use RuntimeException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -42,7 +41,7 @@ class GoogleUploader extends AbstractUploader
     /**
      * @param Request $request
      * @param Response $response
-     * @throws RuntimeException
+     * @throws FileExistException
      * @return Response
      */
     public function actionCreate(Request $request, Response $response) : Response
@@ -50,7 +49,7 @@ class GoogleUploader extends AbstractUploader
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
         if ($cg->getAttribute('google_id')) {
-            throw new RuntimeException('CG has image on google, at first try to delete.');
+            throw new FileExistException('CG has image on google, at first try to delete.');
         }
 
         $driveManager = $this->getGoogleDriveManager();
