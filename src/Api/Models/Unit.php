@@ -7,7 +7,6 @@ use Aigisu\Api\Models\Handlers\UnitTagsHandler;
 use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Api\Models\Unit\MissingCG;
 use Aigisu\Api\Models\Unit\Tag;
-use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -175,14 +174,10 @@ class Unit extends Model
 
     /**
      * @param Request $request
-     * @param Dispatcher $dispatcher
      */
-    public function saveUnitModel(Request $request, Dispatcher $dispatcher)
+    public function saveUnitModel(Request $request)
     {
         $this->fill($request->getParams());
-        if ($this->uploadIcon($request)) {
-            $dispatcher->call('spriteGenerator');
-        }
         $this->saveOrFail();
         $this->syncTags();
     }
