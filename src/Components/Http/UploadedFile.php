@@ -8,41 +8,21 @@
 
 namespace Aigisu\Components\Http;
 
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemInterface;
 use Slim\Http\UploadedFile as SlimUploadedFile;
 
 class UploadedFile extends SlimUploadedFile
 {
-    /** @const VISIBILITY_PUBLIC public visibility */
-    const VISIBILITY_PUBLIC = 'public';
-
-    /** @const VISIBILITY_PRIVATE private visibility */
-    const VISIBILITY_PRIVATE = 'private';
-
-    /** @var FilesystemManager|null */
-    protected $manager;
+    /** @var FilesystemInterface|null */
+    private $manager;
 
     /**
-     * @param null|FilesystemManager $manager
+     * @param FilesystemInterface $manager
      */
-    public function setManager($manager)
+    public function setManager(FilesystemInterface $manager)
     {
-        if ($manager instanceof FilesystemManager) {
-            $this->manager = $manager;
-        }
-    }
-
-    /**
-     * Store the uploaded file on a filesystem disk with public visibility.
-     *
-     * @param  string $path
-     * @param  string $disk
-     * @return string|false
-     */
-    public function storePublicly(string $path, string $disk = '')
-    {
-        return $this->storeAs($path, '', $disk, self::VISIBILITY_PUBLIC);
+        $this->manager = $manager;
     }
 
     /**
@@ -50,26 +30,39 @@ class UploadedFile extends SlimUploadedFile
      *
      * @param  string $path
      * @param  string $name
-     * @param  string $disk
-     * @param  string $visibility
-     * @return string|false
+     * @param bool $public
+     * @return string storage filename
      */
-    public function storeAs(
-        string $path,
-        string $name = '',
-        string $disk = '',
-        string $visibility = self::VISIBILITY_PUBLIC
-    ) {
-        if ($this->exist() && $this->manager instanceof FilesystemManager) {
-            $path = $name ? $path . DIRECTORY_SEPARATOR . $name : $this->hashName($path);
-            $result = $this->manager->disk($disk)->putStream($path, $this->getStream()->detach(), [
-                'visibility' => $this->prepareVisibility($visibility)
-            ]);
-
-            return $result ? $path : false;
+    public function store(string $path, string $name = '', $public = true) : string
+    {
+        if (!$this->exist()) {
+            throw new RuntimeException('The upload fails');
         }
 
-        return false;
+        if ($this->moved) {
+            throw new RuntimeException('Uploaded file already moved');
+        }
+
+        $newName = $this->generateName($path, $name);
+        $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
+            'visibility' => $this->prepareVisibility($public)
+        ]);
+
+        if (!$result) {
+            throw new RuntimeException("Can't save file {$this->file}");
+        }
+
+        $this->moved = true;
+
+        return $newName;
+    }
+
+    /**
+     * @param string $targetPath
+     */
+    public function moveTo($targetPath)
+    {
+        $this->store('', $targetPath ? basename($targetPath) : '');
     }
 
     /**
@@ -81,58 +74,40 @@ class UploadedFile extends SlimUploadedFile
     }
 
     /**
-     * Get a filename for the file that is the MD5 hash of the contents.
+     * Generate new name for file
      *
-     * @param  string $path
+     * @param string $newPath
+     * @param string $newName
      * @return string
      */
-    public function hashName(string $path = '')
+    protected function generateName(string $newPath = '', string $newName = '') : string
     {
-        if ($path) {
-            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if (!$newName) {
+            $newName = md5_file($this->file);
         }
-        $path .= md5_file($this->file);
 
-        return $path;
+        if ($newPath) {
+            $newPath = rtrim($newPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        }
+
+        return $newPath . $newName;
+    }
+
+    private function getManager() : FilesystemInterface
+    {
+        if (!$this->manager) {
+            throw new RuntimeException("Missing filesystem manager");
+        }
+
+        return $this->manager;
     }
 
     /**
-     * @param string $value
+     * @param bool $isPublic
      * @return string
      */
-    private function prepareVisibility(string $value) : string
+    private function prepareVisibility(bool $isPublic) : string
     {
-        switch ($value) {
-            case self::VISIBILITY_PRIVATE:
-                return AdapterInterface::VISIBILITY_PRIVATE;
-            case self::VISIBILITY_PUBLIC:
-            default:
-                return AdapterInterface::VISIBILITY_PUBLIC;
-        }
-    }
-
-    /**
-     * Store the uploaded file on a filesystem disk.
-     *
-     * @param  string $path
-     * @param  string $disk
-     * @return string|false
-     */
-    public function store(string $path, string $disk = '')
-    {
-        return $this->storeAs($path, '', $disk);
-    }
-
-    /**
-     * Store the uploaded file on a filesystem disk with public visibility.
-     *
-     * @param  string $path
-     * @param  string $name
-     * @param  string $disk
-     * @return string|false
-     */
-    public function storePubliclyAs(string $path, string $name, string $disk = '')
-    {
-        return $this->storeAs($path, $name, $disk, self::VISIBILITY_PUBLIC);
+        return $isPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
     }
 }

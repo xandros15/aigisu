@@ -7,7 +7,6 @@
  */
 use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
-use Aigisu\Components\Http\Filesystem\FilesystemManager;
 use Aigisu\Components\Imgur\Imgur;
 use Aigisu\Components\Oauth\AccessTokenRepository;
 use Aigisu\Components\Oauth\BearerTokenResponse;
@@ -15,13 +14,14 @@ use Aigisu\Components\Oauth\ClientRepository;
 use Aigisu\Components\Oauth\RefreshTokenRepository;
 use Aigisu\Components\Oauth\ScopeRepository;
 use Aigisu\Components\Oauth\UserRepository;
-use Aigisu\Components\Url\UrlManager;
 use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Events\Dispatcher as EloquentDispatcher;
 use Interop\Container\ContainerInterface;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
@@ -44,11 +44,9 @@ return [
         $database->bootEloquent();
         return $database;
     },
-    FilesystemManager::class => function (ContainerInterface $container) {
-        return new FilesystemManager(require __DIR__ . '/filesystems.php');
-    },
-    UrlManager::class => function (ContainerInterface $container) {
-        return new UrlManager($container->get('router'), $container->get('siteUrl'));
+    Filesystem::class => function (ContainerInterface $container) {
+        $adapter = new Local($container->get('upload'));
+        return new Filesystem($adapter);
     },
     GoogleDriveFilesystem::class => function () {
         return new GoogleDriveFilesystem(require __DIR__ . '/google.php');

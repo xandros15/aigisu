@@ -6,13 +6,11 @@
  * Time: 19:13
  */
 use Aigisu\Api\Middlewares\ExceptionHandler;
-use Aigisu\Api\Middlewares\UrlManagerModelAccess;
 
 return [
     'web' => [],
     'api' => [
         ExceptionHandler::class,
-        UrlManagerModelAccess::class,
     ],
     'storage' => [],
 ];

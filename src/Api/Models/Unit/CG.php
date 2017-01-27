@@ -105,19 +105,6 @@ class CG extends Model
     }
 
     /**
-     * @return string
-     */
-    public function getLocalAttribute()
-    {
-        $url = null;
-        if (!empty($this->attributes['local'])) {
-            $url = $this->urlTo('storage.images.cg', ['id' => $this->attributes['id']]);
-        }
-
-        return $url;
-    }
-
-    /**
      * @param Request $request
      */
     public function uploadCG(Request $request)

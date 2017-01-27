@@ -132,19 +132,7 @@ class Unit extends Model
         ];
     }
 
-    /**
-     * @return null|string
-     */
-    public function getIconAttribute()
-    {
-        $url = null;
-        $icon = $this->attributes['icon'];
-        if ($icon && $local = $this->urlTo('storage.images', ['path' => $icon])) {
-            $url = $local;
-        }
 
-        return $url;
-    }
 
     /**
      * @return array
@@ -178,6 +166,7 @@ class Unit extends Model
     public function saveUnitModel(Request $request)
     {
         $this->fill($request->getParams());
+        $this->uploadIcon($request);
         $this->saveOrFail();
         $this->syncTags();
     }
@@ -190,10 +179,11 @@ class Unit extends Model
     {
         /** @var $icon UploadedFile */
         $icon = $request->getUploadedFiles()['icon'] ?? null;
-        if ($icon && $iconName = $icon->store(self::ICON_UPLOAD_CATALOG)) {
-            $this->setAttribute('icon', $iconName);
+        if ($icon) {
+            $this->setAttribute('icon', $icon->store(self::ICON_UPLOAD_CATALOG));
             return true;
         }
+
         return false;
     }
 
