@@ -37,13 +37,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storeAsPublic(string $path, string $name = '') : string
     {
-        if (!$this->exist()) {
-            throw new RuntimeException('The upload fails');
-        }
-
-        if ($this->moved) {
-            throw new RuntimeException('Uploaded file already moved');
-        }
+        $this->beforeStore();
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
@@ -54,7 +48,7 @@ class UploadedFile extends SlimUploadedFile
             throw new RuntimeException("Can't save file {$this->file}");
         }
 
-        $this->moved = true;
+        $this->afterStore();
 
         return $newName;
     }
@@ -68,13 +62,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storeAsPrivate(string $path, string $name = '') : string
     {
-        if (!$this->exist()) {
-            throw new RuntimeException('The upload fails');
-        }
-
-        if ($this->moved) {
-            throw new RuntimeException('Uploaded file already moved');
-        }
+        $this->beforeStore();
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
@@ -85,7 +73,7 @@ class UploadedFile extends SlimUploadedFile
             throw new RuntimeException("Can't save file {$this->file}");
         }
 
-        $this->moved = true;
+        $this->afterStore();
 
         return $newName;
     }
@@ -128,5 +116,24 @@ class UploadedFile extends SlimUploadedFile
         }
 
         return $this->manager;
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    private function beforeStore()
+    {
+        if (!$this->exist()) {
+            throw new RuntimeException('The upload fails');
+        }
+
+        if ($this->moved) {
+            throw new RuntimeException('Uploaded file already moved');
+        }
+    }
+
+    private function afterStore()
+    {
+        $this->moved = true;
     }
 }
