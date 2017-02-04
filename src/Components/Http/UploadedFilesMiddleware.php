@@ -39,9 +39,9 @@ class UploadedFilesMiddleware extends Middleware
         $newFiles = UploadedFile::createFromEnvironment(new FakeEnvironment());
         $manager = $this->get(Filesystem::class);
 
-        foreach ($newFiles as $file) {
+        foreach ($newFiles as &$file) {
             /** @var $file UploadedFile */
-            $file->setManager($manager);
+            $file = $file->withManager($manager);
         }
 
         return $request->withUploadedFiles($newFiles);
