@@ -11,7 +11,6 @@ namespace Aigisu\Components\Http;
 
 use Aigisu\Core\Middleware;
 use League\Flysystem\Filesystem;
-use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -37,7 +36,7 @@ class UploadedFilesMiddleware extends Middleware
      */
     private function withUploadedFiles(Request $request) : Request
     {
-        $newFiles = UploadedFile::createFromEnvironment(new Environment());
+        $newFiles = UploadedFile::createFromEnvironment(new FakeEnvironment());
         $manager = $this->get(Filesystem::class);
 
         foreach ($newFiles as $file) {
