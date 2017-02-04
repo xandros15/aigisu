@@ -14,6 +14,7 @@ use Aigisu\Components\Oauth\ClientRepository;
 use Aigisu\Components\Oauth\RefreshTokenRepository;
 use Aigisu\Components\Oauth\ScopeRepository;
 use Aigisu\Components\Oauth\UserRepository;
+use Aigisu\Core\Response;
 use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
@@ -105,9 +106,11 @@ return [
     },
     'response' => function (ContainerInterface $container) {
         $headers = new Headers(['Content-Type' => 'text/html; charset=UTF-8']);
-        $response = new \Aigisu\Core\Response(200, $headers);
         $basePath = Uri::createFromEnvironment($container->get('environment'))->getBasePath();
-        $response->setBaseUri($basePath);
+        $response = new Response([
+            'status' => 200,
+            'headers' => $headers
+        ], $basePath);
 
         return $response->withProtocolVersion($container->get('settings')['httpVersion']);
     }

@@ -12,11 +12,17 @@ use Slim\Http\Uri;
 
 class Response extends \Slim\Http\Response
 {
-    /** @var Uri */
+    /** @var string */
     private $basePath;
 
-    public function setBaseUri(string $basePath)
+    /**
+     * Response constructor.
+     * @param array $params
+     * @param string $basePath
+     */
+    public function __construct(array $params, string $basePath)
     {
+        parent::__construct($params['status'], $params['headers'] ?? null, $params['body'] ?? null);
         $this->basePath = $basePath;
     }
 
