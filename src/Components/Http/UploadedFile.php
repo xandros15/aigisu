@@ -96,6 +96,9 @@ class UploadedFile extends SlimUploadedFile
         return $newPath . $newName;
     }
 
+    /**
+     * @return FilesystemInterface
+     */
     private function getManager() : FilesystemInterface
     {
         if (!$this->manager) {
