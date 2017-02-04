@@ -91,14 +91,6 @@ class UploadedFile extends SlimUploadedFile
     }
 
     /**
-     * @param string $targetPath
-     */
-    public function moveTo($targetPath)
-    {
-        $this->storeAsPublic('', $targetPath ? basename($targetPath) : '');
-    }
-
-    /**
      * @return bool
      */
     public function exist() : bool
