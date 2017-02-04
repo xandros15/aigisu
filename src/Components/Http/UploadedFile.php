@@ -19,13 +19,11 @@ class UploadedFile extends SlimUploadedFile
 
     /**
      * @param FilesystemInterface $manager
-     * @return UploadedFile
+     * @return void
      */
-    public function withManager(FilesystemInterface $manager)
+    public function addManager(FilesystemInterface $manager)
     {
-        $file = clone $this;
-        $file->manager = $manager;
-        return $file;
+        $this->manager = $manager;
     }
 
     /**
