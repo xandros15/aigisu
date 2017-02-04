@@ -180,7 +180,7 @@ class Unit extends Model
         /** @var $icon UploadedFile */
         $icon = $request->getUploadedFiles()['icon'] ?? null;
         if ($icon) {
-            $this->setAttribute('icon', $icon->store(self::ICON_UPLOAD_CATALOG));
+            $this->setAttribute('icon', $icon->storeAsPublic(self::ICON_UPLOAD_CATALOG));
             return true;
         }
 

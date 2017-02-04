@@ -112,7 +112,7 @@ class CG extends Model
         /** @var $cg UploadedFile */
         $cg = $request->getUploadedFiles()[self::CG_UPLOAD_KEY_NAME] ?? null;
 
-        if ($cg && $storagePath = $cg->store(self::CG_UPLOAD_CATALOG)) {
+        if ($cg && $storagePath = $cg->storeAsPublic(self::CG_UPLOAD_CATALOG)) {
             $this->setAttribute('local', $storagePath);
         }
     }
