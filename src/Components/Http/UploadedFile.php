@@ -33,10 +33,9 @@ class UploadedFile extends SlimUploadedFile
      *
      * @param  string $path
      * @param  string $name
-     * @param bool $public
      * @return string storage filename
      */
-    public function store(string $path, string $name = '', $public = true) : string
+    public function storeAsPublic(string $path, string $name = '') : string
     {
         if (!$this->exist()) {
             throw new RuntimeException('The upload fails');
@@ -48,7 +47,38 @@ class UploadedFile extends SlimUploadedFile
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
-            'visibility' => $this->prepareVisibility($public)
+            'visibility' => AdapterInterface::VISIBILITY_PUBLIC
+        ]);
+
+        if (!$result) {
+            throw new RuntimeException("Can't save file {$this->file}");
+        }
+
+        $this->moved = true;
+
+        return $newName;
+    }
+
+    /**
+     * Store the uploaded file on a filesystem disk as private file.
+     *
+     * @param string $path
+     * @param string $name
+     * @return string
+     */
+    public function storeAsPrivate(string $path, string $name = '') : string
+    {
+        if (!$this->exist()) {
+            throw new RuntimeException('The upload fails');
+        }
+
+        if ($this->moved) {
+            throw new RuntimeException('Uploaded file already moved');
+        }
+
+        $newName = $this->generateName($path, $name);
+        $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
+            'visibility' => AdapterInterface::VISIBILITY_PRIVATE
         ]);
 
         if (!$result) {
@@ -65,7 +95,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function moveTo($targetPath)
     {
-        $this->store('', $targetPath ? basename($targetPath) : '');
+        $this->storeAsPublic('', $targetPath ? basename($targetPath) : '');
     }
 
     /**
@@ -106,14 +136,5 @@ class UploadedFile extends SlimUploadedFile
         }
 
         return $this->manager;
-    }
-
-    /**
-     * @param bool $isPublic
-     * @return string
-     */
-    private function prepareVisibility(bool $isPublic) : string
-    {
-        return $isPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
     }
 }
