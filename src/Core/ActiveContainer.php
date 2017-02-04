@@ -58,14 +58,4 @@ abstract class ActiveContainer
 
         return $this->container->get($name);
     }
-
-    /**
-     * @param string $name
-     * @param $value
-     * @return void
-     */
-    protected function set(string $name, $value)
-    {
-        $this->container[$name] = $value;
-    }
 }
