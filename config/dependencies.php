@@ -19,7 +19,6 @@ use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
-use Illuminate\Events\Dispatcher as EloquentDispatcher;
 use Interop\Container\ContainerInterface;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -40,7 +39,6 @@ return [
     CapsuleManager::class => function (ContainerInterface $container) {
         $database = new CapsuleManager();
         $database->addConnection($container->get('database'));
-        $database->setEventDispatcher(new EloquentDispatcher(new LaravelContainer()));
         $database->setAsGlobal();
         $database->bootEloquent();
         return $database;
