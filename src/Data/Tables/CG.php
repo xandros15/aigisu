@@ -6,10 +6,10 @@
  * Time: 21:05
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
-use Aigisu\Api\Models\Unit\CG as CGModel;
+use Aigisu\Models\Unit\CG as CGModel;
 use Illuminate\Database\Schema\Blueprint;
 
 class CG implements Table

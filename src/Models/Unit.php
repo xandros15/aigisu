@@ -1,14 +1,14 @@
 <?php
 
-namespace Aigisu\Api\Models;
+namespace Aigisu\Models;
 
 
-use Aigisu\Api\Models\Handlers\UnitTagsHandler;
-use Aigisu\Api\Models\Unit\CG;
-use Aigisu\Api\Models\Unit\MissingCG;
-use Aigisu\Api\Models\Unit\Tag;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
+use Aigisu\Models\Handlers\UnitTagsHandler;
+use Aigisu\Models\Unit\CG;
+use Aigisu\Models\Unit\MissingCG;
+use Aigisu\Models\Unit\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;

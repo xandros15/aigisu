@@ -8,9 +8,9 @@
 
 namespace Aigisu\Api\Controllers\Unit\CG;
 
-use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\components\google\GoogleDriveManager;
+use Aigisu\Models\Unit\CG;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;

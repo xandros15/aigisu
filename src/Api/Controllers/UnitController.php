@@ -2,7 +2,7 @@
 
 namespace Aigisu\Api\Controllers;
 
-use Aigisu\Api\Models\Unit;
+use Aigisu\Models\Unit;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

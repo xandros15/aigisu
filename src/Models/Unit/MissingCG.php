@@ -6,7 +6,7 @@
  * Time: 16:10
  */
 
-namespace Aigisu\Api\Models\Unit;
+namespace Aigisu\Models\Unit;
 
 
 use Illuminate\Database\Eloquent\Collection;
@@ -77,21 +77,6 @@ class MissingCG
         $this->applyIfNotFound($this->requiredMap['nutaku']);
     }
 
-    /**
-     * @param array $requiredMap
-     */
-    protected function applyIfNotFound(array $requiredMap)
-    {
-        foreach ($requiredMap as $required) {
-            $hasCG = $this->cg->contains(function (CG $cg) use ($required) {
-                return $cg->scene == $required['scene'] && $cg->server == $required['server'];
-            });
-            if (!$hasCG) {
-                $this->missing[] = $required;
-            }
-        }
-    }
-
     public function applyDmm()
     {
         $this->applyIfNotFound($this->requiredMap['dmm']);
@@ -108,5 +93,20 @@ class MissingCG
     public function toArray() : array
     {
         return $this->missing;
+    }
+
+    /**
+     * @param array $requiredMap
+     */
+    protected function applyIfNotFound(array $requiredMap)
+    {
+        foreach ($requiredMap as $required) {
+            $hasCG = $this->cg->contains(function (CG $cg) use ($required) {
+                return $cg->scene == $required['scene'] && $cg->server == $required['server'];
+            });
+            if (!$hasCG) {
+                $this->missing[] = $required;
+            }
+        }
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Aigisu\Api\Models\Unit;
+namespace Aigisu\Models\Unit;
 
 
-use Aigisu\Api\Models\Unit;
 use Aigisu\Core\Model;
+use Aigisu\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
 
 /**

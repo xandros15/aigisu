@@ -6,11 +6,11 @@
  * Time: 21:44
  */
 
-namespace Aigisu\Api\Models\Handlers;
+namespace Aigisu\Models\Handlers;
 
 
-use Aigisu\Api\Models\Unit;
-use Aigisu\Api\Models\Unit\Tag;
+use Aigisu\Models\Unit;
+use Aigisu\Models\Unit\Tag;
 
 class UnitTagsHandler
 {

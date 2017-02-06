@@ -6,12 +6,12 @@
  * Time: 21:46
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
-use Aigisu\Api\Data\Schema;
-use Aigisu\Api\Models\Unit;
-use Aigisu\Api\Models\Unit\Tag;
+use Aigisu\Data\Schema;
+use Aigisu\Models\Unit;
+use Aigisu\Models\Unit\Tag;
 use Illuminate\Database\Schema\Blueprint;
 
 class TagsUnits implements Table

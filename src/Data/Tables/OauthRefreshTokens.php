@@ -3,15 +3,15 @@
  * Created by PhpStorm.
  * User: xandros15
  * Date: 2016-10-08
- * Time: 16:33
+ * Time: 16:32
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
 use Illuminate\Database\Schema\Blueprint;
 
-class OauthAccessTokens implements Table
+class OauthRefreshTokens implements Table
 {
 
     /**
@@ -19,7 +19,7 @@ class OauthAccessTokens implements Table
      */
     public function getTableName() : string
     {
-        return 'oauth_access_tokens';
+        return 'oauth_refresh_tokens';
     }
 
     /**
@@ -29,10 +29,8 @@ class OauthAccessTokens implements Table
     public function onCreate(Blueprint $table)
     {
         $table->string('id', 100)->primary();
-        $table->integer('client_id')->index();
-        $table->text('scopes')->nullable();
+        $table->string('access_token_id', 100)->index();
         $table->boolean('revoked');
-        $table->timestamps();
-        $table->dateTime('expires_at')->nullable();
+        $table->dateTime('expires_at')->nullable(); // <- say wat, Otwell?
     }
 }

@@ -6,20 +6,20 @@
  * Time: 21:05
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
-use Aigisu\Api\Models\Unit;
+use Aigisu\Models\Unit\Tag;
 use Illuminate\Database\Schema\Blueprint;
 
-class Units implements Table
+class Tags implements Table
 {
     /**
      * @return string
      */
     public function getTableName() : string
     {
-        return (new Unit())->getTable();
+        return (new Tag())->getTable();
     }
 
     /**
@@ -33,17 +33,7 @@ class Units implements Table
         $table->engine = 'InnoDB';
 
         $table->increments('id')->unsigned();
-        $table->string('name', 25);
-        $table->string('kanji', 45);
-        $table->string('icon');
-        $table->string('link_seesaw', 100)->nullable();
-        $table->string('link_gc', 100)->nullable();
-        $table->enum('rarity', Unit::getRarities());
-        $table->enum('gender', Unit::getGenders());
-        $table->boolean('dmm');
-        $table->boolean('nutaku');
-        $table->boolean('special_cg');
+        $table->string('name', 25)->unique();
         $table->timestamps();
     }
-
 }

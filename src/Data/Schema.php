@@ -5,18 +5,19 @@
  * Date: 2016-08-19
  * Time: 20:48
  */
-namespace Aigisu\Api\Data;
+namespace Aigisu\Data;
 
-use Aigisu\Api\Data\Tables\CG;
-use Aigisu\Api\Data\Tables\OauthAccessTokens;
-use Aigisu\Api\Data\Tables\OauthRefreshTokens;
-use Aigisu\Api\Data\Tables\Table;
-use Aigisu\Api\Data\Tables\Tags;
-use Aigisu\Api\Data\Tables\TagsUnits;
-use Aigisu\Api\Data\Tables\Units;
-use Aigisu\Api\Data\Tables\Users;
+
 use Aigisu\Core\Configuration;
 use Aigisu\Core\Model;
+use Aigisu\Data\Tables\CG;
+use Aigisu\Data\Tables\OauthAccessTokens;
+use Aigisu\Data\Tables\OauthRefreshTokens;
+use Aigisu\Data\Tables\Table;
+use Aigisu\Data\Tables\Tags;
+use Aigisu\Data\Tables\TagsUnits;
+use Aigisu\Data\Tables\Units;
+use Aigisu\Data\Tables\Users;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Schema\Blueprint;
@@ -75,22 +76,6 @@ class Schema
     }
 
     /**
-     * @return array
-     */
-    private function tables() : array
-    {
-        return [
-            new Units(),
-            new Users(),
-            new CG(),
-            new Tags(),
-            new TagsUnits(),
-            new OauthAccessTokens(),
-            new OauthRefreshTokens(),
-        ];
-    }
-
-    /**
      * @param Table $table
      */
     public function backupTableData(Table $table)
@@ -102,17 +87,6 @@ class Schema
             $filename = __DIR__ . '/../../../backup/' . $tableName . date('_Y-m-d-hs') . '.json';
             file_put_contents($filename, $collection->toJson(JSON_PRETTY_PRINT));
         }
-    }
-
-    /**
-     * @param Table $table
-     * @return \Closure
-     */
-    private function makeClosure(Table $table)
-    {
-        return function (Blueprint $blueprint) use ($table) {
-            $table->onCreate($blueprint);
-        };
     }
 
     public function backupTables()
@@ -138,5 +112,32 @@ class Schema
         } catch (\Exception $e) {
             dump($e->getTrace());
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function tables() : array
+    {
+        return [
+            new Units(),
+            new Users(),
+            new CG(),
+            new Tags(),
+            new TagsUnits(),
+            new OauthAccessTokens(),
+            new OauthRefreshTokens(),
+        ];
+    }
+
+    /**
+     * @param Table $table
+     * @return \Closure
+     */
+    private function makeClosure(Table $table)
+    {
+        return function (Blueprint $blueprint) use ($table) {
+            $table->onCreate($blueprint);
+        };
     }
 }

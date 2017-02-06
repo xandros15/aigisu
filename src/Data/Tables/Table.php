@@ -6,7 +6,7 @@
  * Time: 21:06
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
 use Illuminate\Database\Schema\Blueprint;

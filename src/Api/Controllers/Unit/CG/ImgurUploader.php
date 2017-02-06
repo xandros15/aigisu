@@ -9,8 +9,8 @@
 namespace Aigisu\Api\Controllers\Unit\CG;
 
 
-use Aigisu\Api\Models\Unit\CG;
 use Aigisu\Components\Imgur\Imgur;
+use Aigisu\Models\Unit\CG;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Slim\Exception\NotFoundException;

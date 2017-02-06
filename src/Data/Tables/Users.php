@@ -6,11 +6,11 @@
  * Time: 21:05
  */
 
-namespace Aigisu\Api\Data\Tables;
+namespace Aigisu\Data\Tables;
 
 
-use Aigisu\Api\Models\User;
 use Aigisu\Core\Configuration;
+use Aigisu\Models\User;
 use Google\Auth\Cache\InvalidArgumentException;
 use Illuminate\Database\Schema\Blueprint;
 

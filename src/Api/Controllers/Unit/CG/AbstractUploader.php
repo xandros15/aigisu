@@ -10,7 +10,7 @@ namespace Aigisu\Api\Controllers\Unit\CG;
 
 
 use Aigisu\Api\Controllers\Controller;
-use Aigisu\Api\Models\Unit\CG;
+use Aigisu\Models\Unit\CG;
 use RuntimeException;
 use Slim\Http\Request;
 use Slim\Http\Response;

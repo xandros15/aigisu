@@ -6,7 +6,7 @@
  * Time: 23:29
  */
 
-namespace Aigisu\Api\Models;
+namespace Aigisu\Models;
 
 
 use Aigisu\Core\Model;
