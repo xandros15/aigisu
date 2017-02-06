@@ -12,7 +12,7 @@ namespace Aigisu\Api\Middlewares\Validators;
 use Aigisu\Api\Middlewares\Validator;
 use Aigisu\Api\Middlewares\Validators\Rules\ImageSize;
 use Aigisu\Api\Middlewares\Validators\Rules\Optional;
-use Aigisu\Api\Models\Unit\CG;
+use Aigisu\Models\Unit\CG;
 use Respect\Validation\Validator as v;
 
 class CreateCGValidator extends Validator

@@ -10,8 +10,8 @@ namespace Aigisu\Api\Middlewares\Validators;
 
 
 use Aigisu\Api\Middlewares\Validator;
-use Aigisu\Api\Models\Unit;
-use Aigisu\Api\Models\Unit\CG;
+use Aigisu\Models\Unit;
+use Aigisu\Models\Unit\CG;
 use Slim\Http\Request;
 
 class MissingCGValidator extends Validator
@@ -42,6 +42,44 @@ class MissingCGValidator extends Validator
         }
 
         return !$this->errors;
+    }
+
+    /**
+     * @param Request $request
+     * @return int|null
+     */
+    protected function getCGId(Request $request)
+    {
+        $route = $request->getAttribute('route');
+        return $route->getArgument('id');
+    }
+
+    /**
+     * @param Request $request
+     * @return int|null
+     */
+    protected function getUnitId(Request $request)
+    {
+        $route = $request->getAttribute('route');
+        return $route->getArgument('unitId');
+    }
+
+    /**
+     * @param Unit $unit
+     * @param array $params
+     * @return bool
+     */
+    protected function isMissing(Unit $unit, array $params) : bool
+    {
+        foreach ($unit->getAttribute('missingCG') as $missingCG) {
+            if ($missingCG['server'] == $params['server'] &&
+                $missingCG['scene'] == $params['scene']
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -100,43 +138,5 @@ class MissingCGValidator extends Validator
             'archival' => $cg->getAttribute('archival'),
         ];
 
-    }
-
-    /**
-     * @param Request $request
-     * @return int|null
-     */
-    protected function getCGId(Request $request)
-    {
-        $route = $request->getAttribute('route');
-        return $route->getArgument('id');
-    }
-
-    /**
-     * @param Request $request
-     * @return int|null
-     */
-    protected function getUnitId(Request $request)
-    {
-        $route = $request->getAttribute('route');
-        return $route->getArgument('unitId');
-    }
-
-    /**
-     * @param Unit $unit
-     * @param array $params
-     * @return bool
-     */
-    protected function isMissing(Unit $unit, array $params) : bool
-    {
-        foreach ($unit->getAttribute('missingCG') as $missingCG) {
-            if ($missingCG['server'] == $params['server'] &&
-                $missingCG['scene'] == $params['scene']
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
