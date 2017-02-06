@@ -8,5 +8,5 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$schema = new \Aigisu\Api\Data\Schema();
+$schema = new \Aigisu\Data\Schema();
 $schema->run();
