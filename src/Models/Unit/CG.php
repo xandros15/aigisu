@@ -2,15 +2,12 @@
 
 namespace Aigisu\Models\Unit;
 
+
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Aigisu\Models\Unit;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Slim\Http\Request;
-
-/**
- * Class Image
- */
 
 /**
  * @property string $server

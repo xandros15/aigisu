@@ -14,10 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Slim\Http\Request;
 
 /**
- * Class Unit
- */
-
-/**
  * @property string $name
  * @property string $kanji
  * @property string $link_seesaw

@@ -8,10 +8,6 @@ use Aigisu\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Class Tag
- */
-
-/**
  * @property int $id
  * @property string $name
  * @property Unit[] $units

@@ -59,6 +59,9 @@ class MissingCG
         $this->cg = $collection instanceof Collection ? $collection : new Collection();
     }
 
+    /**
+     * @param Collection $cg
+     */
     public function attachCGCollection(Collection $cg)
     {
         $this->missing = [];
