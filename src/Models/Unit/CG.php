@@ -45,22 +45,6 @@ class CG extends Model
         'imgur_id',
         'imgur_delhash',
     ];
-    /** @var array */
-    protected $casts = [
-        'archival' => 'bool',
-    ];
-    /** @var array */
-    protected $hidden = [
-        'unit_id',
-        'google_id',
-        'imgur_id',
-        'imgur_delhash',
-    ];
-    /** @var array */
-    protected $appends = [
-        'google',
-        'imgur',
-    ];
 
     /**
      * @return array
@@ -76,32 +60,6 @@ class CG extends Model
     public function unit() : BelongsTo
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
-    }
-
-    /**
-     * @return string
-     */
-    public function getGoogleAttribute()
-    {
-        $url = null;
-        if (!empty($this->attributes['google_id'])) {
-            $url = sprintf('http://drive.google.com/uc?export=view&id=%s', $this->attributes['google_id']);
-        }
-
-        return $url;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImgurAttribute()
-    {
-        $url = null;
-        if (!empty($this->attributes['imgur_id'])) {
-            $url = sprintf('http://i.imgur.com/%s.png', $this->attributes['imgur_id']);
-        }
-
-        return $url;
     }
 
     /**

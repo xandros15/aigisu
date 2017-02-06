@@ -7,7 +7,6 @@ use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Aigisu\Models\Handlers\UnitTagsHandler;
 use Aigisu\Models\Unit\CG;
-use Aigisu\Models\Unit\MissingCG;
 use Aigisu\Models\Unit\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -62,25 +61,6 @@ class Unit extends Model
         'tags'
     ];
 
-    /** @var array */
-    protected $hidden = [
-        'link_gc',
-        'link_seesaw',
-    ];
-
-    /** @var array */
-    protected $casts = [
-        'dmm' => 'bool',
-        'nutaku' => 'bool',
-        'special_cg' => 'bool',
-    ];
-
-    /** @var array */
-    protected $appends = [
-        'links',
-        'missingCG'
-    ];
-
     /**
      * @return array
      */
@@ -119,45 +99,6 @@ class Unit extends Model
     public function setTagsAttribute($tagNames)
     {
         $this->tagNames = $tagNames;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLinksAttribute() : array
-    {
-        return [
-            'seesaw' => $this->link_seesaw,
-            'gc' => $this->link_gc
-        ];
-    }
-
-
-
-    /**
-     * @return array
-     */
-    public function getMissingCGAttribute() : array
-    {
-        $missing = new MissingCG();
-        if ($this->gender === self::GENDER_FEMALE) {
-            $missing->attachCGCollection($this->cg);
-            $missing->filterArchival();
-
-            if ($this->dmm) {
-                $missing->applyDmm();
-            }
-
-            if ($this->special_cg) {
-                $missing->applySpecialDmm();
-            }
-
-            if ($this->nutaku) {
-                $missing->applyNutaku();
-            }
-        }
-
-        return $missing->toArray();
     }
 
     /**

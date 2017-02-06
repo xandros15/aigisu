@@ -23,11 +23,6 @@ class Tag extends Model
         'name'
     ];
 
-    /** @var array */
-    protected $hidden = [
-        'pivot'
-    ];
-
     /**
      * @param array $names
      * @return Collection

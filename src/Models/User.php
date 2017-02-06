@@ -29,14 +29,6 @@ class User extends Model
         'role',
     ];
 
-    protected $hidden = [
-        'password',
-        'access_token',
-        'recovery_hash',
-        'remember_identifier',
-        'remember_hash',
-    ];
-
     /**
      * @param string $password
      */
