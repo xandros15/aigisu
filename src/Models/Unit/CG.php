@@ -6,6 +6,7 @@ namespace Aigisu\Models\Unit;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Aigisu\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Slim\Http\Request;
 
@@ -18,6 +19,8 @@ use Slim\Http\Request;
  * @property string $local
  * @property string $google
  * @property string $imgur
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class CG extends Model
 {
