@@ -17,8 +17,9 @@ use Slim\Http\Request;
  * @property int $id
  * @property bool $archival
  * @property string $local
- * @property string $google
- * @property string $imgur
+ * @property string $google_id
+ * @property string $imgur_id
+ * @property string $imgur_delhash
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
