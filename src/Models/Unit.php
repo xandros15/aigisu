@@ -15,7 +15,7 @@ use Slim\Http\Request;
 
 /**
  * @property string $name
- * @property string $kanji
+ * @property string $japanese_name
  * @property string $link_seesaw
  * @property string $link_gc
  * @property string $rarity
@@ -45,7 +45,7 @@ class Unit extends Model
     /** @var array */
     protected $fillable = [
         'name',
-        'kanji',
+        'japanese_name',
         'link_seesaw',
         'link_gc',
         'rarity',

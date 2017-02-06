@@ -34,7 +34,7 @@ class Units implements Table
 
         $table->increments('id')->unsigned();
         $table->string('name', 25);
-        $table->string('kanji', 45);
+        $table->string('japanese_name', 45);
         $table->string('icon');
         $table->string('link_seesaw', 100)->nullable();
         $table->string('link_gc', 100)->nullable();

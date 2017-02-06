@@ -25,7 +25,7 @@ class CreateUnitValidator extends Validator
     {
         return [
             'name' => v::alpha('_')->noWhitespace(),
-            'kanji' => v::stringType(),
+            'japanese_name' => v::stringType(),
             'link_seesaw' => new Optional(v::url()),
             'link_gc' => v::url(),
             'rarity' => v::in(Unit::getRarities()),
