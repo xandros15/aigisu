@@ -11,6 +11,7 @@ namespace Aigisu\Api\Middlewares\Access;
 
 use Aigisu\Api\Messages;
 use Aigisu\Api\Middlewares\Middleware;
+use Aigisu\Components\Http\ForbiddenException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -21,15 +22,15 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
      * @param Response $response
      * @param callable $next
      * @return Response
+     * @throws ForbiddenException
      */
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
-        if ($this->hasAccess($request)) {
-            $response = $next($request, $response);
-        } else {
-            $response = $response->withStatus(self::STATUS_FORBIDDEN);
+        if (!$this->hasAccess($request)) {
+            throw new ForbiddenException($request, $response);
         }
 
+        $response = $next($request, $response);
         return $response;
     }
 
@@ -50,6 +51,14 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
     }
 
     /**
+     * @return array
+     */
+    protected function getAccessList() : array
+    {
+        return $this->get('access');
+    }
+
+    /**
      * @param string $role
      * @return int
      */
@@ -62,14 +71,6 @@ abstract class AbstractAccessMiddleware extends Middleware implements Messages
         }
 
         throw new \RuntimeException('Access role not found');
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAccessList() : array
-    {
-        return $this->get('access');
     }
 
     /**
