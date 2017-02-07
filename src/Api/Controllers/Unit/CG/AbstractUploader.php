@@ -9,13 +9,13 @@
 namespace Aigisu\Api\Controllers\Unit\CG;
 
 
-use Aigisu\Api\Controllers\Controller;
+use Aigisu\Api\Controllers\AbstractController;
 use Aigisu\Models\Unit\CG;
 use RuntimeException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class AbstractUploader extends Controller
+abstract class AbstractUploader extends AbstractController
 {
     const UNIT_ID = 'unitId';
 

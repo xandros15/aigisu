@@ -14,7 +14,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class AuthController extends Controller
+class AuthController extends AbstractController
 {
     /**
      * @param Request $request

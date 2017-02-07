@@ -13,7 +13,7 @@ use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @param Request $request

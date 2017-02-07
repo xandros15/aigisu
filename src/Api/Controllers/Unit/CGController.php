@@ -9,13 +9,13 @@
 namespace Aigisu\Api\Controllers\Unit;
 
 
-use Aigisu\Api\Controllers\Controller;
+use Aigisu\Api\Controllers\AbstractController;
 use Aigisu\Api\Transformers\CGTransformerFacade;
 use Aigisu\Models\Unit\CG;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class CGController extends Controller
+class CGController extends AbstractController
 {
     const UNIT_INDEX = 'unitId';
 

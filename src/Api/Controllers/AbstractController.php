@@ -14,7 +14,7 @@ use Aigisu\Core\ActiveContainer;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class Controller extends ActiveContainer implements Messages
+abstract class AbstractController extends ActiveContainer implements Messages
 {
     const EXTENDED = 'extended';
     const HEADER_LOCATION = 'Location';

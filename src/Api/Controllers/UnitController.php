@@ -7,7 +7,7 @@ use Aigisu\Models\Unit;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UnitController extends Controller
+class UnitController extends AbstractController
 {
 
     /**
