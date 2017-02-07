@@ -9,7 +9,7 @@
 namespace Aigisu\Api\Controllers;
 
 
-use Aigisu\Components\Http\NotAllowedException;
+use Aigisu\Components\Http\UnauthorizedException;
 use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -83,12 +83,12 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws NotAllowedException
+     * @throws UnauthorizedException
      */
     public function actionGetCurrent(Request $request, Response $response) : Response
     {
         if ($request->getAttribute('is_guest')) {
-            throw new NotAllowedException($request, $response);
+            throw new UnauthorizedException($request, $response);
         }
 
         return $this->retrieve($response, $request->getAttribute('user')->toArray());

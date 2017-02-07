@@ -13,11 +13,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\SlimException;
 
-class NotAllowedException extends SlimException
+class ForbiddenException extends SlimException
 {
+    /**
+     * ForbiddenException constructor.
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         parent::__construct($request, $response->withStatus(403));
     }
-
 }
