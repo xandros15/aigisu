@@ -9,6 +9,7 @@
 namespace Aigisu\Api\Controllers;
 
 
+use Aigisu\Components\Http\NotAllowedException;
 use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -82,15 +83,14 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws NotAllowedException
      */
     public function actionGetCurrent(Request $request, Response $response) : Response
     {
         if ($request->getAttribute('is_guest')) {
-            $response = $response->withStatus(403);
-        } else {
-            $response = $this->retrieve($response, $request->getAttribute('user')->toArray());
+            throw new NotAllowedException($request, $response);
         }
 
-        return $response;
+        return $this->retrieve($response, $request->getAttribute('user')->toArray());
     }
 }
