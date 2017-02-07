@@ -9,8 +9,8 @@
 namespace Aigisu\Api\Middlewares;
 
 
-use Aigisu\Api\Messages;
 use Aigisu\Api\Middlewares\Validators\Rules\Optional;
+use Aigisu\Components\Http\BadRequestException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -20,13 +20,6 @@ use SplFileInfo;
 abstract class Validator extends Middleware
 {
     const MESSAGE = 'message';
-    const
-        STATUS_BAD_REQUEST = 400,
-        STATUS_UNAUTHORIZED = 401,
-        STATUS_FORBIDDEN = 403,
-        STATUS_NOT_FOUND = 404,
-        STATUS_METHOD_NOT_ALLOWED = 405,
-        STATUS_SERVER_ERROR = 500;
 
     /**
      * @var array
@@ -38,17 +31,19 @@ abstract class Validator extends Middleware
      * @param Response $response
      * @param callable $next
      * @return Response
+     * @throws BadRequestException
      */
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
-        if ($this->validate($request) && $this->validateFiles($request)) {
-            return $next($request, $response);
+        if (!$this->validate($request) || !$this->validateFiles($request)) {
+            $response = $response->withJson([
+                self::MESSAGE => $this->getErrors(),
+            ]);
+
+            throw new BadRequestException($request, $response);
         }
 
-        //@todo correct response message
-        return $response->withJson([
-            self::MESSAGE => $this->getErrors(),
-        ], self::STATUS_BAD_REQUEST);
+        return $next($request, $response);
     }
 
     /**
