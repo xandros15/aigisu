@@ -73,7 +73,7 @@ class CGController extends AbstractController
         $cg->uploadCG($request);
         $cg->saveOrFail();
 
-        return $this->update($response);
+        return $this->updated($response);
     }
 
     /**
@@ -84,7 +84,7 @@ class CGController extends AbstractController
     public function actionDelete(Request $request, Response $response): Response
     {
         $this->findCGOrFail($request)->delete();
-        return $this->delete($response);
+        return $this->deleted($response);
     }
 
     /**

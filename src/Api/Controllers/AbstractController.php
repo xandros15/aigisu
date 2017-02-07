@@ -67,7 +67,7 @@ abstract class AbstractController extends ActiveContainer implements Messages
      * @param Response $response
      * @return Response
      */
-    protected function delete(Response $response) : Response
+    protected function deleted(Response $response) : Response
     {
         return $response->withStatus(self::STATUS_OK);
     }
@@ -76,7 +76,7 @@ abstract class AbstractController extends ActiveContainer implements Messages
      * @param Response $response
      * @return Response
      */
-    protected function update(Response $response) : Response
+    protected function updated(Response $response) : Response
     {
         return $response->withStatus(self::STATUS_OK);
     }

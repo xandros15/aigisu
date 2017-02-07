@@ -62,7 +62,7 @@ class UserController extends AbstractController
         $user->fill($request->getParams());
         $user->saveOrFail();
 
-        return $this->update($response);
+        return $this->updated($response);
     }
 
     /**
@@ -76,7 +76,7 @@ class UserController extends AbstractController
         $user = User::findOrFail($request->getAttribute('id'));
         $user->delete();
 
-        return $this->delete($response);
+        return $this->deleted($response);
     }
 
     /**

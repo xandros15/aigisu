@@ -63,7 +63,7 @@ class UnitController extends AbstractController
         $unit = Unit::findOrFail($this->getID($request));
         $unit->saveUnitModel($request);
 
-        return $this->update($response);
+        return $this->updated($response);
     }
 
     /**
@@ -75,7 +75,7 @@ class UnitController extends AbstractController
     {
         Unit::findOrFail($this->getID($request))->delete();
 
-        return $this->delete($response);
+        return $this->deleted($response);
     }
 
     /**

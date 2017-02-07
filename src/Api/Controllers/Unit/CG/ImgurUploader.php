@@ -40,7 +40,7 @@ class ImgurUploader extends AbstractUploader
             'imgur_delhash' => null
         ])->saveOrFail();
 
-        return $this->delete($response);
+        return $this->deleted($response);
     }
 
     /**
@@ -89,7 +89,7 @@ class ImgurUploader extends AbstractUploader
         ])->saveOrFail();
         $imgur->deleteImage($id);
 
-        return $this->update($response);
+        return $this->updated($response);
     }
 
     /**
