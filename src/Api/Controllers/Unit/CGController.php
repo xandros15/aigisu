@@ -10,6 +10,7 @@ namespace Aigisu\Api\Controllers\Unit;
 
 
 use Aigisu\Api\Controllers\Controller;
+use Aigisu\Api\Transformers\CGTransformerFacade;
 use Aigisu\Models\Unit\CG;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -25,11 +26,11 @@ class CGController extends Controller
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        $cgs = CG::where('unit_id', $this->getUnitID($request))
-            ->with($this->getExtendedParam($request))
-            ->get();
+        $expand = $this->getExtendedParam($request);
+        $cgs = CG::where('unit_id', $this->getUnitID($request))->with($expand)->get();
+        $cgs = CGTransformerFacade::transformAll($cgs, $this->get('router'), $expand);
 
-        return $response->withJson($cgs->toArray(), self::STATUS_OK);
+        return $response->withJson($cgs, self::STATUS_OK);
     }
 
     /**
@@ -39,7 +40,11 @@ class CGController extends Controller
      */
     public function actionView(Request $request, Response $response): Response
     {
-        return $response->withJson($this->findCGOrFail($request)->toArray(), self::STATUS_OK);
+        $expand = $this->getExtendedParam($request);
+        $cg = $this->findCGOrFail($request);
+        $cg = CGTransformerFacade::transform($cg, $this->get('router'), $expand);
+
+        return $response->withJson($cg, self::STATUS_OK);
     }
 
     /**
