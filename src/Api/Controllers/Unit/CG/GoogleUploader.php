@@ -35,7 +35,7 @@ class GoogleUploader extends AbstractUploader
         $driveManager->delete($id);
         $cg->setAttribute('google_id', null)->saveOrFail();
 
-        return $response->withStatus(self::STATUS_OK);
+        return $this->delete($response);
     }
 
     /**
@@ -61,7 +61,7 @@ class GoogleUploader extends AbstractUploader
 
         $cg->setAttribute('google_id', $driveFile->getId())->saveOrFail();
 
-        return $response->withStatus(self::STATUS_CREATED)->withHeader('Location', $this->getLocation($request));
+        return $this->created($response, $this->getLocation($request));
     }
 
     /**
@@ -84,7 +84,7 @@ class GoogleUploader extends AbstractUploader
             'filename' => $this->getImageFileName($cg),
         ]);
 
-        return $response->withStatus(self::STATUS_OK);
+        return $this->update($response);
     }
 
     /**

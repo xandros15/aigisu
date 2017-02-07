@@ -30,7 +30,7 @@ class CGController extends AbstractController
         $cgs = CG::where('unit_id', $this->getUnitID($request))->with($expand)->get();
         $cgs = CGTransformerFacade::transformAll($cgs, $this->get('router'), $expand);
 
-        return $response->withJson($cgs, self::STATUS_OK);
+        return $this->retrieve($response, $cgs);
     }
 
     /**
@@ -44,7 +44,7 @@ class CGController extends AbstractController
         $cg = $this->findCGOrFail($request);
         $cg = CGTransformerFacade::transform($cg, $this->get('router'), $expand);
 
-        return $response->withJson($cg, self::STATUS_OK);
+        return $this->retrieve($response, $cg);
     }
 
     /**
@@ -58,7 +58,7 @@ class CGController extends AbstractController
         $cg->uploadCG($request);
         $cg->saveOrFail();
 
-        return $this->created($response, $cg->getKey());
+        return $this->created($response, $this->get('router')->pathFor('api.unit.cg.view', ['id' => $cg->getKey()]));
     }
 
     /**
@@ -73,7 +73,7 @@ class CGController extends AbstractController
         $cg->uploadCG($request);
         $cg->saveOrFail();
 
-        return $response->withStatus(self::STATUS_OK);
+        return $this->update($response);
     }
 
     /**
@@ -84,7 +84,7 @@ class CGController extends AbstractController
     public function actionDelete(Request $request, Response $response): Response
     {
         $this->findCGOrFail($request)->delete();
-        return $response->withStatus(self::STATUS_OK);
+        return $this->delete($response);
     }
 
     /**

@@ -22,7 +22,7 @@ class UserController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        return $response->withJson(User::all()->toArray(), self::STATUS_OK);
+        return $this->retrieve($response, User::all()->toArray());
     }
 
     /**
@@ -34,7 +34,7 @@ class UserController extends AbstractController
     {
         $user = User::findOrFail($request->getAttribute('id'));
 
-        return $response->withJson($user->toArray(), self::STATUS_OK);
+        return $this->retrieve($response, $user->toArray());
     }
 
     /**
@@ -47,7 +47,7 @@ class UserController extends AbstractController
         $user = new User($request->getParams());
         $user->saveOrFail();
 
-        return $response->withJson($user->toArray(), self::STATUS_CREATED);
+        return $this->created($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
     }
 
     /**
@@ -61,7 +61,7 @@ class UserController extends AbstractController
         $user->fill($request->getParams());
         $user->saveOrFail();
 
-        return $response->withJson($user->toArray(), self::STATUS_OK);
+        return $this->update($response);
     }
 
     /**
@@ -75,7 +75,7 @@ class UserController extends AbstractController
         $user = User::findOrFail($request->getAttribute('id'));
         $user->delete();
 
-        return $response->withJson($user->toArray(), self::STATUS_OK);
+        return $this->delete($response);
     }
 
     /**
@@ -88,7 +88,7 @@ class UserController extends AbstractController
         if ($request->getAttribute('is_guest')) {
             $response = $response->withStatus(403);
         } else {
-            $response = $response->withJson($request->getAttribute('user')->toArray());
+            $response = $this->retrieve($response, $request->getAttribute('user')->toArray());
         }
 
         return $response;
