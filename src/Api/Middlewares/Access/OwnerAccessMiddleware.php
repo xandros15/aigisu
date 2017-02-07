@@ -9,7 +9,7 @@
 namespace Aigisu\Api\Middlewares\Access;
 
 
-use Aigisu\Api\Models\User;
+use Aigisu\Models\User;
 use Slim\Http\Request;
 
 class OwnerAccessMiddleware extends AbstractAccessMiddleware
