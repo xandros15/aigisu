@@ -16,6 +16,10 @@ use Slim\Http\Response;
 
 abstract class AbstractController extends ActiveContainer implements Messages
 {
+    const
+        STATUS_OK = 200,
+        STATUS_CREATED = 201;
+
     const EXTENDED = 'extended';
     const HEADER_LOCATION = 'Location';
     const INDEX = 'id';
