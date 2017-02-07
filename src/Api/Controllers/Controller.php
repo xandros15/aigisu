@@ -52,4 +52,32 @@ abstract class Controller extends ActiveContainer implements Messages
             ->withStatus(self::STATUS_CREATED)
             ->withHeader(self::HEADER_LOCATION, $path);
     }
+
+    /**
+     * @param Response $response
+     * @param array $data
+     * @return Response
+     */
+    protected function retrieve(Response $response, array $data) : Response
+    {
+        return $response->withJson($data, self::STATUS_OK);
+    }
+
+    /**
+     * @param Response $response
+     * @return Response
+     */
+    protected function delete(Response $response) : Response
+    {
+        return $response->withStatus(self::STATUS_OK);
+    }
+
+    /**
+     * @param Response $response
+     * @return Response
+     */
+    protected function update(Response $response) : Response
+    {
+        return $response->withStatus(self::STATUS_OK);
+    }
 }
