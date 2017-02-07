@@ -21,9 +21,7 @@ abstract class Validator extends Middleware
 {
     const MESSAGE = 'message';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $errors;
 
     /**
