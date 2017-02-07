@@ -50,7 +50,7 @@ class AuthController extends AbstractController
         if (!isset($parsedBody['client_id']) && isset($parsedBody['username'])) {
             $parsedBody['client_id'] = $parsedBody['username'];
         }
-        
+
         return $request->withParsedBody($parsedBody);
     }
 }
