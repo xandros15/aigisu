@@ -9,13 +9,12 @@
 namespace Aigisu\Api\Middlewares\Access;
 
 
-use Aigisu\Api\Messages;
 use Aigisu\Api\Middlewares\Middleware;
 use Aigisu\Components\Http\ForbiddenException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class AbstractAccessMiddleware extends Middleware implements Messages
+abstract class AbstractAccessMiddleware extends Middleware
 {
     /**
      * @param Request $request

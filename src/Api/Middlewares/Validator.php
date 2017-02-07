@@ -17,7 +17,7 @@ use Slim\Http\Response;
 use Slim\Http\UploadedFile;
 use SplFileInfo;
 
-abstract class Validator extends Middleware implements Messages
+abstract class Validator extends Middleware
 {
     const MESSAGE = 'message';
     const

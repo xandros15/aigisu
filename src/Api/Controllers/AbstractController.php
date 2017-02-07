@@ -9,12 +9,11 @@
 namespace Aigisu\Api\Controllers;
 
 
-use Aigisu\Api\Messages;
 use Aigisu\Core\ActiveContainer;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class AbstractController extends ActiveContainer implements Messages
+abstract class AbstractController extends ActiveContainer
 {
     const
         STATUS_OK = 200,
