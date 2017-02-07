@@ -19,6 +19,14 @@ use SplFileInfo;
 
 abstract class Validator extends Middleware implements Messages
 {
+    const MESSAGE = 'message';
+    const
+        STATUS_BAD_REQUEST = 400,
+        STATUS_UNAUTHORIZED = 401,
+        STATUS_FORBIDDEN = 403,
+        STATUS_NOT_FOUND = 404,
+        STATUS_METHOD_NOT_ALLOWED = 405,
+        STATUS_SERVER_ERROR = 500;
 
     /**
      * @var array
