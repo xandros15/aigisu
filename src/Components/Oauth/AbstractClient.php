@@ -9,7 +9,7 @@
 namespace Aigisu\Components\Oauth;
 
 
-use Aigisu\Api\Models\User;
+use Aigisu\Models\User;
 
 abstract class AbstractClient
 {
