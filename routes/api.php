@@ -14,7 +14,6 @@ use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
-use Aigisu\Api\Middlewares\AddCurrentUserMiddleware;
 use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
@@ -26,7 +25,6 @@ use Aigisu\Api\Middlewares\Validators\UpdateCGValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
 use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
-use Aigisu\Components\Oauth\ClientToUserMiddleware;
 
 /** @var $this \Slim\App */
 $this->group('/users', function () {
@@ -141,10 +139,9 @@ $this->group('/units', function () {
     });
 });
 
-$this->post('/auth', AuthController::class . ':actionCreate')->add(new ClientToUserMiddleware());
+$this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware($this->getContainer()));
 $this->add(new UploadedFilesMiddleware($this->getContainer()));
-$this->add(new AddCurrentUserMiddleware($this->getContainer()));
 
 
 $this->add(function ($request, $response, $next) {

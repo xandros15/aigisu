@@ -8,12 +8,6 @@
 use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Imgur\Imgur;
-use Aigisu\Components\Oauth\AccessTokenRepository;
-use Aigisu\Components\Oauth\BearerTokenResponse;
-use Aigisu\Components\Oauth\ClientRepository;
-use Aigisu\Components\Oauth\RefreshTokenRepository;
-use Aigisu\Components\Oauth\ScopeRepository;
-use Aigisu\Components\Oauth\UserRepository;
 use Aigisu\Core\Response;
 use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
@@ -22,10 +16,6 @@ use Illuminate\Database\Connectors\ConnectionFactory;
 use Interop\Container\ContainerInterface;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\Grant\PasswordGrant;
-use League\OAuth2\Server\Grant\RefreshTokenGrant;
-use League\OAuth2\Server\ResourceServer;
 use Slim\Http\Headers;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
@@ -52,40 +42,6 @@ return [
     },
     Imgur::class => function () {
         return new Imgur(require __DIR__ . '/imgur.php');
-    },
-    AuthorizationServer::class => function (ContainerInterface $container) {
-        $connection = $container->get(Connection::class);
-
-        // Setup the authorization server
-        $server = new AuthorizationServer(
-            new ClientRepository($container->get('siteUrl')),
-            new AccessTokenRepository($connection),
-            new ScopeRepository([]),
-            'file://' . __DIR__ . '/oauth/private.key',
-            'file://' . __DIR__ . '/oauth/public.key',
-            new BearerTokenResponse()
-        );
-
-        $grants = [
-            new PasswordGrant(new UserRepository(), new RefreshTokenRepository($connection)),
-            new RefreshTokenGrant(new RefreshTokenRepository($connection)),
-        ];
-
-        foreach ($grants as $grant) {
-            /** @var $grant \League\OAuth2\Server\Grant\GrantTypeInterface */
-            $grant->setRefreshTokenTTL(new \DateInterval('P999Y')); //Refresh token should no expired
-            $server->enableGrantType($grant, new \DateInterval('P1D'));
-        }
-
-        return $server;
-    },
-    ResourceServer::class => function (ContainerInterface $container) {
-        $server = new ResourceServer(
-            new AccessTokenRepository($container->get(Connection::class)),
-            'file://' . __DIR__ . '/oauth/public.key'
-        );
-
-        return $server;
     },
     Dispatcher::class => function (ContainerInterface $container) {
         $callbacks = require_once __DIR__ . '/callbacks.php';
