@@ -9,18 +9,6 @@
 namespace Aigisu\Api\Middlewares;
 
 
-use Slim\Http\Request;
-
 abstract class Middleware extends \Aigisu\Core\Middleware
 {
-    const INDEX = 'id';
-
-    /**
-     * @param Request $request
-     * @return int
-     */
-    protected function getID(Request $request) : int
-    {
-        return $request->getAttribute('route')->getArgument(self::INDEX, 0);
-    }
 }
