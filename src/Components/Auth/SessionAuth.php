@@ -31,7 +31,7 @@ class SessionAuth
      */
     public function isGuest() : bool
     {
-        return isset($_SESSION[self::SESSION_FIELD]);
+        return !isset($_SESSION[self::SESSION_FIELD]);
     }
 
     /**
