@@ -46,6 +46,7 @@ class JWTAuthMiddleware extends Middleware
      * @param Request $request
      * @return Request
      * @throws InvalidTokenException
+     * @throws InvalidUserIdException
      */
     private function authorizeRequest(Request $request) : Request
     {
@@ -61,7 +62,7 @@ class JWTAuthMiddleware extends Middleware
             }
 
             if (!$user = User::find($token->getHeader('jti'))) {
-                throw new InvalidTokenException("Owner token not found");
+                throw new InvalidUserIdException("Owner token not found");
             }
 
             $request = $request->withAttribute('user', $user)->withAttribute('is_guest', false);
