@@ -30,6 +30,15 @@ class User extends Model
     ];
 
     /**
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmail(string $email)
+    {
+        return static::where(['email' => $email])->get()->first();
+    }
+
+    /**
      * @param string $password
      */
     public function setPasswordAttribute($password)

@@ -47,4 +47,7 @@ return [
     'isDebug' => function (Configuration $container) {
         return $container->get('settings')->get('displayErrorDetails');
     },
+    'auth' => function () {
+        return require __DIR__ . '/auth.php';
+    },
 ];

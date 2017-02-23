@@ -9,7 +9,9 @@
 namespace Aigisu\Api\Controllers;
 
 
-use Slim\Exception\NotFoundException;
+use Aigisu\Components\Auth\JWTAuth;
+use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -19,10 +21,21 @@ class AuthController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     public function actionCreate(Request $request, Response $response) : Response
     {
-        throw new NotFoundException($request, $response);
+        $user = User::findByEmail($request->getParam('email'));
+        if (!$user || !$user->validatePassword($request->getParam('password', ''))) {
+            throw new UnauthorizedException($request, $response);
+        }
+
+        $auth = new JWTAuth($this->get('auth'));
+        $token = $auth->createToken($user->getKey());
+        return $this->retrieve($response, [
+            'token' => (string)$token,
+            'expires_at' => $token->getClaim('exp'),
+            'token_type' => "Bearer",
+        ]);
     }
 }
