@@ -32,7 +32,7 @@ class AuthController extends Controller
             //@todo add alert: you was logged
         }
 
-        return $response->withRedirect('/');
+        return $this->goHome($response);
     }
 
     /**
@@ -48,6 +48,7 @@ class AuthController extends Controller
             throw new BadRequestException($request, $response);
         }
         $auth->singOut();
-        return $response->withRedirect('/');
+
+        return $this->goHome($response);
     }
 }
