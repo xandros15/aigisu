@@ -9,16 +9,25 @@
 namespace Aigisu\Components\Auth;
 
 
+use Aigisu\Models\User;
+
 class SessionAuth
 {
     const SESSION_FIELD = 'user_id';
 
     /**
-     * @param int $id
+     * @param string $email
+     * @param string $password
+     * @return bool
      */
-    public function signIn(int $id) : void
+    public function signIn(string $email, string $password) : bool
     {
-        $_SESSION[self::SESSION_FIELD] = $id;
+        if (($user = User::findByEmail($email)) && $user->validatePassword($password)) {
+            $_SESSION[self::SESSION_FIELD] = $user->getKey();
+            return true;
+        }
+
+        return false;
     }
 
     public function singOut() : void

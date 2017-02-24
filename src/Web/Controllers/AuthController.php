@@ -10,7 +10,7 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Auth\SessionAuth;
-use Aigisu\Models\User;
+use Aigisu\Components\Http\BadRequestException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -20,19 +20,15 @@ class AuthController extends Controller
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws BadRequestException
      */
     public function actionSignin(Request $request, Response $response) : Response
     {
         $auth = new SessionAuth();
         if (!$auth->isGuest()) {
-            if (($user = User::findByEmail($request->getParam('email'))) &&
-                $user->validatePassword($request->getParam('password'))
-            ) {
-                $auth->signIn($user->getKey());
-            } else {
-                //@todo add alert: bad authorize and go back to form
-            }
-        } else {
+            throw new BadRequestException($request, $response);
+        }
+        if (!$auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
             //@todo add alert: you was logged
         }
 
@@ -42,16 +38,16 @@ class AuthController extends Controller
     /**
      * @param Request $request
      * @param Response $response
-     * @param Response $response
+     * @throws BadRequestException
      * @return Response
      */
     public function actionSignout(Request $request, Response $response) : Response
     {
         $auth = new SessionAuth();
-        if (!$auth->isGuest()) {
-            $auth->singOut();
+        if ($auth->isGuest()) {
+            throw new BadRequestException($request, $response);
         }
-
+        $auth->singOut();
         return $response->withRedirect('/');
     }
 }
