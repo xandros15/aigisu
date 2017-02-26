@@ -17,6 +17,13 @@ class MissingCG
     /** @var Collection */
     private $collection;
 
+    private $default = [
+        'is_male' => false,
+        'is_dmm' => false,
+        'is_nutaku' => false,
+        'is_special_cg' => false,
+    ];
+
     /** @var array */
     private $requiredMap = [
         'dmm' => [
@@ -52,41 +59,42 @@ class MissingCG
      * MissingCG constructor.
      * @param array $collection
      */
-    public function __construct(array $collection)
+    public function __construct($collection)
     {
-        $this->collection = new Collection($collection);
+        /** @var $collection Collection */
+        $collection = !$collection instanceof Collection ? new Collection($collection) : $collection;
+        $collection = $collection->filter(function ($cg) {
+            return !$cg['archival'];
+        });
+        $this->collection = $collection;
     }
 
-    public function filter(array $unit) : array
+    /**
+     * @param $params
+     * @return array
+     */
+    public function filter($params) : array
     {
+        $params = array_merge($this->default, $params);
         $missing = [];
-        if ($unit['gender'] == Unit::GENDER_MALE) {
+        if ($params['is_male']) {
             return $missing;
         }
-        $this->filterArchival();
 
-
-        if ($unit['dmm']) {
+        if ($params['is_dmm']) {
             $missing = array_merge($missing, $this->filterDMM());
         }
 
-        if ($unit['nutaku']) {
+        if ($params['is_nutaku']) {
             $missing = array_merge($missing, $this->filterNutaku());
         }
 
-        if ($unit['special_cg']) {
+        if ($params['is_special_cg']) {
             $missing = array_merge($missing, $this->filterSpecial());
         }
 
 
         return $missing;
-    }
-
-    private function filterArchival() : void
-    {
-        $this->collection = $this->collection->filter(function ($cg) {
-            return !$cg['archival'];
-        });
     }
 
     /**

@@ -13,8 +13,11 @@ use Aigisu\Models\Unit;
 use Aigisu\Models\Unit\CG;
 use Aigisu\Models\Unit\MissingCG;
 
-class MissingCGValidator extends AbstractValidator
+class MissingCGValidator implements ValidatorInterface
 {
+
+    /** @var array */
+    private $errors = [];
 
     /**
      * @param array $params
@@ -31,45 +34,21 @@ class MissingCGValidator extends AbstractValidator
      */
     public function validate(array $params) : bool
     {
-        $unitId = $this->getUnitId($params);
-        $cgId = $this->getCGId($params);
-        $params = $this->getParams($params, $cgId);
+        $params = $this->parseParams($params, $params['_attributes']['id'] ?? 0);
 
-        if ($params['is_changed'] && !$params['archival']) {
-            if (!$this->isMissing($unitId, $params)) {
-                $this->errors[] = 'This CG isn\'t required';
-            }
+        if (!$this->isMissing($params['_attributes']['unitId'] ?? 0, $params)) {
+            $this->errors[] = 'This CG isn\'t required';
         }
 
         return !$this->errors;
     }
 
-    public function getUnit(int $id)
-    {
-        return Unit::with('cg')->findOrFail($id)->toArray();
-    }
-
-    public function getCG(int $id)
-    {
-        return CG::findOrFail($id)->toArray();
-    }
-
     /**
-     * @param array $params
-     * @return int
+     * @return array
      */
-    protected function getCGId(array $params) : int
+    public function getErrors() : array
     {
-        return $params['_attributes']['id'] ?? 0;
-    }
-
-    /**
-     * @param array $params
-     * @return int
-     */
-    protected function getUnitId(array $params) : int
-    {
-        return $params['_attributes']['unitId'] ?? 0;
+        return $this->errors;
     }
 
     /**
@@ -79,15 +58,20 @@ class MissingCGValidator extends AbstractValidator
      */
     protected function isMissing(int $unitId, array $params) : bool
     {
-        $unit = $this->getUnit($unitId);
+        if ($params['is_changed'] && !$params['archival']) {
+            return false;
+        }
 
+        $unit = Unit::with('cg')->findOrFail($unitId);
         $missing = new MissingCG($unit['cg']);
-        $whatMissing = $missing->filter($unit);
+        $whatMissing = $missing->filter([
+            'is_dmm' => $unit['dmm'],
+            'is_nutaku' => $unit['nutaku'],
+            'is_special_cg' => $unit['spacial_cg'],
+        ]);
 
         foreach ($whatMissing as $missingCG) {
-            if ($missingCG['server'] == $params['server'] &&
-                $missingCG['scene'] == $params['scene']
-            ) {
+            if ($missingCG['server'] == $params['server'] && $missingCG['scene'] == $params['scene']) {
                 return true;
             }
         }
@@ -100,7 +84,7 @@ class MissingCGValidator extends AbstractValidator
      * @param null|int $id
      * @return array
      */
-    private function getParams(array $params, $id = null) : array
+    private function parseParams(array $params, $id = null) : array
     {
         $newParams = $this->getNewParams($params);
         $oldParams = $id ? $this->getOldParams($id) : [];
@@ -129,7 +113,7 @@ class MissingCGValidator extends AbstractValidator
      */
     private function getOldParams(int $cgId) : array
     {
-        $cg = $this->getCG($cgId);
+        $cg = CG::findOrNew($cgId);
         return [
             'server' => (string)$cg['server'],
             'scene' => (int)$cg['scene'],
