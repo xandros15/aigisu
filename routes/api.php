@@ -14,6 +14,7 @@ use Aigisu\Api\Controllers\UserController;
 use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
 use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
+use Aigisu\Api\Middlewares\AccessControlAllowMiddleware;
 use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
@@ -137,11 +138,4 @@ $this->group('/units', function () {
 $this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware($this->getContainer()));
 $this->add(new JWTAuthMiddleware($this->getContainer()));
-
-$this->add(function ($request, $response, $next) {
-    /** @var $response \Slim\Http\Response */
-    $response = $next($request, $response);
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-});
+$this->add(new AccessControlAllowMiddleware());
