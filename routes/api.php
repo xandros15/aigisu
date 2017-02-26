@@ -18,10 +18,7 @@ use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\ValidatorMiddleware;
-use Aigisu\Components\Auth\IsGuestMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
-use Aigisu\Components\Http\AttributesAttachMiddleware;
-use Aigisu\Components\Http\UploadedFilesMiddleware;
 use Aigisu\Components\Validators\ValidatorManager;
 
 /** @var $this \Slim\App */
@@ -139,10 +136,7 @@ $this->group('/units', function () {
 
 $this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware($this->getContainer()));
-$this->add(new UploadedFilesMiddleware($this->getContainer()));
-$this->add(new AttributesAttachMiddleware());
 $this->add(new JWTAuthMiddleware($this->getContainer()));
-$this->add(new IsGuestMiddleware($this->getContainer()));
 
 $this->add(function ($request, $response, $next) {
     /** @var $response \Slim\Http\Response */

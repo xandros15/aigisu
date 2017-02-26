@@ -9,11 +9,11 @@
 namespace Aigisu\Components\Auth;
 
 
-use Aigisu\Core\Middleware;
+use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class IsGuestMiddleware extends Middleware
+class IsGuestMiddleware implements MiddlewareInterface
 {
 
     /**

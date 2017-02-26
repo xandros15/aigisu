@@ -9,13 +9,23 @@
 namespace Aigisu\Components\Http;
 
 
-use Aigisu\Core\Middleware;
-use League\Flysystem\Filesystem;
+use Aigisu\Core\MiddlewareInterface;
+use League\Flysystem\FilesystemInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UploadedFilesMiddleware extends Middleware
+class UploadedFilesMiddleware implements MiddlewareInterface
 {
+    private $filesystem;
+
+    /**
+     * UploadedFilesMiddleware constructor.
+     * @param FilesystemInterface $filesystem
+     */
+    public function __construct(FilesystemInterface $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
 
     /**
      * @param Request $request
@@ -37,11 +47,9 @@ class UploadedFilesMiddleware extends Middleware
     private function withUploadedFiles(Request $request) : Request
     {
         $newFiles = UploadedFile::createFromEnvironment(new FakeEnvironment());
-        $manager = $this->get(Filesystem::class);
-
         foreach ($newFiles as $file) {
             /** @var $file UploadedFile */
-            $file->addManager($manager);
+            $file->addManager($this->filesystem);
         }
 
         return $request->withUploadedFiles($newFiles);
