@@ -51,10 +51,6 @@ return [
     Imgur::class => function () {
         return new Imgur(require __DIR__ . '/imgur.php');
     },
-    Dispatcher::class => function (ContainerInterface $container) {
-        $callbacks = require_once __DIR__ . '/callbacks.php';
-        return new Dispatcher($callbacks, $container);
-    },
     Twig::class => function (ContainerInterface $container) {
         $settings = ($container->get('isDebug')) ? [] : [
             'cache' => $container->get('cache')
