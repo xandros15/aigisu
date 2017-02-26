@@ -6,37 +6,33 @@
  * Time: 14:48
  */
 
-namespace Aigisu\Components\Validators;
+namespace Aigisu\Api\Middlewares;
 
 
+use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Core\MiddlewareInterface;
 use Aigisu\Models\Unit;
 use Aigisu\Models\Unit\CG;
 use Aigisu\Models\Unit\MissingCG;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
-class MissingCGValidator implements ValidatorInterface
+class MissingCGValidatorMiddleware implements MiddlewareInterface
 {
+    const MESSAGE = 'message';
 
     /** @var array */
     private $errors = [];
 
     /**
-     * @param array $params
+     * @param Request $request
      * @return bool
      */
-    public function validateFiles(array $params) : bool
+    public function validate(Request $request) : bool
     {
-        return true;
-    }
+        $params = $this->parseParams($request->getParams(), $request->getAttribute('id', 0));
 
-    /**
-     * @param array $params
-     * @return bool
-     */
-    public function validate(array $params) : bool
-    {
-        $params = $this->parseParams($params, $params['_attributes']['id'] ?? 0);
-
-        if (!$this->isMissing($params['_attributes']['unitId'] ?? 0, $params)) {
+        if (!$this->isMissing($request->getAttribute('unitId'), $params)) {
             $this->errors[] = 'This CG isn\'t required';
         }
 
@@ -49,6 +45,26 @@ class MissingCGValidator implements ValidatorInterface
     public function getErrors() : array
     {
         return $this->errors;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param callable $next
+     * @return Response
+     * @throws BadRequestException
+     */
+    public function __invoke(Request $request, Response $response, callable $next) : Response
+    {
+        if (!$this->validate($request)) {
+            $response = $response->withJson([
+                self::MESSAGE => $this->getErrors(),
+            ]);
+
+            throw new BadRequestException($request, $response);
+        }
+
+        return $next($request, $response);
     }
 
     /**

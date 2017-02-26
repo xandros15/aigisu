@@ -11,7 +11,7 @@ use Aigisu\Components\Imgur\Imgur;
 use Aigisu\Components\Validators\CreateCGValidator;
 use Aigisu\Components\Validators\CreateUnitValidator;
 use Aigisu\Components\Validators\CreateUserValidator;
-use Aigisu\Components\Validators\MissingCGValidator;
+use Aigisu\Components\Validators\MissingCGValidatorMiddleware;
 use Aigisu\Components\Validators\UpdateCGValidator;
 use Aigisu\Components\Validators\UpdateUnitValidator;
 use Aigisu\Components\Validators\UpdateUserValidator;
@@ -84,7 +84,6 @@ return [
             'unit.update' => new UpdateUnitValidator(),
             'cg.create' => new CreateCGValidator(),
             'cg.update' => new UpdateCGValidator(),
-            'cg.missing' => new MissingCGValidator(),
         ]);
     }
 ];

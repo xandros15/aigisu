@@ -17,6 +17,7 @@ use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
 use Aigisu\Api\Middlewares\AccessControlAllowMiddleware;
 use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
+use Aigisu\Api\Middlewares\MissingCGValidatorMiddleware;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\ValidatorMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
@@ -92,7 +93,7 @@ $this->group('/units', function () {
                 $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
                     ->setName('api.unit.cg.update')
                     ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'));
-            })->add(new ValidatorMiddleware($this->getContainer(), 'cg.missing'));
+            })->add(new MissingCGValidatorMiddleware());
 
             $this->group('', function () {
                 $this->group('/{id:\d+}/google', function () {
