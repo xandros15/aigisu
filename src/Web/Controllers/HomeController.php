@@ -9,7 +9,7 @@
 namespace Aigisu\Web\Controllers;
 
 
-class HomeController extends Controller
+class HomeController extends AbstractController
 {
 
 }

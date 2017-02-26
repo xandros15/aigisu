@@ -13,7 +13,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 
-class UnitController extends Controller
+class UnitController extends AbstractController
 {
     /**
      * @param Request $request

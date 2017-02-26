@@ -9,7 +9,7 @@
 namespace Aigisu\Web\Controllers;
 
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
 
 }

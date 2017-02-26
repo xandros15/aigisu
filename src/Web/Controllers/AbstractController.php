@@ -12,7 +12,7 @@ namespace Aigisu\Web\Controllers;
 use Aigisu\Core\ActiveContainer;
 use Slim\Http\Response;
 
-abstract class Controller extends ActiveContainer
+abstract class AbstractController extends ActiveContainer
 {
 
     const HOME_PATH_NAME = 'web.home';
