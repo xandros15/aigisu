@@ -6,13 +6,13 @@
  * Time: 15:43
  */
 
-namespace Aigisu\Api\Middlewares\Access;
+namespace Aigisu\Middlewares\Access;
 
 
 use Aigisu\Models\User;
 use Slim\Http\Request;
 
-class OwnerAccessMiddleware extends AbstractAccessMiddleware
+class AdminAccessMiddleware extends AbstractAccessMiddleware
 {
 
     /**

@@ -6,9 +6,9 @@
  * Time: 15:48
  */
 
-use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
-use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
-use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
+use Aigisu\Middlewares\Access\AdminAccessMiddleware;
+use Aigisu\Middlewares\Access\ModeratorAccessMiddleware;
+use Aigisu\Middlewares\Access\OwnerAccessMiddleware;
 
 return [
     [

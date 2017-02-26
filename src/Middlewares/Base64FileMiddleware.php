@@ -6,7 +6,7 @@
  * Time: 20:00
  */
 
-namespace Aigisu\Api\Middlewares;
+namespace Aigisu\Middlewares;
 
 
 use Aigisu\Components\Http\Base64UploadedFile;

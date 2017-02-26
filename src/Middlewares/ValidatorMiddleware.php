@@ -6,7 +6,7 @@
  * Time: 10:31
  */
 
-namespace Aigisu\Api\Middlewares;
+namespace Aigisu\Middlewares;
 
 
 use Aigisu\Components\Http\BadRequestException;

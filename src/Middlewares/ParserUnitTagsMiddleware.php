@@ -6,7 +6,7 @@
  * Time: 02:09
  */
 
-namespace Aigisu\Api\Middlewares;
+namespace Aigisu\Middlewares;
 
 
 use Aigisu\Core\MiddlewareInterface;

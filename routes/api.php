@@ -11,16 +11,16 @@ use Aigisu\Api\Controllers\Unit\CG\ImgurUploader;
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
-use Aigisu\Api\Middlewares\Access\AdminAccessMiddleware;
-use Aigisu\Api\Middlewares\Access\ModeratorAccessMiddleware;
-use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
-use Aigisu\Api\Middlewares\AccessControlAllowMiddleware;
-use Aigisu\Api\Middlewares\Base64FileMiddleware;
-use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
-use Aigisu\Api\Middlewares\MissingCGValidatorMiddleware;
-use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
-use Aigisu\Api\Middlewares\ValidatorMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
+use Aigisu\Middlewares\Access\AdminAccessMiddleware;
+use Aigisu\Middlewares\Access\ModeratorAccessMiddleware;
+use Aigisu\Middlewares\Access\OwnerAccessMiddleware;
+use Aigisu\Middlewares\AccessControlAllowMiddleware;
+use Aigisu\Middlewares\Base64FileMiddleware;
+use Aigisu\Middlewares\CG\ExtendedServerExceptionHandler;
+use Aigisu\Middlewares\MissingCGValidatorMiddleware;
+use Aigisu\Middlewares\ParserUnitTagsMiddleware;
+use Aigisu\Middlewares\ValidatorMiddleware;
 
 /** @var $this \Slim\App */
 $this->group('/users', function () {

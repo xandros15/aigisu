@@ -6,7 +6,7 @@
  * Time: 15:54
  */
 
-namespace Aigisu\Api\Middlewares\Access;
+namespace Aigisu\Middlewares\Access;
 
 
 use Aigisu\Components\Http\ForbiddenException;

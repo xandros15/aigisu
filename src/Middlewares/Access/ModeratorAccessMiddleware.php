@@ -3,16 +3,16 @@
  * Created by PhpStorm.
  * User: xandros15
  * Date: 2016-10-09
- * Time: 15:43
+ * Time: 15:44
  */
 
-namespace Aigisu\Api\Middlewares\Access;
+namespace Aigisu\Middlewares\Access;
 
 
 use Aigisu\Models\User;
 use Slim\Http\Request;
 
-class AdminAccessMiddleware extends AbstractAccessMiddleware
+class ModeratorAccessMiddleware extends AbstractAccessMiddleware
 {
 
     /**
