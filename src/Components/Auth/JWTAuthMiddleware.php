@@ -9,15 +9,16 @@
 namespace Aigisu\Components\Auth;
 
 
-use Aigisu\Api\Middlewares\AbstractApiMiddleware;
 use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Core\ActiveContainer;
+use Aigisu\Core\MiddlewareInterface;
 use Aigisu\Models\User;
 use InvalidArgumentException;
 use Lcobucci\JWT\Parser;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class JWTAuthMiddleware extends AbstractApiMiddleware
+class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
 {
     const HEADER = 'Authorization';
     const TYPE = 'Bearer';
@@ -54,7 +55,7 @@ class JWTAuthMiddleware extends AbstractApiMiddleware
 
         list($type, $token) = explode(' ', $authHeader);
         if ($type == self::TYPE) {
-            $auth = new JWTAuth($this->getKeyrings());
+            $auth = new JWTAuth($this->getKeyring());
             $token = (new Parser())->parse((string)$token); //throws InvalidArgumentException
 
             if (!$auth->verifyToken($token)) {
@@ -71,7 +72,7 @@ class JWTAuthMiddleware extends AbstractApiMiddleware
         return $request;
     }
 
-    private function getKeyrings(): array
+    private function getKeyring(): array
     {
         return $this->get('auth');
     }
