@@ -38,15 +38,6 @@ abstract class ActiveContainer
 
     /**
      * @param string $name
-     * @return mixed
-     */
-    public function __get(string $name)
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * @param string $name
      * @param null $default
      * @return mixed
      */
