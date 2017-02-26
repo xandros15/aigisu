@@ -12,7 +12,7 @@ namespace Aigisu\Core;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-abstract class Middleware extends ActiveContainer implements MiddlewareInterface
+abstract class AbstractMiddleware extends ActiveContainer implements MiddlewareInterface
 {
     /**
      * @param Request $request

@@ -9,6 +9,6 @@
 namespace Aigisu\Api\Middlewares;
 
 
-abstract class Middleware extends \Aigisu\Core\Middleware
+abstract class AbstractApiMiddleware extends \Aigisu\Core\AbstractMiddleware
 {
 }

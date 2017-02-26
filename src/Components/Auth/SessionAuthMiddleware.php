@@ -9,14 +9,13 @@
 namespace Aigisu\Components\Auth;
 
 
-use Aigisu\Core\Middleware;
+use Aigisu\Core\MiddlewareInterface;
 use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class SessionAuthMiddleware extends Middleware
+class SessionAuthMiddleware implements MiddlewareInterface
 {
-
 
     /**
      * @param Request $request

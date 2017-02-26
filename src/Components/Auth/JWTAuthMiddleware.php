@@ -9,7 +9,7 @@
 namespace Aigisu\Components\Auth;
 
 
-use Aigisu\Api\Middlewares\Middleware;
+use Aigisu\Api\Middlewares\AbstractApiMiddleware;
 use Aigisu\Components\Http\UnauthorizedException;
 use Aigisu\Models\User;
 use InvalidArgumentException;
@@ -17,7 +17,7 @@ use Lcobucci\JWT\Parser;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class JWTAuthMiddleware extends Middleware
+class JWTAuthMiddleware extends AbstractApiMiddleware
 {
     const HEADER = 'Authorization';
     const TYPE = 'Bearer';
