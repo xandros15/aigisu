@@ -9,15 +9,13 @@
 namespace Aigisu\Models\Unit;
 
 
+use Aigisu\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
 
 class MissingCG
 {
     /** @var Collection */
-    private $cg;
-
-    /** @var array */
-    private $missing = [];
+    private $collection;
 
     /** @var array */
     private $requiredMap = [
@@ -52,64 +50,85 @@ class MissingCG
 
     /**
      * MissingCG constructor.
-     * @param null $collection
+     * @param array $collection
      */
-    public function __construct($collection = null)
+    public function __construct(array $collection)
     {
-        $this->cg = $collection instanceof Collection ? $collection : new Collection();
+        $this->collection = new Collection($collection);
     }
 
-    /**
-     * @param Collection $cg
-     */
-    public function attachCGCollection(Collection $cg)
+    public function filter(array $unit) : array
     {
-        $this->missing = [];
-        $this->cg = $cg;
+        $missing = [];
+        if ($unit['gender'] == Unit::GENDER_MALE) {
+            return $missing;
+        }
+        $this->filterArchival();
+
+
+        if ($unit['dmm']) {
+            $missing = array_merge($missing, $this->filterDMM());
+        }
+
+        if ($unit['nutaku']) {
+            $missing = array_merge($missing, $this->filterNutaku());
+        }
+
+        if ($unit['special_cg']) {
+            $missing = array_merge($missing, $this->filterSpecial());
+        }
+
+
+        return $missing;
     }
 
-    public function filterArchival()
+    private function filterArchival() : void
     {
-        $this->cg = $this->cg->filter(function (CG $cg) {
-            return $cg->archival === false;
+        $this->collection = $this->collection->filter(function ($cg) {
+            return !$cg['archival'];
         });
-    }
-
-    public function applyNutaku()
-    {
-        $this->applyIfNotFound($this->requiredMap['nutaku']);
-    }
-
-    public function applyDmm()
-    {
-        $this->applyIfNotFound($this->requiredMap['dmm']);
-    }
-
-    public function applySpecialDmm()
-    {
-        $this->applyIfNotFound($this->requiredMap['special']);
     }
 
     /**
      * @return array
      */
-    public function toArray() : array
+    private function filterNutaku() : array
     {
-        return $this->missing;
+        return $this->applyIfNotFound($this->requiredMap['nutaku']);
+    }
+
+    /**
+     * @return array
+     */
+    private function filterDMM() : array
+    {
+        return $this->applyIfNotFound($this->requiredMap['dmm']);
+    }
+
+    /**
+     * @return array
+     */
+    private function filterSpecial() : array
+    {
+        return $this->applyIfNotFound($this->requiredMap['special']);
     }
 
     /**
      * @param array $requiredMap
+     * @return array
      */
-    protected function applyIfNotFound(array $requiredMap)
+    private function applyIfNotFound(array $requiredMap) : array
     {
+        $missing = [];
         foreach ($requiredMap as $required) {
-            $hasCG = $this->cg->contains(function (CG $cg) use ($required) {
-                return $cg->scene == $required['scene'] && $cg->server == $required['server'];
+            $hasCG = $this->collection->contains(function ($cg) use ($required) {
+                return $cg['scene'] == $required['scene'] && $cg['server'] == $required['server'];
             });
             if (!$hasCG) {
-                $this->missing[] = $required;
+                $missing[] = $required;
             }
         }
+
+        return $missing;
     }
 }
