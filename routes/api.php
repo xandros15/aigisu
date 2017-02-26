@@ -20,7 +20,6 @@ use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Api\Middlewares\ValidatorMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
-use Aigisu\Components\Validators\ValidatorManager;
 
 /** @var $this \Slim\App */
 $this->group('/users', function () {
@@ -39,11 +38,11 @@ $this->group('/users', function () {
         /** @var $this \Slim\App */
         $this->post('', UserController::class . ':actionCreate')
             ->setName('api.user.create')
-            ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('user.create')));
+            ->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
 
         $this->post('/{id:\d+}', UserController::class . ':actionUpdate')
             ->setName('api.user.update')
-            ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('user.update')));
+            ->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
 
         $this->delete('/{id:\d+}', UserController::class . ':actionDelete')
             ->setName('api.user.delete');
@@ -59,11 +58,11 @@ $this->group('/units', function () {
         $this->group('', function () {
             $this->post('', UnitController::class . ':actionCreate')
                 ->setName('api.unit.create')
-                ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('unit.create')));
+                ->add(new ValidatorMiddleware($this->getContainer(), 'unit.create'));
 
             $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
                 ->setName('api.unit.update')
-                ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('unit.update')));
+                ->add(new ValidatorMiddleware($this->getContainer(), 'unit.update'));
         })->add(new ParserUnitTagsMiddleware());
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
@@ -88,12 +87,12 @@ $this->group('/units', function () {
             $this->group('', function () {
                 $this->post('', CGController::class . ':actionCreate')
                     ->setName('api.unit.cg.create')
-                    ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.create')));
+                    ->add(new ValidatorMiddleware($this->getContainer(), 'cg.create'));
 
                 $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
                     ->setName('api.unit.cg.update')
-                    ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.update')));
-            })->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.missing')));
+                    ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'));
+            })->add(new ValidatorMiddleware($this->getContainer(), 'cg.missing'));
 
             $this->group('', function () {
                 $this->group('/{id:\d+}/google', function () {

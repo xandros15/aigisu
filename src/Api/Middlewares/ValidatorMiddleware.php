@@ -11,7 +11,9 @@ namespace Aigisu\Api\Middlewares;
 
 use Aigisu\Components\Http\BadRequestException;
 use Aigisu\Components\Validators\ValidatorInterface;
+use Aigisu\Components\Validators\ValidatorManager;
 use Aigisu\Core\MiddlewareInterface;
+use Interop\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -24,11 +26,12 @@ class ValidatorMiddleware implements MiddlewareInterface
 
     /**
      * ValidatorMiddleware constructor.
-     * @param ValidatorInterface $validator
+     * @param ContainerInterface $container
+     * @param string $validatorName
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(ContainerInterface $container, string $validatorName)
     {
-        $this->validator = $validator;
+        $this->setValidator($container->get(ValidatorManager::class)->get($validatorName));
     }
 
     /**
@@ -51,5 +54,13 @@ class ValidatorMiddleware implements MiddlewareInterface
         }
 
         return $next($request, $response);
+    }
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    private function setValidator(ValidatorInterface $validator) : void
+    {
+        $this->validator = $validator;
     }
 }
