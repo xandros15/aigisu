@@ -58,7 +58,10 @@ class CGController extends AbstractController
         $cg->uploadCG($request);
         $cg->saveOrFail();
 
-        return $this->created($response, $this->get('router')->pathFor('api.unit.cg.view', ['id' => $cg->getKey()]));
+        return $this->created($response, $this->get('router')->pathFor('api.unit.cg.view', [
+            'id' => $cg->getKey(),
+            'unitId' => $this->getUnitID($request),
+        ]));
     }
 
     /**
