@@ -9,13 +9,13 @@
 namespace Aigisu\Api\Middlewares\CG;
 
 
-use Aigisu\Api\Middlewares\Middleware;
+use Aigisu\Core\MiddlewareInterface;
 use Google_Service_Exception as GoogleServiceException;
 use GuzzleHttp\Exception\BadResponseException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ExtendedServerExceptionHandler extends Middleware
+class ExtendedServerExceptionHandler implements MiddlewareInterface
 {
 
     /**

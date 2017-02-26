@@ -10,10 +10,11 @@ namespace Aigisu\Api\Middlewares;
 
 
 use Aigisu\Components\Http\Base64UploadedFile;
+use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class Base64FileMiddleware extends Middleware
+class Base64FileMiddleware implements MiddlewareInterface
 {
 
     /**
@@ -35,7 +36,7 @@ class Base64FileMiddleware extends Middleware
      * @param array $files
      * @return array
      */
-    protected function createFilesFromParam(array $files) : array
+    private function createFilesFromParam(array $files) : array
     {
         $filesToUpload = [];
         foreach ($files as $name => $value) {

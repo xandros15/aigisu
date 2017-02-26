@@ -9,10 +9,11 @@
 namespace Aigisu\Api\Middlewares;
 
 
+use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ParserUnitTagsMiddleware extends Middleware
+class ParserUnitTagsMiddleware implements MiddlewareInterface
 {
 
     /**

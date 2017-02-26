@@ -64,7 +64,7 @@ $this->group('/units', function () {
             $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
                 ->setName('api.unit.update')
                 ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('unit.update')));
-        })->add(new ParserUnitTagsMiddleware($this->getContainer()));
+        })->add(new ParserUnitTagsMiddleware());
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
@@ -119,7 +119,7 @@ $this->group('/units', function () {
                         ->setName('api.unit.cg.imgur.delete');
 
                 });
-            })->add(new ExtendedServerExceptionHandler($this->getContainer()));
+            })->add(new ExtendedServerExceptionHandler());
 
             $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
                 ->setName('api.unit.cg.delete');
@@ -136,6 +136,7 @@ $this->group('/units', function () {
 });
 
 $this->post('/auth', AuthController::class . ':actionCreate');
-$this->add(new Base64FileMiddleware($this->getContainer()));
+
+$this->add(new Base64FileMiddleware());
 $this->add(new JWTAuthMiddleware($this->getContainer()));
 $this->add(new AccessControlAllowMiddleware());

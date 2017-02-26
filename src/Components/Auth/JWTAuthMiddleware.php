@@ -54,7 +54,7 @@ class JWTAuthMiddleware extends Middleware
 
         list($type, $token) = explode(' ', $authHeader);
         if ($type == self::TYPE) {
-            $auth = new JWTAuth($this->get('auth'));
+            $auth = new JWTAuth($this->getKeyrings());
             $token = (new Parser())->parse((string)$token); //throws InvalidArgumentException
 
             if (!$auth->verifyToken($token)) {
@@ -69,5 +69,10 @@ class JWTAuthMiddleware extends Middleware
         }
 
         return $request;
+    }
+
+    private function getKeyrings(): array
+    {
+        return $this->get('auth');
     }
 }
