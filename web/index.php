@@ -4,6 +4,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Aigisu\Core\Configuration;
 use Aigisu\Core\RouteProvider;
 
+session_start();
+
 $main = new \Slim\App(new Configuration());
 $routerProvider = new RouteProvider($main);
 $routerProvider->map();
