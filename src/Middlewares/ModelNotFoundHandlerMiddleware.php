@@ -2,20 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: xandros15
- * Date: 2016-08-24
- * Time: 19:35
+ * Date: 2017-02-26
+ * Time: 23:01
  */
 
-namespace Aigisu\Api\Middlewares;
+namespace Aigisu\Middlewares;
 
 
+use Aigisu\Core\MiddlewareInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ExceptionHandler extends Middleware
+class ModelNotFoundHandlerMiddleware implements MiddlewareInterface
 {
+
     /**
      * @param Request $request
      * @param Response $response

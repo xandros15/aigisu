@@ -35,9 +35,6 @@ return [
     'sprite.icons' => function (Configuration $container) {
         return "{$container->public}/sprite/icons";
     },
-    'middlewares' => function () {
-        return require __DIR__ . '/middlewares.php';
-    },
     'database' => function () {
         return require __DIR__ . '/db/params.php';
     },
