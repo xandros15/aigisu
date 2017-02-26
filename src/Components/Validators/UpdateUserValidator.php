@@ -6,7 +6,7 @@
  * Time: 11:11
  */
 
-namespace Aigisu\Api\Middlewares\Validators;
+namespace Aigisu\Components\Validators;
 
 
 use Respect\Validation\Validator as v;

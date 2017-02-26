@@ -6,7 +6,7 @@
  * Time: 13:21
  */
 
-namespace Aigisu\Api\Middlewares\Validators\Rules;
+namespace Aigisu\Components\Validators\Rules;
 
 
 use InvalidArgumentException;
@@ -37,6 +37,28 @@ class ImageSize extends AbstractRule
     public function __construct($minResolution = null, $maxResolution = null)
     {
         $this->setResolutionParams($minResolution, $maxResolution);
+    }
+
+    /**
+     * @param $input
+     * @return bool
+     */
+    public function validate($input)
+    {
+        $passed = false;
+
+        if ($input) {
+            if ($input instanceof SplFileInfo) {
+                $input = $input->getPathname();
+            }
+
+            if ($imageSize = getimagesize($input)) {
+                list($width, $height) = $imageSize;
+                $passed = $this->isCorrectResolution($width, $height);
+            }
+        }
+
+        return $passed;
     }
 
     /**
@@ -75,28 +97,6 @@ class ImageSize extends AbstractRule
         }
 
         throw new InvalidArgumentException('Wrong type of resolution');
-    }
-
-    /**
-     * @param $input
-     * @return bool
-     */
-    public function validate($input)
-    {
-        $passed = false;
-
-        if ($input) {
-            if ($input instanceof SplFileInfo) {
-                $input = $input->getPathname();
-            }
-
-            if ($imageSize = getimagesize($input)) {
-                list($width, $height) = $imageSize;
-                $passed = $this->isCorrectResolution($width, $height);
-            }
-        }
-
-        return $passed;
     }
 
     /**

@@ -9,6 +9,7 @@
 return [
     'settings' => [
         'displayErrorDetails' => true,
-        'addContentLengthHeader' => false
+        'addContentLengthHeader' => false,
+        'determineRouteBeforeAppMiddleware' => true,
     ],
 ];

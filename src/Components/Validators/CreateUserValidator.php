@@ -6,15 +6,26 @@
  * Time: 10:33
  */
 
-namespace Aigisu\Api\Middlewares\Validators;
+namespace Aigisu\Components\Validators;
 
 
-use Aigisu\Api\Middlewares\Validator;
 use InvalidArgumentException;
 use Respect\Validation\Validator as v;
 
-class CreateUserValidator extends Validator
+class CreateUserValidator extends AbstractValidator
 {
+    /** @var array */
+    private $accesses = [];
+
+    /**
+     * CreateUserValidator constructor.
+     * @param array $accesses
+     */
+    public function __construct(array $accesses)
+    {
+        $this->accesses = $accesses;
+    }
+
     /**
      * @return array
      */
@@ -33,9 +44,8 @@ class CreateUserValidator extends Validator
      */
     protected function getEnumRoles() : array
     {
-        $accesses = $this->get('access');
         $roles = [];
-        foreach ($accesses as $access) {
+        foreach ($this->accesses as $access) {
             $roles[] = $access['role'];
         }
 

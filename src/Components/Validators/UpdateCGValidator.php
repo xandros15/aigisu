@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: xandros15
- * Date: 2016-08-26
- * Time: 22:55
+ * Date: 2016-09-28
+ * Time: 14:49
  */
 
-namespace Aigisu\Api\Middlewares\Validators;
+namespace Aigisu\Components\Validators;
 
 
-class UpdateUnitValidator extends CreateUnitValidator
+class UpdateCGValidator extends CreateCGValidator
 {
     /**
      * @return array

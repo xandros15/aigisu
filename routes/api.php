@@ -17,14 +17,10 @@ use Aigisu\Api\Middlewares\Access\OwnerAccessMiddleware;
 use Aigisu\Api\Middlewares\Base64FileMiddleware;
 use Aigisu\Api\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Api\Middlewares\ParserUnitTagsMiddleware;
-use Aigisu\Api\Middlewares\Validators\CreateCGValidator;
-use Aigisu\Api\Middlewares\Validators\CreateUnitValidator;
-use Aigisu\Api\Middlewares\Validators\CreateUserValidator;
-use Aigisu\Api\Middlewares\Validators\MissingCGValidator;
-use Aigisu\Api\Middlewares\Validators\UpdateCGValidator;
-use Aigisu\Api\Middlewares\Validators\UpdateUnitValidator;
-use Aigisu\Api\Middlewares\Validators\UpdateUserValidator;
+use Aigisu\Api\Middlewares\ValidatorMiddleware;
+use Aigisu\Components\Http\AttributesAttachMiddleware;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
+use Aigisu\Components\Validators\ValidatorManager;
 
 /** @var $this \Slim\App */
 $this->group('/users', function () {
@@ -43,11 +39,11 @@ $this->group('/users', function () {
         /** @var $this \Slim\App */
         $this->post('', UserController::class . ':actionCreate')
             ->setName('api.user.create')
-            ->add(new CreateUserValidator($this->getContainer()));
+            ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('user.create')));
 
         $this->post('/{id:\d+}', UserController::class . ':actionUpdate')
             ->setName('api.user.update')
-            ->add(new UpdateUserValidator($this->getContainer()));
+            ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('user.update')));
 
         $this->delete('/{id:\d+}', UserController::class . ':actionDelete')
             ->setName('api.user.delete');
@@ -63,11 +59,11 @@ $this->group('/units', function () {
         $this->group('', function () {
             $this->post('', UnitController::class . ':actionCreate')
                 ->setName('api.unit.create')
-                ->add(new CreateUnitValidator($this->getContainer()));
+                ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('unit.create')));
 
             $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
                 ->setName('api.unit.update')
-                ->add(new UpdateUnitValidator($this->getContainer()));
+                ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('unit.update')));
         })->add(new ParserUnitTagsMiddleware($this->getContainer()));
 
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
@@ -92,12 +88,12 @@ $this->group('/units', function () {
             $this->group('', function () {
                 $this->post('', CGController::class . ':actionCreate')
                     ->setName('api.unit.cg.create')
-                    ->add(new CreateCGValidator($this->getContainer()));
+                    ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.create')));
 
                 $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
                     ->setName('api.unit.cg.update')
-                    ->add(new UpdateCGValidator($this->getContainer()));
-            })->add(new MissingCGValidator($this->getContainer()));
+                    ->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.update')));
+            })->add(new ValidatorMiddleware($this->getContainer()->get(ValidatorManager::class)->get('cg.missing')));
 
             $this->group('', function () {
                 $this->group('/{id:\d+}/google', function () {
@@ -142,7 +138,7 @@ $this->group('/units', function () {
 $this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware($this->getContainer()));
 $this->add(new UploadedFilesMiddleware($this->getContainer()));
-
+$this->add(new AttributesAttachMiddleware());
 
 $this->add(function ($request, $response, $next) {
     /** @var $response \Slim\Http\Response */

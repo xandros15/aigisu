@@ -8,6 +8,14 @@
 use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Imgur\Imgur;
+use Aigisu\Components\Validators\CreateCGValidator;
+use Aigisu\Components\Validators\CreateUnitValidator;
+use Aigisu\Components\Validators\CreateUserValidator;
+use Aigisu\Components\Validators\MissingCGValidator;
+use Aigisu\Components\Validators\UpdateCGValidator;
+use Aigisu\Components\Validators\UpdateUnitValidator;
+use Aigisu\Components\Validators\UpdateUserValidator;
+use Aigisu\Components\Validators\ValidatorManager;
 use Aigisu\Core\Response;
 use Illuminate\Container\Container as LaravelContainer;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
@@ -67,5 +75,16 @@ return [
         ], $basePath);
 
         return $response->withProtocolVersion($container->get('settings')['httpVersion']);
+    },
+    ValidatorManager::class => function (ContainerInterface $container) {
+        return new ValidatorManager([
+            'user.create' => new CreateUserValidator($container->get('access')),
+            'user.update' => new UpdateUserValidator($container->get('access')),
+            'unit.create' => new CreateUnitValidator(),
+            'unit.update' => new UpdateUnitValidator(),
+            'cg.create' => new CreateCGValidator(),
+            'cg.update' => new UpdateCGValidator(),
+            'cg.missing' => new MissingCGValidator(),
+        ]);
     }
 ];

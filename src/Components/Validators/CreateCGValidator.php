@@ -6,16 +6,15 @@
  * Time: 14:20
  */
 
-namespace Aigisu\Api\Middlewares\Validators;
+namespace Aigisu\Components\Validators;
 
 
-use Aigisu\Api\Middlewares\Validator;
-use Aigisu\Api\Middlewares\Validators\Rules\ImageSize;
-use Aigisu\Api\Middlewares\Validators\Rules\Optional;
+use Aigisu\Components\Validators\Rules\ImageSize;
+use Aigisu\Components\Validators\Rules\Optional;
 use Aigisu\Models\Unit\CG;
 use Respect\Validation\Validator as v;
 
-class CreateCGValidator extends Validator
+class CreateCGValidator extends AbstractValidator
 {
     /**
      * @return array

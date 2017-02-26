@@ -6,7 +6,7 @@
  * Time: 20:11
  */
 
-namespace Aigisu\Api\Middlewares\Validators\Exceptions;
+namespace Aigisu\Components\Validators\Exceptions;
 
 
 use Respect\Validation\Exceptions\ValidationException;

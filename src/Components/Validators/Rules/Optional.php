@@ -6,7 +6,7 @@
  * Time: 14:33
  */
 
-namespace Aigisu\Api\Middlewares\Validators\Rules;
+namespace Aigisu\Components\Validators\Rules;
 
 
 use Respect\Validation\Rules\AbstractWrapper;
@@ -34,11 +34,6 @@ class Optional extends AbstractWrapper
         return parent::assert($input);
     }
 
-    private function isOptional($input)
-    {
-        return $input === null;
-    }
-
     public function check($input)
     {
         if ($this->isOptional($input)) {
@@ -55,5 +50,10 @@ class Optional extends AbstractWrapper
         }
 
         return parent::validate($input);
+    }
+
+    private function isOptional($input)
+    {
+        return $input === null;
     }
 }
