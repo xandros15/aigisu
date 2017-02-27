@@ -5,6 +5,10 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
+use Aigisu\Components\ACL\AccessManager;
+use Aigisu\Components\ACL\AdminAccessMiddleware;
+use Aigisu\Components\ACL\ModeratorAccessMiddleware;
+use Aigisu\Components\ACL\OwnerAccessMiddleware;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Imgur\Client;
 use Aigisu\Components\Imgur\Imgur;
@@ -88,5 +92,12 @@ return [
             'cg.create' => new CreateCGValidator(),
             'cg.update' => new UpdateCGValidator(),
         ]);
-    }
+    },
+    AccessManager::class => function (ContainerInterface $container) {
+        return new AccessManager([
+            'moderator' => new ModeratorAccessMiddleware($container),
+            'admin' => new AdminAccessMiddleware($container),
+            'owner' => new OwnerAccessMiddleware($container),
+        ]);
+    },
 ];

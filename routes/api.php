@@ -11,10 +11,8 @@ use Aigisu\Api\Controllers\Unit\CG\ImgurUploader;
 use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
+use Aigisu\Components\ACL\AccessManager;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
-use Aigisu\Middlewares\Access\AdminAccessMiddleware;
-use Aigisu\Middlewares\Access\ModeratorAccessMiddleware;
-use Aigisu\Middlewares\Access\OwnerAccessMiddleware;
 use Aigisu\Middlewares\AccessControlAllowMiddleware;
 use Aigisu\Middlewares\Base64FileMiddleware;
 use Aigisu\Middlewares\CG\ExtendedServerExceptionHandler;
@@ -23,7 +21,11 @@ use Aigisu\Middlewares\ParserUnitTagsMiddleware;
 use Aigisu\Middlewares\ValidatorMiddleware;
 
 /** @var $this \Slim\App */
-$this->group('/users', function () {
+/** @var $acl AccessManager */
+$acl = $this->getContainer()->get(AccessManager::class);
+
+
+$this->group('/users', function () use ($acl) {
     /** @var $this \Slim\App */
     $this->get('', UserController::class . ':actionIndex')
         ->setName('api.user.index');
@@ -35,7 +37,7 @@ $this->group('/users', function () {
     $this->get('/current', UserController::class . ':actionGetCurrent')
         ->setName('api.user.current');
 
-    $this->group('', function () {
+    $this->group('', function () use ($acl) {
         /** @var $this \Slim\App */
         $this->post('', UserController::class . ':actionCreate')
             ->setName('api.user.create')
@@ -48,15 +50,15 @@ $this->group('/users', function () {
         $this->delete('/{id:\d+}', UserController::class . ':actionDelete')
             ->setName('api.user.delete');
 
-    })->add(new OwnerAccessMiddleware($this->getContainer()));
+    })->add($acl->get('owner'));
 
-})->add(new ModeratorAccessMiddleware($this->getContainer()));
+})->add($acl->get('moderator'));
 
-$this->group('/units', function () {
+$this->group('/units', function () use ($acl) {
     /** @var $this \Slim\App */
-    $this->group('', function () {
+    $this->group('', function () use ($acl) {
         /** @var $this \Slim\App */
-        $this->group('', function () {
+        $this->group('', function () use ($acl) {
             $this->post('', UnitController::class . ':actionCreate')
                 ->setName('api.unit.create')
                 ->add(new ValidatorMiddleware($this->getContainer(), 'unit.create'));
@@ -69,7 +71,7 @@ $this->group('/units', function () {
         $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
             ->setName('api.unit.delete');
 
-    })->add(new AdminAccessMiddleware($this->getContainer()));
+    })->add($acl->get('admin'));
 
     $this->get('', UnitController::class . ':actionIndex')
         ->setName('api.unit.index');
@@ -80,12 +82,12 @@ $this->group('/units', function () {
     $this->get('/rarities', UnitController::class . ':actionRarities')
         ->setName('api.unit.rarities');
 
-    $this->group('/{unitId:\d+}/cg', function () {
+    $this->group('/{unitId:\d+}/cg', function () use ($acl) {
         /** @var $this \Slim\App */
-        $this->group('', function () {
+        $this->group('', function () use ($acl) {
             /** @var $this \Slim\App */
 
-            $this->group('', function () {
+            $this->group('', function () use ($acl) {
                 $this->post('', CGController::class . ':actionCreate')
                     ->setName('api.unit.cg.create')
                     ->add(new ValidatorMiddleware($this->getContainer(), 'cg.create'));
@@ -95,8 +97,8 @@ $this->group('/units', function () {
                     ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'));
             })->add(new MissingCGValidatorMiddleware());
 
-            $this->group('', function () {
-                $this->group('/{id:\d+}/google', function () {
+            $this->group('', function () use ($acl) {
+                $this->group('/{id:\d+}/google', function () use ($acl) {
                     /** @var $this \Slim\App */
                     $this->post('', GoogleUploader::class . ':actionCreate')
                         ->setName('api.unit.cg.google.create');
@@ -108,7 +110,7 @@ $this->group('/units', function () {
                         ->setName('api.unit.cg.google.delete');
 
                 });
-                $this->group('/{id:\d+}/imgur', function () {
+                $this->group('/{id:\d+}/imgur', function () use ($acl) {
                     $this->post('', ImgurUploader::class . ':actionCreate')
                         ->setName('api.unit.cg.imgur.create');
 
@@ -124,7 +126,7 @@ $this->group('/units', function () {
             $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
                 ->setName('api.unit.cg.delete');
 
-        })->add(new ModeratorAccessMiddleware($this->getContainer()));
+        })->add($acl->get('moderator'));
 
         $this->get('', CGController::class . ':actionIndex')
             ->setName('api.unit.cg.index');

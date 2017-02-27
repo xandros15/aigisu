@@ -6,7 +6,7 @@
  * Time: 15:44
  */
 
-namespace Aigisu\Middlewares\Access;
+namespace Aigisu\Components\ACL;
 
 
 use Aigisu\Models\User;
