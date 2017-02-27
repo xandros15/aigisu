@@ -10,7 +10,6 @@ use Aigisu\Components\Auth\IsGuestMiddleware;
 use Aigisu\Components\Http\AttributesAttachMiddleware;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
 use Aigisu\Middlewares\ModelNotFoundHandlerMiddleware;
-use League\Flysystem\FilesystemInterface;
 
 /** @var $main \Slim\App */
 $main->group('', function () {
@@ -26,6 +25,6 @@ $main->group('/storage', function () {
 });
 
 $main->add(new ModelNotFoundHandlerMiddleware());
-$main->add(new UploadedFilesMiddleware($main->getContainer()->get(FilesystemInterface::class)));
+$main->add(new UploadedFilesMiddleware($main->getContainer()));
 $main->add(new AttributesAttachMiddleware());
 $main->add(new IsGuestMiddleware());
