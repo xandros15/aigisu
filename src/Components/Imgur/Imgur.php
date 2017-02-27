@@ -14,25 +14,18 @@ use Psr\Http\Message\ResponseInterface;
 
 class Imgur extends Configurable
 {
-    /** @var Client */
+    /** @var ClientInterface */
     private $client;
 
     /**
      * Imgur constructor.
+     * @param ClientInterface $client
      * @param array $params
      */
-    public function __construct(array $params = [])
+    public function __construct(ClientInterface $client, array $params = [])
     {
+        $this->client = $client;
         parent::__construct($params);
-        $this->client = new Client($this->config['client']);
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient() : Client
-    {
-        return $this->client;
     }
 
     /**

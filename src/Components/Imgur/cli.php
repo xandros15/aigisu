@@ -13,11 +13,13 @@ defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
 defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
 
 use Aigisu\Components\Imgur\Client;
+use Aigisu\Components\TokenSack;
+use Aigisu\Core\Configuration;
 use GuzzleHttp\Psr7\Uri;
 use function GuzzleHttp\Psr7\parse_query;
 
-/** @var $client Client */
-$client = (new \Aigisu\Core\Configuration())->get(\Aigisu\Components\Imgur\Imgur::class)->getClient();
+$config = new Configuration();
+$client = new Client($config->get(TokenSack::class), $config->get('imgur.settings')['client']);
 
 echo $client->getAuthorization()->getAuthorizationUrl() . PHP_EOL;
 $uri = new Uri(trim(fgets(STDIN)));
@@ -27,5 +29,4 @@ if (!isset($query['code'])) {
 }
 
 $client->fetchAccessTokenWithAuthCode($query['code']);
-
 $client->saveAccessToken();

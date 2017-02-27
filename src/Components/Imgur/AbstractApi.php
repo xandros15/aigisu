@@ -11,14 +11,14 @@ namespace Aigisu\Components\Imgur;
 
 abstract class AbstractApi
 {
-    /** @var Client */
+    /** @var ClientInterface */
     protected $client;
 
     /**
-     * Image constructor.
-     * @param Client $client
+     * AbstractApi constructor.
+     * @param ClientInterface $client
      */
-    public function __construct(Client $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }

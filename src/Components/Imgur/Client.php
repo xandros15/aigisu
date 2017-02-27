@@ -10,7 +10,6 @@ namespace Aigisu\Components\Imgur;
 
 
 use AdamPaterson\OAuth2\Client\Provider\Imgur as ImgurProvider;
-use Aigisu\Components\Configure\Configurable;
 use Aigisu\Components\TokenSack;
 use InvalidArgumentException;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -19,7 +18,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-class Client extends Configurable
+class Client implements ClientInterface
 {
     const TOKEN_NAME = 'imgur_token';
 
@@ -33,6 +32,19 @@ class Client extends Configurable
     private $token;
     /** @var array */
     private $authKeys;
+    /** @var TokenSack */
+    private $tokenSack;
+
+    /**
+     * Client constructor.
+     * @param TokenSack $tokenSack
+     * @param array $keyring
+     */
+    public function __construct(TokenSack $tokenSack, array $keyring)
+    {
+        $this->tokenSack = $tokenSack;
+        $this->setAuthKeys($keyring);
+    }
 
     /**
      * @param RequestInterface $request
@@ -50,12 +62,9 @@ class Client extends Configurable
      */
     public function authorize(RequestInterface $request)
     {
-        if (!$token = $this->getToken()) {
-            // add refresh subscriber to request a new token
-            if ($this->isAccessTokenExpired() && isset($this->token['refresh_token'])) {
-                if ($this->fetchAccessTokenWithRefreshToken()) {
-                    throw new RuntimeException('Can\'t refresh token');
-                }
+        $token = $this->getToken();
+        if ($this->isAccessTokenExpired()) {
+            if ($this->fetchAccessTokenWithRefreshToken()) {
                 $this->saveAccessToken();
             }
         }
@@ -69,7 +78,7 @@ class Client extends Configurable
     public function getToken() : array
     {
         if (!$this->token) {
-            $this->token = json_decode($this->getTokenSack()->getToken(self::TOKEN_NAME), true);
+            $this->token = json_decode($this->tokenSack->getToken(self::TOKEN_NAME), true);
         }
 
         return $this->token;
@@ -115,14 +124,12 @@ class Client extends Configurable
             throw new LogicException('refresh token must be passed in or set as part of setAccessToken');
         }
 
-
-        $auth = $this->getAuthorization();
         $refreshTokenArray = ['refresh_token' => $refreshToken];
-        $accessToken = $auth->getAccessToken('refresh_token', $refreshTokenArray);
+        $accessToken = $this->getAuthorization()->getAccessToken('refresh_token', $refreshTokenArray);
         $credentials = array_merge($accessToken->jsonSerialize(), $refreshTokenArray);
 
 
-        if ($credentials && isset($credentials['access_token'])) {
+        if (isset($credentials['access_token'])) {
             $this->setToken($credentials);
             return true;
         }
@@ -136,39 +143,13 @@ class Client extends Configurable
     public function getAuthorization() : AbstractProvider
     {
         if ($this->authorization === null) {
-            $keys = $this->getAuthKey();
             $this->authorization = new ImgurProvider([
-                'clientId' => $keys['client_id'],
-                'clientSecret' => $keys['client_secret'],
+                'clientId' => $this->authKeys['client_id'],
+                'clientSecret' => $this->authKeys['client_secret'],
             ]);
         }
 
         return $this->authorization;
-    }
-
-    /**
-     * Parsing auth form config
-     *
-     * @return array
-     */
-    public function getAuthKey() : array
-    {
-        if (!$this->authKeys) {
-            if (is_array($this->config['auth'])) {
-                $keys = $this->config['auth'];
-            } else {
-                throw new InvalidArgumentException('Invalid format of keys. Expect array, filename, or json string');
-            }
-
-            if (!isset($keys['client_id'], $keys['client_secret'])) {
-                throw new LogicException('Missing client keys');
-            }
-
-            $this->authKeys = $keys;
-        }
-
-
-        return $this->authKeys;
     }
 
     /**
@@ -180,7 +161,7 @@ class Client extends Configurable
             throw new RuntimeException('Invalid token to save');
         }
 
-        $this->getTokenSack()->saveToken(self::TOKEN_NAME, $token);
+        $this->tokenSack->saveToken(self::TOKEN_NAME, $token);
     }
 
     /**
@@ -188,7 +169,7 @@ class Client extends Configurable
      */
     public function getHttpClient() : \GuzzleHttp\Client
     {
-        if (is_null($this->http)) {
+        if (!$this->http) {
             $this->http = new \GuzzleHttp\Client();
         }
 
@@ -207,15 +188,13 @@ class Client extends Configurable
             throw new InvalidArgumentException("Invalid code");
         }
 
-        $auth = $this->getAuthorization();
-
-        $accessToken = $auth->getAccessToken('authorization_code', [
+        $accessToken = $this->getAuthorization()->getAccessToken('authorization_code', [
             'code' => $code
         ]);
 
         $credentials = $accessToken->jsonSerialize();
 
-        if ($credentials && isset($credentials['access_token'])) {
+        if (isset($credentials['access_token'])) {
             $this->setToken($credentials);
             return true;
         }
@@ -223,11 +202,12 @@ class Client extends Configurable
         return false;
     }
 
-    /**
-     * @return TokenSack
-     */
-    private function getTokenSack() : TokenSack
+    private function setAuthKeys(array $keyring)
     {
-        return $this->config[TokenSack::class];
+        if (!isset($keyring['client_id'], $keyring['client_secret'])) {
+            throw new InvalidParamException('Missing client_id or client_secret in keyring');
+        }
+
+        $this->authKeys = $keyring;
     }
 }

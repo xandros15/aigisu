@@ -47,4 +47,7 @@ return [
     'auth' => function () {
         return require __DIR__ . '/auth.php';
     },
+    'imgur.settings' => function () {
+        return require __DIR__ . '/imgur.php';
+    },
 ];
