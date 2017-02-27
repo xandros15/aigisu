@@ -13,6 +13,7 @@ use Aigisu\Core\Model;
 use Aigisu\Data\Tables\CG;
 use Aigisu\Data\Tables\OauthAccessTokens;
 use Aigisu\Data\Tables\OauthRefreshTokens;
+use Aigisu\Data\Tables\Settings;
 use Aigisu\Data\Tables\Table;
 use Aigisu\Data\Tables\Tags;
 use Aigisu\Data\Tables\TagsUnits;
@@ -127,6 +128,7 @@ class Schema
             new TagsUnits(),
             new OauthAccessTokens(),
             new OauthRefreshTokens(),
+            new Settings(),
         ];
     }
 
