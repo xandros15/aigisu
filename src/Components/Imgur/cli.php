@@ -16,8 +16,8 @@ use Aigisu\Components\Imgur\Client;
 use GuzzleHttp\Psr7\Uri;
 use function GuzzleHttp\Psr7\parse_query;
 
-//@todo load properties form container or just client from container
-$client = new Client();
+/** @var $client Client */
+$client = (new \Aigisu\Core\Configuration())->get(\Aigisu\Components\Imgur\Imgur::class)->getClient();
 
 echo $client->getAuthorization()->getAuthorizationUrl() . PHP_EOL;
 $uri = new Uri(trim(fgets(STDIN)));

@@ -28,6 +28,14 @@ class Imgur extends Configurable
     }
 
     /**
+     * @return Client
+     */
+    public function getClient() : Client
+    {
+        return $this->client;
+    }
+
+    /**
      * @param $file
      * @param array $params
      * @return ResponseInterface

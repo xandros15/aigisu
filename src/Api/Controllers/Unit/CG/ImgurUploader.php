@@ -64,7 +64,7 @@ class ImgurUploader extends AbstractUploader
             'imgur_delhash' => $imgurFile['deletehash'],
         ])->saveOrFail();
 
-        return $this->created($response, $this->getLocation($request));
+        return $this->created($response, $this->getLocationImgur($imgurFile['id']));
     }
 
     /**
@@ -90,6 +90,11 @@ class ImgurUploader extends AbstractUploader
         $imgur->deleteImage($id);
 
         return $this->updated($response);
+    }
+
+    private function getLocationImgur(string $id) : string
+    {
+        return sprintf('https://i.imgur.com/%s.png', $id);
     }
 
     /**
@@ -152,7 +157,7 @@ class ImgurUploader extends AbstractUploader
      */
     private function responseToDataArray(ResponseInterface $response) : array
     {
-        $json = (string) $response->getBody();
+        $json = (string)$response->getBody();
         $jsonArray = json_decode($json, true);
         return $jsonArray['data'];
     }

@@ -8,7 +8,6 @@
 return [
     'client' => [
         'auth' => require __DIR__ . '/imgur/key.php',
-        'access-file' => __DIR__ . '/imgur/credentials.json'
     ],
     'albums' => require __DIR__ . '/imgur/albums.php',
 ];

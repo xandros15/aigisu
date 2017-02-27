@@ -11,6 +11,7 @@ namespace Aigisu\Components\Imgur;
 
 use AdamPaterson\OAuth2\Client\Provider\Imgur as ImgurProvider;
 use Aigisu\Components\Configure\Configurable;
+use Aigisu\Components\TokenSack;
 use InvalidArgumentException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use LogicException;
@@ -20,6 +21,8 @@ use RuntimeException;
 
 class Client extends Configurable
 {
+    const TOKEN_NAME = 'imgur_token';
+
     const ENDPOINT = 'https://api.imgur.com/3/';
 
     /** @var \GuzzleHttp\Client */
@@ -47,11 +50,12 @@ class Client extends Configurable
      */
     public function authorize(RequestInterface $request)
     {
-        if (!$token = $this->getAccessToken()) {
-            $token = $this->setAccessToken($this->config['access-file']);
+        if (!$token = $this->getToken()) {
             // add refresh subscriber to request a new token
             if ($this->isAccessTokenExpired() && isset($this->token['refresh_token'])) {
-                $token = $this->fetchAccessTokenWithRefreshToken();
+                if ($this->fetchAccessTokenWithRefreshToken()) {
+                    throw new RuntimeException('Can\'t refresh token');
+                }
                 $this->saveAccessToken();
             }
         }
@@ -62,39 +66,21 @@ class Client extends Configurable
     /**
      * @return array
      */
-    public function getAccessToken() : array
+    public function getToken() : array
     {
-        return $this->token ?: [];
+        if (!$this->token) {
+            $this->token = json_decode($this->getTokenSack()->getToken(self::TOKEN_NAME), true);
+        }
+
+        return $this->token;
     }
 
     /**
-     * @param string|array $token
-     * @return array
-     * @throws InvalidArgumentException
+     * @param $token
      */
-    public function setAccessToken($token) : array
+    public function setToken($token)
     {
-        if (is_string($token)) {
-            if (file_exists($token)) {
-                $token = file_get_contents($token);
-            }
-            if ($json = json_decode($token, true)) {
-                $token = $json;
-            } else {
-                // assume $token is just the token string
-                $token = ['access_token' => $token];
-            }
-        }
-
-        if (empty($token)) {
-            throw new InvalidArgumentException('invalid json token');
-        }
-
-        if (!isset($token['access_token'])) {
-            throw new InvalidArgumentException("Invalid token format");
-        }
-
-        return $this->token = $token;
+        $this->token = $token;
     }
 
     /**
@@ -120,17 +106,15 @@ class Client extends Configurable
 
     /**
      * @param null $refreshToken
-     * @throws LogicException
-     * @return array
+     * @return bool
      */
-    public function fetchAccessTokenWithRefreshToken($refreshToken = null) : array
+    public function fetchAccessTokenWithRefreshToken($refreshToken = null) : bool
     {
-        if (is_null($refreshToken)) {
-            if (!isset($this->token['refresh_token'])) {
-                throw new LogicException('refresh token must be passed in or set as part of setAccessToken');
-            }
-            $refreshToken = $this->token['refresh_token'];
+        $refreshToken = $refreshToken ?? $this->token['refresh_token'];
+        if (!$refreshToken) {
+            throw new LogicException('refresh token must be passed in or set as part of setAccessToken');
         }
+
 
         $auth = $this->getAuthorization();
         $refreshTokenArray = ['refresh_token' => $refreshToken];
@@ -139,10 +123,11 @@ class Client extends Configurable
 
 
         if ($credentials && isset($credentials['access_token'])) {
-            $this->setAccessToken($credentials);
+            $this->setToken($credentials);
+            return true;
         }
 
-        return $credentials;
+        return false;
     }
 
     /**
@@ -150,7 +135,7 @@ class Client extends Configurable
      */
     public function getAuthorization() : AbstractProvider
     {
-        if (is_null($this->authorization)) {
+        if ($this->authorization === null) {
             $keys = $this->getAuthKey();
             $this->authorization = new ImgurProvider([
                 'clientId' => $keys['client_id'],
@@ -169,17 +154,8 @@ class Client extends Configurable
     public function getAuthKey() : array
     {
         if (!$this->authKeys) {
-            $auth = $this->config['auth'];
-            if (is_string($auth)) {
-                if (file_exists($auth)) {
-                    $auth = file_get_contents($auth);
-                }
-
-                if (!$keys = json_decode($auth, true)) {
-                    throw new InvalidArgumentException('Invalid format of auth keys file');
-                }
-            } elseif (is_array($auth)) {
-                $keys = $auth;
+            if (is_array($this->config['auth'])) {
+                $keys = $this->config['auth'];
             } else {
                 throw new InvalidArgumentException('Invalid format of keys. Expect array, filename, or json string');
             }
@@ -196,30 +172,15 @@ class Client extends Configurable
     }
 
     /**
-     * @param string $filename
-     * @param array $token
-     * @return int
      * @throws RuntimeException
      */
-    public function saveAccessToken(string $filename = '', array $token = [])
+    public function saveAccessToken()
     {
-        if (!$filename) {
-            $filename = $this->config['access-file'];
-        }
-
-        if (!$filename) {
-            throw new RuntimeException('No filename is set');
-        }
-
-        if (!realpath($dirname = dirname($filename))) {
-            throw new RuntimeException("Can't create/update credentials file. Path {$dirname} no exist");
-        }
-
-        if (!$token = json_encode($token ?: $this->token)) {
+        if (!$token = json_encode($this->token)) {
             throw new RuntimeException('Invalid token to save');
         }
 
-        return file_put_contents($filename, $token);
+        $this->getTokenSack()->saveToken(self::TOKEN_NAME, $token);
     }
 
     /**
@@ -238,9 +199,9 @@ class Client extends Configurable
      * Attempt to exchange a code for an valid authentication token.
      *
      * @param $code string code from
-     * @return array access token
+     * @return bool
      */
-    public function fetchAccessTokenWithAuthCode(string $code)
+    public function fetchAccessTokenWithAuthCode(string $code) : bool
     {
         if (strlen($code) == 0) {
             throw new InvalidArgumentException("Invalid code");
@@ -255,9 +216,18 @@ class Client extends Configurable
         $credentials = $accessToken->jsonSerialize();
 
         if ($credentials && isset($credentials['access_token'])) {
-            $this->setAccessToken($credentials);
+            $this->setToken($credentials);
+            return true;
         }
 
-        return $credentials;
+        return false;
+    }
+
+    /**
+     * @return TokenSack
+     */
+    private function getTokenSack() : TokenSack
+    {
+        return $this->config[TokenSack::class];
     }
 }
