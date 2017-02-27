@@ -15,7 +15,7 @@
     "respect/validation": "^1.1",
     "guzzlehttp/guzzle": "^6.2",
     "league/flysystem": "^1.0",
-    "google/apiclient": "2.*",
+    "google/apiclient": "^2.1",
     "xandros15/oauth2-imgur": "^1.0.2",
     "slim/twig-view": "^2.1",
     "league/fractal": "^0.15.0",
