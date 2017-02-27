@@ -30,9 +30,11 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
      */
     public function validate(Request $request) : bool
     {
-        $params = $this->parseParams($request->getParams(), $request->getAttribute('id', 0));
+        $id = $request->getAttribute('route')->getArgument('id') ?? 0;
+        $unitId = $request->getAttribute('route')->getArgument('unitId');
+        $params = $this->parseParams($request->getParams(), $id);
 
-        if (!$this->isMissing($request->getAttribute('unitId'), $params)) {
+        if (!$this->isMissing($unitId, $params)) {
             $this->errors[] = 'This CG isn\'t required';
         }
 
@@ -74,7 +76,11 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
      */
     protected function isMissing(int $unitId, array $params) : bool
     {
-        if ($params['is_changed'] && !$params['archival']) {
+        if ($params['archival']) {
+            return true;
+        }
+
+        if (!$params['is_changed']) {
             return false;
         }
 
@@ -83,7 +89,7 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
         $whatMissing = $missing->filter([
             'is_dmm' => $unit['dmm'],
             'is_nutaku' => $unit['nutaku'],
-            'is_special_cg' => $unit['spacial_cg'],
+            'is_special_cg' => $unit['special_cg'],
         ]);
 
         foreach ($whatMissing as $missingCG) {
