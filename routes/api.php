@@ -25,117 +25,78 @@ use Aigisu\Middlewares\ValidatorMiddleware;
 $acl = $this->getContainer()->get(AccessManager::class);
 
 
-$this->group('/users', function () use ($acl) {
-    /** @var $this \Slim\App */
-    $this->get('', UserController::class . ':actionIndex')
-        ->setName('api.user.index');
-
-    $this->get('/{id:\d+}', UserController::class . ':actionView')
-        ->setName('api.user.view');
-
-
-    $this->get('/current', UserController::class . ':actionGetCurrent')
-        ->setName('api.user.current');
-
-    $this->group('', function () use ($acl) {
-        /** @var $this \Slim\App */
-        $this->post('', UserController::class . ':actionCreate')
-            ->setName('api.user.create')
-            ->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
-
-        $this->post('/{id:\d+}', UserController::class . ':actionUpdate')
-            ->setName('api.user.update')
-            ->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
-
-        $this->delete('/{id:\d+}', UserController::class . ':actionDelete')
-            ->setName('api.user.delete');
-
-    })->add($acl->get('owner'));
-
+/** @var $this \Slim\App */
+$this->group('', function () {
+    $this->get('/users', UserController::class . ':actionIndex')->setName('api.user.index');
+    $this->get('/users/{id:\d+}', UserController::class . ':actionView')->setName('api.user.view');
+    $this->get('/users/current', UserController::class . ':actionGetCurrent')->setName('api.user.current');
 })->add($acl->get('moderator'));
 
-$this->group('/units', function () use ($acl) {
+$this->group('', function () {
+    $this->post('/users', UserController::class . ':actionCreate')
+        ->setName('api.user.create')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
+    $this->post('/users/{id:\d+}', UserController::class . ':actionUpdate')
+        ->setName('api.user.update')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
+    $this->delete('/users/{id:\d+}', UserController::class . ':actionDelete')
+        ->setName('api.user.delete');
+})->add($acl->get('owner'));
+
+$this->group('', function () {
+    $tagsParser = new ParserUnitTagsMiddleware();
+    $this->post('/units', UnitController::class . ':actionCreate')
+        ->setName('api.unit.create')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'unit.create'))
+        ->add($tagsParser);
+    $this->post('/units/{id:\d+}', UnitController::class . ':actionUpdate')
+        ->setName('api.unit.update')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'unit.update'))
+        ->add($tagsParser);
+    $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
+        ->setName('api.unit.delete');
+})->add($acl->get('admin'));
+
+$this->get('/units', UnitController::class . ':actionIndex')->setName('api.unit.index');
+$this->get('/units/{id:\d+}', UnitController::class . ':actionView')->setName('api.unit.view');
+$this->get('/units/rarities', UnitController::class . ':actionRarities')->setName('api.unit.rarities');
+
+
+$this->group('', function () {
+    $missingCG = new MissingCGValidatorMiddleware();
+    $this->post('/units/{unitId:\d+}/cg', CGController::class . ':actionCreate')
+        ->setName('api.unit.cg.create')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'cg.create'))
+        ->add($missingCG);
+    $this->post('/units/{unitId:\d+}/cg/{id:\d+}', CGController::class . ':actionUpdate')
+        ->setName('api.unit.cg.update')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'))
+        ->add($missingCG);
+    $this->delete('/units/{unitId:\d+}/cg/{id:\d+}', CGController::class . ':actionDelete')
+        ->setName('api.unit.cg.delete');
+})->add($acl->get('moderator'));
+
+$this->group('', function () {
     /** @var $this \Slim\App */
-    $this->group('', function () use ($acl) {
-        /** @var $this \Slim\App */
-        $this->group('', function () use ($acl) {
-            $this->post('', UnitController::class . ':actionCreate')
-                ->setName('api.unit.create')
-                ->add(new ValidatorMiddleware($this->getContainer(), 'unit.create'));
+    $this->post('/units/{unitId:\d+}/cg/{id:\d+}/google', GoogleUploader::class . ':actionCreate')
+        ->setName('api.unit.cg.google.create');
+    $this->patch('/units/{unitId:\d+}/cg/{id:\d+}/google', GoogleUploader::class . ':actionUpdate')
+        ->setName('api.unit.cg.google.update');
+    $this->delete('/units/{unitId:\d+}/cg/{id:\d+}/google', GoogleUploader::class . ':actionDelete')
+        ->setName('api.unit.cg.google.delete');
+    $this->post('/units/{unitId:\d+}/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionCreate')
+        ->setName('api.unit.cg.imgur.create');
+    $this->patch('/units/{unitId:\d+}/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionUpdate')
+        ->setName('api.unit.cg.imgur.update');
+    $this->delete('/units/{unitId:\d+}/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionDelete')
+        ->setName('api.unit.cg.imgur.delete');
+})->add(new ExtendedServerExceptionHandler())
+    ->add($acl->get('moderator'));
 
-            $this->post('/{id:\d+}', UnitController::class . ':actionUpdate')
-                ->setName('api.unit.update')
-                ->add(new ValidatorMiddleware($this->getContainer(), 'unit.update'));
-        })->add(new ParserUnitTagsMiddleware());
-
-        $this->delete('/{id:\d+}', UnitController::class . ':actionDelete')
-            ->setName('api.unit.delete');
-
-    })->add($acl->get('admin'));
-
-    $this->get('', UnitController::class . ':actionIndex')
-        ->setName('api.unit.index');
-
-    $this->get('/{id:\d+}', UnitController::class . ':actionView')
-        ->setName('api.unit.view');
-
-    $this->get('/rarities', UnitController::class . ':actionRarities')
-        ->setName('api.unit.rarities');
-
-    $this->group('/{unitId:\d+}/cg', function () use ($acl) {
-        /** @var $this \Slim\App */
-        $this->group('', function () use ($acl) {
-            /** @var $this \Slim\App */
-
-            $this->group('', function () use ($acl) {
-                $this->post('', CGController::class . ':actionCreate')
-                    ->setName('api.unit.cg.create')
-                    ->add(new ValidatorMiddleware($this->getContainer(), 'cg.create'));
-
-                $this->post('/{id:\d+}', CGController::class . ':actionUpdate')
-                    ->setName('api.unit.cg.update')
-                    ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'));
-            })->add(new MissingCGValidatorMiddleware());
-
-            $this->group('', function () use ($acl) {
-                $this->group('/{id:\d+}/google', function () use ($acl) {
-                    /** @var $this \Slim\App */
-                    $this->post('', GoogleUploader::class . ':actionCreate')
-                        ->setName('api.unit.cg.google.create');
-
-                    $this->patch('', GoogleUploader::class . ':actionUpdate')
-                        ->setName('api.unit.cg.google.update');
-
-                    $this->delete('', GoogleUploader::class . ':actionDelete')
-                        ->setName('api.unit.cg.google.delete');
-
-                });
-                $this->group('/{id:\d+}/imgur', function () use ($acl) {
-                    $this->post('', ImgurUploader::class . ':actionCreate')
-                        ->setName('api.unit.cg.imgur.create');
-
-                    $this->patch('', ImgurUploader::class . ':actionUpdate')
-                        ->setName('api.unit.cg.imgur.update');
-
-                    $this->delete('', ImgurUploader::class . ':actionDelete')
-                        ->setName('api.unit.cg.imgur.delete');
-
-                });
-            })->add(new ExtendedServerExceptionHandler());
-
-            $this->delete('/{id:\d+}', CGController::class . ':actionDelete')
-                ->setName('api.unit.cg.delete');
-
-        })->add($acl->get('moderator'));
-
-        $this->get('', CGController::class . ':actionIndex')
-            ->setName('api.unit.cg.index');
-
-        $this->get('/{id:\d+}', CGController::class . ':actionView')
-            ->setName('api.unit.cg.view');
-
-    });
-});
+$this->get('/units/{unitId:\d+}/cg', CGController::class . ':actionIndex')
+    ->setName('api.unit.cg.index');
+$this->get('/units/{unitId:\d+}/cg/{id:\d+}', CGController::class . ':actionView')
+    ->setName('api.unit.cg.view');
 
 $this->post('/auth', AuthController::class . ':actionCreate');
 
