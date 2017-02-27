@@ -46,7 +46,7 @@ abstract class AbstractUploader extends AbstractController
      */
     protected function getLocation(Request $request)
     {
-        return $this->router->pathFor('api.unit.cg.view', [
+        return $this->get('router')->pathFor('api.unit.cg.view', [
             'id' => $this->getID($request),
             'unitId' => $request->getAttribute('unitId')
         ]);
@@ -68,7 +68,7 @@ abstract class AbstractUploader extends AbstractController
      */
     protected function getImageFileName(CG $cg) : string
     {
-        if (!file_exists($filename = $this->get('public') . '/' . $cg->getOriginal('local'))) {
+        if (!file_exists($filename = $this->get('upload') . '/' . $cg->getOriginal('local'))) {
             throw new FileNotFoundException("File {$filename} doesn't exist");
         }
 
