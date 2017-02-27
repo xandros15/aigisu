@@ -12,7 +12,6 @@ return [
     'client' => [
         'application_name' => 'aigisu',
         'access-type' => 'offline',
-        'access-file' => __DIR__ . '/google/credentials.v3.json',
         'auth' => __DIR__ . '/google/key.json',
         'scopes' => [
             GoogleDrive::DRIVE_METADATA,

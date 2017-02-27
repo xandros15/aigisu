@@ -61,7 +61,7 @@ class GoogleUploader extends AbstractUploader
 
         $cg->setAttribute('google_id', $driveFile->getId())->saveOrFail();
 
-        return $this->created($response, $this->getLocation($request));
+        return $this->created($response, $this->getGoogleLocation($driveFile->getId()));
     }
 
     /**
@@ -88,12 +88,22 @@ class GoogleUploader extends AbstractUploader
     }
 
     /**
+     * @param string $id
+     * @return string
+     */
+    private function getGoogleLocation(string $id) : string
+    {
+        return sprintf('https://drive.google.com/uc?export=view&id=%s', $id);
+    }
+
+    /**
      * @return GoogleDriveManager
      */
     private function getGoogleDriveManager() : GoogleDriveManager
     {
+        /** @var $googleSystem GoogleDriveFilesystem */
         $googleSystem = $this->get(GoogleDriveFilesystem::class);
-        $googleSystem->getClientManager()->getAccess();
+        $googleSystem->getClientManager()->setAccess();
         return $googleSystem->getDriveManager();
     }
 

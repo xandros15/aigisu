@@ -15,7 +15,7 @@ $clientManager = $google->getClientManager();
 
 try {
     echo 'Access...' . PHP_EOL;
-    $clientManager->getAccess();
+    $clientManager->setAccess();
     echo '[DONE]' . PHP_EOL;
 } catch (RuntimeException $e) {
     $client = $clientManager->getClient();

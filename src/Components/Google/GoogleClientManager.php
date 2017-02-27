@@ -10,9 +10,12 @@ namespace Aigisu\Components\Google;
 
 
 use Aigisu\Components\Configure\Configurable;
+use Aigisu\Components\TokenSack;
+use InvalidArgumentException;
 
 class GoogleClientManager extends Configurable
 {
+    const TOKEN_NAME = 'google_token';
 
     /** @var  GoogleClient */
     private $client;
@@ -69,35 +72,72 @@ class GoogleClientManager extends Configurable
         return $this->client;
     }
 
-    /**
-     * @param array $access
-     */
-    public function getAccess($access = [])
+    public function setAccess()
     {
-        if ($access) {
-            $this->config['access-file'] = $access['file'];
-            $this->config['access-type'] = $access['type'];
+        if (!isset($this->config['access-type'])) {
+            throw new InvalidArgumentException('Missing access access-type');
         }
 
-        $this->client->setAccessConfig($this->config);
+        $this->client->setAccessType($this->config['access-type']);
+
+        if (!$token = $this->getTokenSack()->getToken(self::TOKEN_NAME)) {
+            throw new \RuntimeException('You need to create token via cli or http');
+        } else {
+            $this->client->setAccessToken($token);
+            if ($this->refreshAccessToken()) {
+                $this->saveAccessToken();
+            }
+        }
     }
 
     /**
-     * Save current access token into file
-     * if filename is empty, getting filename from config
-     * Remember to use full path eg. use __DIR__
+     * Save current access token into token sack
      *
-     * @param string $filename
-     * @return bool
      * @throws \Exception
      */
-    public function saveAccessToken(string $filename = '')
+    public function saveAccessToken()
     {
-        if ($filename) {
-            $this->config['access-file'] = $filename;
+        $this->getTokenSack()->saveToken(self::TOKEN_NAME, json_encode($this->client->getAccessToken()));
+    }
+
+    /**
+     * @return TokenSack
+     */
+    private function getTokenSack() : TokenSack
+    {
+        return $this->config[TokenSack::class];
+    }
+
+    /**
+     * @param $refreshToken
+     */
+    private function addRefreshToken($refreshToken)
+    {
+        if (!$refreshToken) {
+            return;
         }
 
-        return $this->client->saveAccessToken($this->config['access-file']);
+        $this->client->fetchAccessTokenWithRefreshToken();
+        $this->client->setAccessToken(array_merge(
+                ['refresh_token' => $refreshToken],
+                $this->client->getAccessToken())
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private function refreshAccessToken() : bool
+    {
+        if ($this->client->isAccessTokenExpired()) {
+            if ($this->client->isUsingApplicationDefaultCredentials()) {
+                $this->client->fetchAccessTokenWithAssertion();
+            } else {
+                $this->addRefreshToken($this->client->getRefreshToken());
+            }
+            return true;
+        }
+        return false;
     }
 
 }

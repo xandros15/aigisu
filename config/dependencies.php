@@ -5,13 +5,12 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
-use Aigisu\Components\Dispatcher;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Imgur\Imgur;
+use Aigisu\Components\TokenSack;
 use Aigisu\Components\Validators\CreateCGValidator;
 use Aigisu\Components\Validators\CreateUnitValidator;
 use Aigisu\Components\Validators\CreateUserValidator;
-use Aigisu\Components\Validators\MissingCGValidatorMiddleware;
 use Aigisu\Components\Validators\UpdateCGValidator;
 use Aigisu\Components\Validators\UpdateUnitValidator;
 use Aigisu\Components\Validators\UpdateUserValidator;
@@ -45,11 +44,15 @@ return [
         $adapter = new Local($container->get('upload'));
         return new Filesystem($adapter);
     },
-    GoogleDriveFilesystem::class => function () {
-        return new GoogleDriveFilesystem(require __DIR__ . '/google.php');
+    GoogleDriveFilesystem::class => function (ContainerInterface $container) {
+        $settings = require __DIR__ . '/google.php';
+        $settings['client'][TokenSack::class] = new TokenSack($container->get(Connection::class));
+        return new GoogleDriveFilesystem($settings);
     },
-    Imgur::class => function () {
-        return new Imgur(require __DIR__ . '/imgur.php');
+    Imgur::class => function (ContainerInterface $container) {
+        $settings = require __DIR__ . '/imgur.php';
+        $settings['client'][TokenSack::class] = new TokenSack($container->get(Connection::class));
+        return new Imgur($settings);
     },
     Twig::class => function (ContainerInterface $container) {
         $settings = ($container->get('isDebug')) ? [] : [
