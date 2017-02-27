@@ -32,9 +32,6 @@ return [
     'siteUrl' => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
     },
-    'sprite.icons' => function (Configuration $container) {
-        return "{$container->public}/sprite/icons";
-    },
     'database' => function () {
         return require __DIR__ . '/db/params.php';
     },
