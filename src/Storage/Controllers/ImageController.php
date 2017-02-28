@@ -9,12 +9,13 @@
 namespace Aigisu\Storage\Controllers;
 
 
-use finfo;
+use League\Flysystem\FileNotFoundException;
+use League\Flysystem\Filesystem;
 use League\Flysystem\Util;
 use Slim\Exception\NotFoundException;
-use Slim\Http\Body;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Stream;
 
 class ImageController extends AbstractController
 {
@@ -24,42 +25,39 @@ class ImageController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
+     * @throws NotFoundException
      */
     public function actionView(Request $request, Response $response) : Response
     {
-        return $this->getImage($request->getAttribute('path'), $request, $response);
-    }
-
-    /**
-     * @param string $imageFileName
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     * @throws NotFoundException
-     */
-    protected function getImage(string $imageFileName, Request $request, Response $response) : Response
-    {
         try {
-            $imageFileName = $this->get('public') . DIRECTORY_SEPARATOR . Util::normalizePath($imageFileName);
-        } catch (\LogicException $e) {
-            throw new NotFoundException($request, $response);
-        }
-
-        if (!$image = @fopen($imageFileName, 'rb')) {
-            throw new NotFoundException($request, $response);
-        }
-
-        $body = new Body($image);
-        $mimeType = (new finfo())->buffer($body, FILEINFO_MIME_TYPE);
-
-        if (!$this->isImage($mimeType)) {
+            $file = $this->getImage($request->getAttribute('path'));
+            $mime = $file->getMimetype();
+            $body = new Stream($file->readStream());
+        } catch (FileNotFoundException $e) {
             throw new NotFoundException($request, $response);
         }
 
         return $response->withBody($body)
-            ->withHeader('Content-Type', $mimeType)
+            ->withHeader('Content-Type', $mime)
             ->withHeader('Cache-Control', 'max-age=' . self::CACHE_LIFETIME . ', public')
             ->withHeader('Etag', md5($body));
+    }
+
+    /**
+     * @param string $path
+     * @return \League\Flysystem\Directory|\League\Flysystem\File|\League\Flysystem\Handler
+     * @throws FileNotFoundException
+     */
+    protected function getImage(string $path)
+    {
+        /** @var $filesystem Filesystem */
+        $filesystem = $this->get(Filesystem::class);
+        $file = $filesystem->get($path);
+        if (!$file->isFile() || !$this->isImage($file->getMimetype())) {
+            throw new FileNotFoundException($path);
+        }
+
+        return $file;
     }
 
     /**
