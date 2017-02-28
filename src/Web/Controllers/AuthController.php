@@ -63,6 +63,8 @@ class AuthController extends AbstractController
         /** @var $twig Twig */
         $twig = $this->get(Twig::class);
 
-        return $twig->render($response, 'auth/index.twig', $request->getParams());
+        return $twig->render($response, 'auth/index.twig', [
+            'form' => $request->getParams(),
+        ]);
     }
 }

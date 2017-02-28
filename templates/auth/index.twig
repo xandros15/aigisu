@@ -6,10 +6,14 @@
     <section>
         <h1>Sign Up</h1>
         <form action="{{ path_for('web.auth.signin') }}" method="post">
-            <label for="login-email">Email:</label>
-            <input id="login-email" name="email" type="email" value="{{ email }}" required>
-            <label for="login-password">Password:</label>
-            <input id="login-password" name="password" value="{{ password }}" type="password" required>
+            <div>
+                <label for="login-email">Email:</label>
+                <input id="login-email" name="email" type="email" value="{{ form.email }}" required>
+            </div>
+            <div>
+                <label for="login-password">Password:</label>
+                <input id="login-password" name="password" value="{{ form.password }}" type="password" required>
+            </div>
             <button>Sign Up</button>
         </form>
     </section>
