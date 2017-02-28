@@ -32,7 +32,7 @@ class AuthController extends AbstractController
 
         $auth = new JWTAuth($this->get('auth'));
         $token = $auth->createToken($user->getKey());
-        return $this->retrieve($response, [
+        return $this->read($response, [
             'token' => (string)$token,
             'expires_at' => $token->getClaim('exp'),
             'token_type' => "Bearer",

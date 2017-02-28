@@ -49,7 +49,7 @@ abstract class AbstractController extends ActiveContainer
      * @param string $path
      * @return Response
      */
-    protected function created(Response $response, string $path): Response
+    protected function create(Response $response, string $path): Response
     {
         return $response
             ->withStatus(self::STATUS_CREATED)
@@ -61,7 +61,7 @@ abstract class AbstractController extends ActiveContainer
      * @param array $data
      * @return Response
      */
-    protected function retrieve(Response $response, array $data) : Response
+    protected function read(Response $response, array $data) : Response
     {
         return $response->withJson($data, self::STATUS_OK);
     }
@@ -70,7 +70,7 @@ abstract class AbstractController extends ActiveContainer
      * @param Response $response
      * @return Response
      */
-    protected function deleted(Response $response) : Response
+    protected function delete(Response $response) : Response
     {
         return $response->withStatus(self::STATUS_OK);
     }
@@ -79,7 +79,7 @@ abstract class AbstractController extends ActiveContainer
      * @param Response $response
      * @return Response
      */
-    protected function updated(Response $response) : Response
+    protected function update(Response $response) : Response
     {
         return $response->withStatus(self::STATUS_OK);
     }

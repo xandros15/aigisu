@@ -23,7 +23,7 @@ class UserController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        return $this->retrieve($response, User::all()->toArray());
+        return $this->read($response, User::all()->toArray());
     }
 
     /**
@@ -35,7 +35,7 @@ class UserController extends AbstractController
     {
         $user = User::findOrFail($request->getAttribute('id'));
 
-        return $this->retrieve($response, $user->toArray());
+        return $this->read($response, $user->toArray());
     }
 
     /**
@@ -48,7 +48,7 @@ class UserController extends AbstractController
         $user = new User($request->getParams());
         $user->saveOrFail();
 
-        return $this->created($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
+        return $this->create($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
     }
 
     /**
@@ -62,7 +62,7 @@ class UserController extends AbstractController
         $user->fill($request->getParams());
         $user->saveOrFail();
 
-        return $this->updated($response);
+        return $this->update($response);
     }
 
     /**
@@ -76,7 +76,7 @@ class UserController extends AbstractController
         $user = User::findOrFail($request->getAttribute('id'));
         $user->delete();
 
-        return $this->deleted($response);
+        return $this->delete($response);
     }
 
     /**
@@ -91,6 +91,6 @@ class UserController extends AbstractController
             throw new UnauthorizedException($request, $response);
         }
 
-        return $this->retrieve($response, $request->getAttribute('user')->toArray());
+        return $this->read($response, $request->getAttribute('user')->toArray());
     }
 }

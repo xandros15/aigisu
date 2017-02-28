@@ -21,7 +21,7 @@ class UnitController extends AbstractController
         $units = Unit::with($expand)->get();
         $units = UnitTransformerFacade::transformAll($units, $this->get('router'), $expand);
 
-        return $this->retrieve($response, $units);
+        return $this->read($response, $units);
     }
 
     /**
@@ -36,7 +36,7 @@ class UnitController extends AbstractController
         $unit = Unit::with($expand)->findOrFail($this->getID($request));
         $transformedUnit = UnitTransformerFacade::transform($unit, $this->get('router'), $expand);
 
-        return $this->retrieve($response, $transformedUnit);
+        return $this->read($response, $transformedUnit);
     }
 
     /**
@@ -49,7 +49,7 @@ class UnitController extends AbstractController
         $unit = new Unit();
         $unit->saveUnitModel($request);
 
-        return $this->created($response, $this->get('router')->pathFor('api.unit.view', ['id' => $unit->getKey()]));
+        return $this->create($response, $this->get('router')->pathFor('api.unit.view', ['id' => $unit->getKey()]));
     }
 
     /**
@@ -63,7 +63,7 @@ class UnitController extends AbstractController
         $unit = Unit::findOrFail($this->getID($request));
         $unit->saveUnitModel($request);
 
-        return $this->updated($response);
+        return $this->update($response);
     }
 
     /**
@@ -75,7 +75,7 @@ class UnitController extends AbstractController
     {
         Unit::findOrFail($this->getID($request))->delete();
 
-        return $this->deleted($response);
+        return $this->delete($response);
     }
 
     /**
@@ -85,6 +85,6 @@ class UnitController extends AbstractController
      */
     public function actionRarities(Request $request, Response $response): Response
     {
-        return $this->retrieve($response, Unit::getRarities());
+        return $this->read($response, Unit::getRarities());
     }
 }

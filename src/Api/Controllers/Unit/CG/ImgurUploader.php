@@ -40,7 +40,7 @@ class ImgurUploader extends AbstractUploader
             'imgur_delhash' => null
         ])->saveOrFail();
 
-        return $this->deleted($response);
+        return $this->delete($response);
     }
 
     /**
@@ -64,7 +64,7 @@ class ImgurUploader extends AbstractUploader
             'imgur_delhash' => $imgurFile['deletehash'],
         ])->saveOrFail();
 
-        return $this->created($response, $this->getLocationImgur($imgurFile['id']));
+        return $this->create($response, $this->getLocationImgur($imgurFile['id']));
     }
 
     /**
@@ -89,7 +89,7 @@ class ImgurUploader extends AbstractUploader
         ])->saveOrFail();
         $imgur->deleteImage($id);
 
-        return $this->updated($response);
+        return $this->update($response);
     }
 
     private function getLocationImgur(string $id) : string
