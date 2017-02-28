@@ -17,7 +17,7 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        $expand = $this->getExtendedParam($request);
+        $expand = $this->getExpandParam($request);
         $units = Unit::with($expand)->get();
         $units = UnitTransformerFacade::transformAll($units, $this->get('router'), $expand);
 
@@ -31,7 +31,7 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $expand = $this->getExtendedParam($request);
+        $expand = $this->getExpandParam($request);
         /** @var $unit Unit */
         $unit = Unit::with($expand)->findOrFail($this->getID($request));
         $transformedUnit = UnitTransformerFacade::transform($unit, $this->get('router'), $expand);

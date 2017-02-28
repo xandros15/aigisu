@@ -19,7 +19,7 @@ abstract class AbstractController extends ActiveContainer
         STATUS_OK = 200,
         STATUS_CREATED = 201;
 
-    const EXTENDED = 'extended';
+    const EXPAND = 'expand';
     const HEADER_LOCATION = 'Location';
     const INDEX = 'id';
 
@@ -27,9 +27,9 @@ abstract class AbstractController extends ActiveContainer
      * @param Request $request
      * @return mixed
      */
-    protected function getExtendedParam(Request $request)
+    protected function getExpandParam(Request $request)
     {
-        return $request->getQueryParam(self::EXTENDED, []);
+        return $request->getQueryParam(self::EXPAND, []);
     }
 
     /**

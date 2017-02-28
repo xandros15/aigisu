@@ -26,7 +26,7 @@ class CGController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        $expand = $this->getExtendedParam($request);
+        $expand = $this->getExpandParam($request);
         $cgs = CG::where('unit_id', $this->getUnitID($request))->with($expand)->get();
         $cgs = CGTransformerFacade::transformAll($cgs, $this->get('router'), $expand);
 
@@ -40,7 +40,7 @@ class CGController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $expand = $this->getExtendedParam($request);
+        $expand = $this->getExpandParam($request);
         $cg = $this->findCGOrFail($request);
         $cg = CGTransformerFacade::transform($cg, $this->get('router'), $expand);
 
@@ -105,6 +105,6 @@ class CGController extends AbstractController
      */
     protected function findCGOrFail(Request $request) : CG
     {
-        return CG::with($this->getExtendedParam($request))->findOrFail($this->getID($request));
+        return CG::with($this->getExpandParam($request))->findOrFail($this->getID($request));
     }
 }
