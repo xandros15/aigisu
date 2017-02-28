@@ -41,27 +41,6 @@ abstract class AbstractUploader extends AbstractController
     public abstract function actionDelete(Request $request, Response $response) : Response;
 
     /**
-     * @param Request $request
-     * @return string
-     */
-    protected function getLocation(Request $request)
-    {
-        return $this->get('router')->pathFor('api.unit.cg.view', [
-            'id' => $this->getID($request),
-            'unitId' => $request->getAttribute('unitId')
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return int
-     */
-    protected function getUnitID(Request $request) : int
-    {
-        return $request->getAttribute(self::UNIT_ID, 0);
-    }
-
-    /**
      * @param CG $cg
      * @throws RuntimeException
      * @return string
