@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Aigisu\Components\Auth\SessionAuth;
 use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Components\Http\RuntimeException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -29,7 +30,7 @@ class AuthController extends AbstractController
             throw new BadRequestException($request, $response);
         }
         if (!$auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
-            //@todo add alert: you was logged
+            throw new RuntimeException("not implemented yet");
         }
 
         return $this->goHome($response);
