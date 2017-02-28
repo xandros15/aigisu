@@ -100,17 +100,6 @@ $this->get('/cg/{id:\d+}', CGController::class . ':actionView')
 
 $this->post('/auth', AuthController::class . ':actionCreate');
 
-$this->add(function ($req, $res, $next) {
-    /** @var $req \Slim\Http\Request */
-    /** @var $capsule Illuminate\Database\Capsule\Manager */
-    $capsule = $this->get(Illuminate\Database\Capsule\Manager::class);
-    $capsule->getConnection()->enableQueryLog();
-    $res = $next($req, $res);
-    dump($capsule->getConnection()->getQueryLog());
-
-    return $res;
-});
-
 $this->add(new Base64FileMiddleware());
 $this->add(new JWTAuthMiddleware($this->getContainer()));
 $this->add(new AccessControlAllowMiddleware());
