@@ -26,8 +26,10 @@ use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Interop\Container\ContainerInterface;
+use Knlv\Slim\Views\TwigMessages;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Slim\Flash\Messages;
 use Slim\Http\Headers;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
@@ -69,6 +71,7 @@ return [
 
         $view = new Twig($container->get('templates'), $settings);
 
+        $view->addExtension(new TwigMessages($container->get(Messages::class)));
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
         return $view;
@@ -99,5 +102,8 @@ return [
             'admin' => new AdminAccessMiddleware($container),
             'owner' => new OwnerAccessMiddleware($container),
         ]);
+    },
+    Messages::class => function () {
+        return new Messages();
     },
 ];

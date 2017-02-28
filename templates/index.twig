@@ -24,6 +24,11 @@
         </header>
     </section>
     <section class="layout-content">
+        <section class="message">
+            {% for message in flash('flash') %}
+                <div class="{{ message.type }}">{{ message.value }}</div>
+            {% endfor %}
+        </section>
         <main class="container">
             {% block content %}{% endblock %}
         </main>
