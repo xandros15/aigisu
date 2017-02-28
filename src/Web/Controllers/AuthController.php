@@ -30,6 +30,7 @@ class AuthController extends AbstractController
             throw new BadRequestException($request, $response);
         }
         if (!$auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
+            $this->flash->addError('Wrong username or email', true);
             return $this->actionView($request, $response);
         }
 
