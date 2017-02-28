@@ -15,7 +15,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Stream;
 
-class SpriteController extends Controller
+class SpriteController extends AbstractController
 {
     public function getIconsStylesheet(Request $request, Response $response)
     {

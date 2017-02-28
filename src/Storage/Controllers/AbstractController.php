@@ -11,6 +11,6 @@ namespace Aigisu\Storage\Controllers;
 
 use Aigisu\Core\ActiveContainer;
 
-abstract class Controller extends ActiveContainer
+abstract class AbstractController extends ActiveContainer
 {
 }

@@ -16,7 +16,7 @@ use Slim\Http\Body;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ImageController extends Controller
+class ImageController extends AbstractController
 {
     const CACHE_LIFETIME = 60 * 60 * 24; // sec * min * h = day
 
