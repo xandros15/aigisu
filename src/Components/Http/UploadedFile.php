@@ -35,7 +35,9 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storeAsPublic(string $path, string $name = '') : string
     {
-        $this->beforeStore();
+        if (!$this->exist()) {
+            throw new RuntimeException("Uploaded file doesn't exist");
+        }
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
@@ -46,7 +48,8 @@ class UploadedFile extends SlimUploadedFile
             throw new RuntimeException("Can't save file {$this->file}");
         }
 
-        $this->afterStore();
+
+        $this->moved = true;
 
         return $newName;
     }
@@ -60,7 +63,9 @@ class UploadedFile extends SlimUploadedFile
      */
     public function storeAsPrivate(string $path, string $name = '') : string
     {
-        $this->beforeStore();
+        if (!$this->exist()) {
+            throw new RuntimeException("Uploaded file doesn't exist");
+        }
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
@@ -71,7 +76,7 @@ class UploadedFile extends SlimUploadedFile
             throw new RuntimeException("Can't save file {$this->file}");
         }
 
-        $this->afterStore();
+        $this->moved = true;
 
         return $newName;
     }
@@ -81,7 +86,7 @@ class UploadedFile extends SlimUploadedFile
      */
     public function exist() : bool
     {
-        return $this->getError() === UPLOAD_ERR_OK;
+        return $this->getError() === UPLOAD_ERR_OK && !$this->moved;
     }
 
     /**
@@ -98,7 +103,7 @@ class UploadedFile extends SlimUploadedFile
         }
 
         if ($newPath) {
-            $newPath = rtrim($newPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $newPath = rtrim($newPath, DIRECTORY_SEPARATOR) . '/';
         }
 
         return $newPath . $newName;
@@ -114,24 +119,5 @@ class UploadedFile extends SlimUploadedFile
         }
 
         return $this->manager;
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    private function beforeStore()
-    {
-        if (!$this->exist()) {
-            throw new RuntimeException('The upload fails');
-        }
-
-        if ($this->moved) {
-            throw new RuntimeException('Uploaded file already moved');
-        }
-    }
-
-    private function afterStore()
-    {
-        $this->moved = true;
     }
 }
