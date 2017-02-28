@@ -8,8 +8,6 @@ use Aigisu\Core\Model;
 use Aigisu\Models\Handlers\UnitTagsHandler;
 use Aigisu\Models\Unit\CG;
 use Aigisu\Models\Unit\Tag;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Slim\Http\Request;
@@ -25,11 +23,11 @@ use Slim\Http\Request;
  * @property bool $nutaku
  * @property bool $special_cg
  * @property string $icon
- * @property Collection $cg
+ * @property \Illuminate\Database\Eloquent\Collection $cg
  * @property int $id
- * @property Collection $tags
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $tags
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Unit extends Model
 {

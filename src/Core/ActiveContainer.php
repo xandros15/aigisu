@@ -8,20 +8,9 @@
 
 namespace Aigisu\Core;
 
-use Illuminate\Database\Connection;
-use Interop\Container\ContainerInterface;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Router;
 
-/**
- * @property Response $response
- * @property Request $request
- * @property Router $router
- * @property Connection $connection
- * @property string $siteUrl
- * @property string $locale
- */
+use Interop\Container\ContainerInterface;
+
 abstract class ActiveContainer
 {
     /** @var ContainerInterface */
