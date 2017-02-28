@@ -4,7 +4,6 @@ namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Transformers\UnitTransformerFacade;
 use Aigisu\Models\Unit;
-use Aigisu\Models\Unit\MissingCG;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -80,27 +79,6 @@ class UnitController extends AbstractController
         $this->findOrFailUnit($request)->delete();
 
         return $this->delete($response);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
-    public function actionMissing(Request $request, Response $response): Response
-    {
-        $unit = Unit::with('cg')->findOrFail($this->getID($request));
-
-        $missing = new MissingCG($unit['cg']);
-        $missing = $missing->filter([
-            'is_male' => $unit['gender'] == Unit::GENDER_MALE,
-            'is_dmm' => $unit['dmm'],
-            'is_nutaku' => $unit['nutaku'],
-            'is_special_cg' => $unit['special_cg'],
-        ]);
-
-
-        return $this->read($response, $missing);
     }
 
     /**
