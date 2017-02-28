@@ -59,9 +59,9 @@ class Flash
     private function addFormattedMessage(array $message, bool $now) : void
     {
         if ($now) {
-            $this->messages->addMessage('flash', $message);
-        } else {
             $this->messages->addMessageNow('flash', $message);
+        } else {
+            $this->messages->addMessage('flash', $message);
         }
     }
 }
