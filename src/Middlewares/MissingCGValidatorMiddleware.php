@@ -31,10 +31,9 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
     public function validate(Request $request) : bool
     {
         $id = $request->getAttribute('route')->getArgument('id') ?? 0;
-        $unitId = $request->getAttribute('route')->getArgument('unitId');
         $params = $this->parseParams($request->getParams(), $id);
 
-        if (!$this->isMissing($unitId, $params)) {
+        if (!$this->isMissing($request->getParam('unit_id', 0), $params)) {
             $this->errors[] = 'This CG isn\'t required';
         }
 
@@ -84,7 +83,11 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
             return false;
         }
 
-        $unit = Unit::with('cg')->findOrFail($unitId);
+        /** @var $unit Unit */
+        if (!$unit = Unit::with('cg')->find($unitId)) {
+            return false;
+        }
+
         $missing = new MissingCG($unit['cg']);
         $whatMissing = $missing->filter([
             'is_dmm' => $unit['dmm'],

@@ -54,7 +54,7 @@ class CGController extends AbstractController
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        $cg = new CG(array_merge(['unit_id' => $this->getUnitID($request)], $request->getParams()));
+        $cg = new CG($request->getParams());
         $cg->uploadCG($request);
         $cg->saveOrFail();
 
@@ -105,8 +105,6 @@ class CGController extends AbstractController
      */
     protected function findCGOrFail(Request $request) : CG
     {
-        return CG::where('unit_id', $this->getUnitID($request))
-            ->with($this->getExtendedParam($request))
-            ->findOrFail($this->getID($request));
+        return CG::with($this->getExtendedParam($request))->findOrFail($this->getID($request));
     }
 }

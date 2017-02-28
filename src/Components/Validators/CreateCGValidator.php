@@ -11,6 +11,7 @@ namespace Aigisu\Components\Validators;
 
 use Aigisu\Components\Validators\Rules\ImageSize;
 use Aigisu\Components\Validators\Rules\Optional;
+use Aigisu\Components\Validators\Rules\UnitExist;
 use Aigisu\Models\Unit\CG;
 use Respect\Validation\Validator as v;
 
@@ -25,6 +26,7 @@ class CreateCGValidator extends AbstractValidator
             'server' => v::in(CG::getServersNames()),
             'scene' => v::intVal(),
             'archival' => new Optional(v::boolVal()),
+            'unit_id' => new v(new UnitExist()),
         ];
     }
 
