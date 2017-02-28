@@ -17,4 +17,4 @@ $this->get('/units', UnitController::class . ':actionIndex')->setName('web.units
 
 $this->get('/auth', AuthController::class . ':actionView');
 $this->post('/auth', AuthController::class . ':actionSignin')->setName('web.auth.signin');
-$this->post('/auth/signout', AuthController::class . ':actionSignout');
+$this->get('/auth/signout', AuthController::class . ':actionSignout');
