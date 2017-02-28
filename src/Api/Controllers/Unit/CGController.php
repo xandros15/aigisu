@@ -26,9 +26,11 @@ class CGController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        $expand = $this->getExpandParam($request);
-        $cgs = CG::where('unit_id', $this->getUnitID($request))->with($expand)->get();
-        $cgs = CGTransformerFacade::transformAll($cgs, $this->get('router'), $expand);
+        $cgs = CGTransformerFacade::transformAll(
+            $this->findCGOrFail($request),
+            $this->get('router'),
+            $this->getExpandParam($request)
+        );
 
         return $this->read($response, $cgs);
     }
@@ -40,9 +42,11 @@ class CGController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $expand = $this->getExpandParam($request);
-        $cg = $this->findCGOrFail($request);
-        $cg = CGTransformerFacade::transform($cg, $this->get('router'), $expand);
+        $cg = CGTransformerFacade::transform(
+            $this->getExpandParam($request),
+            $this->get('router'),
+            $this->findCGOrFail($request)
+        );
 
         return $this->read($response, $cg);
     }
@@ -54,9 +58,8 @@ class CGController extends AbstractController
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        $cg = new CG($request->getParams());
-        $cg->uploadCG($request);
-        $cg->saveOrFail();
+        $cg = new CG();
+        $cg->saveOrFailCG($request);
 
         return $this->create($response, $this->get('router')->pathFor('api.unit.cg.view', [
             'id' => $cg->getKey(),
@@ -70,10 +73,8 @@ class CGController extends AbstractController
      */
     public function actionUpdate(Request $request, Response $response): Response
     {
-        /** @var $cg CG */
-        $cg = $this->findCGOrFail($request)->fill($request->getParams());
-        $cg->uploadCG($request);
-        $cg->saveOrFail();
+        $cg = $this->findCGOrFail($request);
+        $cg->saveOrFailCG($request);
 
         return $this->update($response);
     }
@@ -91,19 +92,22 @@ class CGController extends AbstractController
 
     /**
      * @param Request $request
-     * @return int
+     * @return CG|\Illuminate\Database\Eloquent\Collection
      */
-    protected function getUnitID(Request $request) : int
+    private function findCGOrFail(Request $request)
     {
-        return $request->getAttribute(self::UNIT_INDEX);
-    }
+        $expand = $this->getExpandParam($request);
+        $cg = new CG();
+        if (in_array($expand, ['unit'])) { //edger loader for less queries
+            $cg = $cg->with('unit');
+        }
 
-    /**
-     * @param Request $request
-     * @return CG
-     */
-    protected function findCGOrFail(Request $request) : CG
-    {
-        return CG::with($this->getExpandParam($request))->findOrFail($this->getID($request));
+        if ($id = $this->getID($request)) {
+            $cg = $cg->findOrFail($id);
+        } else {
+            $cg = $cg->where('unit_id', $request->getAttribute(self::UNIT_INDEX))->get();
+        }
+
+        return $cg;
     }
 }

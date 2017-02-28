@@ -75,4 +75,14 @@ class CG extends Model
             $this->setAttribute('local', $storagePath);
         }
     }
+
+    /**
+     * @param Request $request
+     */
+    public function saveOrFailCG(Request $request) : void
+    {
+        $this->fill($request->getParams());
+        $this->uploadCG($request);
+        $this->saveOrFail();
+    }
 }
