@@ -4,6 +4,7 @@
 /** @var $this \Slim\App */
 
 use Aigisu\Web\Controllers\AbstractController;
+use Aigisu\Web\Controllers\AuthController;
 use Aigisu\Web\Controllers\UnitController;
 
 $this->get('[/]', function () {
@@ -13,3 +14,7 @@ $this->get('[/]', function () {
 })->setName(AbstractController::HOME_PATH_NAME);
 
 $this->get('/units', UnitController::class . ':actionIndex')->setName('web.units');
+
+$this->get('/auth', AuthController::class . ':actionView');
+$this->post('/auth', AuthController::class . ':actionSignin')->setName('web.auth.signin');
+$this->post('/auth/signout', AuthController::class . ':actionSignout');

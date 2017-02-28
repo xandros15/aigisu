@@ -1,0 +1,16 @@
+{% extends 'index.twig' %}
+
+{% block title %}Sign Up | Aigisu{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Sign Up</h1>
+        <form action="{{ path_for('web.auth.signin') }}" method="post">
+            <label for="login-email">Email:</label>
+            <input id="login-email" name="email" type="email" value="{{ email }}" required>
+            <label for="login-password">Password:</label>
+            <input id="login-password" name="password" value="{{ password }}" type="password" required>
+            <button>Sign Up</button>
+        </form>
+    </section>
+{% endblock %}
