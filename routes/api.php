@@ -60,7 +60,7 @@ $this->group('', function () {
 $this->get('/units', UnitController::class . ':actionIndex')->setName('api.unit.index');
 $this->get('/units/{id:\d+}', UnitController::class . ':actionView')->setName('api.unit.view');
 $this->get('/units/rarities', UnitController::class . ':actionRarities')->setName('api.unit.rarities');
-
+$this->get('/units/{id:\d+}/cg/missing', UnitController::class . ':actionMissing')->setName('api.unit.cg.missing');
 
 $this->group('', function () {
     $missingCG = new MissingCGValidatorMiddleware();

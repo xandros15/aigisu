@@ -10,6 +10,7 @@ namespace Aigisu\Api\Transformers;
 
 
 use Aigisu\Models\Unit;
+use Aigisu\Models\Unit\MissingCG;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
 use Slim\Interfaces\RouterInterface;
@@ -20,7 +21,8 @@ class UnitTransformer extends TransformerAbstract
 
     /** @var array */
     protected $availableIncludes = [
-        'cg'
+        'cg',
+        'missing_cg',
     ];
 
     /** @var RouterInterface */
@@ -44,6 +46,21 @@ class UnitTransformer extends TransformerAbstract
         return $this->collection($unit->cg, new CGTransformer($this->router));
     }
 
+    public function includeMissingCg(Unit $unit) : Collection
+    {
+        $missing = new MissingCG($unit['cg']);
+        $missing = $missing->filter([
+            'is_male' => $unit['gender'] == Unit::GENDER_MALE,
+            'is_dmm' => $unit['dmm'],
+            'is_nutaku' => $unit['nutaku'],
+            'is_special_cg' => $unit['special_cg'],
+        ]);
+
+        return new Collection($missing, function ($missing) {
+            return $missing;
+        });
+    }
+
     /**
      * @param Unit $unit
      * @return array
@@ -51,15 +68,15 @@ class UnitTransformer extends TransformerAbstract
     public function transform(Unit $unit) : array
     {
         return [
-            'id' => (int) $unit->id,
+            'id' => (int)$unit->id,
             'name' => $unit->name,
             'japanese_name' => $unit->japanese_name,
             'rarity' => $unit->rarity,
             'icon' => $unit->icon ? $this->router->pathFor('storage.images', ['path' => $unit->icon]) : null,
             'gender' => $unit->gender,
-            'dmm' => (bool) $unit->dmm,
-            'nutaku' => (bool) $unit->nutaku,
-            'special_cg' => (bool) $unit->special_cg,
+            'dmm' => (bool)$unit->dmm,
+            'nutaku' => (bool)$unit->nutaku,
+            'special_cg' => (bool)$unit->special_cg,
             'links' => [
                 'seesaw' => $unit->link_seesaw,
                 'gc' => $unit->link_gc,
