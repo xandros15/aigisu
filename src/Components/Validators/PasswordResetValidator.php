@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: xandros15
  * Date: 2017-03-01
- * Time: 20:51
+ * Time: 18:20
  */
 
 namespace Aigisu\Components\Validators;
@@ -11,16 +11,15 @@ namespace Aigisu\Components\Validators;
 
 use Respect\Validation\Validator as v;
 
-class UpdateUserValidator extends AbstractValidator
+class PasswordResetValidator extends AbstractValidator
 {
     /**
      * @return array
      */
     protected function rules() : array
     {
-        return $this->makeOptional([
-            'name' => v::stringType()->length(4, 15),
-            'email' => v::email(),
-        ]);
+        return [
+            'password' => v::stringType()->length(8, 32),
+        ];
     }
 }

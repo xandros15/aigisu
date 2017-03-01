@@ -9,8 +9,13 @@
 namespace Aigisu\Api\Controllers;
 
 
+use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
+use Aigisu\Components\Http\RuntimeException;
 use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Components\Mailer;
+use Aigisu\Models\Unit;
 use Aigisu\Models\User;
+use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -33,8 +38,7 @@ class UserController extends AbstractController
      */
     public function actionView(Request $request, Response $response) : Response
     {
-        $user = User::findOrFail($request->getAttribute('id'));
-
+        $user = $this->findUserOrFail($request);
         return $this->read($response, $user->toArray());
     }
 
@@ -43,12 +47,32 @@ class UserController extends AbstractController
      * @param Response $response
      * @return Response
      */
-    public function actionCreate(Request $request, Response $response) : Response
+    public function actionActivate(Request $request, Response $response) : Response
     {
-        $user = new User($request->getParams());
-        $user->saveOrFail();
+        $this->findUserOrFail($request)->activate();
+        return $this->update($response);
+    }
 
-        return $this->create($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionChangeRole(Request $request, Response $response) : Response
+    {
+        $this->findUserOrFail($request)->changeRole($request->getParam('role'));
+        return $this->update($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionDeactivate(Request $request, Response $response) : Response
+    {
+        $this->findUserOrFail($request)->deactivate();
+        return $this->update($response);
     }
 
     /**
@@ -58,9 +82,67 @@ class UserController extends AbstractController
      */
     public function actionUpdate(Request $request, Response $response) : Response
     {
-        $user = User::findOrFail($request->getAttribute('id'));
-        $user->fill($request->getParams());
+        $this->findUserOrFail($request)->fill($request->getParams())->saveOrFail();
+        return $this->update($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionRegister(Request $request, Response $response) : Response
+    {
+        $user = new User($request->getParams());
+        $user->setPassword($request->getParam('password'));
         $user->saveOrFail();
+
+        return $this->create($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws NotFoundException
+     * @throws RuntimeException
+     */
+    public function actionResetPasswordRequest(Request $request, Response $response) : Response
+    {
+        if (!$user = User::findByEmail($request->getParam('email'))) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $user->generateRecoveryHash();
+
+        $isSend = $this->get(Mailer::class)->send([
+            'to' => $user->email,
+            'subject' => 'Reset Password',
+            'view' => 'mail/reset-password.twig',
+            'user' => $user,
+        ]);
+
+        if (!$isSend) {
+            throw new RuntimeException('Can\'t send email');
+        }
+
+        return $this->update($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws InvalidRecoveryHashException
+     */
+    public function actionResetPassword(Request $request, Response $response) : Response
+    {
+        $hash = $request->getAttribute('token');
+        if (!User::isValidRecoveryHash($hash) || !$user = User::findByRecoveryHash($hash)) {
+            throw new InvalidRecoveryHashException($request, $response);
+        }
+
+        $user->changePassword($request->getParam('password'));
 
         return $this->update($response);
     }
@@ -73,9 +155,7 @@ class UserController extends AbstractController
      */
     public function actionDelete(Request $request, Response $response) : Response
     {
-        $user = User::findOrFail($request->getAttribute('id'));
-        $user->delete();
-
+        $this->findUserOrFail($request)->delete();
         return $this->delete($response);
     }
 
@@ -92,5 +172,16 @@ class UserController extends AbstractController
         }
 
         return $this->read($response, $request->getAttribute('user')->toArray());
+    }
+
+
+    /**
+     * @param Request $request
+     * @throws NotFoundException
+     * @return User
+     */
+    private function findUserOrFail(Request $request) : User
+    {
+        return User::findOrFail($this->getID($request));
     }
 }

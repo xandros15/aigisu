@@ -39,7 +39,8 @@ class Users implements Table
         $table->string('name', 15)->unique();
         $table->string('password', 255);
         $table->string('email', 64)->unique();
-        $table->enum('role', $this->getEnumRoles());
+        $table->enum('role', $this->getEnumRoles())->default($this->getDefaultRole());
+        $table->boolean('is_confirmed')->default(false);
         $table->string('recovery_hash', 255)->nullable();
         $table->string('remember_identifier', 255)->nullable();
         $table->string('remember_hash', 255)->nullable();
@@ -54,7 +55,7 @@ class Users implements Table
         $accesses = (new Configuration())->get('access');
         $roles = [];
         foreach ($accesses as $access) {
-            $roles[] = $access['role'];
+            $roles[$accesses['level']] = $access['role'];
         }
 
         if (!$roles) {
@@ -62,5 +63,12 @@ class Users implements Table
         }
 
         return $roles;
+    }
+
+    private function getDefaultRole() : string
+    {
+        $enum = $this->getDefaultRole();
+        ksort($enum);
+        return end($enum);
     }
 }

@@ -14,9 +14,12 @@ use Aigisu\Components\Imgur\Client;
 use Aigisu\Components\Imgur\Imgur;
 use Aigisu\Components\Mailer;
 use Aigisu\Components\TokenSack;
+use Aigisu\Components\Validators\ChangeRoleValidator;
 use Aigisu\Components\Validators\CreateCGValidator;
 use Aigisu\Components\Validators\CreateUnitValidator;
 use Aigisu\Components\Validators\CreateUserValidator;
+use Aigisu\Components\Validators\PasswordResetRequestValidator;
+use Aigisu\Components\Validators\PasswordResetValidator;
 use Aigisu\Components\Validators\UpdateCGValidator;
 use Aigisu\Components\Validators\UpdateUnitValidator;
 use Aigisu\Components\Validators\UpdateUserValidator;
@@ -89,8 +92,11 @@ return [
     },
     ValidatorManager::class => function (ContainerInterface $container) {
         return new ValidatorManager([
-            'user.create' => new CreateUserValidator($container->get('access')),
-            'user.update' => new UpdateUserValidator($container->get('access')),
+            'user.create' => new CreateUserValidator(),
+            'user.update' => new UpdateUserValidator(),
+            'user.role' => new ChangeRoleValidator($container->get('access')),
+            'user.password.reset' => new PasswordResetValidator(),
+            'user.password.reset.request' => new PasswordResetRequestValidator(),
             'unit.create' => new CreateUnitValidator(),
             'unit.update' => new UpdateUnitValidator(),
             'cg.create' => new CreateCGValidator(),

@@ -9,22 +9,10 @@
 namespace Aigisu\Components\Validators;
 
 
-use InvalidArgumentException;
 use Respect\Validation\Validator as v;
 
 class CreateUserValidator extends AbstractValidator
 {
-    /** @var array */
-    private $accesses = [];
-
-    /**
-     * CreateUserValidator constructor.
-     * @param array $accesses
-     */
-    public function __construct(array $accesses)
-    {
-        $this->accesses = $accesses;
-    }
 
     /**
      * @return array
@@ -35,24 +23,6 @@ class CreateUserValidator extends AbstractValidator
             'name' => v::stringType()->length(4, 15),
             'email' => v::email(),
             'password' => v::stringType()->length(8, 32),
-            'role' => v::in($this->getEnumRoles()),
         ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getEnumRoles() : array
-    {
-        $roles = [];
-        foreach ($this->accesses as $access) {
-            $roles[] = $access['role'];
-        }
-
-        if (!$roles) {
-            throw new InvalidArgumentException('Missing roles in access param. Check configuration params');
-        }
-
-        return $roles;
     }
 }

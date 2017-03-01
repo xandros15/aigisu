@@ -25,7 +25,13 @@ use Aigisu\Middlewares\ValidatorMiddleware;
 $acl = $this->getContainer()->get(AccessManager::class);
 
 
-/** @var $this \Slim\App */
+$this->post('/users', UserController::class . ':actionRegister')
+    ->setName('api.user.create')->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
+$this->post('/users/password/reset/send', UserController::class . ':actionResetPasswordRequest')
+    ->add(new ValidatorMiddleware($this->getContainer(), 'user.password.reset.request'));
+$this->post('/users/password/reset/{token:\w+}', UserController::class . ':actionResetPassword')
+    ->add(new ValidatorMiddleware($this->getContainer(), 'user.password.reset'));
+
 $this->group('', function () {
     $this->get('/users', UserController::class . ':actionIndex')->setName('api.user.index');
     $this->get('/users/{id:\d+}', UserController::class . ':actionView')->setName('api.user.view');
@@ -33,12 +39,15 @@ $this->group('', function () {
 })->add($acl->get('moderator'));
 
 $this->group('', function () {
-    $this->post('/users', UserController::class . ':actionCreate')
-        ->setName('api.user.create')
-        ->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
     $this->post('/users/{id:\d+}', UserController::class . ':actionUpdate')
-        ->setName('api.user.update')
-        ->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
+        ->setName('api.user.update')->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
+    $this->post('/users/{id:\d+}/activate', UserController::class . ':actionActivate')
+        ->setName('api.user.activate');
+    $this->post('/users/{id:\d+}/deactivate', UserController::class . ':actionDeactivate')
+        ->setName('api.user.deactivate');
+    $this->post('/users/{id:\d+}/role', UserController::class . ':actionChangeRole')
+        ->setName('api.user.role')
+        ->add(new ValidatorMiddleware($this->getContainer(), 'user.role'));
     $this->delete('/users/{id:\d+}', UserController::class . ':actionDelete')
         ->setName('api.user.delete');
 })->add($acl->get('owner'));
