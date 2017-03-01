@@ -13,7 +13,9 @@ use Aigisu\Components\Flash;
 use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;
+use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 abstract class AbstractController extends ActiveContainer
 {
@@ -38,6 +40,21 @@ abstract class AbstractController extends ActiveContainer
     {
         $path = $this->get('router')->pathFor(self::HOME_PATH_NAME);
         return $response->withRedirect($path);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param string $template
+     * @param array $params
+     * @return Response
+     */
+    public function render(Request $request, Response $response, string $template, array $params = []) : Response
+    {
+        return $this->get(Twig::class)->render($response, $template, array_merge($params, [
+            'is_guest' => $request->getAttribute('is_guest', true),
+            'user' => $request->getAttribute('user', []),
+        ]));
     }
 
 }

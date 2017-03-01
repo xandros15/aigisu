@@ -13,7 +13,6 @@ use Aigisu\Components\Auth\SessionAuth;
 use Aigisu\Components\Http\BadRequestException;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Views\Twig;
 
 class AuthController extends AbstractController
 {
@@ -61,10 +60,7 @@ class AuthController extends AbstractController
      */
     public function actionView(Request $request, Response $response) : Response
     {
-        /** @var $twig Twig */
-        $twig = $this->get(Twig::class);
-
-        return $twig->render($response, 'auth/index.twig', [
+        return $this->render($request, $response, 'auth/index.twig', [
             'form' => $request->getParams(),
         ]);
     }
