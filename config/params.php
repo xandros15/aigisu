@@ -11,6 +11,7 @@ return [
     'root' => Configuration::DIR_ROOT,
     'web' => Configuration::DIR_WEB,
     'locale' => 'en',
+    'app.name' => 'Aigisu',
     'templates' => function (Configuration $container) {
         return "{$container->root}/templates";
     },
