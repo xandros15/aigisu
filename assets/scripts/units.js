@@ -5,7 +5,7 @@
     var storage = {
         units: [],
         filter: {
-            missingCG: false,
+            missing_cg: false,
             rarity: 'all',
             name: '',
             server: 'all',
@@ -13,7 +13,7 @@
         sort: 'crated_at',
     };
     var template = _.template(document.getElementById('unit-template').innerHTML);
-    axios.get(API.UNITS).then(function (response) {
+    axios.get(API.UNITS + '?expand=missing_cg').then(function (response) {
         storage.units = response.data;
         updateUnitList();
     });
@@ -27,7 +27,7 @@
     }, 300));
 
     document.getElementById('filter-missing-cg').addEventListener('change', function (e) {
-        updateFilter('missingCG', e.target.checked)
+        updateFilter('missing_cg', e.target.checked)
     });
 
     document.getElementById('filter-server').addEventListener('change', function (e) {
@@ -73,7 +73,7 @@
         newUnits = _.filter(newUnits, function (unit) {
             var rarityFilter = filter.rarity == 'all' || filter.rarity == unit.rarity;
             var nameFilter = filter.name.length == 0 || unit.name.toLowerCase().indexOf(filter.name.toLowerCase()) != -1;
-            var missingCGFilter = !filter.missingCG || unit.missingCG.length > 0;
+            var missingCGFilter = !filter.missing_cg || unit.missing_cg.length > 0;
             var serverFilter = filter.server == 'all' || unit[filter.server];
 
             return rarityFilter && nameFilter && missingCGFilter && serverFilter;
