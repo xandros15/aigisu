@@ -12,6 +12,7 @@ use Aigisu\Components\ACL\OwnerAccessMiddleware;
 use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Imgur\Client;
 use Aigisu\Components\Imgur\Imgur;
+use Aigisu\Components\Mailer;
 use Aigisu\Components\TokenSack;
 use Aigisu\Components\Validators\CreateCGValidator;
 use Aigisu\Components\Validators\CreateUnitValidator;
@@ -105,5 +106,22 @@ return [
     },
     Messages::class => function () {
         return new Messages();
+    },
+    Mailer::class => function (ContainerInterface $container) {
+        $params = require __DIR__ . '/mailer/mailer.php';
+
+        $transporter = new Swift_SmtpTransport($params['host'], $params['port'], $params['encryption']);
+        $transporter->setUsername($params['username']);
+        $transporter->setPassword($params['password']);
+
+        $twig = $container->get(Twig::class)->getEnvironment();
+        $swift = new Swift_Mailer($transporter);
+
+        $mailer = new Mailer($swift, $twig, [
+            'from' => $params['username'],
+            'prefix' => $container->get('app.name'),
+        ]);
+
+        return $mailer;
     },
 ];
