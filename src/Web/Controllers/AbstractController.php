@@ -49,7 +49,7 @@ abstract class AbstractController extends ActiveContainer
      * @param array $params
      * @return Response
      */
-    public function render(Request $request, Response $response, string $template, array $params = []) : Response
+    protected function render(Request $request, Response $response, string $template, array $params = []) : Response
     {
         return $this->get(Twig::class)->render($response, $template, array_merge($params, [
             'is_guest' => $request->getAttribute('is_guest', true),
