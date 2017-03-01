@@ -13,7 +13,6 @@ use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
 use Aigisu\Components\Http\RuntimeException;
 use Aigisu\Components\Http\UnauthorizedException;
 use Aigisu\Components\Mailer;
-use Aigisu\Models\Unit;
 use Aigisu\Models\User;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
@@ -173,7 +172,6 @@ class UserController extends AbstractController
 
         return $this->read($response, $request->getAttribute('user')->toArray());
     }
-
 
     /**
      * @param Request $request
