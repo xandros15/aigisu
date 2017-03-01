@@ -1,10 +1,10 @@
 {% extends 'index.twig' %}
 
-{% block title %}Sign Up | Aigisu{% endblock %}
+{% block title %}Sign Ip | Aigisu{% endblock %}
 
 {% block content %}
     <section>
-        <h1>Sign Up</h1>
+        <h1>Sign In</h1>
         <form action="{{ path_for('web.auth.signin') }}" method="post">
             <div>
                 <label for="login-email">Email:</label>
@@ -14,7 +14,7 @@
                 <label for="login-password">Password:</label>
                 <input id="login-password" name="password" value="{{ form.password }}" type="password" required>
             </div>
-            <button>Sign Up</button>
+            <button>Sign In</button>
         </form>
     </section>
 {% endblock %}
