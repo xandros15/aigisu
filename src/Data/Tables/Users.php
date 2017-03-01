@@ -67,7 +67,7 @@ class Users implements Table
 
     private function getDefaultRole() : string
     {
-        $enum = $this->getDefaultRole();
+        $enum = $this->getEnumRoles();
         ksort($enum);
         return end($enum);
     }
