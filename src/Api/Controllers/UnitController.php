@@ -99,7 +99,7 @@ class UnitController extends AbstractController
     {
         $expand = $this->getExpandParam($request);
         $unit = new Unit();
-        if (in_array($expand, ['cg'])) { //edger loader for less queries
+        if (in_array($expand, ['cg', 'missing_cg'])) { //edger loader for less queries
             $unit = $unit->with('cg');
         }
 
