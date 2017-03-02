@@ -16,6 +16,7 @@ use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Interfaces\CollectionInterface;
 use Slim\Views\Twig;
 
 abstract class AbstractController extends ActiveContainer
@@ -51,11 +52,12 @@ abstract class AbstractController extends ActiveContainer
      * @param Request $request
      * @param Response $response
      * @param string $template
-     * @param array $params
+     * @param array|CollectionInterface $params
      * @return Response
      */
-    protected function render(Request $request, Response $response, string $template, array $params = []) : Response
+    protected function render(Request $request, Response $response, string $template, $params = []) : Response
     {
+        $params = (array)($params instanceof CollectionInterface ? $params->all() : $params);
         $params = array_merge($this->authParams($request), $params);
         return $this->get(Twig::class)->render($response, $template, $params);
     }
