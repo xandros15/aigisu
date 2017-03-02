@@ -9,6 +9,8 @@
 namespace Aigisu\Web\Controllers;
 
 
+use Aigisu\Components\Api\Api;
+use Aigisu\Components\Api\ApiResponse;
 use Aigisu\Components\Auth\RequestAdapter;
 use Aigisu\Components\Flash;
 use Aigisu\Core\ActiveContainer;
@@ -37,7 +39,6 @@ abstract class AbstractController extends ActiveContainer
         $this->flash = new Flash($this->get(Messages::class));
     }
 
-
     /**
      * @param Response $response
      * @return Response
@@ -46,6 +47,18 @@ abstract class AbstractController extends ActiveContainer
     {
         $path = $this->get('router')->pathFor(self::HOME_PATH_NAME);
         return $response->withRedirect($path);
+    }
+
+    /**
+     * @param $name
+     * @param $request
+     * @param $response
+     * @return ApiResponse
+     */
+    protected function callApi($name, $request, $response) : ApiResponse
+    {
+        $api = new Api($this->get('router')->getNamedRoute($name));
+        return $api->send($request, $response);
     }
 
     /**
