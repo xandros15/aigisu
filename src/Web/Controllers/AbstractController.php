@@ -9,6 +9,7 @@
 namespace Aigisu\Web\Controllers;
 
 
+use Aigisu\Components\Auth\RequestAdapter;
 use Aigisu\Components\Flash;
 use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
@@ -25,6 +26,10 @@ abstract class AbstractController extends ActiveContainer
     /** @var Flash */
     protected $flash;
 
+    /**
+     * AbstractController constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
@@ -51,10 +56,18 @@ abstract class AbstractController extends ActiveContainer
      */
     protected function render(Request $request, Response $response, string $template, array $params = []) : Response
     {
-        return $this->get(Twig::class)->render($response, $template, array_merge($params, [
-            'is_guest' => $request->getAttribute('is_guest', true),
-            'user' => $request->getAttribute('user', []),
-        ]));
+        $params = array_merge($this->authParams($request), $params);
+        return $this->get(Twig::class)->render($response, $template, $params);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function authParams(Request $request) : array
+    {
+        $adapter = new RequestAdapter($request);
+        return $adapter->all();
     }
 
 }
