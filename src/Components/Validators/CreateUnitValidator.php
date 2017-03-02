@@ -33,15 +33,6 @@ class CreateUnitValidator extends AbstractValidator
             'nutaku' => v::boolVal(),
             'special_cg' => v::boolVal(),
             'tags' => new Optional(v::arrayType()),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function fileRules() : array
-    {
-        return [
             'icon' => v::size('1KB', '50KB')->addRule(new ImageSize(80, 150)),
         ];
     }

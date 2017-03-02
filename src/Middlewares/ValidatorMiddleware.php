@@ -10,29 +10,17 @@ namespace Aigisu\Middlewares;
 
 
 use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Components\Validators\ValidatorInterface;
 use Aigisu\Components\Validators\ValidatorManager;
+use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
-use Interop\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ValidatorMiddleware implements MiddlewareInterface
+class ValidatorMiddleware extends ActiveContainer implements MiddlewareInterface
 {
     const MESSAGE = 'message';
-
-    /** @var ValidatorInterface */
-    private $validator;
-
-    /**
-     * ValidatorMiddleware constructor.
-     * @param ContainerInterface $container
-     * @param string $validatorName
-     */
-    public function __construct(ContainerInterface $container, string $validatorName)
-    {
-        $this->setValidator($container->get(ValidatorManager::class)->get($validatorName));
-    }
 
     /**
      * @param Request $request
@@ -43,11 +31,10 @@ class ValidatorMiddleware implements MiddlewareInterface
      */
     public function __invoke(Request $request, Response $response, callable $next) : Response
     {
-        if (!$this->validator->validate($request->getParams()) ||
-            !$this->validator->validateFiles($request->getUploadedFiles())
-        ) {
+        $validator = $this->createValidator($request);
+        if ($validator && !$validator->validate($this->getParams($request), $this->getContext($request))) {
             $response = $response->withJson([
-                self::MESSAGE => $this->validator->getErrors(),
+                self::MESSAGE => $validator->getErrors(),
             ]);
 
             throw new BadRequestException($request, $response);
@@ -57,10 +44,49 @@ class ValidatorMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ValidatorInterface $validator
+     * @param Request $request
+     * @return mixed
      */
-    private function setValidator(ValidatorInterface $validator) : void
+    private function getContext(Request $request)
     {
-        $this->validator = $validator;
+        return $request->getAttribute('route')->getArguments();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function getParams(Request $request) : array
+    {
+        return array_merge($request->getParams(), $this->parseUploadedFiles($request->getUploadedFiles()));
+    }
+
+    /**
+     * @param UploadedFile[] $uploadedFiles
+     * @return array
+     */
+    private function parseUploadedFiles(array $uploadedFiles) : array
+    {
+        $files = [];
+        foreach ($uploadedFiles as $name => $file) {
+            $files[$name] = $file->exist() ? new \SplFileObject($file->file) : null;
+        }
+
+        return $files;
+    }
+
+    /**
+     * @param Request $request
+     * @return ValidatorInterface|null
+     */
+    private function createValidator(Request $request)
+    {
+        if (!$route = $request->getAttribute('route')) {
+            return null;
+        }
+
+        $validator = (string)$route->getArgument('validator', '');
+
+        return $this->get(ValidatorManager::class)->get($validator);
     }
 }

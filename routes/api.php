@@ -26,11 +26,11 @@ $acl = $this->getContainer()->get(AccessManager::class);
 
 
 $this->post('/users', UserController::class . ':actionRegister')
-    ->setName('api.user.create')->add(new ValidatorMiddleware($this->getContainer(), 'user.create'));
+    ->setName('api.user.create')->setArgument('validator', 'user.create');
 $this->post('/users/password/reset/send', UserController::class . ':actionResetPasswordRequest')
-    ->add(new ValidatorMiddleware($this->getContainer(), 'user.password.reset.request'));
+    ->setArgument('validator', 'user.password.reset.request');
 $this->post('/users/password/reset/{token:\w+}', UserController::class . ':actionResetPassword')
-    ->add(new ValidatorMiddleware($this->getContainer(), 'user.password.reset'));
+    ->setArgument('validator', 'user.password.reset');
 
 $this->group('', function () {
     $this->get('/users', UserController::class . ':actionIndex')->setName('api.user.index');
@@ -40,14 +40,14 @@ $this->group('', function () {
 
 $this->group('', function () {
     $this->post('/users/{id:\d+}', UserController::class . ':actionUpdate')
-        ->setName('api.user.update')->add(new ValidatorMiddleware($this->getContainer(), 'user.update'));
+        ->setName('api.user.update')->setArgument('validator', 'user.update');
     $this->post('/users/{id:\d+}/activate', UserController::class . ':actionActivate')
         ->setName('api.user.activate');
     $this->post('/users/{id:\d+}/deactivate', UserController::class . ':actionDeactivate')
         ->setName('api.user.deactivate');
     $this->post('/users/{id:\d+}/role', UserController::class . ':actionChangeRole')
         ->setName('api.user.role')
-        ->add(new ValidatorMiddleware($this->getContainer(), 'user.role'));
+        ->setArgument('validator', 'user.role');
     $this->delete('/users/{id:\d+}', UserController::class . ':actionDelete')
         ->setName('api.user.delete');
 })->add($acl->get('owner'));
@@ -56,11 +56,11 @@ $this->group('', function () {
     $tagsParser = new ParserUnitTagsMiddleware();
     $this->post('/units', UnitController::class . ':actionCreate')
         ->setName('api.unit.create')
-        ->add(new ValidatorMiddleware($this->getContainer(), 'unit.create'))
+        ->setArgument('validator', 'unit.create')
         ->add($tagsParser);
     $this->post('/units/{id:\d+}', UnitController::class . ':actionUpdate')
         ->setName('api.unit.update')
-        ->add(new ValidatorMiddleware($this->getContainer(), 'unit.update'))
+        ->setArgument('validator', 'unit.update')
         ->add($tagsParser);
     $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
         ->setName('api.unit.delete');
@@ -75,11 +75,11 @@ $this->group('', function () {
     $this->post('/cg', CGController::class . ':actionCreate')
         ->setName('api.unit.cg.create')
         ->add($missingCG)
-        ->add(new ValidatorMiddleware($this->getContainer(), 'cg.create'));
+        ->setArgument('validator', 'cg.create');
     $this->post('/cg/{id:\d+}', CGController::class . ':actionUpdate')
         ->setName('api.unit.cg.update')
         ->add($missingCG)
-        ->add(new ValidatorMiddleware($this->getContainer(), 'cg.update'));
+        ->setArgument('validator', 'cg.update');
     $this->delete('/cg/{id:\d+}', CGController::class . ':actionDelete')
         ->setName('api.unit.cg.delete');
 })->add($acl->get('moderator'));
@@ -111,3 +111,4 @@ $this->post('/auth', AuthController::class . ':actionCreate');
 $this->add(new Base64FileMiddleware());
 $this->add(new JWTAuthMiddleware($this->getContainer()));
 $this->add(new AccessControlAllowMiddleware());
+$this->add(new ValidatorMiddleware($this->getContainer()));

@@ -13,15 +13,10 @@ interface ValidatorInterface
 {
     /**
      * @param array $params
+     * @param array $context
      * @return bool
      */
-    public function validate(array $params) : bool;
-
-    /**
-     * @param array $files
-     * @return bool
-     */
-    public function validateFiles(array $files) : bool;
+    public function validate(array $params, $context = []) : bool;
 
     /**
      * @return array

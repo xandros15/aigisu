@@ -27,15 +27,6 @@ class CreateCGValidator extends AbstractValidator
             'scene' => v::intVal(),
             'archival' => new Optional(v::boolVal()),
             'unit_id' => new v(new UnitExist()),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function fileRules() : array
-    {
-        return [
             'cg' => v::size('100KB', '1500KB')->addRule(new ImageSize([959, 639], [961, 641])),
         ];
     }
