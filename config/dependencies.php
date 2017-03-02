@@ -78,6 +78,10 @@ return [
         $view->addExtension(new TwigMessages($container->get(Messages::class)));
         $view->addExtension(new TwigExtension($container->get('router'), $container->get('siteUrl')));
 
+        if ($container->get('isDebug')) {
+            $view->getEnvironment()->addFunction(new Twig_Function('dump', 'dump'));
+        }
+
         return $view;
     },
     'response' => function (ContainerInterface $container) {
