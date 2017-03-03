@@ -7,7 +7,6 @@ use Aigisu\Components\Auth\SessionAuthMiddleware;
 use Aigisu\Components\Auth\TwigAuthMiddleware;
 use Aigisu\Components\Http\MiddlewareHandler;
 use Aigisu\Web\Controllers\AbstractController;
-use Aigisu\Web\Controllers\AuthController;
 use Aigisu\Web\Controllers\SiteController;
 use Aigisu\Web\Controllers\UnitController;
 
