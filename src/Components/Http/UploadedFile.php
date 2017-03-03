@@ -8,6 +8,7 @@
 
 namespace Aigisu\Components\Http;
 
+use Aigisu\Components\Http\Exceptions\RuntimeException;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
 use Slim\Http\UploadedFile as SlimUploadedFile;
