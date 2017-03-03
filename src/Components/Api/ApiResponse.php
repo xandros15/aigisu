@@ -9,18 +9,18 @@
 namespace Aigisu\Components\Api;
 
 
-use Slim\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class ApiResponse
 {
-    /** @var Response */
+    /** @var ResponseInterface */
     private $response;
 
     /**
      * ApiResponse constructor.
-     * @param Response $response
+     * @param ResponseInterface $response
      */
-    public function __construct(Response $response)
+    public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
@@ -30,7 +30,7 @@ class ApiResponse
      */
     public function hasError(): bool
     {
-        return $this->response->isClientError();
+        return $this->response->getStatusCode() >= 400 && $this->response->getStatusCode() < 500;
     }
 
     /**
