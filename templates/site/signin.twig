@@ -1,11 +1,11 @@
 {% extends 'index.twig' %}
 
-{% block title %}Sign Ip | Aigisu{% endblock %}
+{% block title %}Sign In | Aigisu{% endblock %}
 
 {% block content %}
     <section>
         <h1>Sign In</h1>
-        <form action="{{ path_for('web.auth.signin') }}" method="post">
+        <form action="{{ path_for('web.site.signin') }}" method="post">
             <div>
                 <label for="login-email">Email:</label>
                 <input id="login-email" name="email" type="email" value="{{ form.email }}" required>

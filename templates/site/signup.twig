@@ -5,7 +5,7 @@
 {% block content %}
     <section>
         <h1>Sign Up</h1>
-        <form action="{{ path_for('web.site.register') }}" method="post">
+        <form action="{{ path_for('web.site.signup') }}" method="post">
             <div>
                 <label for="register-name">Name:</label>
                 <input id="register-name" name="name" type="text" value="{{ form.name }}" required>
