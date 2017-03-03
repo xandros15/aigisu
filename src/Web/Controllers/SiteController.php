@@ -57,7 +57,7 @@ class SiteController extends AbstractController
             throw new NotFoundException($request, $response);
         }
         if (!$auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
-            $this->flash->addError('Wrong username or email', true);
+            $this->flash->addError('Wrong email or password', true);
             return $this->actionView($request, $response);
         }
 
