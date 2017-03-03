@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 class UnitController extends AbstractController
 {
@@ -21,6 +22,6 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response) : Response
     {
-        return $this->render($request, $response, 'unit/index.twig');
+        return $this->get(Twig::class)->render($response, 'unit/index.twig');
     }
 }

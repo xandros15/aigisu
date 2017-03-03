@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 class AdminController extends AbstractController
 {
@@ -19,7 +20,7 @@ class AdminController extends AbstractController
         $api = $this->callApi('api.user.index', $request, $response);
         $users = $api->getResponse();
 
-        return $this->render($request, $response, 'admin/users.twig', [
+        return $this->get(Twig::class)->render($request, 'admin/users.twig', [
             'users' => $users
         ]);
     }

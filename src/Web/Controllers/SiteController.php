@@ -14,6 +14,7 @@ use Aigisu\Components\Form;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 class SiteController extends AbstractController
 {
@@ -42,7 +43,9 @@ class SiteController extends AbstractController
      */
     public function actionRegisterView(Request $request, Response $response): Response
     {
-        return $this->render($request, $response, 'site/signup.twig', new Form($request));
+        return $this->get(Twig::class)->render($response, 'site/signup.twig',
+            (new Form($request))->all()
+        );
     }
 
     /**
@@ -89,9 +92,9 @@ class SiteController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        return $this->render($request, $response, 'site/signin.twig', [
-            'form' => $request->getParams(),
-        ]);
+        return $this->get(Twig::class)->render($response, 'site/signin.twig',
+            (new Form($request))->all()
+        );
     }
 
 }
