@@ -28,7 +28,7 @@ class ApiResponse
     /**
      * @return bool
      */
-    public function hasError() : bool
+    public function hasError(): bool
     {
         return $this->response->isClientError();
     }
@@ -36,16 +36,16 @@ class ApiResponse
     /**
      * @return array
      */
-    public function getErrors() : array
+    public function getErrors(): array
     {
-        return json_decode($this->response->getBody())['message'];
+        return json_decode($this->response->getBody(), true)['message'];
     }
 
     /**
      * @return array
      */
-    public function getResponse() : array
+    public function getResponse(): array
     {
-        return json_decode($this->response->getBody())['message'];
+        return json_decode($this->response->getBody(), true)['message'];
     }
 }
