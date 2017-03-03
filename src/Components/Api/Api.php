@@ -35,6 +35,7 @@ class Api
      */
     public function send(Request $request, Response $response) : ApiResponse
     {
+        $request = $request->withHeader('Accept', 'application/json');
         try {
             $response = $this->route->run($request, $response);
         } catch (SlimException $e) {
