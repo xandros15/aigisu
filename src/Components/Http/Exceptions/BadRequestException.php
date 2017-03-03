@@ -23,7 +23,6 @@ class BadRequestException extends HttpException
      */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
-        $response = $response->withStatus(self::BAD_REQUEST_STATUS_CODE);
-        parent::__construct($request, $response);
+        parent::__construct($request, $response->withStatus(self::BAD_REQUEST_STATUS_CODE));
     }
 }
