@@ -9,12 +9,15 @@
 namespace Aigisu\Components\Http;
 
 
+use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Components\Http\Exceptions\HttpException;
+use Aigisu\Components\Http\Handlers\AccessDenied;
 use Aigisu\Components\Http\Handlers\HandlerInterface;
 use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 class MiddlewareHandler extends ActiveContainer implements MiddlewareInterface
 {
@@ -44,6 +47,10 @@ class MiddlewareHandler extends ActiveContainer implements MiddlewareInterface
      */
     private function determineHandler($exception)
     {
+        if ($exception instanceof ForbiddenException) {
+            $handler = new AccessDenied($this->get(Twig::class));
+        }
+
         return $handler ?? null;
     }
 }
