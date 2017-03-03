@@ -9,7 +9,7 @@
 namespace Aigisu\Components\ACL;
 
 
-use Aigisu\Components\Http\ForbiddenException;
+use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;

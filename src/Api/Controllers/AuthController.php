@@ -10,7 +10,7 @@ namespace Aigisu\Api\Controllers;
 
 
 use Aigisu\Components\Auth\JWTAuth;
-use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;

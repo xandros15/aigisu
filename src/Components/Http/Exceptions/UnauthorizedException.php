@@ -6,7 +6,7 @@
  * Time: 02:24
  */
 
-namespace Aigisu\Components\Http;
+namespace Aigisu\Components\Http\Exceptions;
 
 
 use Psr\Http\Message\ResponseInterface;
@@ -15,6 +15,8 @@ use Slim\Exception\SlimException;
 
 class UnauthorizedException extends SlimException
 {
+    const UNAUTHORIZED_STATUS_CODE = 401;
+
     /**
      * ForbiddenException constructor.
      * @param ServerRequestInterface $request
@@ -22,6 +24,6 @@ class UnauthorizedException extends SlimException
      */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
-        parent::__construct($request, $response->withStatus(401));
+        parent::__construct($request, $response->withStatus(self::UNAUTHORIZED_STATUS_CODE));
     }
 }

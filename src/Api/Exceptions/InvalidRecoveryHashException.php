@@ -9,7 +9,7 @@
 namespace Aigisu\Api\Exceptions;
 
 
-use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;

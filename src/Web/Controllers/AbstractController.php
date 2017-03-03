@@ -13,7 +13,7 @@ use Aigisu\Components\Api\Api;
 use Aigisu\Components\Api\ApiResponse;
 use Aigisu\Components\Auth\RequestAdapter;
 use Aigisu\Components\Flash;
-use Aigisu\Components\Http\ForbiddenException;
+use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;

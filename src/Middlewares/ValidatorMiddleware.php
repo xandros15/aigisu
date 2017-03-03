@@ -9,7 +9,7 @@
 namespace Aigisu\Middlewares;
 
 
-use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Components\Validators\ValidatorInterface;
 use Aigisu\Core\MiddlewareInterface;

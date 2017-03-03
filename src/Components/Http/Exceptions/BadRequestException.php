@@ -3,25 +3,28 @@
  * Created by PhpStorm.
  * User: xandros15
  * Date: 2017-02-07
- * Time: 02:11
+ * Time: 20:39
  */
 
-namespace Aigisu\Components\Http;
+namespace Aigisu\Components\Http\Exceptions;
 
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\SlimException;
 
-class ForbiddenException extends SlimException
+class BadRequestException extends SlimException
 {
+    const BAD_REQUEST_STATUS_CODE = 400;
+
     /**
-     * ForbiddenException constructor.
+     * BadRequestException constructor.
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
-        parent::__construct($request, $response->withStatus(403));
+        $response = $response->withStatus(self::BAD_REQUEST_STATUS_CODE);
+        parent::__construct($request, $response);
     }
 }

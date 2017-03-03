@@ -9,7 +9,7 @@
 namespace Aigisu\Components\Auth;
 
 
-use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
 use Aigisu\Models\User;
@@ -30,7 +30,7 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
      * @return Response
      * @throws UnauthorizedException
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         if ($request->hasHeader(self::HEADER)) {
             try {
@@ -49,7 +49,7 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
      * @throws InvalidTokenException
      * @throws InvalidUserIdException
      */
-    private function authorizeRequest(Request $request) : Request
+    private function authorizeRequest(Request $request): Request
     {
         $authHeader = $request->getHeaderLine(self::HEADER);
 

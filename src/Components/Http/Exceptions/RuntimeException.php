@@ -6,7 +6,7 @@
  * Time: 23:14
  */
 
-namespace Aigisu\Components\Http;
+namespace Aigisu\Components\Http\Exceptions;
 
 
 class RuntimeException extends \RuntimeException

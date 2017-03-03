@@ -10,8 +10,8 @@ namespace Aigisu\Api\Controllers;
 
 
 use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
-use Aigisu\Components\Http\RuntimeException;
-use Aigisu\Components\Http\UnauthorizedException;
+use Aigisu\Components\Http\Exceptions\RuntimeException;
+use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Components\Mailer;
 use Aigisu\Models\User;
 use Slim\Exception\NotFoundException;

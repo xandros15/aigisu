@@ -9,7 +9,7 @@
 namespace Aigisu\Middlewares;
 
 
-use Aigisu\Components\Http\BadRequestException;
+use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Core\MiddlewareInterface;
 use Aigisu\Models\Unit;
 use Aigisu\Models\Unit\CG;
