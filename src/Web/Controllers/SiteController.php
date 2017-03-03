@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Aigisu\Components\Auth\SessionAuth;
 use Aigisu\Components\Form;
+use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -48,7 +49,7 @@ class SiteController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws BadRequestException
+     * @throws NotFoundException
      */
     public function actionSignin(Request $request, Response $response): Response
     {
@@ -67,8 +68,8 @@ class SiteController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
-     * @throws BadRequestException
      * @return Response
+     * @throws NotFoundException
      */
     public function actionSignout(Request $request, Response $response): Response
     {
