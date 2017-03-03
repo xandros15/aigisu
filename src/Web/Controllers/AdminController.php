@@ -20,7 +20,7 @@ class AdminController extends AbstractController
         $api = $this->callApi('api.user.index', $request, $response);
         $users = $api->getResponse();
 
-        return $this->get(Twig::class)->render($request, 'admin/users.twig', [
+        return $this->get(Twig::class)->render($response, 'admin/users.twig', [
             'users' => $users
         ]);
     }
