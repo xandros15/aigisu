@@ -31,6 +31,9 @@ class TwigAuthMiddleware extends ActiveContainer implements MiddlewareInterface
         return $next($request, $response);
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     */
     private function replaceTwigCallback(ServerRequestInterface $request)
     {
         /** @var $twig Twig */
