@@ -5,6 +5,7 @@
 
 use Aigisu\Components\Auth\SessionAuthMiddleware;
 use Aigisu\Components\Auth\TwigAuthMiddleware;
+use Aigisu\Components\Http\MiddlewareHandler;
 use Aigisu\Web\Controllers\AbstractController;
 use Aigisu\Web\Controllers\AuthController;
 use Aigisu\Web\Controllers\SiteController;
@@ -27,5 +28,6 @@ $this->get('/signup', SiteController::class . ':actionRegisterView')->setName('w
 
 $this->get('/admin/users', \Aigisu\Web\Controllers\AdminController::class . ':actionIndexUsers');
 
+$this->add(new MiddlewareHandler($this->getContainer()));
 $this->add(new TwigAuthMiddleware($this->getContainer()));
 $this->add(new SessionAuthMiddleware());
