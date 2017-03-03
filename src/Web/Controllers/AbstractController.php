@@ -13,6 +13,7 @@ use Aigisu\Components\Api\Api;
 use Aigisu\Components\Api\ApiResponse;
 use Aigisu\Components\Auth\RequestAdapter;
 use Aigisu\Components\Flash;
+use Aigisu\Components\Http\ForbiddenException;
 use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;
@@ -54,11 +55,17 @@ abstract class AbstractController extends ActiveContainer
      * @param $request
      * @param $response
      * @return ApiResponse
+     * @throws ForbiddenException
      */
     protected function callApi($name, $request, $response) : ApiResponse
     {
         $api = new Api($this->get('router')->getNamedRoute($name));
-        return $api->send($request, $response);
+        $apiResponse = $api->send($request, $response);
+        if ($apiResponse->isForbidden()) {
+            throw new ForbiddenException($request, $response);
+        }
+
+        return $apiResponse;
     }
 
     /**

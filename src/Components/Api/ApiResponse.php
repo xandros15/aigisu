@@ -48,4 +48,12 @@ class ApiResponse
     {
         return json_decode($this->response->getBody(), true)['message'];
     }
+
+    /**
+     * @return bool
+     */
+    public function isForbidden()
+    {
+        return $this->response->getStatusCode() === 403;
+    }
 }
