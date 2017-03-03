@@ -11,9 +11,8 @@ namespace Aigisu\Components\Http\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\SlimException;
 
-class ForbiddenException extends SlimException
+class ForbiddenException extends HttpException
 {
     const FORBIDDEN_STATUS_CODE = 403;
 

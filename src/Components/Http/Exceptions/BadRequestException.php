@@ -11,9 +11,8 @@ namespace Aigisu\Components\Http\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\SlimException;
 
-class BadRequestException extends SlimException
+class BadRequestException extends HttpException
 {
     const BAD_REQUEST_STATUS_CODE = 400;
 

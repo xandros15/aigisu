@@ -11,9 +11,8 @@ namespace Aigisu\Components\Http\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\SlimException;
 
-class UnauthorizedException extends SlimException
+class UnauthorizedException extends HttpException
 {
     const UNAUTHORIZED_STATUS_CODE = 401;
 
