@@ -87,10 +87,9 @@ return [
     'response' => function (ContainerInterface $container) {
         $headers = new Headers(['Content-Type' => 'text/html; charset=UTF-8']);
         $basePath = Uri::createFromEnvironment($container->get('environment'))->getBasePath();
-        $response = new Response([
-            'status' => 200,
+        $response = new Response($basePath, [
             'headers' => $headers
-        ], $basePath);
+        ]);
 
         return $response->withProtocolVersion($container->get('settings')['httpVersion']);
     },

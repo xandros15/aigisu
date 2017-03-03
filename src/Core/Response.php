@@ -8,6 +8,7 @@
 
 namespace Aigisu\Core;
 
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Uri;
 
 class Response extends \Slim\Http\Response
@@ -20,16 +21,16 @@ class Response extends \Slim\Http\Response
      * @param array $params
      * @param string $basePath
      */
-    public function __construct(array $params, string $basePath)
+    public function __construct(string $basePath, array $params = [])
     {
-        parent::__construct($params['status'], $params['headers'] ?? null, $params['body'] ?? null);
+        parent::__construct($params['status'] ?? 200, $params['headers'] ?? null, $params['body'] ?? null);
         $this->basePath = $basePath;
     }
 
     /**
      * @param \Psr\Http\Message\UriInterface|string $url
      * @param null $status
-     * @return static
+     * @return ResponseInterface
      */
     public function withRedirect($url, $status = null)
     {
