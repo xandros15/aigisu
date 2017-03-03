@@ -36,7 +36,6 @@ class EmailExist extends AbstractRule
         if ($this->id) {
             $user = $user->where('id', '!=', $this->id);
         }
-        dd($user, $user->exists());
         return $user->exists();
     }
 }
