@@ -24,4 +24,6 @@ $this->get('/signout', SiteController::class . ':actionSignout')->setName('web.s
 $this->post('/signup', SiteController::class . ':actionRegister')->setName('web.site.signup');
 $this->get('/signup', SiteController::class . ':actionRegisterView')->setName('web.site.signup.view');
 
+$this->get('/admin/users', \Aigisu\Web\Controllers\AdminController::class . ':actionIndexUsers');
+
 $this->add(new SessionAuthMiddleware());

@@ -1,0 +1,26 @@
+{% extends 'index.twig' %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table" role="grid">
+            <thead>
+            <tr role="row">
+                <th>Username</th>
+                <th>E-Mail</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr role="row">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.is_comfirmed ? 'true' : 'false' }}</td>
+                    <td>Update user</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
