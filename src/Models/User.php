@@ -9,6 +9,7 @@
 namespace Aigisu\Models;
 
 
+use Aigisu\Components\Auth\IdentInterface;
 use Aigisu\Core\Model;
 
 /**
@@ -21,7 +22,7 @@ use Aigisu\Core\Model;
  * @property string $remember_identifier
  * @property string $remember_hash
  */
-class User extends Model
+class User extends Model implements IdentInterface
 {
     protected $fillable = [
         'name',
@@ -31,7 +32,7 @@ class User extends Model
     /**
      * @return array
      */
-    public static function getRoleList() : array
+    public static function getRoleList(): array
     {
         return ['moderator', 'admin', 'owner'];
     }
@@ -58,7 +59,7 @@ class User extends Model
      * @param string $hash
      * @return bool
      */
-    public static function isValidRecoveryHash(string $hash) : bool
+    public static function isValidRecoveryHash(string $hash): bool
     {
         list(, $timestamp) = explode('_', $hash);
         return time() - $timestamp < 0;
@@ -73,7 +74,7 @@ class User extends Model
         $this->saveOrFail();
     }
 
-    public function generateRecoveryHash() : void
+    public function generateRecoveryHash(): void
     {
         $this->recovery_hash = bin2hex(random_bytes(32)) . '_' . (new \DateTime('+1 hour'))->getTimestamp();
         $this->saveOrFail();
@@ -82,18 +83,18 @@ class User extends Model
     /**
      * @return bool
      */
-    public function isActivated() : bool
+    public function isActivated(): bool
     {
         return $this->is_confirmed;
     }
 
-    public function activate() : void
+    public function activate(): void
     {
         $this->is_confirmed = true;
         $this->saveOrFail();
     }
 
-    public function deactivate() : void
+    public function deactivate(): void
     {
         $this->is_confirmed = false;
         $this->saveOrFail();
@@ -102,7 +103,7 @@ class User extends Model
     /**
      * @param string $password
      */
-    public function changePassword(string $password) : void
+    public function changePassword(string $password): void
     {
         $this->setPassword($password);
         $this->removeRecoveryHash();
@@ -121,12 +122,44 @@ class User extends Model
      * @param string $password
      * @return bool
      */
-    public function validatePassword(string $password) : bool
+    public function validatePassword(string $password): bool
     {
         return password_verify($password, $this->password);
     }
 
-    private function removeRecoveryHash() : void
+    /**
+     * @return string
+     */
+    public function email(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role == 'admin';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwner(): bool
+    {
+        return $this->role == 'owner';
+    }
+
+    private function removeRecoveryHash(): void
     {
         $this->recovery_hash = null;
     }
