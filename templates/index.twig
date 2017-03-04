@@ -24,7 +24,6 @@
         </header>
     </section>
     <section class="layout-content">
-        {{ dump(flash('flash')) }}
         {% if flash('flash') %}
             <section class="messages">
                 {% for message in flash('flash') %}
