@@ -42,8 +42,7 @@ abstract class AbstractController extends ActiveContainer
      */
     public function goHome(Response $response): Response
     {
-        $path = $this->get('router')->pathFor(self::HOME_PATH_NAME);
-        return $response->withRedirect($path);
+        return $response->withRedirect('/');
     }
 
     /**
