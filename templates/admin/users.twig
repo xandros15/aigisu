@@ -1,32 +1,34 @@
 {% extends 'index.twig' %}
 
 {% block content %}
-    <div class="table-responsive">
-        <table class="table" role="grid">
-            <thead>
-            <tr role="row">
-                <th>Username</th>
-                <th>E-Mail</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
+    <section>
+        <div class="table-responsive">
+            <table class="table" role="grid">
+                <thead>
                 <tr role="row">
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>
-                        {% if user.is_confirmed %}
-                            <a href="{{ path_for('web.admin.deactivate', {id:user.id}) }}">Deactivate</a>
-                        {% else %}
-                            <a href="{{ path_for('web.admin.activate', {id:user.id}) }}">Activate</a>
-                        {% endif %}
-                    </td>
-                    <td>Update user</td>
+                    <th>Username</th>
+                    <th>E-Mail</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr role="row">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.is_confirmed %}
+                                <a href="{{ path_for('web.admin.deactivate', {id:user.id}) }}">Deactivate</a>
+                            {% else %}
+                                <a href="{{ path_for('web.admin.activate', {id:user.id}) }}">Activate</a>
+                            {% endif %}
+                        </td>
+                        <td>Update user</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock %}
