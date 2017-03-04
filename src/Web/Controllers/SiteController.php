@@ -25,26 +25,18 @@ class SiteController extends AbstractController
      */
     public function actionRegister(Request $request, Response $response): Response
     {
-        $api = $this->callApi('api.user.create', $request, $response);
-        if ($api->hasError()) {
+        if ($request->isPost()) {
+            $api = $this->callApi('api.user.create', $request, $response);
+            if (!$api->hasError()) {
+                $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
+                return $this->goHome($response);
+            }
             $request = $request->withAttribute('errors', $api->getErrors());
-            return $this->actionRegisterView($request, $response);
         }
 
-        $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
-
-        return $this->goHome($response);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
-    public function actionRegisterView(Request $request, Response $response): Response
-    {
+        $form = new Form($request);
         return $this->get(Twig::class)->render($response, 'site/signup.twig', [
-            'form' => (new Form($request))->all(),
+            'form' => $form->all(),
         ]);
     }
 
@@ -60,12 +52,19 @@ class SiteController extends AbstractController
         if (!$auth->isGuest()) {
             throw new NotFoundException($request, $response);
         }
-        if (!$auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
-            $this->flash->addError('Wrong email or password', true);
-            return $this->actionView($request, $response);
+
+        if ($request->isPost()) {
+            if ($auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
+                $this->flash->addSuccess('Successful login.');
+                return $this->goHome($response);
+            }
+            $this->flash->addError('Wrong email or password.', true);
         }
 
-        return $this->goHome($response);
+        $form = new Form($request);
+        return $this->get(Twig::class)->render($response, 'site/signin.twig', [
+            'form' => $form->all(),
+        ]);
     }
 
     /**
@@ -81,6 +80,7 @@ class SiteController extends AbstractController
             throw new NotFoundException($request, $response);
         }
         $auth->singOut();
+        $this->flash->addSuccess('Successful logout.');
 
         return $this->goHome($response);
     }
@@ -90,33 +90,20 @@ class SiteController extends AbstractController
      * @param Response $response
      * @return Response
      */
-    public function actionView(Request $request, Response $response): Response
-    {
-        return $this->get(Twig::class)->render($response, 'site/signin.twig', [
-            'form' => (new Form($request))->all(),
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
     public function actionPasswordReset(Request $request, Response $response): Response
     {
-        $form = new Form($request);
         if ($request->isPost()) {
             $request = $request->withAttribute('token', $request->getParam('token', ''));
             $api = $this->callApi('api.user.password.reset', $request, $response);
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
-                $form = $form->withRequest($request);
             } else {
-                $this->flash->addSuccess('Successful change password');
+                $this->flash->addSuccess('Successful change password.');
                 return $this->goHome($response);
             }
         }
 
+        $form = new Form($request);
         return $this->get(Twig::class)->render($response, 'site/password-reset.twig', $form->all());
     }
 
@@ -127,17 +114,16 @@ class SiteController extends AbstractController
      */
     public function actionPasswordResetRequest(Request $request, Response $response): Response
     {
-        $form = new Form($request);
         if ($request->isPost()) {
             $api = $this->callApi('api.user.password.reset.send', $request, $response);
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
-                $form = $form->withRequest($request);
             } else {
                 return $response->withRedirect('/password/reset');
             }
         }
 
+        $form = new Form($request);
         return $this->get(Twig::class)->render($response, 'site/password-reset-request.twig', $form->all());
     }
 
