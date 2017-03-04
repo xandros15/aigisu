@@ -1,0 +1,20 @@
+{% extends 'index.twig' %}
+
+{% block content %}
+    <section>
+        <h1>Edit user {{ form.email }} </h1>
+        <form action="{{ path_for('web.admin.user.update', {id:form.id}) }}" method="post">
+            <div>
+                <label for="register-name">Name:</label>
+                <input id="register-name" name="name" type="text" value="{{ form.name }}" required>
+                <p>{{ errors.name | join }}</p>
+            </div>
+            <div>
+                <label for="register-email">Email:</label>
+                <input id="register-email" name="email" type="email" value="{{ form.email }}" required>
+                <p>{{ errors.email | join }}</p>
+            </div>
+            <button>Update</button>
+        </form>
+    </section>
+{% endblock %}

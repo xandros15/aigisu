@@ -24,7 +24,7 @@
                                 <a href="{{ path_for('web.admin.activate', {id:user.id}) }}">Activate</a>
                             {% endif %}
                         </td>
-                        <td>Update user</td>
+                        <td><a href="{{ path_for('web.admin.user.update.view', {id:user.id}) }}">Update</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
