@@ -42,6 +42,7 @@ class CGTransformer extends TransformerAbstract
         return [
             'id' => (int) $cg->id,
             'scene' => (int) $cg->scene,
+            'server' => (string)$cg->server,
             'archival' => (bool) $cg->archival,
             'links' => [
                 'local' => $this->router->pathFor('storage.images', ['path' => $cg->local]),
