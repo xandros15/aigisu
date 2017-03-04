@@ -11,11 +11,11 @@ namespace Aigisu\Components\Validators\Exceptions;
 
 use Respect\Validation\Exceptions\ValidationException;
 
-class EmailExistException extends ValidationException
+class EmailNotExistException extends ValidationException
 {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => 'Email doesn\'t exist',
+            self::STANDARD => 'Email is in usage',
         ],
     ];
 }

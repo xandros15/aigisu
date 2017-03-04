@@ -8,6 +8,7 @@
 
 namespace Aigisu\Components\Validators;
 
+use Aigisu\Components\Validators\Rules\EmailExist;
 use Respect\Validation\Validator;
 
 class PasswordResetRequestValidator extends AbstractValidator
@@ -15,10 +16,10 @@ class PasswordResetRequestValidator extends AbstractValidator
     /**
      * @return array
      */
-    protected function rules() : array
+    protected function rules(): array
     {
         return [
-            'email' => Validator::email(),
+            'email' => Validator::email()->addRule(new EmailExist($this->context)),
         ];
     }
 }

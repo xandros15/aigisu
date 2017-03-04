@@ -14,7 +14,7 @@ use Respect\Validation\Rules\AbstractRule;
 
 class EmailExist extends AbstractRule
 {
-    /** @var null */
+    /** @var null|int */
     private $id;
 
     /**
@@ -36,6 +36,7 @@ class EmailExist extends AbstractRule
         if ($this->id) {
             $user = $user->where('id', '!=', $this->id);
         }
-        return !$user->exists();
+
+        return $user->exists();
     }
 }

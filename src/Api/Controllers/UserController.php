@@ -107,13 +107,8 @@ class UserController extends AbstractController
      */
     public function actionResetPasswordRequest(Request $request, Response $response) : Response
     {
-        if (!$user = User::findByEmail($request->getParam('email'))) {
-            $response = $response->withJson(['message' => ['email' => 'email not found']]);
-            throw new BadRequestException($request, $response);
-        }
-
+        $user = User::findByEmail($request->getParam('email'));
         $user->generateRecoveryHash();
-
         $isSend = $this->get(Mailer::class)->send([
             'to' => $user->email,
             'subject' => 'Reset Password',

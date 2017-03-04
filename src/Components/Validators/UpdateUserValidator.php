@@ -9,7 +9,7 @@
 namespace Aigisu\Components\Validators;
 
 
-use Aigisu\Components\Validators\Rules\EmailExist;
+use Aigisu\Components\Validators\Rules\EmailNotExist;
 use Respect\Validation\Validator as v;
 
 class UpdateUserValidator extends AbstractValidator
@@ -21,7 +21,7 @@ class UpdateUserValidator extends AbstractValidator
     {
         return $this->makeOptional([
             'name' => v::stringType()->length(4, 15),
-            'email' => v::email()->addRule(new EmailExist($this->context)),
+            'email' => v::email()->addRule(new EmailNotExist($this->context)),
         ]);
     }
 }
