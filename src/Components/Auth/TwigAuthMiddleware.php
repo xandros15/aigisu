@@ -38,7 +38,9 @@ class TwigAuthMiddleware extends ActiveContainer implements MiddlewareInterface
     {
         /** @var $twig Twig */
         $twig = $this->get(Twig::class);
-        $twig->getEnvironment()->addGlobal('is_guest', $request->getAttribute('is_guest', true));
-        $twig->getEnvironment()->addGlobal('user', $request->getAttribute('user', []));
+        $twig->getEnvironment()->addGlobal('ident', [
+            'is_guest' => $request->getAttribute('is_guest', true),
+            'user' => $request->getAttribute('user', []),
+        ]);
     }
 }
