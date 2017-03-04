@@ -16,6 +16,9 @@
                 {% else %}
                     <li><a href="{{ path_for('web.site.signout') }}">Logout</a></li>
                 {% endif %}
+                {% if ident.user.isOwner() %}
+                    <li><a href="{{ path_for('web.admin.user.index') }}">Users</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
