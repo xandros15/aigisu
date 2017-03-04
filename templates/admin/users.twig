@@ -16,7 +16,13 @@
                 <tr role="row">
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.is_comfirmed ? 'true' : 'false' }}</td>
+                    <td>
+                        {% if user.is_confirmed %}
+                            <a href="{{ path_for('web.admin.deactivate', {id:user.id}) }}">Deactivate</a>
+                        {% else %}
+                            <a href="{{ path_for('web.admin.activate', {id:user.id}) }}">Activate</a>
+                        {% endif %}
+                    </td>
                     <td>Update user</td>
                 </tr>
             {% endfor %}
