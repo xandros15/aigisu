@@ -11,8 +11,8 @@ namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
 use Aigisu\Components\Http\Exceptions\BadRequestException;
+use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Components\Http\Exceptions\RuntimeException;
-use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Components\Mailer;
 use Aigisu\Models\User;
 use Slim\Http\Request;
@@ -162,12 +162,12 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws UnauthorizedException
+     * @throws ForbiddenException
      */
     public function actionGetCurrent(Request $request, Response $response) : Response
     {
         if ($request->getAttribute('is_guest')) {
-            throw new UnauthorizedException($request, $response);
+            throw new ForbiddenException($request, $response);
         }
 
         return $this->read($response, $request->getAttribute('user')->toArray());
