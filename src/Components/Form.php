@@ -26,9 +26,20 @@ class Form extends Collection
 
     /**
      * @param Request $request
+     * @return Form
+     */
+    public function withRequest(Request $request)
+    {
+        $clone = clone $this;
+        $clone->replace($clone->setForm($request));
+        return $clone;
+    }
+
+    /**
+     * @param Request $request
      * @return array
      */
-    private function setForm(Request $request) : array
+    private function setForm(Request $request): array
     {
         return [
             'form' => $request->getParams(),
