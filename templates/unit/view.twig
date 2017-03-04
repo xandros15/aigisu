@@ -1,0 +1,44 @@
+{% extends 'index.twig' %}
+{% block content %}
+    <section>
+        <section>
+            <figure>
+                <img src="{{ unit.icon }}" alt="{{ unit.name }} icon">
+                <figcaption><h2>{{ unit.name }}</h2></figcaption>
+            </figure>
+        </section>
+        <section>
+            <h2>Data</h2>
+            <table>
+                <tbody>
+                <tr>
+                    <th>name</th>
+                    <td>{{ unit.name }}</td>
+                </tr>
+                <tr>
+                    <th>japanese</th>
+                    <td>{{ unit.japanese_name }}</td>
+                </tr>
+                <tr>
+                    <th>gender</th>
+                    <td>{{ unit.gender }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+        {% if unit.links %}
+            <section>
+                <h2>Sources</h2>
+                <ul>
+                    {% for name,link in unit.links %}
+                        <li><a href="{{ link }}" target="_blank">{{ name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+        <section>
+            <h2>Bedroom</h2>
+            <a href="#" onclick="return confirm('Be careful if you are not alone')">Enter</a>
+        </section>
+    </section>
+{% endblock %}

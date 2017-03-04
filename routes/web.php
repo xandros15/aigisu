@@ -39,6 +39,8 @@ $this->map(['post', 'get'], '/password/reset/send', SiteController::class . ':ac
 $this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionPasswordReset')
     ->setName('web.user.password.reset');
 
+$this->get('/units/{id:\d+}', UnitController::class . ':actionView');
+
 
 $this->add(new MiddlewareHandler($this->getContainer()));
 $this->add(new TwigAuthMiddleware($this->getContainer()));
