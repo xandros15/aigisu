@@ -58,32 +58,22 @@ class AdminController extends AbstractController
      * @param Response $response
      * @return Response
      */
-    public function actionViewUser(Request $request, Response $response): Response
-    {
-        $user = $this->callApi('api.user.view', $request, $response)->getResponse();
-        $form = new Form($request);
-        $form['form'] = array_merge($user, $form['form']);
-
-        return $this->get(Twig::class)->render($response, 'admin/user-form.twig', $form->all());
-    }
-
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
     public function actionUpdateUser(Request $request, Response $response): Response
     {
-
-        $api = $this->callApi('api.user.update', $request, $response);
-        if ($api->hasError()) {
-            $request = $request->withAttribute('errors', $api->getErrors());
-            return $this->actionViewUser($request, $response);
+        $user = $this->callApi('api.user.view', $request, $response)->getResponse();
+        if ($request->isPost()) {
+            $api = $this->callApi('api.user.update', $request, $response);
+            if ($api->hasError()) {
+                $request = $request->withAttribute('errors', $api->getErrors());
+            } else {
+                $this->flash->addSuccess('Successful update user.');
+                return $response->withRedirect('/admin/users');
+            }
         }
 
-        $this->flash->addSuccess('Successful update user.');
-
-        return $response->withRedirect('/admin/users');
+        $form = new Form($request);
+        $form['form'] = array_merge($user, $form['form']);
+        $form['user'] = $user;
+        return $this->get(Twig::class)->render($response, 'admin/user-form.twig', $form->all());
     }
 }

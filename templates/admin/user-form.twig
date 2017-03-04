@@ -2,7 +2,7 @@
 
 {% block content %}
     <section>
-        <h1>Edit user {{ form.email }} </h1>
+        <h1>Edit user {{ user.email }} </h1>
         <form action="{{ path_for('web.admin.user.update', {id:form.id}) }}" method="post">
             <div>
                 <label for="register-name">Name:</label>
