@@ -176,9 +176,9 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @throws NotFoundException
-     * @return User
+     * @return User|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
-    private function findUserOrFail(Request $request) : User
+    private function findUserOrFail(Request $request)
     {
         return User::findOrFail($this->getID($request));
     }
