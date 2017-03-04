@@ -7,7 +7,6 @@ use Aigisu\Components\Auth\SessionAuthMiddleware;
 use Aigisu\Components\Auth\TwigAuthMiddleware;
 use Aigisu\Components\CloneFlashMiddleware;
 use Aigisu\Components\Http\MiddlewareHandler;
-use Aigisu\Web\Controllers\AbstractController;
 use Aigisu\Web\Controllers\AdminController;
 use Aigisu\Web\Controllers\SiteController;
 use Aigisu\Web\Controllers\UnitController;
@@ -16,7 +15,7 @@ $this->get('[/]', function () {
     list(, $response) = func_get_args();
     /** @var $response \Slim\Http\Response */
     return $response->withRedirect('/units');
-})->setName(AbstractController::HOME_PATH_NAME)->add(new CloneFlashMiddleware($this->getContainer()));
+})->add(new CloneFlashMiddleware($this->getContainer()))->setName('web.home');
 
 $this->get('/units', UnitController::class . ':actionIndex')->setName('web.units');
 
