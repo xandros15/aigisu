@@ -35,6 +35,12 @@ $this->get('/admin/users/{id:\d+}/deactivate', AdminController::class . ':action
 $this->get('/admin/users/{id:\d+}', AdminController::class . ':actionViewUser')->setName('web.admin.user.update.view');
 $this->post('/admin/users/{id:\d+}', AdminController::class . ':actionUpdateUser')->setName('web.admin.user.update');
 
+$this->map(['post', 'get'], '/password/reset/send', SiteController::class . ':actionPasswordResetRequest')
+    ->setName('web.user.password.reset.send');
+
+$this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionPasswordReset')
+    ->setName('web.user.password.reset');
+
 
 $this->add(new MiddlewareHandler($this->getContainer()));
 $this->add(new TwigAuthMiddleware($this->getContainer()));

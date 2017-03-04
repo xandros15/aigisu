@@ -30,9 +30,11 @@ $validators = $this->getContainer()->get(ValidatorManager::class);
 $this->post('/users', UserController::class . ':actionRegister')
     ->setName('api.user.create')->add(new ValidatorMiddleware($validators->get('user.create')));
 $this->post('/users/password/reset/send', UserController::class . ':actionResetPasswordRequest')
-    ->add(new ValidatorMiddleware($validators->get('user.password.reset.request')));
+    ->add(new ValidatorMiddleware($validators->get('user.password.reset.request')))
+    ->setName('api.user.password.reset.send');
 $this->post('/users/password/reset/{token:\w+}', UserController::class . ':actionResetPassword')
-    ->add(new ValidatorMiddleware($validators->get('user.password.reset')));
+    ->add(new ValidatorMiddleware($validators->get('user.password.reset')))
+    ->setName('api.user.password.reset');
 
 $this->group('', function () {
     $this->get('/users', UserController::class . ':actionIndex')->setName('api.user.index');
