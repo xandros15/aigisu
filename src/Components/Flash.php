@@ -40,7 +40,7 @@ class Flash
      */
     public function addWarning(string $message, bool $now = false) : void
     {
-        $this->addFormattedMessage(['type' => 'error', 'value' => $message], $now);
+        $this->addFormattedMessage(['type' => 'warning', 'value' => $message], $now);
     }
 
     /**
@@ -49,7 +49,7 @@ class Flash
      */
     public function addSuccess(string $message, bool $now = false) : void
     {
-        $this->addFormattedMessage(['type' => 'error', 'value' => $message], $now);
+        $this->addFormattedMessage(['type' => 'success', 'value' => $message], $now);
     }
 
     /**
