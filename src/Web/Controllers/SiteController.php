@@ -43,9 +43,9 @@ class SiteController extends AbstractController
      */
     public function actionRegisterView(Request $request, Response $response): Response
     {
-        return $this->get(Twig::class)->render($response, 'site/signup.twig',
-            (new Form($request))->all()
-        );
+        return $this->get(Twig::class)->render($response, 'site/signup.twig', [
+            'form' => (new Form($request))->all(),
+        ]);
     }
 
     /**
@@ -92,9 +92,9 @@ class SiteController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        return $this->get(Twig::class)->render($response, 'site/signin.twig',
-            (new Form($request))->all()
-        );
+        return $this->get(Twig::class)->render($response, 'site/signin.twig', [
+            'form' => (new Form($request))->all(),
+        ]);
     }
 
     /**

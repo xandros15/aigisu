@@ -9,17 +9,17 @@
             <div>
                 <label for="register-name">Name:</label>
                 <input id="register-name" name="name" type="text" value="{{ form.name }}" required>
-                <p>{{ errors.name | join }}</p>
+                <p>{{ form.errors.name | join }}</p>
             </div>
             <div>
                 <label for="register-email">Email:</label>
                 <input id="register-email" name="email" type="email" value="{{ form.email }}" required>
-                <p>{{ errors.email | join }}</p>
+                <p>{{ form.errors.email | join }}</p>
             </div>
             <div>
                 <label for="register-password">Password:</label>
                 <input id="register-password" name="password" value="{{ form.password }}" type="password" required>
-                <p>{{ errors.password | join }}</p>
+                <p>{{ form.errors.password | join }}</p>
             </div>
             <button>Sign Up</button>
         </form>

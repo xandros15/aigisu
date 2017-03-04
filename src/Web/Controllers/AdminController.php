@@ -72,8 +72,9 @@ class AdminController extends AbstractController
         }
 
         $form = new Form($request);
-        $form['form'] = array_merge($user, $form['form']);
-        $form['user'] = $user;
-        return $this->get(Twig::class)->render($response, 'admin/user-form.twig', $form->all());
+        return $this->get(Twig::class)->render($response, 'admin/user-form.twig', [
+            'form' => $form->all(),
+            'user' => $user
+        ]);
     }
 }

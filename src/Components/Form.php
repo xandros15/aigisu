@@ -20,8 +20,7 @@ class Form extends Collection
      */
     public function __construct(Request $request)
     {
-        $items = $this->setForm($request);
-        parent::__construct($items);
+        parent::__construct(array_merge($request->getParams(), ['errors' => $request->getAttribute('errors', [])]));
     }
 
     /**
@@ -30,20 +29,7 @@ class Form extends Collection
      */
     public function withRequest(Request $request)
     {
-        $clone = clone $this;
-        $clone->replace($clone->setForm($request));
+        $clone = new static($request);
         return $clone;
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    private function setForm(Request $request): array
-    {
-        return [
-            'form' => $request->getParams(),
-            'errors' => $request->getAttribute('errors', []),
-        ];
     }
 }

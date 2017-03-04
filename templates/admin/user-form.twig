@@ -3,16 +3,16 @@
 {% block content %}
     <section>
         <h1>Edit user {{ user.email }} </h1>
-        <form action="{{ path_for('web.admin.user.update', {id:form.id}) }}" method="post">
+        <form action="{{ path_for('web.admin.user.update', {id:user.id}) }}" method="post">
             <div>
                 <label for="register-name">Name:</label>
-                <input id="register-name" name="name" type="text" value="{{ form.name }}" required>
-                <p>{{ errors.name | join }}</p>
+                <input id="register-name" name="name" type="text" value="{{ form.name ?: user.name }}" required>
+                <p>{{ form.errors.name | join }}</p>
             </div>
             <div>
                 <label for="register-email">Email:</label>
-                <input id="register-email" name="email" type="email" value="{{ form.email }}" required>
-                <p>{{ errors.email | join }}</p>
+                <input id="register-email" name="email" type="email" value="{{ form.email ?: user.email }}" required>
+                <p>{{ form.errors.email | join }}</p>
             </div>
             <button>Update</button>
         </form>
