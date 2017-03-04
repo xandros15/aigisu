@@ -10,11 +10,11 @@ namespace Aigisu\Api\Controllers;
 
 
 use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
+use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Components\Http\Exceptions\RuntimeException;
 use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Components\Mailer;
 use Aigisu\Models\User;
-use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -103,13 +103,13 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Response $response
      * @return Response
-     * @throws NotFoundException
-     * @throws RuntimeException
+     * @throws BadRequestException
      */
     public function actionResetPasswordRequest(Request $request, Response $response) : Response
     {
         if (!$user = User::findByEmail($request->getParam('email'))) {
-            throw new NotFoundException($request, $response);
+            $response = $response->withJson(['message' => ['email' => 'email not found']]);
+            throw new BadRequestException($request, $response);
         }
 
         $user->generateRecoveryHash();
