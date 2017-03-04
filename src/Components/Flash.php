@@ -13,6 +13,7 @@ use Slim\Flash\Messages;
 
 class Flash
 {
+    const KEY_NAME = 'flash';
     /** @var Messages */
     private $messages;
 
@@ -29,7 +30,7 @@ class Flash
      * @param string $message
      * @param bool $now
      */
-    public function addError(string $message, bool $now = false) : void
+    public function addError(string $message, bool $now = false): void
     {
         $this->addFormattedMessage(['type' => 'error', 'value' => $message], $now);
     }
@@ -38,7 +39,7 @@ class Flash
      * @param string $message
      * @param bool $now
      */
-    public function addWarning(string $message, bool $now = false) : void
+    public function addWarning(string $message, bool $now = false): void
     {
         $this->addFormattedMessage(['type' => 'warning', 'value' => $message], $now);
     }
@@ -47,7 +48,7 @@ class Flash
      * @param string $message
      * @param bool $now
      */
-    public function addSuccess(string $message, bool $now = false) : void
+    public function addSuccess(string $message, bool $now = false): void
     {
         $this->addFormattedMessage(['type' => 'success', 'value' => $message], $now);
     }
@@ -56,12 +57,12 @@ class Flash
      * @param array $message
      * @param bool $now
      */
-    private function addFormattedMessage(array $message, bool $now) : void
+    private function addFormattedMessage(array $message, bool $now): void
     {
         if ($now) {
-            $this->messages->addMessageNow('flash', $message);
+            $this->messages->addMessageNow(self::KEY_NAME, $message);
         } else {
-            $this->messages->addMessage('flash', $message);
+            $this->messages->addMessage(self::KEY_NAME, $message);
         }
     }
 }
