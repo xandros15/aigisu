@@ -10,7 +10,10 @@
             name: '',
             server: 'all',
         },
-        sort: 'crated_at',
+        sort: {
+            ident: 'id',
+            order: 'desc',
+        },
     };
     var template = _.template(document.getElementById('unit-template').innerHTML);
     axios.get(API.UNITS + '?expand=missing_cg,cg').then(function (response) {
@@ -35,11 +38,13 @@
     });
 
     document.getElementById('sort-units').addEventListener('change', function (e) {
-        updateSort(e.target.value)
+        const ident = e.target.value == 'created_at' ? 'id' : e.target.value;
+        const order = ident == 'id' ? 'desc' : 'asc';
+        updateSort({ident: ident, order: order})
     });
 
-    function updateSort(value) {
-        storage.sort = value;
+    function updateSort(sort) {
+        storage.sort = sort;
         updateUnitList();
     }
 
@@ -69,6 +74,7 @@
 
     function updateUnitList() {
         var newUnits = Object.assign({}, storage.units);
+        console.log(storage);
         var filter = storage.filter;
         newUnits = _.filter(newUnits, function (unit) {
             var rarityFilter = filter.rarity == 'all' || filter.rarity == unit.rarity;
@@ -79,7 +85,7 @@
             return rarityFilter && nameFilter && missingCGFilter && serverFilter;
         });
 
-        newUnits = _.sortBy(newUnits, storage.sort);
+        newUnits = _.orderBy(newUnits, storage.sort.ident, storage.sort.order);
 
         document.getElementById('units-index').innerHTML = template({
             units: newUnits
