@@ -36,4 +36,20 @@ class UnitController extends AbstractController
         return $this->get(Twig::class)->render($response, 'unit/view.twig', ['unit' => $unit]);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function actionBedroom(Request $request, Response $response): Response
+    {
+        $cgs = $this->callApi('api.unit.cg.index', $request, $response)->getResponse();
+
+        $map = [];
+        foreach ($cgs as $cg) {
+            $map[$cg['server']][] = $cg;
+        }
+        return $this->get(Twig::class)->render($response, 'unit/bedroom.twig', ['cgs' => $map]);
+    }
+
 }

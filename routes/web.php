@@ -40,6 +40,7 @@ $this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionP
     ->setName('web.user.password.reset');
 
 $this->get('/units/{id:\d+}', UnitController::class . ':actionView');
+$this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom');
 
 
 $this->add(new MiddlewareHandler($this->getContainer()));

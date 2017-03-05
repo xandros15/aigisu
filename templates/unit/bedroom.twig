@@ -1,0 +1,17 @@
+{% extends 'index.twig' %}
+
+{% block content %}
+    <section>
+        <h1>Bedroom</h1>
+        {% for server,cg in cgs %}
+            <section>
+                <h2>{{ server }}</h2>
+                <ul>
+                    {% for data in cg %}
+                        <li><img src="{{ data.links.imgur }}" alt='{{ "#{data.scene} #{data.server}" }}'></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endfor %}
+    </section>
+{% endblock %}
