@@ -74,7 +74,6 @@
 
     function updateUnitList() {
         var newUnits = Object.assign({}, storage.units);
-        console.log(storage);
         var filter = storage.filter;
         newUnits = _.filter(newUnits, function (unit) {
             var rarityFilter = filter.rarity == 'all' || filter.rarity == unit.rarity;
