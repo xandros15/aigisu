@@ -15,3 +15,18 @@
     transform: rotate(360deg)
   }
 }
+
+.unit .fa {
+  font-size: 2em;
+  transform: scale(.7);
+  transition: transform .1s linear;
+  &:hover {
+    transform: scale(1);
+  }
+  &.fa-heart {
+    color: #ff0000;
+  }
+  &.fa-user {
+    color: #008000;
+  }
+}
