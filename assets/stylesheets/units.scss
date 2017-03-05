@@ -30,3 +30,31 @@
     color: #008000;
   }
 }
+
+nav ul, nav li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  .unit-container {
+    justify-content: center;
+    display: flex;
+  }
+  .image-container {
+    width: 100px;
+    img {
+      width: 96px;
+    }
+  }
+  .unit-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
