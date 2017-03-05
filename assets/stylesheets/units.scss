@@ -16,18 +16,20 @@
   }
 }
 
-.unit .fa {
-  font-size: 2em;
-  transform: scale(.7);
-  transition: transform .1s linear;
-  &:hover {
+.unit-navigation a {
+  &:hover .fa {
     transform: scale(1);
   }
-  &.fa-heart {
-    color: #ff0000;
-  }
-  &.fa-user {
-    color: #008000;
+  .fa {
+    font-size: 2em;
+    transform: scale(.7);
+    transition: transform .1s linear;
+    &.fa-heart {
+      color: #ff0000;
+    }
+    &.fa-user {
+      color: #008000;
+    }
   }
 }
 
