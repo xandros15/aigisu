@@ -7,6 +7,7 @@ use Aigisu\Components\Auth\SessionAuthMiddleware;
 use Aigisu\Components\Auth\TwigAuthMiddleware;
 use Aigisu\Components\CloneFlashMiddleware;
 use Aigisu\Components\Http\MiddlewareHandler;
+use Aigisu\Middlewares\BedroomLockMiddleware;
 use Aigisu\Web\Controllers\AdminController;
 use Aigisu\Web\Controllers\SiteController;
 use Aigisu\Web\Controllers\UnitController;
@@ -40,7 +41,8 @@ $this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionP
     ->setName('web.user.password.reset');
 
 $this->get('/units/{id:\d+}', UnitController::class . ':actionView');
-$this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom');
+$this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom')
+    ->add(new BedroomLockMiddleware($this->getContainer()));
 
 
 $this->add(new MiddlewareHandler($this->getContainer()));

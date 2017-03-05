@@ -48,4 +48,7 @@ return [
     'imgur.settings' => function () {
         return require __DIR__ . '/imgur.php';
     },
+    'bedroom.lock' => function () {
+        return require __DIR__ . '/bedroom/params.php';
+    },
 ];
