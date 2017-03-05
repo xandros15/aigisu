@@ -13,7 +13,7 @@
         sort: 'crated_at',
     };
     var template = _.template(document.getElementById('unit-template').innerHTML);
-    axios.get(API.UNITS + '?expand=missing_cg').then(function (response) {
+    axios.get(API.UNITS + '?expand=missing_cg,cg').then(function (response) {
         storage.units = response.data;
         updateUnitList();
     });
