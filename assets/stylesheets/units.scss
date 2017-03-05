@@ -42,19 +42,19 @@ nav ul, nav li {
   flex-wrap: wrap;
   justify-content: space-around;
   .unit-container {
-    justify-content: center;
+    justify-content: flex-end;
     display: flex;
+    width: 12rem;
+    flex-direction: column-reverse;
   }
-  .image-container {
-    width: 100px;
-    img {
-      width: 96px;
-    }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
   .unit-navigation {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
   }
 }
 
