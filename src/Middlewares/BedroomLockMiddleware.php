@@ -22,6 +22,7 @@ class BedroomLockMiddleware extends ActiveContainer implements MiddlewareInterfa
      * @param Response $response
      * @param callable $next
      * @return Response
+     * @throws UnauthorizedException
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
