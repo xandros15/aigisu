@@ -23,7 +23,7 @@
     </script>
     <script id="unit-template" type="text/html">
         <% _.each(units, function(unit){ %>
-        <div id="unit-<%= unit.id %>" class="unit unit-container element-item">
+        <article id="unit-<%= unit.id %>" class="unit unit-container element-item">
             <figure class="image-container">
                 <img class="image img-circle" src="<%= unit.icon %>">
                 <figcaption class="text-center">
@@ -31,7 +31,7 @@
                     <div><span class="kanji label label-primary"><%= unit.japanese_name %></span></div>
                 </figcaption>
             </figure>
-        </div>
+        </article>
         <% }); %>
     </script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
