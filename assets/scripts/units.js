@@ -15,11 +15,31 @@
             order: 'desc',
         },
     };
+
     var template = _.template(document.getElementById('unit-template').innerHTML);
+
+    function initStyleImages() {
+        var style = document.createElement('style');
+        style.id = 'icons-stylesheet';
+        document.head.appendChild(style);
+    }
+
+    function addImageToStyle(unit) {
+        document.getElementById('icons-stylesheet').innerHTML +=
+            '#unit-' + unit.id + ' .icon-img{background-image: url(\'' + unit.icon + '\');} ';
+    }
+
+    function addImagesToStyle(units) {
+        _.each(units, addImageToStyle);
+    }
+
     axios.get(API.UNITS + '?expand=missing_cg,cg').then(function (response) {
         storage.units = response.data;
+        initStyleImages();
+        addImagesToStyle(storage.units);
         updateUnitList();
     });
+
 
     document.getElementById('filter-rarities').addEventListener('change', function (e) {
         updateFilter('rarity', e.target.value);
