@@ -23,4 +23,4 @@ gulp.task('sass', () =>
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(webRoot)));
 
-gulp.task('sass:watch', () => gulp.watch('./sass/**/*.scss', ['sass']));
+gulp.task('sass:watch', () => gulp.watch('./stylesheets/**/*.scss', ['sass']));
