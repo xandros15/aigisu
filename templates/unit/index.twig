@@ -27,8 +27,8 @@
             <figure class="image-container">
                 <div class="icon-img"></div>
                 <figcaption class="text-center">
-                    <div><span class="name label label-primary"><%= unit.name %></span></div>
-                    <div><span class="kanji label label-primary"><%= unit.japanese_name %></span></div>
+                    <span class="name label label-primary"
+                          data-japanese="<%= unit.japanese_name %>"><%= unit.name %></span>
                 </figcaption>
             </figure>
             <nav class="unit-navigation">
