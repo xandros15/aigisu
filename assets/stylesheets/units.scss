@@ -17,18 +17,6 @@
   }
 }
 
-nav ul, nav li {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.icon-img {
-  height: 100px;
-  width: auto;
-  background: no-repeat center/contain;
-}
-
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -36,13 +24,18 @@ nav ul, nav li {
   .unit-container {
     justify-content: flex-end;
     display: flex;
-    width: 12rem;
+    flex-basis: 12rem;
     flex-direction: column-reverse;
   }
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .icon-img {
+      height: 6rem;
+      width: 6rem;
+      background: no-repeat center/contain;
+    }
   }
   .unit-navigation {
     display: flex;
