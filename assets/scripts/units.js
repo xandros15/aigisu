@@ -2,6 +2,52 @@
  * Created by xandros15 on 2016-11-19.
  */
 (function () {
+
+    const lazyload = ({elements, callback, threshold = 0}) => {
+        const belowthefold = (element, settings) => {
+            return (window.innerHeight ? window.innerHeight : $(window).height()) + $(window).scrollTop() <= $(element).offset().top - settings.threshold;
+        };
+
+        const rightoffold = (element, settings) => {
+            return $(window).width() + $(window).scrollLeft() <= $(element).offset().left - settings.threshold;
+        };
+
+        const abovethetop = (element, settings) => {
+            return $(window).scrollTop() >= $(element).offset().top + settings.threshold + $(element).height();
+        };
+
+        const leftofbegin = (element, settings) => {
+            return $(window).scrollLeft() >= $(element).offset().left + settings.threshold + $(element).width();
+        };
+
+        const inviewport = (element, settings) => {
+            return !rightoffold(element, settings) && !leftofbegin(element, settings) && !belowthefold(element, settings) && !abovethetop(element, settings);
+        };
+
+        const settings = {
+            threshold: threshold,
+        };
+
+        const canBeShow = (element) => {
+            return !element.dataset.loaded && inviewport(element, settings);
+        };
+
+        const update = () => {
+            _.each(elements, (element) => {
+                if (canBeShow(element) && !element.dataset.loaded) {
+                    callback(element);
+                    element.dataset.loaded = true;
+                    element.classList.add('loaded');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', update);
+        window.addEventListener("resize", update);
+
+        return update;
+    };
+
     const storage = {
         units: [],
         filter: {
@@ -18,19 +64,21 @@
 
     const template = _.template(document.getElementById('unit-template').innerHTML);
 
-    const initStyleImages = () => {
+    const addImageToStyle = (unit) => {
         const style = document.createElement('style');
-        style.id = 'icons-stylesheet';
+        unit.isLoaded = true;
+        style.id = 'icons-stylesheet-unit-' + unit.id;
+        style.innerHTML = '#unit-' + unit.id + ' .icon-img{background-image: url(\'' + unit.icon + '\')} ';
         document.head.appendChild(style);
     };
 
-    const addImageToStyle = (unit) => {
-        document.getElementById('icons-stylesheet').innerHTML +=
-            '#unit-' + unit.id + ' .icon-img{background-image: url(\'' + unit.icon + '\');} ';
-    };
-
     const addImagesToStyle = (units) => {
-        _.each(units, addImageToStyle);
+        _.each(units, (unit) => {
+            !unit.isLoaded || lazyload({
+                elements: document.querySelectorAll("#unit-" + unit.id + " .icon-img:not(.loaded)"),
+                callback: () => addImageToStyle(unit)
+            })();
+        });
     };
 
     const updateSort = (sort) => {
@@ -79,6 +127,7 @@
         document.getElementById('units-index').innerHTML = template({
             units: newUnits
         });
+        addImagesToStyle(newUnits);
     };
 
     const bootstrap = () => {
@@ -100,8 +149,6 @@
 
         axios.get(API.UNITS + '?expand=missing_cg,cg').then((response) => {
             storage.units = response.data;
-            initStyleImages();
-            addImagesToStyle(storage.units);
             updateUnitList();
         });
 
