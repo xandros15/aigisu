@@ -3,3 +3,11 @@ nav ul, nav li {
   margin: 0;
   list-style: none;
 }
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
