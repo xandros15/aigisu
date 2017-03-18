@@ -74,7 +74,7 @@
 
     const addImagesToStyle = (units) => {
         _.each(units, (unit) => {
-            !unit.isLoaded || lazyload({
+            unit.isLoaded || lazyload({
                 elements: document.querySelectorAll("#unit-" + unit.id + " .icon-img:not(.loaded)"),
                 callback: () => addImageToStyle(unit)
             })();
@@ -123,7 +123,6 @@
         });
 
         newUnits = _.orderBy(newUnits, storage.sort.ident, storage.sort.order);
-
         document.getElementById('units-index').innerHTML = template({
             units: newUnits
         });
