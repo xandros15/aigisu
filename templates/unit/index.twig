@@ -10,45 +10,20 @@
     <section>
         {% include 'unit/options/index.twig' %}
         <section id="units-index" class="grid text-center">
-            <div class="loader"></div>
+            {% for unit in units %}
+                {% include 'unit/single.twig' %}
+            {% endfor %}
         </section>
     </section>
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.8.2/blazy.js"
+            integrity="sha256-ROy/F1BMPc0R/34gIOKiQvqvlNjbN7xLa+4oymrUdT4=" crossorigin="anonymous"></script>
     <script>
-        var API = {
-            UNITS: '{{ path_for('api.unit.index') }}'
-        }
+        "use strict";
+        !function () {
+            new Blazy();
+        }();
     </script>
-    <script id="unit-template" type="text/html">
-        <% _.each(units, function(unit){ %>
-        <article id="unit-<%= unit.id %>" class="unit unit-container element-item">
-            <figure class="image-container">
-                <div class="<%= unit.isLoaded ? 'loaded icon-img' : 'icon-img' %>"></div>
-                <figcaption class="text-center">
-                    <span class="name label label-primary"
-                          data-japanese="<%= unit.japanese_name %>"><%= unit.name %></span>
-                </figcaption>
-            </figure>
-            <nav class="unit-navigation">
-                <a href="{{ base_url() }}/units/<%= unit.id %>">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <span class="sr-only">View</span>
-                </a>
-                <% if(!_.isEmpty(unit.cg)){ %>
-                <a href="{{ base_url() }}/units/<%= unit.id %>/bedroom">
-                    <i class="fa fa-heart" aria-hidden="true"></i>
-                    <span class="sr-only">Bedroom</span>
-                </a>
-                <% } %>
-            </nav>
-        </article>
-        <% }); %>
-    </script>
-    <script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"
-            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script src="{{ base_url() }}/dist/units.js"></script>
 {% endblock %}

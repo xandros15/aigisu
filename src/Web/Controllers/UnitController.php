@@ -9,6 +9,8 @@
 namespace Aigisu\Web\Controllers;
 
 
+use Aigisu\Components\Form;
+use Aigisu\Web\Components\UnitManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -18,27 +20,46 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        return $this->get(Twig::class)->render($response, 'unit/index.twig');
+        $apiRequest = $request->withQueryParams(array_merge($request->getQueryParams(), [
+            'expand' => 'missing_cg,cg',
+        ]));
+
+        $units = $this->callApi('api.unit.index', $apiRequest, $response)->getResponse();
+
+        $manager = new UnitManager($request->getQueryParams());
+        $units   = $manager->filter($units);
+        $units   = $manager->filter($units);
+
+        $request = $request->withQueryParams($manager->getQuery());
+
+        return $this->get(Twig::class)->render($response, 'unit/index.twig', [
+            'units' => $units,
+            'form'  => new Form($request),
+        ]);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionView(Request $request, Response $response): Response
     {
         $unit = $this->callApi('api.unit.view', $request, $response)->getResponse();
+
         return $this->get(Twig::class)->render($response, 'unit/view.twig', ['unit' => $unit]);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionBedroom(Request $request, Response $response): Response
@@ -49,6 +70,7 @@ class UnitController extends AbstractController
         foreach ($cgs as $cg) {
             $map[$cg['server']][] = $cg;
         }
+
         return $this->get(Twig::class)->render($response, 'unit/bedroom.twig', ['cgs' => $map]);
     }
 

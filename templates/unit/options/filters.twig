@@ -1,31 +1,68 @@
+{% set raritiesMap = {
+'':'all',
+'black':'black',
+'sapphire':'sapphire',
+'platinum':'platinum',
+'gold':'gold',
+'silver':'silver',
+'silver':'silver',
+'iron':'iron',
+} %}
+
+{% set serverMap = {
+'':'all',
+'dmm':'DMM',
+'nutaku':'nutaku',
+} %}
+
 <section class="filters">
-    <div>
-        <label>Rarities</label>
-        <div id="filter-rarities" class="form-control">
-            <label><input type="radio" name="filter-rarities" value="all" checked>all</label>
-            <label><input type="radio" name="filter-rarities" value="black">black</label>
-            <label><input type="radio" name="filter-rarities" value="sapphire">sapphire</label>
-            <label><input type="radio" name="filter-rarities" value="platinum">platinum</label>
-            <label><input type="radio" name="filter-rarities" value="gold">gold</label>
-            <label><input type="radio" name="filter-rarities" value="silver">silver</label>
-            <label><input type="radio" name="filter-rarities" value="bronze">bronze</label>
-            <label><input type="radio" name="filter-rarities" value="iron">iron</label>
+    <form method="get">
+        {% for name,value in form  if value is not iterable %}
+            <input type="hidden" name="{{ name }}" value="{{ value }}">
+        {% endfor %}
+        <div>
+            <label>Rarities</label>
+            <div id="filter-rarities" class="form-control">
+                {% for id,rarity in raritiesMap %}
+                    <label>
+                        <input
+                                type="radio"
+                                name="filter-rarities"
+                                value="{{ id }}"
+                                {{ form.get('filter-rarities') is same as(id) ? 'checked' }}>
+                        {{ rarity }}
+                    </label>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-    <div>
-        <label for="filter-name">Name</label>
-        <input type="text" id="filter-name" class="form-control">
-    </div>
-    <div>
-        <label for="filter-missing-cg">Missing CG</label>
-        <input type="checkbox" id="filter-missing-cg">
-    </div>
-    <div>
-        <label>Server</label>
-        <div id="filter-server" class="form-control">
-            <label><input type="radio" name="filter-server" value="all" checked>all</label>
-            <label><input type="radio" name="filter-server" value="dmm">DMM</label>
-            <label><input type="radio" name="filter-server" value="nutaku">nutaku</label>
+        <div>
+            <label for="filter-name">Name</label>
+            <input type="text" name="filter-name" value="{{ form.get('filter-name') }}" id="filter-name"
+                   class="form-control">
         </div>
-    </div>
+        <div>
+            <label for="filter-missing-cg">Missing CG</label>
+            <input type="hidden" name="filter-missing-cg" value="0">
+            <input type="checkbox" name="filter-missing-cg" value="1"
+                   id="filter-missing-cg" {{ form.get('filter-missing-cg') ? 'checked' }}>
+        </div>
+        <div>
+            <label>Server</label>
+            <div id="filter-server" class="form-control">
+                {% for id,server in serverMap %}
+                    <label>
+                        <input
+                                type="radio"
+                                name="filter-server"
+                                value="{{ id }}"
+                                {{ form.get('filter-server') is same as(id) ? 'checked' }}>
+                        {{ server }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <button>Filter it!</button>
+        </div>
+    </form>
 </section>

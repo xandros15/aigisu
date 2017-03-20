@@ -1,8 +1,22 @@
+{% set sortMap = {
+'created_at':'Created at',
+'name':'Name',
+'rarity':'Rarity',
+} %}
+
 <section class="sort">
-    <label for="sort-units">Sort units by</label>
-    <select id="sort-units">
-        <option value="created_at">Created at</option>
-        <option value="name">Name</option>
-        <option value="rarity">Rarity</option>
-    </select>
+    <form method="get">
+        {% for name,value in form if value is not iterable %}
+            <input type="hidden" name="{{ name }}" value="{{ value }}">
+        {% endfor %}
+        <label for="sort-units">Sort units by</label>
+        <select id="sort-units" name="sort-units">
+            {% for value,name in sortMap %}
+                <option value="{{ value }}" {{ form.get('sort-units') is same as(value) ? 'selected' }}>{{ name }}</option>
+            {% endfor %}
+            <option value="name">Name</option>
+            <option value="rarity">Rarity</option>
+        </select>
+        <button>Sort it!</button>
+    </form>
 </section>
