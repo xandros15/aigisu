@@ -33,7 +33,7 @@ class UnitController extends AbstractController
 
         $manager = new UnitManager($request->getQueryParams());
         $units   = $manager->filter($units);
-        $units   = $manager->filter($units);
+        $units   = $manager->sort($units);
 
         $request = $request->withQueryParams($manager->getQuery());
 
