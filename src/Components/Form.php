@@ -16,6 +16,7 @@ class Form extends Collection
 {
     /**
      * Form constructor.
+     *
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -25,11 +26,23 @@ class Form extends Collection
 
     /**
      * @param Request $request
+     *
      * @return Form
      */
     public function withRequest(Request $request)
     {
         $clone = new static($request);
+
         return $clone;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function checkout(string $name): string
+    {
+        return $this->get($name, false) ? 'checked' : '';
     }
 }
