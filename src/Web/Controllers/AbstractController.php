@@ -76,7 +76,7 @@ abstract class AbstractController extends ActiveContainer
     {
         /** @var $router Router */
         $router = $this->get('router');
-        $path   = $router->pathFor($name, $params['arguments'], $params['query']);
+        $path   = $router->pathFor($name, $params['arguments'] ?? [], $params['query'] ?? []);
 
         return $response->withRedirect($path);
     }
