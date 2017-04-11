@@ -19,6 +19,7 @@ class Flash
 
     /**
      * Flash constructor.
+     *
      * @param Messages $messages
      */
     public function __construct(Messages $messages)
@@ -28,41 +29,65 @@ class Flash
 
     /**
      * @param string $message
-     * @param bool $now
      */
-    public function addError(string $message, bool $now = false): void
+    public function addError(string $message): void
     {
-        $this->addFormattedMessage(['type' => 'error', 'value' => $message], $now);
+        $this->addFormattedMessage(['type' => 'error', 'value' => $message]);
     }
 
     /**
      * @param string $message
-     * @param bool $now
      */
-    public function addWarning(string $message, bool $now = false): void
+    public function addWarning(string $message): void
     {
-        $this->addFormattedMessage(['type' => 'warning', 'value' => $message], $now);
+        $this->addFormattedMessage(['type' => 'warning', 'value' => $message]);
     }
 
     /**
      * @param string $message
-     * @param bool $now
      */
-    public function addSuccess(string $message, bool $now = false): void
+    public function addSuccess(string $message): void
     {
-        $this->addFormattedMessage(['type' => 'success', 'value' => $message], $now);
+        $this->addFormattedMessage(['type' => 'success', 'value' => $message]);
+    }
+
+    /**
+     * @param string $message
+     */
+    public function addInstantError(string $message): void
+    {
+        $this->addInstantFormattedMessage(['type' => 'error', 'value' => $message]);
+    }
+
+    /**
+     * @param string $message
+     */
+    public function addInstantWarning(string $message): void
+    {
+        $this->addInstantFormattedMessage(['type' => 'warning', 'value' => $message]);
+    }
+
+    /**
+     * @param string $message
+     */
+    public function addInstantSuccess(string $message): void
+    {
+        $this->addInstantFormattedMessage(['type' => 'success', 'value' => $message]);
     }
 
     /**
      * @param array $message
-     * @param bool $now
      */
-    private function addFormattedMessage(array $message, bool $now): void
+    private function addInstantFormattedMessage(array $message): void
     {
-        if ($now) {
-            $this->messages->addMessageNow(self::KEY_NAME, $message);
-        } else {
-            $this->messages->addMessage(self::KEY_NAME, $message);
-        }
+        $this->messages->addMessageNow(self::KEY_NAME, $message);
+    }
+
+    /**
+     * @param array $message
+     */
+    private function addFormattedMessage(array $message): void
+    {
+        $this->messages->addMessage(self::KEY_NAME, $message);
     }
 }

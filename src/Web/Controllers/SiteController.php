@@ -58,7 +58,7 @@ class SiteController extends AbstractController
                 $this->flash->addSuccess('Successful login.');
                 return $this->goHome($response);
             }
-            $this->flash->addError('Wrong email or password.', true);
+            $this->flash->addInstantError('Wrong email or password.');
         }
 
         $form = new Form($request);
