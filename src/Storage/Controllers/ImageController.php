@@ -37,9 +37,10 @@ class ImageController extends AbstractController
         }
 
         return $response->withBody($body)
-            ->withHeader('Content-Type', $mime)
-            ->withHeader('Cache-Control', 'max-age=' . self::CACHE_LIFETIME . ', public')
-            ->withHeader('Etag', md5($body));
+                        ->withHeader('Content-Type', $mime)
+                        ->withHeader('Cache-Control', 'max-age=' . self::CACHE_LIFETIME . ', public')
+                        ->withHeader('Etag', md5($body))
+                        ->withHeader('Expires', gmdate(DATE_RFC1123, time() + self::CACHE_LIFETIME));
     }
 
     /**
