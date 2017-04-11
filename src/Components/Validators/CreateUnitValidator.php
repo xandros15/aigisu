@@ -23,17 +23,17 @@ class CreateUnitValidator extends AbstractValidator
     protected function rules() : array
     {
         return [
-            'name' => v::alpha('_')->noWhitespace(),
+            'name'          => v::alpha('_'),
             'japanese_name' => v::stringType(),
-            'link_seesaw' => new Optional(v::url()),
-            'link_gc' => v::url(),
-            'rarity' => v::in(Unit::getRarities()),
-            'gender' => v::in(Unit::getGenders()),
-            'dmm' => v::boolVal(),
-            'nutaku' => v::boolVal(),
-            'special_cg' => v::boolVal(),
-            'tags' => new Optional(v::arrayType()),
-            'icon' => v::size('1KB', '50KB')->addRule(new ImageSize(80, 150)),
+            'link_seesaw'   => new Optional(v::url()),
+            'link_gc'       => v::url(),
+            'rarity'        => v::in(Unit::getRarities()),
+            'gender'        => v::in(Unit::getGenders()),
+            'dmm'           => v::boolVal(),
+            'nutaku'        => v::boolVal(),
+            'special_cg'    => v::boolVal(),
+            'tags'          => new Optional(v::arrayType()),
+            'icon'          => v::size('1KB', '50KB')->addRule(new ImageSize(80, 150)),
         ];
     }
 }
