@@ -17,6 +17,7 @@ use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;
 use Slim\Http\Response;
+use Slim\Router;
 
 abstract class AbstractController extends ActiveContainer
 {
@@ -26,6 +27,7 @@ abstract class AbstractController extends ActiveContainer
 
     /**
      * AbstractController constructor.
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -36,6 +38,7 @@ abstract class AbstractController extends ActiveContainer
 
     /**
      * @param Response $response
+     *
      * @return Response
      */
     public function goHome(Response $response): Response
@@ -47,17 +50,34 @@ abstract class AbstractController extends ActiveContainer
      * @param $name
      * @param $request
      * @param $response
+     *
      * @return ApiResponse
      * @throws ForbiddenException
      */
     protected function callApi($name, $request, $response): ApiResponse
     {
-        $api = new Api($this->get('router')->getNamedRoute($name));
+        $api         = new Api($this->get('router')->getNamedRoute($name));
         $apiResponse = $api->send($request, $response);
         if ($apiResponse->isForbidden()) {
             throw new ForbiddenException($request, $response);
         }
 
         return $apiResponse;
+    }
+
+    /**
+     * @param Response $response
+     * @param string $name
+     * @param array $params
+     *
+     * @return Response
+     */
+    protected function redirect(Response $response, string $name, array $params = [])
+    {
+        /** @var $router Router */
+        $router = $this->get('router');
+        $path   = $router->pathFor($name, $params['arguments'], $params['query']);
+
+        return $response->withRedirect($path);
     }
 }
