@@ -3,6 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Aigisu\Core\Configuration;
 
+session_cache_limiter(false);
 session_start();
 
 $main = new \Slim\App(new Configuration());

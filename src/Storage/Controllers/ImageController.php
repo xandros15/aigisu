@@ -26,7 +26,7 @@ class ImageController extends AbstractController
      * @return Response
      * @throws NotFoundException
      */
-    public function actionView(Request $request, Response $response) : Response
+    public function actionView(Request $request, Response $response): Response
     {
         try {
             $file = $this->getImage($request->getAttribute('path'));
@@ -39,8 +39,7 @@ class ImageController extends AbstractController
         return $response->withBody($body)
                         ->withHeader('Content-Type', $mime)
                         ->withHeader('Cache-Control', 'max-age=' . self::CACHE_LIFETIME . ', public')
-                        ->withHeader('Etag', md5($body))
-                        ->withHeader('Expires', gmdate(DATE_RFC1123, time() + self::CACHE_LIFETIME));
+                        ->withHeader('Etag', md5($body));
     }
 
     /**
@@ -52,7 +51,7 @@ class ImageController extends AbstractController
     {
         /** @var $filesystem Filesystem */
         $filesystem = $this->get(Filesystem::class);
-        $file = $filesystem->get($path);
+        $file       = $filesystem->get($path);
         if (!$file->isFile() || !$this->isImage($file->getMimetype())) {
             throw new FileNotFoundException($path);
         }
@@ -64,7 +63,7 @@ class ImageController extends AbstractController
      * @param string $mimeType
      * @return bool
      */
-    protected function isImage(string $mimeType) : bool
+    protected function isImage(string $mimeType): bool
     {
         return 0 === strpos($mimeType, 'image/');
     }
