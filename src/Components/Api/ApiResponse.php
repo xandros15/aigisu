@@ -18,12 +18,42 @@ class ApiResponse
 
     /**
      * ApiResponse constructor.
+     *
      * @param ResponseInterface $response
      */
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
+
+    /**
+     * @return \string[][]
+     */
+    public function getHeaders()
+    {
+        return $this->response->getHeaders();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array
+     */
+    public function getHeader(string $name): array
+    {
+        return $this->response->getHeader($name);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getFirstHeader(string $name): string
+    {
+        return reset($this->response->getHeader($name)) ?? '';
+    }
+
 
     /**
      * @return bool
