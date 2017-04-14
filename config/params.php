@@ -8,47 +8,48 @@
 use Aigisu\Core\Configuration;
 
 return [
-    'root' => Configuration::DIR_ROOT,
-    'web' => Configuration::DIR_WEB,
-    'locale' => 'en',
-    'app.name' => 'Aigisu',
-    'templates' => function (Configuration $container) {
+    'root'           => Configuration::DIR_ROOT,
+    'web'            => Configuration::DIR_WEB,
+    'debug'          => true,
+    'locale'         => 'en',
+    'app.name'       => 'Aigisu',
+    'templates'      => function (Configuration $container) {
         return "{$container->root}/templates";
     },
-    'routes' => function (Configuration $container) {
+    'routes'         => function (Configuration $container) {
         return "{$container->root}/routes";
     },
-    'cache' => function (Configuration $container) {
+    'cache'          => function (Configuration $container) {
         return "{$container->root}/cache";
     },
-    'storage' => function (Configuration $container) {
+    'storage'        => function (Configuration $container) {
         return "{$container->root}/storage";
     },
-    'upload' => function (Configuration $container) {
+    'upload'         => function (Configuration $container) {
         return "{$container->storage}/app";
     },
-    'public' => function (Configuration $container) {
+    'public'         => function (Configuration $container) {
         return "{$container->upload}/public";
     },
-    'siteUrl' => function (Configuration $container) {
+    'siteUrl'        => function (Configuration $container) {
         return rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
     },
-    'database' => function () {
+    'database'       => function () {
         return require __DIR__ . '/db/params.php';
     },
-    'access' => function () {
+    'access'         => function () {
         return require __DIR__ . '/access.php';
     },
-    'isDebug' => function (Configuration $container) {
-        return $container->get('settings')->get('displayErrorDetails');
+    'isDebug'        => function (Configuration $container) {
+        return $container->debug;
     },
-    'auth' => function () {
+    'auth'           => function () {
         return require __DIR__ . '/auth.php';
     },
     'imgur.settings' => function () {
         return require __DIR__ . '/imgur.php';
     },
-    'bedroom.lock' => function () {
+    'bedroom.lock'   => function () {
         return require __DIR__ . '/bedroom/params.php';
     },
 ];

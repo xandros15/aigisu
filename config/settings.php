@@ -8,8 +8,8 @@
 
 return [
     'settings' => [
-        'displayErrorDetails' => true,
-        'addContentLengthHeader' => false,
+        'displayErrorDetails'               => $this->debug,
+        'addContentLengthHeader'            => false,
         'determineRouteBeforeAppMiddleware' => true,
     ],
 ];
