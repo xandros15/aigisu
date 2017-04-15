@@ -43,9 +43,9 @@ class CGController extends AbstractController
     public function actionView(Request $request, Response $response): Response
     {
         $cg = CGTransformerFacade::transform(
-            $this->getExpandParam($request),
+            $this->findCGOrFail($request),
             $this->get('router'),
-            $this->findCGOrFail($request)
+            $this->getExpandParam($request)
         );
 
         return $this->read($response, $cg);
