@@ -11,16 +11,15 @@ final class Configuration extends Container
 
     /**
      * Configuration constructor.
-     * @param array $items
      */
-    public function __construct(array $items = [])
+    public function __construct()
     {
         /** @noinspection PhpIncludeInspection */
         $this->applyParams(require self::DIR_ROOT . '/config/params.php');
         /** @noinspection PhpIncludeInspection */
         $this->applyParams(require self::DIR_ROOT . '/config/dependencies.php');
         /** @noinspection PhpIncludeInspection */
-        parent::__construct((array) (require self::DIR_ROOT . '/config/settings.php') + $items);
+        parent::__construct(require self::DIR_ROOT . '/config/settings.php');
     }
 
     /**

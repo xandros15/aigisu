@@ -40,9 +40,6 @@ return [
     'access'         => function () {
         return require __DIR__ . '/access.php';
     },
-    'isDebug'        => function (Configuration $container) {
-        return $container->debug;
-    },
     'auth'           => function () {
         return require __DIR__ . '/auth.php';
     },
