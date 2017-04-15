@@ -30,7 +30,7 @@ class AuthController extends AbstractController
             throw new UnauthorizedException($request, $response);
         }
 
-        $auth = new JWTAuth($this->get('auth'));
+        $auth  = new JWTAuth($this->get('settings')->get('auth'));
         $token = $auth->createToken($user->getKey());
         return $this->read($response, [
             'token' => (string)$token,
