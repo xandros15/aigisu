@@ -74,4 +74,29 @@ class UnitController extends AbstractController
         return $this->get(Twig::class)->render($response, 'unit/bedroom.twig', ['cgs' => $map]);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     */
+    public function actionCreate(Request $request, Response $response): Response
+    {
+        if ($request->isPost()) {
+            $api = $this->callApi('api.unit.create', $request, $response);
+            if ($api->hasError()) {
+                $request = $request->withAttribute('errors', $api->getErrors());
+            } else {
+                $this->flash->addSuccess('Successful created unit.');
+
+                return $this->redirect($response, 'web.units');
+            }
+        }
+
+        $form = new Form($request);
+
+        return $this->get(Twig::class)->render($response, 'unit/create.twig', [
+            'form' => $form,
+        ]);
+    }
 }

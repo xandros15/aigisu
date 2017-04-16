@@ -1,0 +1,62 @@
+{% extends 'index.twig' %}
+
+{% block content %}
+    <form action="{{ path_for('web.unit.create') }}" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="unit-name">Name:</label>
+            <input id="unit-name" name="name" type="text" value="{{ form.get('name') }}">
+            <p>{{ form.errors.name | join }}</p>
+        </div>
+        <div>
+            <label for="unit-japanese_name">Japanese name:</label>
+            <input id="unit-japanese_name" name="japanese_name" type="text" value="{{ form.get('japanese_name') }}">
+            <p>{{ form.errors.japanese_name | join }}</p>
+        </div>
+        <div>
+            <label for="unit-link_seesaw">Link seesaw:</label>
+            <input id="unit-link_seesaw" name="link_seesaw" type="url" value="{{ form.get('link_seesaw') }}">
+            <p>{{ form.errors.link_seesaw | join }}</p>
+        </div>
+        <div>
+            <label for="unit-link_gc">Link gc:</label>
+            <input id="unit-link_gc" name="link_gc" type="url" value="{{ form.get('link_gc') }}">
+            <p>{{ form.errors.link_gc | join }}</p>
+        </div>
+        <div>
+            <label for="unit-rarity">Rarity:</label>
+            <input id="unit-rarity" name="rarity" type="text" value="{{ form.get('rarity') }}">
+            <p>{{ form.errors.rarity | join }}</p>
+        </div>
+        <div>
+            <label for="unit-gender">Gender:</label>
+            <input id="unit-gender" name="gender" type="text" value="{{ form.get('gender') }}">
+            <p>{{ form.errors.gender | join }}</p>
+        </div>
+        <div>
+            <label for="unit-dmm">Dmm:</label>
+            <input id="unit-dmm" name="dmm" type="checkbox" {{ form.checkout('dmm') }}>
+            <p>{{ form.errors.dmm | join }}</p>
+        </div>
+        <div>
+            <label for="unit-nutaku">Nutaku:</label>
+            <input id="unit-nutaku" name="nutaku" type="checkbox" {{ form.checkout('nutaku') }}>
+            <p>{{ form.errors.nutaku | join }}</p>
+        </div>
+        <div>
+            <label for="unit-special_cg">Has special cg::</label>
+            <input id="unit-special_cg" name="special_cg" type="checkbox" value="{{ form.get('special_cg') }}">
+            <p>{{ form.errors.special_cg | join }}</p>
+        </div>
+        <div>
+            <label for="unit-icon">Icon:</label>
+            <input id="unit-icon" name="icon" type="file">
+            <p>{{ form.errors.icon | join }}</p>
+        </div>
+        <div>
+            <label for="unit-tags">Tags:</label>
+            <input id="unit-tags" name="tags" type="text" value="{{ form.get('tags') }}">
+            <p>{{ form.errors.tags | join }}</p>
+        </div>
+        <button>Create</button>
+    </form>
+{% endblock %}

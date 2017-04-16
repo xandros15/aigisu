@@ -41,6 +41,7 @@ $this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionP
     ->setName('web.user.password.reset');
 
 $this->get('/units/{id:\d+}', UnitController::class . ':actionView')->setName('web.unit.view');
+$this->map(['get', 'post'], '/units/create', UnitController::class . ':actionCreate')->setName('web.unit.create');
 $this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom')->setName('web.unit.bedroom')
     ->add(new BedroomLockMiddleware($this->getContainer()));
 
