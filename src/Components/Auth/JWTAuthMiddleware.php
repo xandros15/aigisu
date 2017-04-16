@@ -74,6 +74,6 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
 
     private function getKeyring(): array
     {
-        return $this->get('auth');
+        return $this->get('settings')->get('auth');
     }
 }
