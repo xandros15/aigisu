@@ -32,14 +32,14 @@ class UnitController extends AbstractController
         $units = $this->callApi('api.unit.index', $apiRequest, $response)->getJson();
 
         $manager = new UnitManager($request->getQueryParams());
-        $units   = $manager->filter($units);
-        $units   = $manager->sort($units);
+        $units = $manager->filter($units);
+        $units = $manager->sort($units);
 
         $request = $request->withQueryParams($manager->getQuery());
 
         return $this->get(Twig::class)->render($response, 'unit/index.twig', [
             'units' => $units,
-            'form'  => new Form($request),
+            'form' => new Form($request),
         ]);
     }
 
@@ -87,9 +87,11 @@ class UnitController extends AbstractController
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
+                $path = $api->getFirstHeader('location');
+                $id = $this->getPathArgument($path, 'id');
                 $this->flash->addSuccess('Successful created unit.');
 
-                return $this->redirect($response, 'web.units');
+                return $this->redirect($response, 'web.unit.view', ['arguments' => ['id' => $id]]);
             }
         }
 
