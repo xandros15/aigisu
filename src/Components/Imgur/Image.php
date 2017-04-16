@@ -24,10 +24,11 @@ class Image extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @see https://api.imgur.com/endpoints/image#image
      * @return ResponseInterface
      */
-    public function get(string $id) : ResponseInterface
+    public function get(string $id): ResponseInterface
     {
         $uri = strtr(self::ENDPOINT_IMAGE, ['{id}' => $id]);
         $request = new Request('GET', $uri);
@@ -38,10 +39,11 @@ class Image extends AbstractApi
     /**
      * @param $file
      * @param array $params
+     *
      * @see https://api.imgur.com/endpoints/image#image-upload
      * @return ResponseInterface
      */
-    public function upload($file, array $params = []) : ResponseInterface
+    public function upload($file, array $params = []): ResponseInterface
     {
         $default = ['image', 'album', 'type', 'name', 'title', 'description'];
         $params = $this->proceedParams(array_merge($params, $this->proceedImage($file)), $default);
@@ -53,43 +55,12 @@ class Image extends AbstractApi
     }
 
     /**
-     * Detects if image is file, url address or base64 string
-     *
-     * @param $image
-     * @see https://api.imgur.com/endpoints/image#image-upload
-     * @return array
-     */
-    private function proceedImage(string $image) : array
-    {
-        if (file_exists($image)) {
-            //binary
-            $params = [
-                'image' => fopen($image, 'r'),
-                'type' => 'file'
-            ];
-        } elseif (filter_var($image, FILTER_VALIDATE_URL)) {
-            //url
-            $params = [
-                'image' => $image,
-                'type' => 'URL'
-            ];
-        } else {
-            //base64
-            $params = [
-                'image' => $image,
-                'type' => 'base64'
-            ];
-        }
-
-        return $params;
-    }
-
-    /**
      * @param string $id
+     *
      * @see https://api.imgur.com/endpoints/image#image-delete
      * @return ResponseInterface
      */
-    public function delete(string $id) : ResponseInterface
+    public function delete(string $id): ResponseInterface
     {
         $uri = strtr(self::ENDPOINT_IMAGE_DELETE, ['{id}' => $id]);
         $request = new Request('DELETE', $uri);
@@ -100,10 +71,11 @@ class Image extends AbstractApi
     /**
      * @param string $id
      * @param array $params
+     *
      * @see https://api.imgur.com/endpoints/image#image-update
      * @return ResponseInterface
      */
-    public function update(string $id, array $params = []) : ResponseInterface
+    public function update(string $id, array $params = []): ResponseInterface
     {
         $uri = strtr(self::ENDPOINT_IMAGE_UPDATE, ['{id}' => $id]);
         $default = ['title', 'description'];
@@ -117,14 +89,48 @@ class Image extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @see https://api.imgur.com/endpoints/image#image-favorite
      * @return ResponseInterface
      */
-    public function favorite(string $id) : ResponseInterface
+    public function favorite(string $id): ResponseInterface
     {
         $uri = strtr(self::ENDPOINT_IMAGE_FAVORITE, ['{id}' => $id]);
         $request = new Request('POST', $uri);
 
         return $this->client->execute($request);
+    }
+
+    /**
+     * Detects if image is file, url address or base64 string
+     *
+     * @param $image
+     *
+     * @see https://api.imgur.com/endpoints/image#image-upload
+     * @return array
+     */
+    private function proceedImage(string $image): array
+    {
+        if (file_exists($image)) {
+            //binary
+            $params = [
+                'image' => fopen($image, 'r'),
+                'type' => 'file',
+            ];
+        } elseif (filter_var($image, FILTER_VALIDATE_URL)) {
+            //url
+            $params = [
+                'image' => $image,
+                'type' => 'URL',
+            ];
+        } else {
+            //base64
+            $params = [
+                'image' => $image,
+                'type' => 'base64',
+            ];
+        }
+
+        return $params;
     }
 }

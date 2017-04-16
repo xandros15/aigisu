@@ -26,6 +26,7 @@ class MiddlewareHandler extends ActiveContainer implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
@@ -42,6 +43,7 @@ class MiddlewareHandler extends ActiveContainer implements MiddlewareInterface
 
     /**
      * @param $exception
+     *
      * @return HandlerInterface|null
      * @throws SlimException
      */

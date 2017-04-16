@@ -23,9 +23,10 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionIndex(Request $request, Response $response) : Response
+    public function actionIndex(Request $request, Response $response): Response
     {
         return $this->read($response, User::all()->toArray());
     }
@@ -33,64 +34,75 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionView(Request $request, Response $response) : Response
+    public function actionView(Request $request, Response $response): Response
     {
         $user = $this->findUserOrFail($request);
+
         return $this->read($response, $user->toArray());
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionActivate(Request $request, Response $response) : Response
+    public function actionActivate(Request $request, Response $response): Response
     {
         $this->findUserOrFail($request)->activate();
+
         return $this->update($response);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionChangeRole(Request $request, Response $response) : Response
+    public function actionChangeRole(Request $request, Response $response): Response
     {
         $this->findUserOrFail($request)->changeRole($request->getParam('role'));
+
         return $this->update($response);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionDeactivate(Request $request, Response $response) : Response
+    public function actionDeactivate(Request $request, Response $response): Response
     {
         $this->findUserOrFail($request)->deactivate();
+
         return $this->update($response);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionUpdate(Request $request, Response $response) : Response
+    public function actionUpdate(Request $request, Response $response): Response
     {
         $this->findUserOrFail($request)->fill($request->getParams())->saveOrFail();
+
         return $this->update($response);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionRegister(Request $request, Response $response) : Response
+    public function actionRegister(Request $request, Response $response): Response
     {
         $user = new User($request->getParams());
         $user->setPassword($request->getParam('password'));
@@ -102,10 +114,11 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws BadRequestException
      */
-    public function actionResetPasswordRequest(Request $request, Response $response) : Response
+    public function actionResetPasswordRequest(Request $request, Response $response): Response
     {
         $user = User::findByEmail($request->getParam('email'));
         $user->generateRecoveryHash();
@@ -126,10 +139,11 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws InvalidRecoveryHashException
      */
-    public function actionResetPassword(Request $request, Response $response) : Response
+    public function actionResetPassword(Request $request, Response $response): Response
     {
         $hash = $request->getAttribute('token');
         if (!User::isValidRecoveryHash($hash) || !$user = User::findByRecoveryHash($hash)) {
@@ -144,22 +158,25 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws \Exception
      */
-    public function actionDelete(Request $request, Response $response) : Response
+    public function actionDelete(Request $request, Response $response): Response
     {
         $this->findUserOrFail($request)->delete();
+
         return $this->delete($response);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws ForbiddenException
      */
-    public function actionGetCurrent(Request $request, Response $response) : Response
+    public function actionGetCurrent(Request $request, Response $response): Response
     {
         if ($request->getAttribute('is_guest')) {
             throw new ForbiddenException($request, $response);
@@ -170,6 +187,7 @@ class UserController extends AbstractController
 
     /**
      * @param Request $request
+     *
      * @throws NotFoundException
      * @return User|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */

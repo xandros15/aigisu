@@ -20,12 +20,14 @@ class AccessControlAllowMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         /** @var $response \Slim\Http\Response */
         $response = $next($request, $response);
+
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Headers',

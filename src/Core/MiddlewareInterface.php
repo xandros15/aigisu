@@ -18,7 +18,8 @@ interface MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response;
+    public function __invoke(Request $request, Response $response, callable $next): Response;
 }

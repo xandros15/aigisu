@@ -19,13 +19,14 @@ class TagsUnits implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return Schema::pivot(new Tag(), new Unit());
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)

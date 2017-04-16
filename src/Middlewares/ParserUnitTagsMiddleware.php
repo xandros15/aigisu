@@ -20,9 +20,10 @@ class ParserUnitTagsMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         $tags = $request->getParam('tags');
         $parsedBody = $request->getParsedBody();
@@ -36,9 +37,10 @@ class ParserUnitTagsMiddleware implements MiddlewareInterface
 
     /**
      * @param $tags
+     *
      * @return array
      */
-    private function parseTags($tags) : array
+    private function parseTags($tags): array
     {
         if (is_string($tags)) {
             $tags = $this->tagsToArray($tags);
@@ -51,15 +53,17 @@ class ParserUnitTagsMiddleware implements MiddlewareInterface
 
     /**
      * @param string $tagsString
+     *
      * @return array
      */
-    private function tagsToArray(string $tagsString) : array
+    private function tagsToArray(string $tagsString): array
     {
         $tags = explode(',', $tagsString);
         $tags = array_map(function ($tag) {
             $tag = trim($tag);
             $tag = strtolower($tag);
             $tag = str_replace(' ', '_', $tag);
+
             return $tag;
         }, $tags);
 

@@ -18,19 +18,21 @@ class SessionAuth
     /**
      * @param string $email
      * @param string $password
+     *
      * @return bool
      */
-    public function signIn(string $email, string $password) : bool
+    public function signIn(string $email, string $password): bool
     {
         if (($user = User::findByEmail($email)) && $user->validatePassword($password)) {
             $_SESSION[self::SESSION_FIELD] = $user->getKey();
+
             return true;
         }
 
         return false;
     }
 
-    public function singOut() : void
+    public function singOut(): void
     {
         unset($_SESSION[self::SESSION_FIELD]);
     }
@@ -38,7 +40,7 @@ class SessionAuth
     /**
      * @return bool
      */
-    public function isGuest() : bool
+    public function isGuest(): bool
     {
         return !isset($_SESSION[self::SESSION_FIELD]);
     }
@@ -46,7 +48,7 @@ class SessionAuth
     /**
      * @return int
      */
-    public function getAuthId() : int
+    public function getAuthId(): int
     {
         return $_SESSION[self::SESSION_FIELD];
     }

@@ -22,14 +22,16 @@ class UnitTransformerFacade
      * @param $units
      * @param RouterInterface $router
      * @param array $expand
+     *
      * @return array
      */
-    public static function transformAll($units, RouterInterface $router, $expand = []) : array
+    public static function transformAll($units, RouterInterface $router, $expand = []): array
     {
         $fractal = new Fractal();
         $fractal->setSerializer(new SimplyArraySerializer());
         $collection = new Collection($units, new UnitTransformer($router));
         $fractal->parseIncludes($expand);
+
         return $fractal->createData($collection)->toArray();
     }
 
@@ -37,14 +39,16 @@ class UnitTransformerFacade
      * @param Unit $unit
      * @param RouterInterface $router
      * @param array $expand
+     *
      * @return array
      */
-    public static function transform(Unit $unit, RouterInterface $router, $expand = []) : array
+    public static function transform(Unit $unit, RouterInterface $router, $expand = []): array
     {
         $fractal = new Fractal();
         $fractal->setSerializer(new SimplyArraySerializer());
         $item = new Item($unit, new UnitTransformer($router));
         $fractal->parseIncludes($expand);
+
         return $fractal->createData($item)->toArray();
     }
 }

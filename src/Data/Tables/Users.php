@@ -20,13 +20,14 @@ class Users implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return (new User())->getTable();
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)
@@ -50,7 +51,7 @@ class Users implements Table
     /**
      * @return array
      */
-    private function getEnumRoles() : array
+    private function getEnumRoles(): array
     {
         $accesses = (new Configuration())->get('access');
         $roles = [];
@@ -65,10 +66,11 @@ class Users implements Table
         return $roles;
     }
 
-    private function getDefaultRole() : string
+    private function getDefaultRole(): string
     {
         $enum = $this->getEnumRoles();
         ksort($enum);
+
         return end($enum);
     }
 }

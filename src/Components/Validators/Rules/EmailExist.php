@@ -19,6 +19,7 @@ class EmailExist extends AbstractRule
 
     /**
      * EmailExist constructor.
+     *
      * @param $context
      */
     public function __construct($context)
@@ -28,6 +29,7 @@ class EmailExist extends AbstractRule
 
     /**
      * @param $input
+     *
      * @return bool
      */
     public function validate($input)

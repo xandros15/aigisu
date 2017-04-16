@@ -11,8 +11,8 @@ use Aigisu\Components\TokenSack;
 use Aigisu\Core\Configuration;
 
 $configuration = new Configuration();
-$settings      = $configuration->get('settings')->get('google');
-$tokenSack     = $configuration->get(TokenSack::class);
+$settings = $configuration->get('settings')->get('google');
+$tokenSack = $configuration->get(TokenSack::class);
 $clientManager = new GoogleClientManager($tokenSack, $settings['client']);
 
 

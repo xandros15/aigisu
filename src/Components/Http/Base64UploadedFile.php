@@ -26,9 +26,10 @@ class Base64UploadedFile extends UploadedFile
 
     /**
      * @param string $base64
+     *
      * @return string filename
      */
-    public function putBase64ToFile(string $base64) : string
+    public function putBase64ToFile(string $base64): string
     {
         $file = tempnam(sys_get_temp_dir(), 'upload');
         if (!file_put_contents($file, base64_decode($base64))) {

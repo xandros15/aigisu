@@ -14,6 +14,7 @@ use Aigisu\Web\Controllers\UnitController;
 
 $this->get('[/]', function () {
     list(, $response) = func_get_args();
+
     /** @var $response \Slim\Http\Response */
     return $response->withRedirect('/units');
 })->add(new CloneFlashMiddleware($this->getContainer()))->setName('web.home');
@@ -27,23 +28,23 @@ $this->map(['post', 'get'], '/signup', SiteController::class . ':actionRegister'
 
 $this->get('/admin/users', AdminController::class . ':actionIndexUsers')->setName('web.admin.user.index');
 $this->get('/admin/users/{id:\d+}/activate', AdminController::class . ':actionActivateUser')
-    ->setName('web.admin.activate');
+     ->setName('web.admin.activate');
 $this->get('/admin/users/{id:\d+}/deactivate', AdminController::class . ':actionDeactivateUser')
-    ->setName('web.admin.deactivate');
+     ->setName('web.admin.deactivate');
 
 $this->map(['get', 'post'], '/admin/users/{id:\d+}', AdminController::class . ':actionUpdateUser')
-    ->setName('web.admin.user.update');
+     ->setName('web.admin.user.update');
 
 $this->map(['post', 'get'], '/password/reset/send', SiteController::class . ':actionPasswordResetRequest')
-    ->setName('web.user.password.reset.send');
+     ->setName('web.user.password.reset.send');
 
 $this->map(['post', 'get'], '/password/reset', SiteController::class . ':actionPasswordReset')
-    ->setName('web.user.password.reset');
+     ->setName('web.user.password.reset');
 
 $this->get('/units/{id:\d+}', UnitController::class . ':actionView')->setName('web.unit.view');
 $this->map(['get', 'post'], '/units/create', UnitController::class . ':actionCreate')->setName('web.unit.create');
 $this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom')->setName('web.unit.bedroom')
-    ->add(new BedroomLockMiddleware($this->getContainer()));
+     ->add(new BedroomLockMiddleware($this->getContainer()));
 
 
 $this->add(new MiddlewareHandler($this->getContainer()));

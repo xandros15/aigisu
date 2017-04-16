@@ -17,13 +17,14 @@ class OauthRefreshTokens implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return 'oauth_refresh_tokens';
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)

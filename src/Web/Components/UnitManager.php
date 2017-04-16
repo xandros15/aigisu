@@ -14,11 +14,11 @@ final class UnitManager
     private $query;
 
     private $defaults = [
-        'filter-rarities'   => '',
-        'filter-name'       => '',
+        'filter-rarities' => '',
+        'filter-name' => '',
         'filter-missing-cg' => '',
-        'filter-server'     => '',
-        'sort-units'        => '',
+        'filter-server' => '',
+        'sort-units' => '',
     ];
 
     /**

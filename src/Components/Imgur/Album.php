@@ -29,10 +29,11 @@ class Album extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album
      */
-    public function get(string $id) : ResponseInterface
+    public function get(string $id): ResponseInterface
     {
         $uri = strtr(self::ENDPOINT_ALBUM, ['{id}' => $id]);
         $request = new Request('GET', $uri);
@@ -42,6 +43,7 @@ class Album extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-images
      */
@@ -56,6 +58,7 @@ class Album extends AbstractApi
     /**
      * @param string $albumId
      * @param string $imageId
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-image
      */
@@ -73,6 +76,7 @@ class Album extends AbstractApi
 
     /**
      * @param array $params
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-upload
      */
@@ -90,6 +94,7 @@ class Album extends AbstractApi
     /**
      * @param string $id
      * @param array $params
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-update
      */
@@ -108,6 +113,7 @@ class Album extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-delete
      */
@@ -121,6 +127,7 @@ class Album extends AbstractApi
 
     /**
      * @param string $id
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-favorite
      */
@@ -135,6 +142,7 @@ class Album extends AbstractApi
     /**
      * @param string $id
      * @param array $imagesIds
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-set-to
      */
@@ -151,6 +159,7 @@ class Album extends AbstractApi
     /**
      * @param string $id
      * @param array $imagesIds
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-add-to
      */
@@ -167,6 +176,7 @@ class Album extends AbstractApi
     /**
      * @param string $id
      * @param array $imagesIds
+     *
      * @return ResponseInterface
      * @see https://api.imgur.com/endpoints/album#album-remove-from
      */

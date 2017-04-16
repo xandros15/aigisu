@@ -18,6 +18,7 @@ class ChangeRoleValidator extends AbstractValidator
 
     /**
      * ChangeRoleValidator constructor.
+     *
      * @param array $accesses
      */
     public function __construct(array $accesses)
@@ -28,7 +29,7 @@ class ChangeRoleValidator extends AbstractValidator
     /**
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'role' => v::in($this->roles),

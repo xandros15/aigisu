@@ -18,6 +18,7 @@ abstract class ActiveContainer
 
     /**
      * ActiveContainer constructor.
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -28,6 +29,7 @@ abstract class ActiveContainer
     /**
      * @param string $name
      * @param null $default
+     *
      * @return mixed
      */
     protected function get(string $name, $default = null)

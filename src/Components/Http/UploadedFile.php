@@ -20,6 +20,7 @@ class UploadedFile extends SlimUploadedFile
 
     /**
      * @param FilesystemInterface $manager
+     *
      * @return void
      */
     public function addManager(FilesystemInterface $manager)
@@ -32,9 +33,10 @@ class UploadedFile extends SlimUploadedFile
      *
      * @param  string $path
      * @param  string $name
+     *
      * @return string storage filename
      */
-    public function storeAsPublic(string $path, string $name = '') : string
+    public function storeAsPublic(string $path, string $name = ''): string
     {
         if (!$this->exist()) {
             throw new RuntimeException("Uploaded file doesn't exist");
@@ -42,7 +44,7 @@ class UploadedFile extends SlimUploadedFile
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
-            'visibility' => AdapterInterface::VISIBILITY_PUBLIC
+            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
         ]);
 
         if (!$result) {
@@ -60,9 +62,10 @@ class UploadedFile extends SlimUploadedFile
      *
      * @param string $path
      * @param string $name
+     *
      * @return string
      */
-    public function storeAsPrivate(string $path, string $name = '') : string
+    public function storeAsPrivate(string $path, string $name = ''): string
     {
         if (!$this->exist()) {
             throw new RuntimeException("Uploaded file doesn't exist");
@@ -70,7 +73,7 @@ class UploadedFile extends SlimUploadedFile
 
         $newName = $this->generateName($path, $name);
         $result = $this->getManager()->putStream($newName, $this->getStream()->detach(), [
-            'visibility' => AdapterInterface::VISIBILITY_PRIVATE
+            'visibility' => AdapterInterface::VISIBILITY_PRIVATE,
         ]);
 
         if (!$result) {
@@ -85,7 +88,7 @@ class UploadedFile extends SlimUploadedFile
     /**
      * @return bool
      */
-    public function exist() : bool
+    public function exist(): bool
     {
         return $this->getError() === UPLOAD_ERR_OK && !$this->moved;
     }
@@ -95,9 +98,10 @@ class UploadedFile extends SlimUploadedFile
      *
      * @param string $newPath
      * @param string $newName
+     *
      * @return string
      */
-    protected function generateName(string $newPath = '', string $newName = '') : string
+    protected function generateName(string $newPath = '', string $newName = ''): string
     {
         if (!$newName) {
             $newName = md5_file($this->file);
@@ -113,7 +117,7 @@ class UploadedFile extends SlimUploadedFile
     /**
      * @return FilesystemInterface
      */
-    private function getManager() : FilesystemInterface
+    private function getManager(): FilesystemInterface
     {
         if (!$this->manager) {
             throw new RuntimeException("Missing filesystem manager");

@@ -55,13 +55,13 @@ class Unit extends Model
         'nutaku',
         'icon',
         'special_cg',
-        'tags'
+        'tags',
     ];
 
     /**
      * @return array
      */
-    public static function getRarities() : array
+    public static function getRarities(): array
     {
         return ['black', 'sapphire', 'platinum', 'gold', 'silver', 'bronze', 'iron'];
     }
@@ -69,7 +69,7 @@ class Unit extends Model
     /**
      * @return array
      */
-    public static function getGenders() : array
+    public static function getGenders(): array
     {
         return [self::GENDER_FEMALE, self::GENDER_MALE];
     }
@@ -77,7 +77,7 @@ class Unit extends Model
     /**
      * @return HasMany
      */
-    public function cg() : HasMany
+    public function cg(): HasMany
     {
         return $this->hasMany(CG::class, 'unit_id', 'id');
     }
@@ -85,7 +85,7 @@ class Unit extends Model
     /**
      * @return BelongsToMany
      */
-    public function tags() : BelongsToMany
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, null, 'unit_id', 'tag_id');
     }
@@ -111,6 +111,7 @@ class Unit extends Model
 
     /**
      * @param Request $request
+     *
      * @return bool
      */
     public function uploadIcon(Request $request)
@@ -119,6 +120,7 @@ class Unit extends Model
         $icon = $request->getUploadedFiles()['icon'] ?? null;
         if ($icon) {
             $this->setAttribute('icon', $icon->storeAsPublic(self::ICON_UPLOAD_CATALOG));
+
             return true;
         }
 

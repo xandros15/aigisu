@@ -24,6 +24,7 @@ class TokenSack
     public function getToken($name)
     {
         $stmt = "SELECT `value` FROM `settings` WHERE `name` = :name";
+
         return $this->connection->selectOne($stmt, ['name' => $name])->value ?? null;
 
     }

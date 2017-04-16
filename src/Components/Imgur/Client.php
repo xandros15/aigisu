@@ -37,6 +37,7 @@ class Client implements ClientInterface
 
     /**
      * Client constructor.
+     *
      * @param TokenSack $tokenSack
      * @param array $keyring
      */
@@ -48,16 +49,19 @@ class Client implements ClientInterface
 
     /**
      * @param RequestInterface $request
+     *
      * @return ResponseInterface
      */
-    public function execute(RequestInterface $request) : ResponseInterface
+    public function execute(RequestInterface $request): ResponseInterface
     {
         $request = $this->authorize($request);
+
         return $this->getHttpClient()->send($request);
     }
 
     /**
      * @param RequestInterface $request
+     *
      * @return RequestInterface $request
      */
     public function authorize(RequestInterface $request)
@@ -75,7 +79,7 @@ class Client implements ClientInterface
     /**
      * @return array
      */
-    public function getToken() : array
+    public function getToken(): array
     {
         if (!$this->token) {
             $this->token = json_decode($this->tokenSack->getToken(self::TOKEN_NAME), true);
@@ -96,7 +100,7 @@ class Client implements ClientInterface
      * Returns if the access_token is expired.
      * @return bool Returns True if the access_token is expired.
      */
-    public function isAccessTokenExpired() : bool
+    public function isAccessTokenExpired(): bool
     {
         if (!$this->token) {
             return true;
@@ -115,9 +119,10 @@ class Client implements ClientInterface
 
     /**
      * @param null $refreshToken
+     *
      * @return bool
      */
-    public function fetchAccessTokenWithRefreshToken($refreshToken = null) : bool
+    public function fetchAccessTokenWithRefreshToken($refreshToken = null): bool
     {
         $refreshToken = $refreshToken ?? $this->token['refresh_token'];
         if (!$refreshToken) {
@@ -131,6 +136,7 @@ class Client implements ClientInterface
 
         if (isset($credentials['access_token'])) {
             $this->setToken($credentials);
+
             return true;
         }
 
@@ -140,7 +146,7 @@ class Client implements ClientInterface
     /**
      * @return AbstractProvider
      */
-    public function getAuthorization() : AbstractProvider
+    public function getAuthorization(): AbstractProvider
     {
         if ($this->authorization === null) {
             $this->authorization = new ImgurProvider([
@@ -167,7 +173,7 @@ class Client implements ClientInterface
     /**
      * @return \GuzzleHttp\Client
      */
-    public function getHttpClient() : \GuzzleHttp\Client
+    public function getHttpClient(): \GuzzleHttp\Client
     {
         if (!$this->http) {
             $this->http = new \GuzzleHttp\Client();
@@ -180,22 +186,24 @@ class Client implements ClientInterface
      * Attempt to exchange a code for an valid authentication token.
      *
      * @param $code string code from
+     *
      * @return bool
      */
-    public function fetchAccessTokenWithAuthCode(string $code) : bool
+    public function fetchAccessTokenWithAuthCode(string $code): bool
     {
         if (strlen($code) == 0) {
             throw new InvalidArgumentException("Invalid code");
         }
 
         $accessToken = $this->getAuthorization()->getAccessToken('authorization_code', [
-            'code' => $code
+            'code' => $code,
         ]);
 
         $credentials = $accessToken->jsonSerialize();
 
         if (isset($credentials['access_token'])) {
             $this->setToken($credentials);
+
             return true;
         }
 

@@ -17,10 +17,11 @@ class UnitExist extends AbstractRule
 
     /**
      * @param int $id
+     *
      * @return bool
      */
     public function validate($id)
     {
-        return (bool)Unit::find((int)$id);
+        return (bool) Unit::find((int) $id);
     }
 }

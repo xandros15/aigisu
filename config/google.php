@@ -15,10 +15,10 @@ return [
         'auth' => __DIR__ . '/google/key.json',
         'scopes' => [
             GoogleDrive::DRIVE_METADATA,
-            GoogleDrive::DRIVE_FILE
+            GoogleDrive::DRIVE_FILE,
         ],
     ],
     'drive' => [
         'rootId' => require __DIR__ . '/google/root.php',
-    ]
+    ],
 ];

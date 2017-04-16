@@ -20,7 +20,7 @@ class CreateCGValidator extends AbstractValidator
     /**
      * @return array
      */
-    protected function rules() : array
+    protected function rules(): array
     {
         return [
             'server' => v::in(CG::getServersNames()),

@@ -13,6 +13,7 @@ class EmailNotExist extends EmailExist
 {
     /**
      * @param $input
+     *
      * @return bool
      */
     public function validate($input)

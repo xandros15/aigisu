@@ -17,13 +17,14 @@ class Tags implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return (new Tag())->getTable();
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)

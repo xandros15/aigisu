@@ -17,6 +17,7 @@ interface HandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
+     *
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface;

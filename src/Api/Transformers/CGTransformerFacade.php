@@ -22,14 +22,16 @@ class CGTransformerFacade
      * @param $cgs
      * @param RouterInterface $router
      * @param array $expand
+     *
      * @return array
      */
-    public static function transformAll($cgs, RouterInterface $router, $expand = []) : array
+    public static function transformAll($cgs, RouterInterface $router, $expand = []): array
     {
         $fractal = new Fractal();
         $fractal->setSerializer(new SimplyArraySerializer());
         $collection = new Collection($cgs, new CGTransformer($router));
         $fractal->parseIncludes($expand);
+
         return $fractal->createData($collection)->toArray();
     }
 
@@ -37,14 +39,16 @@ class CGTransformerFacade
      * @param CG $cg
      * @param RouterInterface $router
      * @param array $expand
+     *
      * @return array
      */
-    public static function transform(CG $cg, RouterInterface $router, $expand = []) : array
+    public static function transform(CG $cg, RouterInterface $router, $expand = []): array
     {
         $fractal = new Fractal();
         $fractal->setSerializer(new SimplyArraySerializer());
         $item = new Item($cg, new CGTransformer($router));
         $fractal->parseIncludes($expand);
+
         return $fractal->createData($item)->toArray();
     }
 }

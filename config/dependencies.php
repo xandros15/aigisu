@@ -40,12 +40,12 @@ use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
 return [
-    Connection::class         => function (ContainerInterface $container) {
+    Connection::class => function (ContainerInterface $container) {
         $factory = new ConnectionFactory(new LaravelContainer());
 
         return $factory->make($container->get('settings')->get('database'));
     },
-    CapsuleManager::class     => function (ContainerInterface $container) {
+    CapsuleManager::class => function (ContainerInterface $container) {
         $database = new CapsuleManager();
         $database->addConnection($container->get('settings')->get('database'));
         $database->setAsGlobal();
@@ -53,9 +53,9 @@ return [
 
         return $database;
     },
-    Filesystem::class         => function (ContainerInterface $container) {
+    Filesystem::class => function (ContainerInterface $container) {
         $settings = $container->get('settings')->get('flysystem');
-        $adapter  = new Local($settings['local']);
+        $adapter = new Local($settings['local']);
 
         return new Filesystem($adapter);
     },
@@ -63,21 +63,21 @@ return [
 
         $config = $container->get('settings')->get('google');
         $client = new GoogleClientManager($container->get(TokenSack::class), $config['client']);
-        $drive  = new GoogleDriveManager($client, $config['drive']['rootId']);
+        $drive = new GoogleDriveManager($client, $config['drive']['rootId']);
 
         return $drive;
     },
-    Imgur::class              => function (ContainerInterface $container) {
+    Imgur::class => function (ContainerInterface $container) {
         $settings = $container->get('settings')->get('imgur');
-        $client   = new Client($container->get(TokenSack::class), $settings['client']['auth']);
+        $client = new Client($container->get(TokenSack::class), $settings['client']['auth']);
 
         return new Imgur($client, $settings);
     },
-    TokenSack::class          => function (ContainerInterface $container) {
+    TokenSack::class => function (ContainerInterface $container) {
         return new TokenSack($container->get(Connection::class));
     },
-    Twig::class               => function (ContainerInterface $container) {
-        $siteUrl  = rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
+    Twig::class => function (ContainerInterface $container) {
+        $siteUrl = rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
         $settings = $container->get('settings')->get('twig');
 
         $view = new Twig($settings['templates'], $settings);
@@ -91,49 +91,49 @@ return [
 
         return $view;
     },
-    'response'                => function (ContainerInterface $container) {
+    'response' => function (ContainerInterface $container) {
         $basePath = Uri::createFromEnvironment($container->get('environment'))->getBasePath();
         $response = new Response($basePath);
 
         return $response->withProtocolVersion($container->get('settings')->get('httpVersion'))
                         ->withHeader('Content-Type', 'text/html; charset=UTF-8');
     },
-    ValidatorManager::class   => function (ContainerInterface $container) {
+    ValidatorManager::class => function (ContainerInterface $container) {
         $access = $container->get('settings')->get('access');
 
         return new ValidatorManager([
-            'user.create'                 => new CreateUserValidator(),
-            'user.update'                 => new UpdateUserValidator(),
-            'user.role'                   => new ChangeRoleValidator($access),
-            'user.password.reset'         => new PasswordResetValidator(),
+            'user.create' => new CreateUserValidator(),
+            'user.update' => new UpdateUserValidator(),
+            'user.role' => new ChangeRoleValidator($access),
+            'user.password.reset' => new PasswordResetValidator(),
             'user.password.reset.request' => new PasswordResetRequestValidator(),
-            'unit.create'                 => new CreateUnitValidator(),
-            'unit.update'                 => new UpdateUnitValidator(),
-            'cg.create'                   => new CreateCGValidator(),
-            'cg.update'                   => new UpdateCGValidator(),
+            'unit.create' => new CreateUnitValidator(),
+            'unit.update' => new UpdateUnitValidator(),
+            'cg.create' => new CreateCGValidator(),
+            'cg.update' => new UpdateCGValidator(),
         ]);
     },
-    AccessManager::class      => function (ContainerInterface $container) {
+    AccessManager::class => function (ContainerInterface $container) {
         return new AccessManager([
             'moderator' => new ModeratorAccessMiddleware($container),
-            'admin'     => new AdminAccessMiddleware($container),
-            'owner'     => new OwnerAccessMiddleware($container),
+            'admin' => new AdminAccessMiddleware($container),
+            'owner' => new OwnerAccessMiddleware($container),
         ]);
     },
-    Messages::class           => function () {
+    Messages::class => function () {
         return new Messages();
     },
-    Mailer::class             => function (ContainerInterface $container) {
-        $params      = $container->get('settings')->get('mailer');
+    Mailer::class => function (ContainerInterface $container) {
+        $params = $container->get('settings')->get('mailer');
         $transporter = new Swift_SmtpTransport($params['host'], $params['port'], $params['encryption']);
         $transporter->setUsername($params['username']);
         $transporter->setPassword($params['password']);
 
-        $twig  = $container->get(Twig::class)->getEnvironment();
+        $twig = $container->get(Twig::class)->getEnvironment();
         $swift = new Swift_Mailer($transporter);
 
         $mailer = new Mailer($swift, $twig, [
-            'from'   => $params['username'],
+            'from' => $params['username'],
             'prefix' => $container->get('app.name'),
         ]);
 

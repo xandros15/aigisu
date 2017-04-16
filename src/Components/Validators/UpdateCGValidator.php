@@ -14,7 +14,7 @@ class UpdateCGValidator extends CreateCGValidator
     /**
      * @return array
      */
-    protected function rules() : array
+    protected function rules(): array
     {
         return $this->makeOptional(parent::rules());
     }

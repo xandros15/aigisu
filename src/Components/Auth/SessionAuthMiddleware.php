@@ -21,9 +21,10 @@ class SessionAuthMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         $request = $this->authorizeRequest($request);
 
@@ -32,10 +33,11 @@ class SessionAuthMiddleware implements MiddlewareInterface
 
     /**
      * @param Request $request
+     *
      * @return Request
      * @throws InvalidTokenException
      */
-    private function authorizeRequest(Request $request) : Request
+    private function authorizeRequest(Request $request): Request
     {
         $auth = new SessionAuth();
         if (!$auth->isGuest()) {

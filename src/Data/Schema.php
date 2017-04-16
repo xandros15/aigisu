@@ -5,6 +5,7 @@
  * Date: 2016-08-19
  * Time: 20:48
  */
+
 namespace Aigisu\Data;
 
 
@@ -45,9 +46,10 @@ class Schema
     /**
      * @param Model $firstModel
      * @param Model $secondModel
+     *
      * @return string
      */
-    public static function pivot(Model $firstModel, Model $secondModel) : string
+    public static function pivot(Model $firstModel, Model $secondModel): string
     {
         $fistTable = rtrim($firstModel->getTable(), 's');
         $secondTable = rtrim($secondModel->getTable(), 's');
@@ -100,6 +102,7 @@ class Schema
     /**
      * @param string $tableName
      * @param string $filename
+     *
      * @throws \Exception
      * @throws \Throwable
      */
@@ -118,7 +121,7 @@ class Schema
     /**
      * @return array
      */
-    private function tables() : array
+    private function tables(): array
     {
         return [
             new Units(),
@@ -134,6 +137,7 @@ class Schema
 
     /**
      * @param Table $table
+     *
      * @return \Closure
      */
     private function makeClosure(Table $table)

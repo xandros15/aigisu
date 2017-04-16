@@ -18,6 +18,7 @@ class Response extends \Slim\Http\Response
 
     /**
      * Response constructor.
+     *
      * @param array $params
      * @param string $basePath
      */
@@ -30,6 +31,7 @@ class Response extends \Slim\Http\Response
     /**
      * @param \Psr\Http\Message\UriInterface|string $url
      * @param null $status
+     *
      * @return ResponseInterface
      */
     public function withRedirect($url, $status = null)

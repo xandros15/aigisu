@@ -18,6 +18,7 @@ class UnauthorizedException extends HttpException
 
     /**
      * ForbiddenException constructor.
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      */

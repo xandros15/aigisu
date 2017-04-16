@@ -20,20 +20,22 @@ class AuthController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws UnauthorizedException
      */
-    public function actionCreate(Request $request, Response $response) : Response
+    public function actionCreate(Request $request, Response $response): Response
     {
         $user = User::findByEmail($request->getParam('email'));
         if (!$user || !$user->validatePassword($request->getParam('password', ''))) {
             throw new UnauthorizedException($request, $response);
         }
 
-        $auth  = new JWTAuth($this->get('settings')->get('auth'));
+        $auth = new JWTAuth($this->get('settings')->get('auth'));
         $token = $auth->createToken($user->getKey());
+
         return $this->read($response, [
-            'token' => (string)$token,
+            'token' => (string) $token,
             'expires_at' => $token->getClaim('exp'),
             'token_type' => "Bearer",
         ]);

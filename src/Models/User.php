@@ -39,6 +39,7 @@ class User extends Model implements IdentInterface
 
     /**
      * @param string $email
+     *
      * @return static|null
      */
     public static function findByEmail(string $email)
@@ -48,6 +49,7 @@ class User extends Model implements IdentInterface
 
     /**
      * @param string $hash
+     *
      * @return static|null
      */
     public static function findByRecoveryHash(string $hash)
@@ -57,11 +59,13 @@ class User extends Model implements IdentInterface
 
     /**
      * @param string $hash
+     *
      * @return bool
      */
     public static function isValidRecoveryHash(string $hash): bool
     {
         list(, $timestamp) = explode('_', $hash);
+
         return time() - $timestamp < 0;
     }
 
@@ -120,6 +124,7 @@ class User extends Model implements IdentInterface
 
     /**
      * @param string $password
+     *
      * @return bool
      */
     public function validatePassword(string $password): bool

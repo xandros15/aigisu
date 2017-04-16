@@ -20,11 +20,13 @@ class IsGuestMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         $request = $request->withAttribute('is_guest', true);
+
         return $next($request, $response);
     }
 }

@@ -17,13 +17,15 @@ class OwnerAccessMiddleware extends AbstractAccessMiddleware
 
     /**
      * @param Request $request
+     *
      * @return bool
      */
-    protected function hasAccess(Request $request) : bool
+    protected function hasAccess(Request $request): bool
     {
         if ($request->getAttribute('is_guest') === false) {
             /** @var $user User */
             $user = $request->getAttribute('user');
+
             return $this->compareAccess($user->role, self::class);
         }
 

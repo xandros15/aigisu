@@ -19,6 +19,7 @@ class UserNameExist extends AbstractRule
 
     /**
      * UserNameExist constructor.
+     *
      * @param $context
      */
     public function __construct($context)
@@ -29,6 +30,7 @@ class UserNameExist extends AbstractRule
 
     /**
      * @param $input
+     *
      * @return bool
      */
     public function validate($input)
@@ -37,6 +39,7 @@ class UserNameExist extends AbstractRule
         if ($this->id) {
             $user = $user->where('id', '!=', $this->id);
         }
+
         return !$user->exists();
     }
 }

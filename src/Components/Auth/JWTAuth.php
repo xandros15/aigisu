@@ -25,6 +25,7 @@ class JWTAuth
 
     /**
      * JWTAuth constructor.
+     *
      * @param array $keyring
      */
     public function __construct(array $keyring)
@@ -41,6 +42,7 @@ class JWTAuth
 
     /**
      * @param string $id
+     *
      * @return Token
      */
     public function createToken(string $id)
@@ -56,9 +58,10 @@ class JWTAuth
 
     /**
      * @param Token $token
+     *
      * @return bool
      */
-    public function verifyToken(Token $token) : bool
+    public function verifyToken(Token $token): bool
     {
         return $token->verify(new Sha256(), $this->public) && $token->validate(new ValidationData());
     }

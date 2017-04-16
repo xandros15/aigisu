@@ -20,7 +20,7 @@ class InvalidRecoveryHashException extends BadRequestException
     {
         /** @var $response Response */
         $response = $response->withJson([
-            'message' => ['token' => 'Invalid recovery hash']
+            'message' => ['token' => 'Invalid recovery hash'],
         ]);
         parent::__construct($request, $response);
     }

@@ -23,9 +23,10 @@ class AbstractValidator implements ValidatorInterface
     /**
      * @param array $params
      * @param array $context
+     *
      * @return bool
      */
-    public function validate(array $params, $context = []) : bool
+    public function validate(array $params, $context = []): bool
     {
         $this->context = $context;
         foreach ($this->rules() as $field => $rule) {
@@ -43,7 +44,7 @@ class AbstractValidator implements ValidatorInterface
     /**
      * @return array
      */
-    public function getErrors() : array
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -51,16 +52,17 @@ class AbstractValidator implements ValidatorInterface
     /**
      * @return array
      */
-    protected function rules() : array
+    protected function rules(): array
     {
         return [];
     }
 
     /**
      * @param array $rules
+     *
      * @return array
      */
-    protected function makeOptional(array $rules) : array
+    protected function makeOptional(array $rules): array
     {
         foreach ($rules as &$rule) {
             $rule = new Optional($rule);

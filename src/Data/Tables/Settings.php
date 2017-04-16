@@ -16,13 +16,14 @@ class Settings implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return 'settings';
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onUpdate(Blueprint $table)
@@ -32,6 +33,7 @@ class Settings implements Table
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)

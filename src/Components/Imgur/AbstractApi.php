@@ -16,6 +16,7 @@ abstract class AbstractApi
 
     /**
      * AbstractApi constructor.
+     *
      * @param ClientInterface $client
      */
     public function __construct(ClientInterface $client)
@@ -26,9 +27,10 @@ abstract class AbstractApi
     /**
      * @param array $params
      * @param array $default
+     *
      * @return array
      */
-    protected function proceedParams(array $params, array $default) : array
+    protected function proceedParams(array $params, array $default): array
     {
         $proceedParams = [];
         foreach ($default as $name) {

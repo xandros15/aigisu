@@ -55,9 +55,9 @@ class GoogleUploader extends AbstractUploader
         }
 
         $driveManager = $this->getGoogleDriveManager();
-        $driveFile    = $driveManager->create([
-            'name'     => $this->generateName($cg),
-            'filename' => $this->getImageFileName($cg)
+        $driveFile = $driveManager->create([
+            'name' => $this->generateName($cg),
+            'filename' => $this->getImageFileName($cg),
         ]);
         $driveManager->anyoneWithLinkCan($driveFile, 'view');
 
@@ -83,7 +83,7 @@ class GoogleUploader extends AbstractUploader
 
         $driveManager = $this->getGoogleDriveManager();
         $driveManager->update($id, [
-            'name'     => $this->generateName($cg),
+            'name' => $this->generateName($cg),
             'filename' => $this->getImageFileName($cg),
         ]);
 

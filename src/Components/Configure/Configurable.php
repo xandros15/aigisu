@@ -18,6 +18,7 @@ abstract class Configurable
 
     /**
      * GoogleDriveFilesystem constructor.
+     *
      * @param array $config
      */
     public function __construct($config = [])
@@ -27,6 +28,7 @@ abstract class Configurable
 
     /**
      * @param array $config
+     *
      * @throws InvalidArgumentException
      */
     public function setConfig($config)

@@ -28,13 +28,13 @@ $acl = $this->getContainer()->get(AccessManager::class);
 $validators = $this->getContainer()->get(ValidatorManager::class);
 
 $this->post('/users', UserController::class . ':actionRegister')
-    ->setName('api.user.create')->add(new ValidatorMiddleware($validators->get('user.create')));
+     ->setName('api.user.create')->add(new ValidatorMiddleware($validators->get('user.create')));
 $this->post('/users/password/reset/send', UserController::class . ':actionResetPasswordRequest')
-    ->add(new ValidatorMiddleware($validators->get('user.password.reset.request')))
-    ->setName('api.user.password.reset.send');
+     ->add(new ValidatorMiddleware($validators->get('user.password.reset.request')))
+     ->setName('api.user.password.reset.send');
 $this->post('/users/password/reset/{token:\w+}', UserController::class . ':actionResetPassword')
-    ->add(new ValidatorMiddleware($validators->get('user.password.reset')))
-    ->setName('api.user.password.reset');
+     ->add(new ValidatorMiddleware($validators->get('user.password.reset')))
+     ->setName('api.user.password.reset');
 
 $this->group('', function () {
     $this->get('/users', UserController::class . ':actionIndex')->setName('api.user.index');
@@ -44,30 +44,30 @@ $this->group('', function () {
 
 $this->group('', function () use ($validators) {
     $this->post('/users/{id:\d+}', UserController::class . ':actionUpdate')
-        ->setName('api.user.update')->add(new ValidatorMiddleware($validators->get('user.update')));
+         ->setName('api.user.update')->add(new ValidatorMiddleware($validators->get('user.update')));
     $this->post('/users/{id:\d+}/activate', UserController::class . ':actionActivate')
-        ->setName('api.user.activate');
+         ->setName('api.user.activate');
     $this->post('/users/{id:\d+}/deactivate', UserController::class . ':actionDeactivate')
-        ->setName('api.user.deactivate');
+         ->setName('api.user.deactivate');
     $this->post('/users/{id:\d+}/role', UserController::class . ':actionChangeRole')
-        ->setName('api.user.role')
-        ->add(new ValidatorMiddleware($validators->get('user.role')));
+         ->setName('api.user.role')
+         ->add(new ValidatorMiddleware($validators->get('user.role')));
     $this->delete('/users/{id:\d+}', UserController::class . ':actionDelete')
-        ->setName('api.user.delete');
+         ->setName('api.user.delete');
 })->add($acl->get('owner'));
 
 $this->group('', function () use ($validators) {
     $tagsParser = new ParserUnitTagsMiddleware();
     $this->post('/units', UnitController::class . ':actionCreate')
-        ->setName('api.unit.create')
-        ->add(new ValidatorMiddleware($validators->get('unit.create')))
-        ->add($tagsParser);
+         ->setName('api.unit.create')
+         ->add(new ValidatorMiddleware($validators->get('unit.create')))
+         ->add($tagsParser);
     $this->post('/units/{id:\d+}', UnitController::class . ':actionUpdate')
-        ->setName('api.unit.update')
-        ->add(new ValidatorMiddleware($validators->get('unit.update')))
-        ->add($tagsParser);
+         ->setName('api.unit.update')
+         ->add(new ValidatorMiddleware($validators->get('unit.update')))
+         ->add($tagsParser);
     $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
-        ->setName('api.unit.delete');
+         ->setName('api.unit.delete');
 })->add($acl->get('admin'));
 
 $this->get('/units', UnitController::class . ':actionIndex')->setName('api.unit.index');
@@ -77,38 +77,38 @@ $this->get('/units/rarities', UnitController::class . ':actionRarities')->setNam
 $this->group('', function () use ($validators) {
     $missingCG = new MissingCGValidatorMiddleware();
     $this->post('/cg', CGController::class . ':actionCreate')
-        ->setName('api.unit.cg.create')
-        ->add($missingCG)
-        ->add(new ValidatorMiddleware($validators->get('cg.create')));
+         ->setName('api.unit.cg.create')
+         ->add($missingCG)
+         ->add(new ValidatorMiddleware($validators->get('cg.create')));
     $this->post('/cg/{id:\d+}', CGController::class . ':actionUpdate')
-        ->setName('api.unit.cg.update')
-        ->add($missingCG)
-        ->add(new ValidatorMiddleware($validators->get('cg.update')));
+         ->setName('api.unit.cg.update')
+         ->add($missingCG)
+         ->add(new ValidatorMiddleware($validators->get('cg.update')));
     $this->delete('/cg/{id:\d+}', CGController::class . ':actionDelete')
-        ->setName('api.unit.cg.delete');
+         ->setName('api.unit.cg.delete');
 })->add($acl->get('moderator'));
 
 $this->group('', function () {
     /** @var $this \Slim\App */
     $this->post('/cg/{id:\d+}/google', GoogleUploader::class . ':actionCreate')
-        ->setName('api.unit.cg.google.create');
+         ->setName('api.unit.cg.google.create');
     $this->patch('/cg/{id:\d+}/google', GoogleUploader::class . ':actionUpdate')
-        ->setName('api.unit.cg.google.update');
+         ->setName('api.unit.cg.google.update');
     $this->delete('/cg/{id:\d+}/google', GoogleUploader::class . ':actionDelete')
-        ->setName('api.unit.cg.google.delete');
+         ->setName('api.unit.cg.google.delete');
     $this->post('/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionCreate')
-        ->setName('api.unit.cg.imgur.create');
+         ->setName('api.unit.cg.imgur.create');
     $this->patch('/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionUpdate')
-        ->setName('api.unit.cg.imgur.update');
+         ->setName('api.unit.cg.imgur.update');
     $this->delete('/cg/{id:\d+}/imgur', ImgurUploader::class . ':actionDelete')
-        ->setName('api.unit.cg.imgur.delete');
+         ->setName('api.unit.cg.imgur.delete');
 })->add(new ExtendedServerExceptionHandler())
-    ->add($acl->get('moderator'));
+     ->add($acl->get('moderator'));
 
 $this->get('/units/{unitId:\d+}/cg', CGController::class . ':actionIndex')
-    ->setName('api.unit.cg.index');
+     ->setName('api.unit.cg.index');
 $this->get('/cg/{id:\d+}', CGController::class . ':actionView')
-    ->setName('api.unit.cg.view');
+     ->setName('api.unit.cg.view');
 
 $this->post('/auth', AuthController::class . ':actionCreate');
 

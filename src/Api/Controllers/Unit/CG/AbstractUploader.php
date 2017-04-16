@@ -22,30 +22,34 @@ abstract class AbstractUploader extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public abstract function actionCreate(Request $request, Response $response) : Response;
+    public abstract function actionCreate(Request $request, Response $response): Response;
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public abstract function actionUpdate(Request $request, Response $response) : Response;
+    public abstract function actionUpdate(Request $request, Response $response): Response;
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public abstract function actionDelete(Request $request, Response $response) : Response;
+    public abstract function actionDelete(Request $request, Response $response): Response;
 
     /**
      * @param CG $cg
+     *
      * @throws RuntimeException
      * @return string
      */
-    protected function getImageFileName(CG $cg) : string
+    protected function getImageFileName(CG $cg): string
     {
         if (!file_exists($filename = $this->get('settings')->get('flysystem')['local'] . '/' . $cg->getOriginal('local'))) {
             throw new FileNotFoundException("File {$filename} doesn't exist");

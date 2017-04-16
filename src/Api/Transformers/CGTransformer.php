@@ -19,13 +19,14 @@ class CGTransformer extends TransformerAbstract
 
     /** @var array */
     protected $availableIncludes = [
-        'unit'
+        'unit',
     ];
     /** @var RouterInterface */
     private $router;
 
     /**
      * UnitTransformer constructor.
+     *
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
@@ -35,14 +36,15 @@ class CGTransformer extends TransformerAbstract
 
     /**
      * @param CG $cg
+     *
      * @return array
      */
-    public function transform(CG $cg) : array
+    public function transform(CG $cg): array
     {
         return [
             'id' => (int) $cg->id,
             'scene' => (int) $cg->scene,
-            'server' => (string)$cg->server,
+            'server' => (string) $cg->server,
             'archival' => (bool) $cg->archival,
             'links' => [
                 'local' => $this->router->pathFor('storage.images', ['path' => $cg->local]),
@@ -56,6 +58,7 @@ class CGTransformer extends TransformerAbstract
 
     /**
      * @param CG $cg
+     *
      * @return \League\Fractal\Resource\Item
      */
     public function includeUnit(CG $cg)
@@ -65,6 +68,7 @@ class CGTransformer extends TransformerAbstract
 
     /**
      * @param $id
+     *
      * @return null|string
      */
     private function getGoogleAttribute($id)
@@ -79,6 +83,7 @@ class CGTransformer extends TransformerAbstract
 
     /**
      * @param $id
+     *
      * @return null|string
      */
     private function getImgurAttribute($id)

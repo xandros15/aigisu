@@ -21,6 +21,7 @@ class SiteController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionRegister(Request $request, Response $response): Response
@@ -29,12 +30,14 @@ class SiteController extends AbstractController
             $api = $this->callApi('api.user.create', $request, $response);
             if (!$api->hasError()) {
                 $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
+
                 return $this->goHome($response);
             }
             $request = $request->withAttribute('errors', $api->getErrors());
         }
 
         $form = new Form($request);
+
         return $this->get(Twig::class)->render($response, 'site/signup.twig', [
             'form' => $form->all(),
         ]);
@@ -43,6 +46,7 @@ class SiteController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotFoundException
      */
@@ -56,12 +60,14 @@ class SiteController extends AbstractController
         if ($request->isPost()) {
             if ($auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
                 $this->flash->addSuccess('Successful login.');
+
                 return $this->goHome($response);
             }
             $this->flash->addInstantError('Wrong email or password.');
         }
 
         $form = new Form($request);
+
         return $this->get(Twig::class)->render($response, 'site/signin.twig', [
             'form' => $form->all(),
         ]);
@@ -70,6 +76,7 @@ class SiteController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotFoundException
      */
@@ -88,6 +95,7 @@ class SiteController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionPasswordReset(Request $request, Response $response): Response
@@ -99,17 +107,20 @@ class SiteController extends AbstractController
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
                 $this->flash->addSuccess('Successful change password.');
+
                 return $this->goHome($response);
             }
         }
 
         $form = new Form($request);
+
         return $this->get(Twig::class)->render($response, 'site/password-reset.twig', $form->all());
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionPasswordResetRequest(Request $request, Response $response): Response
@@ -124,6 +135,7 @@ class SiteController extends AbstractController
         }
 
         $form = new Form($request);
+
         return $this->get(Twig::class)->render($response, 'site/password-reset-request.twig', $form->all());
     }
 

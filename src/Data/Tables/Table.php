@@ -16,10 +16,11 @@ interface Table
     /**
      * @return string
      */
-    public function getTableName() : string;
+    public function getTableName(): string;
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table);

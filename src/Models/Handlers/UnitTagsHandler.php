@@ -23,6 +23,7 @@ class UnitTagsHandler
 
     /**
      * UnitTagsHandler constructor.
+     *
      * @param Unit $unit
      */
     public function __construct(Unit $unit)

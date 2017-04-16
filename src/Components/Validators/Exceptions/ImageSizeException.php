@@ -16,7 +16,7 @@ class ImageSizeException extends ValidationException
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
             self::STANDARD => '{{name}} must be a valid image and has resolution between {{minWidth}}x{{minHeight}} ' .
-                'and {{maxWidth}}x{{maxHeight}}',
+                              'and {{maxWidth}}x{{maxHeight}}',
         ],
     ];
 }

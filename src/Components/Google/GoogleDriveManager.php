@@ -33,8 +33,8 @@ class GoogleDriveManager
     public function __construct(GoogleClientManager $googleClientManager, string $rootId = '')
     {
         $this->clientManager = $googleClientManager;
-        $this->rootId        = $rootId;
-        $this->drive         = new GoogleDrive($this->clientManager->getClient());
+        $this->rootId = $rootId;
+        $this->drive = new GoogleDrive($this->clientManager->getClient());
     }
 
     /**
@@ -60,7 +60,7 @@ class GoogleDriveManager
      */
     public function create(array $params = [])
     {
-        $file      = new GoogleDriveFile($params);
+        $file = new GoogleDriveFile($params);
         $optParams = [];
 
         if (isset($params['filename'])) {
@@ -83,7 +83,7 @@ class GoogleDriveManager
     public function update($id, array $params = [])
     {
 
-        $file      = new GoogleDriveFile($params);
+        $file = new GoogleDriveFile($params);
         $optParams = [];
 
         if (isset($params['filename'])) {
@@ -134,8 +134,8 @@ class GoogleDriveManager
     public function anyoneWithLinkCan(GoogleDriveFile $file, string $can = 'view')
     {
         $permission = new GoogleDrivePermission([
-            'type'               => 'anyone',
-            'role'               => $this->getRole($can),
+            'type' => 'anyone',
+            'role' => $this->getRole($can),
             'allowFileDiscovery' => false,
         ]);
 
@@ -155,8 +155,8 @@ class GoogleDriveManager
 
         $mediaFile = [
             'uploadType' => 'media',
-            'data'       => file_get_contents($filename),
-            'mimeType'   => (new \finfo())->file($filename, FILEINFO_MIME_TYPE),
+            'data' => file_get_contents($filename),
+            'mimeType' => (new \finfo())->file($filename, FILEINFO_MIME_TYPE),
         ];
 
 
@@ -171,9 +171,9 @@ class GoogleDriveManager
     protected function getRole(string $can)
     {
         $roles = [
-            'edit'    => 'writer',
+            'edit' => 'writer',
             'comment' => 'commenter',
-            'view'    => 'reader'
+            'view' => 'reader',
         ];
 
         if (!isset($roles[$can])) {

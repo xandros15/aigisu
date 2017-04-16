@@ -26,9 +26,10 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
 
     /**
      * @param Request $request
+     *
      * @return bool
      */
-    public function validate(Request $request) : bool
+    public function validate(Request $request): bool
     {
         $id = $request->getAttribute('route')->getArgument('id') ?? 0;
         $params = $this->parseParams($request->getParams(), $id);
@@ -43,7 +44,7 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
     /**
      * @return array
      */
-    public function getErrors() : array
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -52,10 +53,11 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      * @throws BadRequestException
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         if (!$this->validate($request)) {
             $response = $response->withJson([
@@ -71,9 +73,10 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
     /**
      * @param int $unitId
      * @param array $params
+     *
      * @return bool
      */
-    protected function isMissing(int $unitId, array $params) : bool
+    protected function isMissing(int $unitId, array $params): bool
     {
         if ($params['archival']) {
             return true;
@@ -107,9 +110,10 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
     /**
      * @param array $params
      * @param null|int $id
+     *
      * @return array
      */
-    private function parseParams(array $params, $id = null) : array
+    private function parseParams(array $params, $id = null): array
     {
         $newParams = $this->getNewParams($params);
         $oldParams = $id ? $this->getOldParams($id) : [];
@@ -121,28 +125,31 @@ class MissingCGValidatorMiddleware implements MiddlewareInterface
 
     /**
      * @param array $params
+     *
      * @return array
      */
-    private function getNewParams(array $params) : array
+    private function getNewParams(array $params): array
     {
         return [
-            'server' => (string)($params['server'] ?? null),
-            'scene' => (int)($params['scene'] ?? null),
-            'archival' => (bool)($params['archival'] ?? null),
+            'server' => (string) ($params['server'] ?? null),
+            'scene' => (int) ($params['scene'] ?? null),
+            'archival' => (bool) ($params['archival'] ?? null),
         ];
     }
 
     /**
      * @param int $cgId
+     *
      * @return array
      */
-    private function getOldParams(int $cgId) : array
+    private function getOldParams(int $cgId): array
     {
         $cg = CG::findOrNew($cgId);
+
         return [
-            'server' => (string)$cg['server'],
-            'scene' => (int)$cg['scene'],
-            'archival' => (bool)$cg['archival'],
+            'server' => (string) $cg['server'],
+            'scene' => (int) $cg['scene'],
+            'archival' => (bool) $cg['archival'],
         ];
 
     }

@@ -49,7 +49,7 @@ class CG extends Model
     /**
      * @return array
      */
-    public static function getServersNames() : array
+    public static function getServersNames(): array
     {
         return [self::SERVER_DMM, self::SERVER_NUTAKU];
     }
@@ -57,7 +57,7 @@ class CG extends Model
     /**
      * @return BelongsTo
      */
-    public function unit() : BelongsTo
+    public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
@@ -78,7 +78,7 @@ class CG extends Model
     /**
      * @param Request $request
      */
-    public function saveOrFailCG(Request $request) : void
+    public function saveOrFailCG(Request $request): void
     {
         $this->fill($request->getParams());
         $this->uploadCG($request);

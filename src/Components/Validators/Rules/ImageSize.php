@@ -31,6 +31,7 @@ class ImageSize extends AbstractRule
 
     /**
      * ImageSize constructor.
+     *
      * @param null $minResolution
      * @param null $maxResolution
      */
@@ -41,6 +42,7 @@ class ImageSize extends AbstractRule
 
     /**
      * @param $input
+     *
      * @return bool
      */
     public function validate($input)
@@ -64,9 +66,8 @@ class ImageSize extends AbstractRule
     /**
      * @param $minResolution
      * @param $maxResolution
-     * @return array
      */
-    private function setResolutionParams($minResolution, $maxResolution)
+    private function setResolutionParams($minResolution, $maxResolution): void
     {
         if ($minResolution) {
             $minResolution = $this->parseResolutionParams($minResolution);
@@ -83,10 +84,11 @@ class ImageSize extends AbstractRule
 
     /**
      * @param  array|int $resolution
+     *
      * @throws InvalidArgumentException
      * @return array
      */
-    private function parseResolutionParams($resolution)
+    private function parseResolutionParams($resolution): array
     {
         if (is_array($resolution)) {
             return ['width' => reset($resolution), 'height' => end($resolution)];
@@ -102,9 +104,10 @@ class ImageSize extends AbstractRule
     /**
      * @param int $width
      * @param int $height
+     *
      * @return bool
      */
-    private function isCorrectResolution(int $width, int $height) : bool
+    private function isCorrectResolution(int $width, int $height): bool
     {
         $correctWidth = v::between(
             $this->minWidth, $this->maxWidth

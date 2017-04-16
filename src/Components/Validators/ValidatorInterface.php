@@ -14,12 +14,13 @@ interface ValidatorInterface
     /**
      * @param array $params
      * @param array $context
+     *
      * @return bool
      */
-    public function validate(array $params, $context = []) : bool;
+    public function validate(array $params, $context = []): bool;
 
     /**
      * @return array
      */
-    public function getErrors() : array;
+    public function getErrors(): array;
 }

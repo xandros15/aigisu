@@ -30,6 +30,7 @@ class UnitTransformer extends TransformerAbstract
 
     /**
      * UnitTransformer constructor.
+     *
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
@@ -39,14 +40,15 @@ class UnitTransformer extends TransformerAbstract
 
     /**
      * @param Unit $unit
+     *
      * @return \League\Fractal\Resource\Collection
      */
-    public function includeCg(Unit $unit) : Collection
+    public function includeCg(Unit $unit): Collection
     {
         return $this->collection($unit->cg, new CGTransformer($this->router));
     }
 
-    public function includeMissingCg(Unit $unit) : Collection
+    public function includeMissingCg(Unit $unit): Collection
     {
         $missing = new MissingCG($unit['cg']);
         $missing = $missing->filter([
@@ -63,20 +65,21 @@ class UnitTransformer extends TransformerAbstract
 
     /**
      * @param Unit $unit
+     *
      * @return array
      */
-    public function transform(Unit $unit) : array
+    public function transform(Unit $unit): array
     {
         return [
-            'id' => (int)$unit->id,
+            'id' => (int) $unit->id,
             'name' => $unit->name,
             'japanese_name' => $unit->japanese_name,
             'rarity' => $unit->rarity,
             'icon' => $unit->icon ? $this->router->pathFor('storage.images', ['path' => $unit->icon]) : null,
             'gender' => $unit->gender,
-            'dmm' => (bool)$unit->dmm,
-            'nutaku' => (bool)$unit->nutaku,
-            'special_cg' => (bool)$unit->special_cg,
+            'dmm' => (bool) $unit->dmm,
+            'nutaku' => (bool) $unit->nutaku,
+            'special_cg' => (bool) $unit->special_cg,
             'links' => [
                 'seesaw' => $unit->link_seesaw,
                 'gc' => $unit->link_gc,

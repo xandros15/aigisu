@@ -16,14 +16,15 @@ class Tag extends Model
 {
     /** @var array */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     /**
      * @param array $names
+     *
      * @return Collection
      */
-    public static function createManyByName(array $names) : Collection
+    public static function createManyByName(array $names): Collection
     {
         $tags = new Collection();
         foreach ($names as $name) {

@@ -18,6 +18,7 @@ class BadRequestException extends HttpException
 
     /**
      * BadRequestException constructor.
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      */

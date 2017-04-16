@@ -4,6 +4,7 @@ namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Transformers\UnitTransformerFacade;
 use Aigisu\Models\Unit;
+use Illuminate\Support\Collection;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -13,9 +14,10 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
-    public function actionIndex(Request $request, Response $response) : Response
+    public function actionIndex(Request $request, Response $response): Response
     {
         $units = UnitTransformerFacade::transformAll(
             $this->findOrFailUnit($request),
@@ -29,6 +31,7 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionView(Request $request, Response $response): Response
@@ -45,6 +48,7 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionCreate(Request $request, Response $response): Response
@@ -53,13 +57,14 @@ class UnitController extends AbstractController
         $unit->saveUnitModel($request);
 
         return $this->create($response, $this->get('router')->pathFor('api.unit.view', [
-            'id' => $unit->getKey()
+            'id' => $unit->getKey(),
         ]));
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionUpdate(Request $request, Response $response): Response
@@ -72,6 +77,7 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionDelete(Request $request, Response $response): Response
@@ -84,6 +90,7 @@ class UnitController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      */
     public function actionRarities(Request $request, Response $response): Response
@@ -93,10 +100,12 @@ class UnitController extends AbstractController
 
     /**
      * @param Request $request
-     * @return Unit|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|static|static[]
+     *
+     * @return Unit|Collection
      */
     private function findOrFailUnit(Request $request)
     {
+        /** @var  $unit Unit|Collection */
         $expand = $this->getExpandParam($request);
         $unit = new Unit();
         if (in_array($expand, ['cg', 'missing_cg'])) { //edger loader for less queries

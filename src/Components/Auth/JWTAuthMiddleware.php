@@ -27,6 +27,7 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      * @throws UnauthorizedException
      */
@@ -45,6 +46,7 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
 
     /**
      * @param Request $request
+     *
      * @return Request
      * @throws InvalidTokenException
      * @throws InvalidUserIdException
@@ -56,7 +58,7 @@ class JWTAuthMiddleware extends ActiveContainer implements MiddlewareInterface
         list($type, $token) = explode(' ', $authHeader);
         if ($type == self::TYPE) {
             $auth = new JWTAuth($this->getKeyring());
-            $token = (new Parser())->parse((string)$token); //throws InvalidArgumentException
+            $token = (new Parser())->parse((string) $token); //throws InvalidArgumentException
 
             if (!$auth->verifyToken($token)) {
                 throw new InvalidTokenException("Verify token fails");

@@ -32,6 +32,7 @@ class Mailer
 
     /**
      * Mailer constructor.
+     *
      * @param \Swift_Mailer $mailer
      * @param \Twig_Environment $twig
      * @param array $params
@@ -46,26 +47,30 @@ class Mailer
 
     /**
      * @param array $params
+     *
      * @return int
      */
-    public function send(array $params) : int
+    public function send(array $params): int
     {
         $params = array_merge($this->defaults, $params);
         $mail = $this->createMail($params);
         $mail->setFrom($this->from);
         $mail->setTo($params['to']);
+
         return $this->mailer->send($mail);
     }
 
     /**
      * @param $params
+     *
      * @return \Swift_Message
      */
-    private function createMail($params) : \Swift_Message
+    private function createMail($params): \Swift_Message
     {
         $params['subject'] = trim($this->prefix . ' - ' . $params['subject'], '- ');
         $body = $this->twig->render($params['view'], $params);
         $mail = new \Swift_Message($params['subject'], $body, self::CONTENT_TYPE, $params['charset']);
+
         return $mail;
     }
 }

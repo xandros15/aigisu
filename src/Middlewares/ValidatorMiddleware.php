@@ -25,6 +25,7 @@ class ValidatorMiddleware implements MiddlewareInterface
 
     /**
      * ValidatorMiddleware constructor.
+     *
      * @param ValidatorInterface $validator
      */
     public function __construct(ValidatorInterface $validator)
@@ -36,6 +37,7 @@ class ValidatorMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      * @throws BadRequestException
      */
@@ -54,6 +56,7 @@ class ValidatorMiddleware implements MiddlewareInterface
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function getContext(Request $request)
@@ -63,6 +66,7 @@ class ValidatorMiddleware implements MiddlewareInterface
 
     /**
      * @param Request $request
+     *
      * @return array
      */
     private function getParams(Request $request): array
@@ -72,6 +76,7 @@ class ValidatorMiddleware implements MiddlewareInterface
 
     /**
      * @param UploadedFile[] $uploadedFiles
+     *
      * @return array
      */
     private function parseUploadedFiles(array $uploadedFiles): array

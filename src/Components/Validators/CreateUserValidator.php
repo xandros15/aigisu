@@ -21,10 +21,10 @@ class CreateUserValidator extends AbstractValidator
      */
     protected function rules(): array
     {
-        return array(
+        return [
             'name' => v::stringType()->length(4, 15)->addRule(new UserNameExist($this->context)),
             'email' => v::email()->addRule(new EmailNotExist($this->context)),
             'password' => v::stringType()->length(8, 32),
-        );
+        ];
     }
 }

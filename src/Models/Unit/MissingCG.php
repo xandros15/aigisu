@@ -9,7 +9,6 @@
 namespace Aigisu\Models\Unit;
 
 
-use Aigisu\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
 
 class MissingCG
@@ -57,6 +56,7 @@ class MissingCG
 
     /**
      * MissingCG constructor.
+     *
      * @param array $collection
      */
     public function __construct($collection)
@@ -71,9 +71,10 @@ class MissingCG
 
     /**
      * @param $params
+     *
      * @return array
      */
-    public function filter($params) : array
+    public function filter($params): array
     {
         $params = array_merge($this->default, $params);
         $missing = [];
@@ -100,7 +101,7 @@ class MissingCG
     /**
      * @return array
      */
-    private function filterNutaku() : array
+    private function filterNutaku(): array
     {
         return $this->applyIfNotFound($this->requiredMap['nutaku']);
     }
@@ -108,7 +109,7 @@ class MissingCG
     /**
      * @return array
      */
-    private function filterDMM() : array
+    private function filterDMM(): array
     {
         return $this->applyIfNotFound($this->requiredMap['dmm']);
     }
@@ -116,16 +117,17 @@ class MissingCG
     /**
      * @return array
      */
-    private function filterSpecial() : array
+    private function filterSpecial(): array
     {
         return $this->applyIfNotFound($this->requiredMap['special']);
     }
 
     /**
      * @param array $requiredMap
+     *
      * @return array
      */
-    private function applyIfNotFound(array $requiredMap) : array
+    private function applyIfNotFound(array $requiredMap): array
     {
         $missing = [];
         foreach ($requiredMap as $required) {

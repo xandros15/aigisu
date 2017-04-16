@@ -22,6 +22,7 @@ class Api
 
     /**
      * Api constructor.
+     *
      * @param RouteInterface $route
      */
     public function __construct(RouteInterface $route)
@@ -32,6 +33,7 @@ class Api
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return ApiResponse
      * @throws NotFoundException
      */

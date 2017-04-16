@@ -17,13 +17,14 @@ class CG implements Table
     /**
      * @return string
      */
-    public function getTableName() : string
+    public function getTableName(): string
     {
         return (new CGModel())->getTable();
     }
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onUpdate(Blueprint $table)
@@ -33,6 +34,7 @@ class CG implements Table
 
     /**
      * @param Blueprint $table
+     *
      * @return void
      */
     public function onCreate(Blueprint $table)

@@ -22,10 +22,11 @@ class ModelNotFoundHandlerMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      * @throws NotFoundException
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         try {
             return $next($request, $response);

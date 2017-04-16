@@ -25,6 +25,7 @@ abstract class AbstractController extends ActiveContainer
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     protected function getExpandParam(Request $request)
@@ -34,9 +35,10 @@ abstract class AbstractController extends ActiveContainer
 
     /**
      * @param Request $request
+     *
      * @return int
      */
-    protected function getID(Request $request) : int
+    protected function getID(Request $request): int
     {
         return $request->getAttribute(self::INDEX, 0);
     }
@@ -45,8 +47,10 @@ abstract class AbstractController extends ActiveContainer
      * Creating response with header location
      *
      * @see http://www.restapitutorial.com/lessons/httpmethods.html
+     *
      * @param Response $response
      * @param string $path
+     *
      * @return Response
      */
     protected function create(Response $response, string $path): Response
@@ -59,27 +63,30 @@ abstract class AbstractController extends ActiveContainer
     /**
      * @param Response $response
      * @param array $data
+     *
      * @return Response
      */
-    protected function read(Response $response, array $data) : Response
+    protected function read(Response $response, array $data): Response
     {
         return $response->withJson($data, self::STATUS_OK);
     }
 
     /**
      * @param Response $response
+     *
      * @return Response
      */
-    protected function delete(Response $response) : Response
+    protected function delete(Response $response): Response
     {
         return $response->withStatus(self::STATUS_OK);
     }
 
     /**
      * @param Response $response
+     *
      * @return Response
      */
-    protected function update(Response $response) : Response
+    protected function update(Response $response): Response
     {
         return $response->withStatus(self::STATUS_OK);
     }

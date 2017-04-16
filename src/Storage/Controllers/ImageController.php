@@ -23,6 +23,7 @@ class ImageController extends AbstractController
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotFoundException
      */
@@ -44,6 +45,7 @@ class ImageController extends AbstractController
 
     /**
      * @param string $path
+     *
      * @return \League\Flysystem\Directory|\League\Flysystem\File|\League\Flysystem\Handler
      * @throws FileNotFoundException
      */
@@ -51,7 +53,7 @@ class ImageController extends AbstractController
     {
         /** @var $filesystem Filesystem */
         $filesystem = $this->get(Filesystem::class);
-        $file       = $filesystem->get($path);
+        $file = $filesystem->get($path);
         if (!$file->isFile() || !$this->isImage($file->getMimetype())) {
             throw new FileNotFoundException($path);
         }
@@ -61,6 +63,7 @@ class ImageController extends AbstractController
 
     /**
      * @param string $mimeType
+     *
      * @return bool
      */
     protected function isImage(string $mimeType): bool

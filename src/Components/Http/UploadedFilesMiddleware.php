@@ -22,25 +22,27 @@ class UploadedFilesMiddleware extends ActiveContainer implements MiddlewareInter
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         $request = $this->withUploadedFiles($request);
 
         return $next($request, $response);
     }
 
-    private function getFilesystem() : Filesystem
+    private function getFilesystem(): Filesystem
     {
         return $this->get(Filesystem::class);
     }
 
     /**
      * @param Request $request
+     *
      * @return Request
      */
-    private function withUploadedFiles(Request $request) : Request
+    private function withUploadedFiles(Request $request): Request
     {
         $newFiles = UploadedFile::createFromEnvironment(new FakeEnvironment());
         $filesystem = $this->getFilesystem();

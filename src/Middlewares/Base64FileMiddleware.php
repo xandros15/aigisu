@@ -21,9 +21,10 @@ class Base64FileMiddleware implements MiddlewareInterface
      * @param Request $request
      * @param Response $response
      * @param callable $next
+     *
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next) : Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
         if (!is_null($filesParam = $request->getParam('files')) && $files = $this->createFilesFromParam($filesParam)) {
             $request = $request->withUploadedFiles($files);
@@ -34,9 +35,10 @@ class Base64FileMiddleware implements MiddlewareInterface
 
     /**
      * @param array $files
+     *
      * @return array
      */
-    private function createFilesFromParam(array $files) : array
+    private function createFilesFromParam(array $files): array
     {
         $filesToUpload = [];
         foreach ($files as $name => $value) {

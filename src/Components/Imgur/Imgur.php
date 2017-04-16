@@ -19,6 +19,7 @@ class Imgur extends Configurable
 
     /**
      * Imgur constructor.
+     *
      * @param ClientInterface $client
      * @param array $params
      */
@@ -31,9 +32,10 @@ class Imgur extends Configurable
     /**
      * @param $file
      * @param array $params
+     *
      * @return ResponseInterface
      */
-    public function uploadDmmImage($file, array $params = []) : ResponseInterface
+    public function uploadDmmImage($file, array $params = []): ResponseInterface
     {
         $image = new Image($this->client);
         $params = array_merge($params, ['album' => $this->config['albums']['dmm']]);
@@ -44,9 +46,10 @@ class Imgur extends Configurable
     /**
      * @param $file
      * @param array $params
+     *
      * @return ResponseInterface
      */
-    public function uploadNutakuImage($file, array $params = []) : ResponseInterface
+    public function uploadNutakuImage($file, array $params = []): ResponseInterface
     {
         $image = new Image($this->client);
         $params = array_merge($params, ['album' => $this->config['albums']['nutaku']]);
@@ -56,9 +59,10 @@ class Imgur extends Configurable
 
     /**
      * @param string $id
+     *
      * @return ResponseInterface
      */
-    public function deleteImage(string $id) : ResponseInterface
+    public function deleteImage(string $id): ResponseInterface
     {
         $image = new Image($this->client);
 
