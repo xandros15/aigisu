@@ -8,89 +8,82 @@
 
 namespace Aigisu\Components\Google;
 
-use Aigisu\Components\Configure\Configurable;
 use Google_Service_Drive as GoogleDrive;
 use Google_Service_Drive_DriveFile as GoogleDriveFile;
 use Google_Service_Drive_Permission as GoogleDrivePermission;
 
-class GoogleDriveManager extends Configurable
+class GoogleDriveManager
 {
 
     const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
+    /** @var $rootId */
+    private $rootId;
     /** @var GoogleDrive */
     private $drive;
+    /** @var GoogleClientManager */
+    private $clientManager;
 
     /**
      * GoogleDriveManager constructor.
-     * @param GoogleClient $googleClient
-     * @param array $config
+     *
+     * @param GoogleClientManager $googleClientManager
+     * @param string $rootId
      */
-    public function __construct(GoogleClient $googleClient, $config = [])
+    public function __construct(GoogleClientManager $googleClientManager, string $rootId = '')
     {
-        $this->drive = new GoogleDrive($googleClient);
-        parent::__construct($config);
+        $this->clientManager = $googleClientManager;
+        $this->rootId        = $rootId;
+        $this->drive         = new GoogleDrive($this->clientManager->getClient());
+    }
+
+    /**
+     * @return GoogleClientManager
+     */
+    public function getClientManager(): GoogleClientManager
+    {
+        return $this->clientManager;
     }
 
     /**
      * @return GoogleDrive
      */
-    public function getDrive() : GoogleDrive
+    public function getDrive(): GoogleDrive
     {
         return $this->drive;
     }
 
     /**
      * @param array $params
+     *
      * @return GoogleDriveFile
      */
     public function create(array $params = [])
     {
-        $file = new GoogleDriveFile($params);
+        $file      = new GoogleDriveFile($params);
         $optParams = [];
 
         if (isset($params['filename'])) {
             $optParams = array_merge($optParams, $this->prepareMediaFile($params['filename']));
         }
 
-        if ($rootId = $this->config->get('rootId')) {
-            $file->setParents([$rootId]);
+        if ($this->rootId) {
+            $file->setParents([$this->rootId]);
         }
 
         return $this->drive->files->create($file, $optParams);
     }
 
     /**
-     * @param string $filename
-     * @return array
-     */
-    protected function prepareMediaFile(string $filename) : array
-    {
-        $mediaFile = [];
-        if ($filename) {
-            if (!file_exists($filename)) {
-                throw new \InvalidArgumentException("File `$filename` doesn't exist");
-            }
-
-            $mediaFile = [
-                'uploadType' => 'media',
-                'data' => file_get_contents($filename),
-                'mimeType' => (new \finfo())->file($filename, FILEINFO_MIME_TYPE),
-            ];
-        }
-
-        return $mediaFile;
-    }
-
-    /**
      * @param $id
      * @param array $params
+     *
      * @return GoogleDriveFile
      */
     public function update($id, array $params = [])
     {
 
-        $file = new GoogleDriveFile($params);
+        $file      = new GoogleDriveFile($params);
         $optParams = [];
 
         if (isset($params['filename'])) {
@@ -120,6 +113,7 @@ class GoogleDriveManager extends Configurable
     /**
      * @param $id
      * @param array $fields
+     *
      * @return GoogleDriveFile
      */
     public function get($id, array $fields = [])
@@ -134,13 +128,14 @@ class GoogleDriveManager extends Configurable
     /**
      * @param GoogleDriveFile $file
      * @param string $can
+     *
      * @return GoogleDrivePermission
      */
     public function anyoneWithLinkCan(GoogleDriveFile $file, string $can = 'view')
     {
         $permission = new GoogleDrivePermission([
-            'type' => 'anyone',
-            'role' => $this->getRole($can),
+            'type'               => 'anyone',
+            'role'               => $this->getRole($can),
             'allowFileDiscovery' => false,
         ]);
 
@@ -148,20 +143,43 @@ class GoogleDriveManager extends Configurable
     }
 
     /**
+     * @param string $filename
+     *
+     * @return array
+     */
+    protected function prepareMediaFile(string $filename): array
+    {
+        if (!file_exists($filename)) {
+            throw new \InvalidArgumentException("File `$filename` doesn't exist");
+        }
+
+        $mediaFile = [
+            'uploadType' => 'media',
+            'data'       => file_get_contents($filename),
+            'mimeType'   => (new \finfo())->file($filename, FILEINFO_MIME_TYPE),
+        ];
+
+
+        return $mediaFile;
+    }
+
+    /**
      * @param string $can
+     *
      * @return mixed
      */
     protected function getRole(string $can)
     {
         $roles = [
-            'edit' => 'writer',
+            'edit'    => 'writer',
             'comment' => 'commenter',
-            'view' => 'reader'
+            'view'    => 'reader'
         ];
 
         if (!isset($roles[$can])) {
-            throw new \InvalidArgumentException('Wrong accessible name. Available: ' . implode(', ',
-                    array_keys($roles)));
+            throw new \InvalidArgumentException('Wrong accessible name. Available: ' .
+                                                implode(', ', array_keys($roles))
+            );
         }
 
         return $roles[$can];

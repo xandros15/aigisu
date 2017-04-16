@@ -9,7 +9,7 @@
 namespace Aigisu\Api\Controllers\Unit\CG;
 
 use Aigisu\Components\Google\GoogleDriveFilesystem;
-use Aigisu\components\google\GoogleDriveManager;
+use Aigisu\Components\Google\GoogleDriveManager;
 use Aigisu\Models\Unit\CG;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
@@ -20,10 +20,11 @@ class GoogleUploader extends AbstractUploader
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotFoundException
      */
-    public function actionDelete(Request $request, Response $response) : Response
+    public function actionDelete(Request $request, Response $response): Response
     {
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
@@ -41,10 +42,11 @@ class GoogleUploader extends AbstractUploader
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @throws FileExistException
      * @return Response
      */
-    public function actionCreate(Request $request, Response $response) : Response
+    public function actionCreate(Request $request, Response $response): Response
     {
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
@@ -53,8 +55,8 @@ class GoogleUploader extends AbstractUploader
         }
 
         $driveManager = $this->getGoogleDriveManager();
-        $driveFile = $driveManager->create([
-            'name' => $this->generateName($cg),
+        $driveFile    = $driveManager->create([
+            'name'     => $this->generateName($cg),
             'filename' => $this->getImageFileName($cg)
         ]);
         $driveManager->anyoneWithLinkCan($driveFile, 'view');
@@ -67,10 +69,11 @@ class GoogleUploader extends AbstractUploader
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotFoundException
      */
-    public function actionUpdate(Request $request, Response $response) : Response
+    public function actionUpdate(Request $request, Response $response): Response
     {
         /** @var $cg CG */
         $cg = CG::with('unit')->findOrFail($this->getID($request));
@@ -80,7 +83,7 @@ class GoogleUploader extends AbstractUploader
 
         $driveManager = $this->getGoogleDriveManager();
         $driveManager->update($id, [
-            'name' => $this->generateName($cg),
+            'name'     => $this->generateName($cg),
             'filename' => $this->getImageFileName($cg),
         ]);
 
@@ -89,9 +92,10 @@ class GoogleUploader extends AbstractUploader
 
     /**
      * @param string $id
+     *
      * @return string
      */
-    private function getGoogleLocation(string $id) : string
+    private function getGoogleLocation(string $id): string
     {
         return sprintf('https://drive.google.com/uc?export=view&id=%s', $id);
     }
@@ -99,19 +103,21 @@ class GoogleUploader extends AbstractUploader
     /**
      * @return GoogleDriveManager
      */
-    private function getGoogleDriveManager() : GoogleDriveManager
+    private function getGoogleDriveManager(): GoogleDriveManager
     {
-        /** @var $googleSystem GoogleDriveFilesystem */
-        $googleSystem = $this->get(GoogleDriveFilesystem::class);
-        $googleSystem->getClientManager()->setAccess();
-        return $googleSystem->getDriveManager();
+        /** @var $googleSystem GoogleDriveManager */
+        $manager = $this->get(GoogleDriveManager::class);
+        $manager->getClientManager()->setAccess();
+
+        return $manager;
     }
 
     /**
      * @param CG $cg
+     *
      * @return string
      */
-    private function generateName(CG $cg) : string
+    private function generateName(CG $cg): string
     {
         $name = "{$cg->unit->name} - {$cg->server}{$cg->scene}";
         if ($cg->archival) {

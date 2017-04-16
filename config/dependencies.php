@@ -9,7 +9,8 @@ use Aigisu\Components\ACL\AccessManager;
 use Aigisu\Components\ACL\AdminAccessMiddleware;
 use Aigisu\Components\ACL\ModeratorAccessMiddleware;
 use Aigisu\Components\ACL\OwnerAccessMiddleware;
-use Aigisu\Components\Google\GoogleDriveFilesystem as GoogleDrive;
+use Aigisu\Components\Google\GoogleClientManager;
+use Aigisu\Components\Google\GoogleDriveManager;
 use Aigisu\Components\Imgur\Client;
 use Aigisu\Components\Imgur\Imgur;
 use Aigisu\Components\Mailer;
@@ -39,12 +40,12 @@ use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
 return [
-    Connection::class       => function (ContainerInterface $container) {
+    Connection::class         => function (ContainerInterface $container) {
         $factory = new ConnectionFactory(new LaravelContainer());
 
         return $factory->make($container->get('settings')->get('database'));
     },
-    CapsuleManager::class   => function (ContainerInterface $container) {
+    CapsuleManager::class     => function (ContainerInterface $container) {
         $database = new CapsuleManager();
         $database->addConnection($container->get('settings')->get('database'));
         $database->setAsGlobal();
@@ -52,32 +53,34 @@ return [
 
         return $database;
     },
-    Filesystem::class       => function (ContainerInterface $container) {
+    Filesystem::class         => function (ContainerInterface $container) {
         $settings = $container->get('settings')->get('flysystem');
         $adapter  = new Local($settings['local']);
 
         return new Filesystem($adapter);
     },
-    GoogleDrive::class      => function (ContainerInterface $container) {
-        $settings                             = require __DIR__ . '/google.php';
-        $settings['client'][TokenSack::class] = $container->get(TokenSack::class);
+    GoogleDriveManager::class => function (ContainerInterface $container) {
 
-        return new GoogleDrive($settings);
+        $config = $container->get('settings')->get('google');
+        $client = new GoogleClientManager($container->get(TokenSack::class), $config['client']);
+        $drive  = new GoogleDriveManager($client, $config['drive']['rootId']);
+
+        return $drive;
     },
-    Imgur::class            => function (ContainerInterface $container) {
+    Imgur::class              => function (ContainerInterface $container) {
         $settings = $container->get('settings')->get('imgur');
         $client   = new Client($container->get(TokenSack::class), $settings['client']['auth']);
 
         return new Imgur($client, $settings);
     },
-    TokenSack::class        => function (ContainerInterface $container) {
+    TokenSack::class          => function (ContainerInterface $container) {
         return new TokenSack($container->get(Connection::class));
     },
-    Twig::class             => function (ContainerInterface $container) {
+    Twig::class               => function (ContainerInterface $container) {
         $siteUrl  = rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
         $settings = $container->get('settings')->get('twig');
 
-        $view = new Twig($container->get('templates'), $settings);
+        $view = new Twig($settings['templates'], $settings);
 
         $view->addExtension(new TwigMessages($container->get(Messages::class)));
         $view->addExtension(new TwigExtension($container->get('router'), $siteUrl));
@@ -88,14 +91,14 @@ return [
 
         return $view;
     },
-    'response'              => function (ContainerInterface $container) {
+    'response'                => function (ContainerInterface $container) {
         $basePath = Uri::createFromEnvironment($container->get('environment'))->getBasePath();
         $response = new Response($basePath);
 
         return $response->withProtocolVersion($container->get('settings')->get('httpVersion'))
                         ->withHeader('Content-Type', 'text/html; charset=UTF-8');
     },
-    ValidatorManager::class => function (ContainerInterface $container) {
+    ValidatorManager::class   => function (ContainerInterface $container) {
         $access = $container->get('settings')->get('access');
 
         return new ValidatorManager([
@@ -110,17 +113,17 @@ return [
             'cg.update'                   => new UpdateCGValidator(),
         ]);
     },
-    AccessManager::class    => function (ContainerInterface $container) {
+    AccessManager::class      => function (ContainerInterface $container) {
         return new AccessManager([
             'moderator' => new ModeratorAccessMiddleware($container),
             'admin'     => new AdminAccessMiddleware($container),
             'owner'     => new OwnerAccessMiddleware($container),
         ]);
     },
-    Messages::class         => function () {
+    Messages::class           => function () {
         return new Messages();
     },
-    Mailer::class           => function (ContainerInterface $container) {
+    Mailer::class             => function (ContainerInterface $container) {
         $params      = $container->get('settings')->get('mailer');
         $transporter = new Swift_SmtpTransport($params['host'], $params['port'], $params['encryption']);
         $transporter->setUsername($params['username']);

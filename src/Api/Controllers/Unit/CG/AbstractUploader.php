@@ -47,7 +47,7 @@ abstract class AbstractUploader extends AbstractController
      */
     protected function getImageFileName(CG $cg) : string
     {
-        if (!file_exists($filename = $this->get('upload') . '/' . $cg->getOriginal('local'))) {
+        if (!file_exists($filename = $this->get('settings')->get('flysystem')['local'] . '/' . $cg->getOriginal('local'))) {
             throw new FileNotFoundException("File {$filename} doesn't exist");
         }
 
