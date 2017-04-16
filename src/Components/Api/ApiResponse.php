@@ -51,7 +51,9 @@ class ApiResponse
      */
     public function getFirstHeader(string $name): string
     {
-        return reset($this->response->getHeader($name)) ?? '';
+        $headers = $this->response->getHeader($name);
+
+        return reset($headers) ?? '';
     }
 
 
