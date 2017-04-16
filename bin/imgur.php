@@ -6,7 +6,7 @@
  * Date: 2016-10-03
  * Time: 14:05
  */
-require __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // fcgi doesn't have STDIN and STDOUT defined by default
 defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
