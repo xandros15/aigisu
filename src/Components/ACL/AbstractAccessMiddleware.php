@@ -55,7 +55,7 @@ abstract class AbstractAccessMiddleware extends ActiveContainer implements Middl
      */
     protected function getAccessList() : array
     {
-        return $this->get('access');
+        return $this->get('settings')->get('access');
     }
 
     /**
