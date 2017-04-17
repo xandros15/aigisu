@@ -29,9 +29,8 @@ class CloneFlashMiddleware extends ActiveContainer implements MiddlewareInterfac
     {
         /** @var $messages Messages */
         $messages = $this->get(Messages::class);
-
         if ($messages->hasMessage(Flash::KEY_NAME)) {
-            foreach ($messages->getMessages()[Flash::KEY_NAME] as $message) {
+            foreach ($messages->getMessage(Flash::KEY_NAME) as $message) {
                 $messages->addMessage(Flash::KEY_NAME, $message);
             }
         }
