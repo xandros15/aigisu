@@ -21,7 +21,6 @@ $web = $main->group('', function () {
     require __DIR__ . '/web.php';
 });
 
-$web->add(new MiddlewareHandler($main->getContainer()));
 $web->add(new TwigAuthMiddleware($main->getContainer()));
 $web->add(new SessionAuthMiddleware());
 
@@ -39,4 +38,5 @@ $main->group('/storage', function () {
 
 $main->add(new ModelNotFoundHandlerMiddleware());
 $main->add(new UploadedFilesMiddleware($main->getContainer()));
+$main->add(new MiddlewareHandler($main->getContainer()));
 $main->add(new IsGuestMiddleware());
