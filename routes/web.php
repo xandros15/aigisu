@@ -3,10 +3,7 @@
 
 /** @var $this \Slim\App */
 
-use Aigisu\Components\Auth\SessionAuthMiddleware;
-use Aigisu\Components\Auth\TwigAuthMiddleware;
 use Aigisu\Components\CloneFlashMiddleware;
-use Aigisu\Components\Http\MiddlewareHandler;
 use Aigisu\Middlewares\BedroomLockMiddleware;
 use Aigisu\Web\Controllers\AdminController;
 use Aigisu\Web\Controllers\SiteController;
@@ -45,8 +42,3 @@ $this->get('/units/{id:\d+}', UnitController::class . ':actionView')->setName('w
 $this->map(['get', 'post'], '/units/create', UnitController::class . ':actionCreate')->setName('web.unit.create');
 $this->get('/units/{unitId:\d+}/bedroom', UnitController::class . ':actionBedroom')->setName('web.unit.bedroom')
      ->add(new BedroomLockMiddleware($this->getContainer()));
-
-
-$this->add(new MiddlewareHandler($this->getContainer()));
-$this->add(new TwigAuthMiddleware($this->getContainer()));
-$this->add(new SessionAuthMiddleware());

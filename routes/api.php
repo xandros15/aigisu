@@ -12,10 +12,7 @@ use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Components\ACL\AccessManager;
-use Aigisu\Components\Auth\JWTAuthMiddleware;
 use Aigisu\Components\Validators\ValidatorManager;
-use Aigisu\Middlewares\AccessControlAllowMiddleware;
-use Aigisu\Middlewares\Base64FileMiddleware;
 use Aigisu\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Middlewares\MissingCGValidatorMiddleware;
 use Aigisu\Middlewares\ParserUnitTagsMiddleware;
@@ -111,7 +108,3 @@ $this->get('/cg/{id:\d+}', CGController::class . ':actionView')
      ->setName('api.unit.cg.view');
 
 $this->post('/auth', AuthController::class . ':actionCreate');
-
-$this->add(new Base64FileMiddleware());
-$this->add(new JWTAuthMiddleware($this->getContainer()));
-$this->add(new AccessControlAllowMiddleware());
