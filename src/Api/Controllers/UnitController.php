@@ -19,13 +19,9 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $units = UnitTransformerFacade::transformAll(
-            $this->findOrFailUnit($request),
-            $this->get('router'),
-            $this->getExpandParam($request)
-        );
+        $transformer = $this->getTransformer($request);
 
-        return $this->read($response, $units);
+        return $this->read($response, $transformer->transformAll($this->findOrFailUnit($request)));
     }
 
     /**
@@ -36,13 +32,9 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $unit = UnitTransformerFacade::transform(
-            $this->findOrFailUnit($request),
-            $this->get('router'),
-            $this->getExpandParam($request)
-        );
+        $transformer = $this->getTransformer($request);
 
-        return $this->read($response, $unit);
+        return $this->read($response, $transformer->transformOne($this->findOrFailUnit($request)));
     }
 
     /**
@@ -55,16 +47,12 @@ class UnitController extends AbstractController
     {
         $unit = new Unit();
         $unit->saveUnitModel($request);
-        $unit = UnitTransformerFacade::transform(
-            $unit,
-            $this->get('router'),
-            $this->getExpandParam($request)
-        );
+        $transformer = $this->getTransformer($request);
         $location = $this->get('router')->pathFor('api.unit.view', [
-            'id' => $unit['id'],
+            'id' => $unit->getKey(),
         ]);
 
-        return $this->create($response, $location, $unit);
+        return $this->create($response, $location, $transformer->transformOne($unit));
     }
 
     /**
@@ -77,13 +65,9 @@ class UnitController extends AbstractController
     {
         $unit = $this->findOrFailUnit($request);
         $unit->saveUnitModel($request);
-        $unit = UnitTransformerFacade::transform(
-            $unit,
-            $this->get('router'),
-            $this->getExpandParam($request)
-        );
+        $transformer = $this->getTransformer($request);
 
-        return $this->update($response, $unit);
+        return $this->update($response, $transformer->transformOne($unit));
     }
 
     /**
@@ -131,5 +115,15 @@ class UnitController extends AbstractController
         }
 
         return $unit;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return UnitTransformerFacade
+     */
+    private function getTransformer(Request $request): UnitTransformerFacade
+    {
+        return new UnitTransformerFacade($this->get('router'), $request);
     }
 }
