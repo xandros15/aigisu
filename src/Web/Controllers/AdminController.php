@@ -25,7 +25,7 @@ class AdminController extends AbstractController
     public function actionIndexUsers(Request $request, Response $response): Response
     {
         $api = $this->callApi('api.user.index', $request, $response);
-        $users = $api->getJson();
+        $users = $api->getArrayBody();
 
         return $this->get(Twig::class)->render($response, 'admin/users.twig', [
             'users' => $users,
@@ -66,7 +66,7 @@ class AdminController extends AbstractController
      */
     public function actionUpdateUser(Request $request, Response $response): Response
     {
-        $user = $this->callApi('api.user.view', $request, $response)->getJson();
+        $user = $this->callApi('api.user.view', $request, $response)->getArrayBody();
         if ($request->isPost()) {
             $api = $this->callApi('api.user.update', $request, $response);
             if ($api->hasError()) {

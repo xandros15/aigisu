@@ -29,7 +29,7 @@ class UnitController extends AbstractController
             'expand' => 'missing_cg,cg',
         ]));
 
-        $units = $this->callApi('api.unit.index', $apiRequest, $response)->getJson();
+        $units = $this->callApi('api.unit.index', $apiRequest, $response)->getArrayBody();
 
         $manager = new UnitManager($request->getQueryParams());
         $units = $manager->filter($units);
@@ -51,7 +51,7 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $unit = $this->callApi('api.unit.view', $request, $response)->getJson();
+        $unit = $this->callApi('api.unit.view', $request, $response)->getArrayBody();
 
         return $this->get(Twig::class)->render($response, 'unit/view.twig', ['unit' => $unit]);
     }
@@ -64,7 +64,7 @@ class UnitController extends AbstractController
      */
     public function actionBedroom(Request $request, Response $response): Response
     {
-        $cgs = $this->callApi('api.unit.cg.index', $request, $response)->getJson();
+        $cgs = $this->callApi('api.unit.cg.index', $request, $response)->getArrayBody();
 
         $map = [];
         foreach ($cgs as $cg) {

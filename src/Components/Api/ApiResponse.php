@@ -76,7 +76,7 @@ class ApiResponse
     /**
      * @return array
      */
-    public function getJson(): array
+    public function getArrayBody(): array
     {
         return json_decode($this->response->getBody(), true) ?? [];
     }
