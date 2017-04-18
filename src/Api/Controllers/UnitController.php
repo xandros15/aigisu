@@ -55,7 +55,7 @@ class UnitController extends AbstractController
     {
         $unit = new Unit();
         $unit->saveUnitModel($request);
-        $unit = UnitTransformerFacade::transformAll(
+        $unit = UnitTransformerFacade::transform(
             $unit,
             $this->get('router'),
             $this->getExpandParam($request)
@@ -77,7 +77,7 @@ class UnitController extends AbstractController
     {
         $unit = $this->findOrFailUnit($request);
         $unit->saveUnitModel($request);
-        $unit = UnitTransformerFacade::transformAll(
+        $unit = UnitTransformerFacade::transform(
             $unit,
             $this->get('router'),
             $this->getExpandParam($request)
