@@ -50,11 +50,16 @@ abstract class AbstractController extends ActiveContainer
      *
      * @param Response $response
      * @param string $path
+     * @param array $data
      *
      * @return Response
      */
-    protected function create(Response $response, string $path): Response
+    protected function create(Response $response, string $path, array $data = []): Response
     {
+        if ($data) {
+            $response = $response->withJson($data);
+        }
+
         return $response
             ->withStatus(self::STATUS_CREATED)
             ->withHeader(self::HEADER_LOCATION, $path);
@@ -83,11 +88,16 @@ abstract class AbstractController extends ActiveContainer
 
     /**
      * @param Response $response
+     * @param array $data
      *
      * @return Response
      */
-    protected function update(Response $response): Response
+    protected function update(Response $response, array $data = []): Response
     {
+        if ($data) {
+            $response = $response->withJson($data);
+        }
+
         return $response->withStatus(self::STATUS_OK);
     }
 }
