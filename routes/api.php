@@ -16,7 +16,6 @@ use Aigisu\Components\Validators\ValidatorManager;
 use Aigisu\Middlewares\CG\ExtendedServerExceptionHandler;
 use Aigisu\Middlewares\MissingCGValidatorMiddleware;
 use Aigisu\Middlewares\ParserUnitTagsMiddleware;
-use Aigisu\Middlewares\ValidatorMiddleware;
 
 /** @var $this \Slim\App */
 /** @var $acl AccessManager */
@@ -25,12 +24,12 @@ $acl = $this->getContainer()->get(AccessManager::class);
 $validators = $this->getContainer()->get(ValidatorManager::class);
 
 $this->post('/users', UserController::class . ':actionRegister')
-     ->setName('api.user.create')->add(new ValidatorMiddleware($validators->get('user.create')));
+     ->setName('api.user.create')->add($validators->get('user.create'));
 $this->post('/users/password/reset/send', UserController::class . ':actionResetPasswordRequest')
-     ->add(new ValidatorMiddleware($validators->get('user.password.reset.request')))
+     ->add($validators->get('user.password.reset.request'))
      ->setName('api.user.password.reset.send');
 $this->post('/users/password/reset/{token:\w+}', UserController::class . ':actionResetPassword')
-     ->add(new ValidatorMiddleware($validators->get('user.password.reset')))
+     ->add($validators->get('user.password.reset'))
      ->setName('api.user.password.reset');
 
 $this->group('', function () {
@@ -41,14 +40,14 @@ $this->group('', function () {
 
 $this->group('', function () use ($validators) {
     $this->post('/users/{id:\d+}', UserController::class . ':actionUpdate')
-         ->setName('api.user.update')->add(new ValidatorMiddleware($validators->get('user.update')));
+         ->setName('api.user.update')->add($validators->get('user.update'));
     $this->post('/users/{id:\d+}/activate', UserController::class . ':actionActivate')
          ->setName('api.user.activate');
     $this->post('/users/{id:\d+}/deactivate', UserController::class . ':actionDeactivate')
          ->setName('api.user.deactivate');
     $this->post('/users/{id:\d+}/role', UserController::class . ':actionChangeRole')
          ->setName('api.user.role')
-         ->add(new ValidatorMiddleware($validators->get('user.role')));
+         ->add($validators->get('user.role'));
     $this->delete('/users/{id:\d+}', UserController::class . ':actionDelete')
          ->setName('api.user.delete');
 })->add($acl->get('owner'));
@@ -57,11 +56,11 @@ $this->group('', function () use ($validators) {
     $tagsParser = new ParserUnitTagsMiddleware();
     $this->post('/units', UnitController::class . ':actionCreate')
          ->setName('api.unit.create')
-         ->add(new ValidatorMiddleware($validators->get('unit.create')))
+         ->add($validators->get('unit.create'))
          ->add($tagsParser);
     $this->post('/units/{id:\d+}', UnitController::class . ':actionUpdate')
          ->setName('api.unit.update')
-         ->add(new ValidatorMiddleware($validators->get('unit.update')))
+         ->add($validators->get('unit.update'))
          ->add($tagsParser);
     $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
          ->setName('api.unit.delete');
@@ -76,11 +75,11 @@ $this->group('', function () use ($validators) {
     $this->post('/cg', CGController::class . ':actionCreate')
          ->setName('api.unit.cg.create')
          ->add($missingCG)
-         ->add(new ValidatorMiddleware($validators->get('cg.create')));
+         ->add($validators->get('cg.create'));
     $this->post('/cg/{id:\d+}', CGController::class . ':actionUpdate')
          ->setName('api.unit.cg.update')
          ->add($missingCG)
-         ->add(new ValidatorMiddleware($validators->get('cg.update')));
+         ->add($validators->get('cg.update'));
     $this->delete('/cg/{id:\d+}', CGController::class . ':actionDelete')
          ->setName('api.unit.cg.delete');
 })->add($acl->get('moderator'));
