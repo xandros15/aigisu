@@ -55,10 +55,16 @@ class UnitController extends AbstractController
     {
         $unit = new Unit();
         $unit->saveUnitModel($request);
+        $unit = UnitTransformerFacade::transformAll(
+            $unit,
+            $this->get('router'),
+            $this->getExpandParam($request)
+        );
+        $location = $this->get('router')->pathFor('api.unit.view', [
+            'id' => $unit['id'],
+        ]);
 
-        return $this->create($response, $this->get('router')->pathFor('api.unit.view', [
-            'id' => $unit->getKey(),
-        ]));
+        return $this->create($response, $location, $unit);
     }
 
     /**
@@ -69,9 +75,15 @@ class UnitController extends AbstractController
      */
     public function actionUpdate(Request $request, Response $response): Response
     {
-        $this->findOrFailUnit($request)->saveUnitModel($request);
+        $unit = $this->findOrFailUnit($request);
+        $unit->saveUnitModel($request);
+        $unit = UnitTransformerFacade::transformAll(
+            $unit,
+            $this->get('router'),
+            $this->getExpandParam($request)
+        );
 
-        return $this->update($response);
+        return $this->update($response, $unit);
     }
 
     /**

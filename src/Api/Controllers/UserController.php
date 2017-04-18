@@ -65,9 +65,10 @@ class UserController extends AbstractController
      */
     public function actionChangeRole(Request $request, Response $response): Response
     {
-        $this->findUserOrFail($request)->changeRole($request->getParam('role'));
+        $user = $this->findUserOrFail($request);
+        $user->changeRole($request->getParam('role'));
 
-        return $this->update($response);
+        return $this->update($response, $user->toArray());
     }
 
     /**
@@ -78,9 +79,10 @@ class UserController extends AbstractController
      */
     public function actionDeactivate(Request $request, Response $response): Response
     {
-        $this->findUserOrFail($request)->deactivate();
+        $user = $this->findUserOrFail($request);
+        $user->deactivate();
 
-        return $this->update($response);
+        return $this->update($response, $user->toArray());
     }
 
     /**
@@ -91,9 +93,10 @@ class UserController extends AbstractController
      */
     public function actionUpdate(Request $request, Response $response): Response
     {
-        $this->findUserOrFail($request)->fill($request->getParams())->saveOrFail();
+        $user = $this->findUserOrFail($request)->fill($request->getParams());
+        $user->saveOrFail();
 
-        return $this->update($response);
+        return $this->update($response, $user->toArray());
     }
 
     /**
@@ -107,8 +110,9 @@ class UserController extends AbstractController
         $user = new User($request->getParams());
         $user->setPassword($request->getParam('password'));
         $user->saveOrFail();
+        $location = $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]);
 
-        return $this->create($response, $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]));
+        return $this->create($response, $location, $user->toArray());
     }
 
     /**

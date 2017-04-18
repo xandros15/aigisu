@@ -63,10 +63,16 @@ class CGController extends AbstractController
     {
         $cg = new CG();
         $cg->saveOrFailCG($request);
+        $cg = CGTransformerFacade::transform(
+            $cg,
+            $this->get('router'),
+            $this->getExpandParam($request)
+        );
+        $location = $this->get('router')->pathFor('api.unit.cg.view', [
+            'id' => $cg['id'],
+        ]);
 
-        return $this->create($response, $this->get('router')->pathFor('api.unit.cg.view', [
-            'id' => $cg->getKey(),
-        ]));
+        return $this->create($response, $location, $cg);
     }
 
     /**
@@ -79,8 +85,13 @@ class CGController extends AbstractController
     {
         $cg = $this->findCGOrFail($request);
         $cg->saveOrFailCG($request);
+        $cg = CGTransformerFacade::transform(
+            $cg,
+            $this->get('router'),
+            $this->getExpandParam($request)
+        );
 
-        return $this->update($response);
+        return $this->update($response, $cg);
     }
 
     /**
