@@ -87,11 +87,11 @@ class UnitController extends AbstractController
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
-                $path = $api->getFirstHeader('location');
-                $id = $this->getPathArgument($path, 'id');
                 $this->flash->addSuccess('Successful created unit.');
 
-                return $this->redirect($response, 'web.unit.view', ['arguments' => ['id' => $id]]);
+                return $this->redirect($response, 'web.unit.view', [
+                    'arguments' => ['id' => $api->getArrayBody()['id']],
+                ]);
             }
         }
 
