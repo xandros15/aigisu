@@ -10,6 +10,7 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Form;
+use Aigisu\Models\Unit;
 use Aigisu\Web\Components\UnitManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -99,6 +100,8 @@ class UnitController extends AbstractController
 
         return $this->get(Twig::class)->render($response, 'unit/create.twig', [
             'form' => $form,
+            'rarities' => Unit::getRarities(),
+            'genders' => Unit::getGenders(),
         ]);
     }
 }

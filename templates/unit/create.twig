@@ -24,12 +24,20 @@
         </div>
         <div>
             <label for="unit-rarity">Rarity:</label>
-            <input id="unit-rarity" name="rarity" type="text" value="{{ form.get('rarity') }}">
+            <select id="unit-rarity" name="rarity">
+                {% for rarity in rarities %}
+                    <option value="{{ rarity }}" {{ form.select('rarity', rarity) }}>{{ rarity }}</option>
+                {% endfor %}
+            </select>
             <p>{{ form.errors.rarity | join }}</p>
         </div>
         <div>
             <label for="unit-gender">Gender:</label>
-            <input id="unit-gender" name="gender" type="text" value="{{ form.get('gender') }}">
+            <select id="unit-gender" name="gender">
+                {% for gender in genders %}
+                    <option value="{{ gender }}" {{ form.select('gender', gender) }}>{{ gender }}</option>
+                {% endfor %}
+            </select>
             <p>{{ form.errors.gender | join }}</p>
         </div>
         <div>
