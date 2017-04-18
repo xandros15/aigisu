@@ -45,4 +45,23 @@ class Form extends Collection
     {
         return $this->get($name, false) ? 'checked' : '';
     }
+
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @return string
+     */
+    public function select(string $name, string $value): string
+    {
+        $param = $this->get($name, '');
+        $isSelected = false;
+        if (is_array($param)) { //select options can be multiple choice
+            $isSelected = in_array($value, $param);
+        } elseif (is_scalar($param)) {
+            $isSelected = $param == $value;
+        }
+
+        return $isSelected ? 'selected' : '';
+    }
 }
