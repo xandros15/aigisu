@@ -1,7 +1,12 @@
 {% extends 'index.twig' %}
 
 {% block content %}
-    <form action="{{ path_for('web.unit.create') }}" method="post" enctype="multipart/form-data">
+    {% if(form.icon) %}
+        <img src="{{ form.icon }}">
+    {% endif %}
+    <form action="{{ form.id ? path_for('web.unit.update', {id:form.id}) : path_for('web.unit.create') }}"
+          method="post"
+          enctype="multipart/form-data">
         <div>
             <label for="unit-name">Name:</label>
             <input id="unit-name" name="name" type="text" value="{{ form.get('name') }}">
@@ -42,17 +47,17 @@
         </div>
         <div>
             <label for="unit-dmm">Dmm:</label>
-            <input id="unit-dmm" name="dmm" type="checkbox" {{ form.checkout('dmm') }}>
+            <input id="unit-dmm" name="dmm" value="1" type="checkbox" {{ form.checkout('dmm') }}>
             <p>{{ form.errors.dmm | join }}</p>
         </div>
         <div>
             <label for="unit-nutaku">Nutaku:</label>
-            <input id="unit-nutaku" name="nutaku" type="checkbox" {{ form.checkout('nutaku') }}>
+            <input id="unit-nutaku" name="nutaku" value="1" type="checkbox" {{ form.checkout('nutaku') }}>
             <p>{{ form.errors.nutaku | join }}</p>
         </div>
         <div>
             <label for="unit-special_cg">Has special cg::</label>
-            <input id="unit-special_cg" name="special_cg" type="checkbox" value="{{ form.get('special_cg') }}">
+            <input id="unit-special_cg" name="special_cg" value="1" type="checkbox" {{ form.checkout('special_cg') }}>
             <p>{{ form.errors.special_cg | join }}</p>
         </div>
         <div>
@@ -65,6 +70,6 @@
             <input id="unit-tags" name="tags" type="text" value="{{ form.get('tags') }}">
             <p>{{ form.errors.tags | join }}</p>
         </div>
-        <button>Create</button>
+        <button>{{ form.id ? 'Update' : 'Create' }}</button>
     </form>
 {% endblock %}

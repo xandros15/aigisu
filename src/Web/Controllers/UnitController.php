@@ -107,4 +107,40 @@ class UnitController extends AbstractController
             'genders' => Unit::getGenders(),
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     */
+    public function actionUpdate(Request $request, Response $response): Response
+    {
+        if ($request->isPost()) {
+            $api = $this->callApi('api.unit.update', $request, $response);
+            if ($api->hasError()) {
+                $request = $request->withAttribute('errors', $api->getErrors());
+            } else {
+                $this->flash->addSuccess('Successful updated unit.');
+
+                return $this->redirect($response, 'web.unit.view', [
+                    'arguments' => ['id' => $api->getArrayBody()['id']],
+                ]);
+            }
+        }
+
+        $params = $request->getParams();
+        $responseApi = $this->callApi('api.unit.view', $request, $response)->getArrayBody();
+        $responseApi['link_seesaw'] = $responseApi['links']['seesaw'];
+        $responseApi['link_gc'] = $responseApi['links']['gc'];
+        $newRequest = $request->withQueryParams(array_merge($responseApi, $params));
+
+        $form = new Form($newRequest);
+
+        return $this->get(Twig::class)->render($response, 'unit/create.twig', [
+            'form' => $form,
+            'rarities' => Unit::getRarities(),
+            'genders' => Unit::getGenders(),
+        ]);
+    }
 }
