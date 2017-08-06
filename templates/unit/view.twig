@@ -36,9 +36,11 @@
                 </ul>
             </section>
         {% endif %}
-        <section>
-            <h2>Bedroom</h2>
-            <a href="#" onclick="return confirm('Be careful if you are not alone')">Enter</a>
-        </section>
+        {% if unit.cg %}
+            <section>
+                <h2>Bedroom</h2>
+                <a href="#" onclick="return confirm('Be careful if you are not alone')">Enter</a>
+            </section>
+        {% endif %}
     </section>
 {% endblock %}

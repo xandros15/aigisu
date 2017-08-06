@@ -52,6 +52,9 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
+        $request = $request->withQueryParams(array_merge($request->getQueryParams(), [
+            'expand' => 'cg',
+        ]));
         $unit = $this->callApi('api.unit.view', $request, $response)->getArrayBody();
 
         return $this->get(Twig::class)->render($response, 'unit/view.twig', ['unit' => $unit]);
