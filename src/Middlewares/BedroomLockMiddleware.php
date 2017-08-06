@@ -27,10 +27,10 @@ class BedroomLockMiddleware extends ActiveContainer implements MiddlewareInterfa
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        $auth = $this->get('bedroom.lock');
+        $auth = $this->get('settings')->get('bedroom');
         $login = $request->getServerParam('PHP_AUTH_USER');
         $password = $request->getServerParam('PHP_AUTH_PW');
-        if ($login != $auth['login'] || $password != $auth['pass']) {
+        if (!isset($auth) || $login != $auth['login'] || $password != $auth['pass']) {
             $response = $response->withHeader('WWW-Authenticate', 'Basic realm="My Realm"');
             throw new UnauthorizedException($request, $response);
         }
