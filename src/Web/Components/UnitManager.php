@@ -13,6 +13,16 @@ final class UnitManager
 {
     private $query;
 
+    private const RARITY_ORDER = [
+        'black' => 1,
+        'sapphire' => 2,
+        'platinum' => 3,
+        'gold' => 4,
+        'silver' => 5,
+        'bronze' => 6,
+        'iron' => 7,
+    ];
+
     private $defaults = [
         'filter-rarities' => '',
         'filter-name' => '',
@@ -46,10 +56,22 @@ final class UnitManager
      */
     public function sort(array $units)
     {
-        if (!empty($this->query['sort-units']) && $units) {
-            usort($units, function ($unitA, $unitB) {
-                return $unitA[$this->query['sort-units']] <=> $unitB[$this->query['sort-units']];
-            });
+        if (!$units) {
+            return $units;
+        }
+
+        switch ($this->query['sort-units'] ?? '') {
+            case 'rarity':
+                usort($units, function ($unitA, $unitB) {
+                    return self::RARITY_ORDER[$unitA['rarity']] <=> self::RARITY_ORDER[$unitB['rarity']];
+                });
+                break;
+            case 'name':
+            case 'created_at':
+                usort($units, function ($unitA, $unitB) {
+                    return $unitA[$this->query['sort-units']] <=> $unitB[$this->query['sort-units']];
+                });
+                break;
         }
 
         return $units;
