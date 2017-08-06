@@ -46,7 +46,7 @@ final class UnitManager
      */
     public function sort(array $units)
     {
-        if (!empty($this->query['sort-units']) && $units && array_key_exists($this->query['sort-units'], $units[0])) {
+        if (!empty($this->query['sort-units']) && $units) {
             usort($units, function ($unitA, $unitB) {
                 return $unitA[$this->query['sort-units']] <=> $unitB[$this->query['sort-units']];
             });
