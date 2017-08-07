@@ -39,7 +39,8 @@
         {% if unit.cg %}
             <section>
                 <h2>Bedroom</h2>
-                <a href="#" onclick="return confirm('Be careful if you are not alone')">Enter</a>
+                <a href="{{ path_for('web.unit.bedroom', {unitId:unit.id}) }}"
+                   onclick="return confirm('Be careful if you are not alone')">Enter</a>
             </section>
         {% endif %}
         {% if ident.user.isAdmin() or ident.user.isOwner() %}
