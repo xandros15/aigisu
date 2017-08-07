@@ -13,7 +13,7 @@
     "slim/slim": "^3.0",
     "illuminate/database": "^5.3",
     "respect/validation": "^1.1",
-    "guzzlehttp/guzzle": "^6.2",
+    "guzzlehttp/guzzle": "^6.3",
     "league/flysystem": "^1.0",
     "google/apiclient": "^2.1",
     "xandros15/oauth2-imgur": "^1.0.2",
