@@ -12,6 +12,7 @@ namespace Aigisu\Components\Http;
 use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -45,12 +46,19 @@ class UploadedFilesMiddleware extends ActiveContainer implements MiddlewareInter
     private function withUploadedFiles(Request $request): Request
     {
         $newFiles = UploadedFile::createFromEnvironment(new FakeEnvironment());
-        $filesystem = $this->getFilesystem();
-        foreach ($newFiles as $file) {
-            /** @var $file UploadedFile */
-            $file->addManager($filesystem);
-        }
+        $this->attachManagerToFiles($newFiles, $this->getFilesystem());
 
         return $request->withUploadedFiles($newFiles);
+    }
+
+    private function attachManagerToFiles(array $newFiles, FilesystemInterface $filesystem)
+    {
+        foreach ($newFiles as $file) {
+            if (is_array($file)) {
+                $this->attachManagerToFiles($file, $filesystem);
+            } elseif ($file instanceof UploadedFile) {
+                $file->addManager($filesystem);
+            }
+        }
     }
 }
