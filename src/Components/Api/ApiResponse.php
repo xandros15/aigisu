@@ -70,7 +70,7 @@ class ApiResponse
      */
     public function getErrors(): array
     {
-        return json_decode($this->response->getBody(), true)['message'];
+        return json_decode($this->response->getBody(), true)['message'] ?? [];
     }
 
     /**
