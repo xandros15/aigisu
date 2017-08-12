@@ -5,6 +5,7 @@
  * Date: 2016-09-05
  * Time: 22:26
  */
+
 use Aigisu\Components\ACL\AccessManager;
 use Aigisu\Components\ACL\AdminAccessMiddleware;
 use Aigisu\Components\ACL\ModeratorAccessMiddleware;
@@ -77,7 +78,7 @@ return [
         return new TokenSack($container->get(Connection::class));
     },
     Twig::class => function (ContainerInterface $container) {
-        $siteUrl = rtrim($container->get('request')->getUri()->getBaseUrl(), '/');
+        $siteUrl = $container->get('request')->getUri()->withUserInfo('');
         $settings = $container->get('settings')->get('twig');
 
         $view = new Twig($settings['templates'], $settings);
