@@ -10,9 +10,7 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Api\Api;
-use Aigisu\Components\Api\ApiResponse;
 use Aigisu\Components\Flash;
-use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Core\ActiveContainer;
 use Interop\Container\ContainerInterface;
 use Slim\Flash\Messages;
@@ -24,6 +22,8 @@ abstract class AbstractController extends ActiveContainer
 
     /** @var Flash */
     protected $flash;
+    /** @var Api */
+    protected $api;
 
     /**
      * AbstractController constructor.
@@ -34,6 +34,7 @@ abstract class AbstractController extends ActiveContainer
     {
         parent::__construct($container);
         $this->flash = new Flash($this->get(Messages::class));
+        $this->api = new Api($this->get('api.uri'));
     }
 
     /**
@@ -44,25 +45,6 @@ abstract class AbstractController extends ActiveContainer
     public function goHome(Response $response): Response
     {
         return $response->withRedirect('/');
-    }
-
-    /**
-     * @param $name
-     * @param $request
-     * @param $response
-     *
-     * @return ApiResponse
-     * @throws ForbiddenException
-     */
-    protected function callApi($name, $request, $response): ApiResponse
-    {
-        $api = new Api($this->get('router')->getNamedRoute($name));
-        $apiResponse = $api->send($request, $response);
-        if ($apiResponse->isForbidden()) {
-            throw new ForbiddenException($request, $response);
-        }
-
-        return $apiResponse;
     }
 
     /**

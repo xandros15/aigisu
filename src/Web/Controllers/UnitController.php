@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Aigisu\Components\Form;
 use Aigisu\Models\Unit;
+use Aigisu\Web\Components\MultipartStream;
 use Aigisu\Web\Components\UnitManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -26,11 +27,7 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $apiRequest = $request->withQueryParams(array_merge($request->getQueryParams(), [
-            'expand' => 'missing_cg,cg',
-        ]));
-
-        $units = $this->callApi('api.unit.index', $apiRequest, $response)->getArrayBody();
+        $units = $this->api->request('/units?expand=missing_cg,cg')->getArrayBody();
 
         $manager = new UnitManager($request->getQueryParams());
         $units = $manager->filter($units);
@@ -52,10 +49,8 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $request = $request->withQueryParams(array_merge($request->getQueryParams(), [
-            'expand' => 'cg',
-        ]));
-        $unit = $this->callApi('api.unit.view', $request, $response)->getArrayBody();
+        $id = $request->getAttribute('id');
+        $unit = $this->api->request('/units/' . $id . '?expand=cg')->getArrayBody();
 
         return $this->get(Twig::class)->render($response, 'unit/view.twig', ['unit' => $unit]);
     }
@@ -68,7 +63,8 @@ class UnitController extends AbstractController
      */
     public function actionBedroom(Request $request, Response $response): Response
     {
-        $cgs = $this->callApi('api.unit.cg.index', $request, $response)->getArrayBody();
+        $id = $request->getAttribute('unitId');;
+        $cgs = $this->api->request('/units/' . $id . '/cg')->getArrayBody();
 
         $map = [];
         foreach ($cgs as $cg) {
@@ -87,7 +83,7 @@ class UnitController extends AbstractController
     public function actionCreate(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->callApi('api.unit.create', $request, $response);
+            $api = $this->api->request('/units', 'POST', new MultipartStream($request));
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
@@ -116,8 +112,9 @@ class UnitController extends AbstractController
      */
     public function actionUpdate(Request $request, Response $response): Response
     {
+        $id = $request->getAttribute('id');
         if ($request->isPost()) {
-            $api = $this->callApi('api.unit.update', $request, $response);
+            $api = $this->api->request('/units/' . $id, 'POST', new MultipartStream($request));
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
@@ -129,13 +126,11 @@ class UnitController extends AbstractController
             }
         }
 
-        $params = $request->getParams();
-        $responseApi = $this->callApi('api.unit.view', $request, $response)->getArrayBody();
+        $responseApi = $this->api->request('/units/' . $id)->getArrayBody();
         $responseApi['link_seesaw'] = $responseApi['links']['seesaw'];
         $responseApi['link_gc'] = $responseApi['links']['gc'];
-        $newRequest = $request->withQueryParams(array_merge($responseApi, $params));
 
-        $form = new Form($newRequest);
+        $form = new Form($request->withQueryParams(array_merge($responseApi, $request->getParams())));
 
         return $this->get(Twig::class)->render($response, 'unit/create.twig', [
             'form' => $form,

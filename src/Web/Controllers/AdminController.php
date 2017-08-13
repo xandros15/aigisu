@@ -10,6 +10,7 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Form;
+use Aigisu\Web\Components\MultipartStream;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -24,7 +25,7 @@ class AdminController extends AbstractController
      */
     public function actionIndexUsers(Request $request, Response $response): Response
     {
-        $api = $this->callApi('api.user.index', $request, $response);
+        $api = $this->api->request('/users');
         $users = $api->getArrayBody();
 
         return $this->get(Twig::class)->render($response, 'admin/users.twig', [
@@ -40,7 +41,8 @@ class AdminController extends AbstractController
      */
     public function actionActivateUser(Request $request, Response $response): Response
     {
-        $this->callApi('api.user.activate', $request, $response);
+        $id = $request->getAttribute('id');
+        $this->api->request('/users/' . $id . '/active', 'POST');
 
         return $response->withRedirect('/admin/users');
     }
@@ -53,7 +55,8 @@ class AdminController extends AbstractController
      */
     public function actionDeactivateUser(Request $request, Response $response): Response
     {
-        $this->callApi('api.user.deactivate', $request, $response);
+        $id = $request->getAttribute('id');
+        $this->api->request('/users/' . $id . '/deactivate', 'POST');
 
         return $response->withRedirect('/admin/users');
     }
@@ -66,9 +69,10 @@ class AdminController extends AbstractController
      */
     public function actionUpdateUser(Request $request, Response $response): Response
     {
-        $user = $this->callApi('api.user.view', $request, $response)->getArrayBody();
+        $id = $request->getAttribute('id');
+        $user = $this->api->request('/users/' . $id)->getArrayBody();
         if ($request->isPost()) {
-            $api = $this->callApi('api.user.update', $request, $response);
+            $api = $this->api->request('/users/' . $id, 'POST', new MultipartStream($request));
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {

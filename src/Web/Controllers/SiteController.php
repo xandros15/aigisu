@@ -9,8 +9,9 @@
 namespace Aigisu\Web\Controllers;
 
 
-use Aigisu\Components\Auth\SessionAuth;
 use Aigisu\Components\Form;
+use Aigisu\Web\Components\JwtAuth;
+use Aigisu\Web\Components\MultipartStream;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -27,7 +28,7 @@ class SiteController extends AbstractController
     public function actionRegister(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->callApi('api.user.create', $request, $response);
+            $api = $this->api->request('/users', 'POST', $request->getBody());
             if (!$api->hasError()) {
                 $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
 
@@ -52,13 +53,17 @@ class SiteController extends AbstractController
      */
     public function actionSignin(Request $request, Response $response): Response
     {
-        $auth = new SessionAuth();
+        $auth = new JwtAuth();
         if (!$auth->isGuest()) {
             throw new NotFoundException($request, $response);
         }
 
         if ($request->isPost()) {
-            if ($auth->signIn($request->getParam('email', ''), $request->getParam('password', ''))) {
+            if ($this->api->auth(
+                $request->getParam('email', ''),
+                $request->getParam('password', ''),
+                $this->get('settings')->get('auth')['public']
+            )) {
                 $this->flash->addSuccess('Successful login.');
 
                 return $this->goHome($response);
@@ -82,7 +87,7 @@ class SiteController extends AbstractController
      */
     public function actionSignout(Request $request, Response $response): Response
     {
-        $auth = new SessionAuth();
+        $auth = new JwtAuth();
         if ($auth->isGuest()) {
             throw new NotFoundException($request, $response);
         }
@@ -101,8 +106,8 @@ class SiteController extends AbstractController
     public function actionPasswordReset(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $request = $request->withAttribute('token', $request->getParam('token', ''));
-            $api = $this->callApi('api.user.password.reset', $request, $response);
+            $token = $request->getParam('token', '');
+            $api = $this->api->request('/users/password/reset/' . $token, 'POST', new MultipartStream($request));
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
@@ -126,7 +131,7 @@ class SiteController extends AbstractController
     public function actionPasswordResetRequest(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->callApi('api.user.password.reset.send', $request, $response);
+            $api = $this->api->request('/users/password/reset/send', 'POST', new MultipartStream($request));
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {

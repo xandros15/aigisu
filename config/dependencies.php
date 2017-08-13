@@ -128,4 +128,12 @@ return [
 
         return $mailer;
     },
+    'api.uri' => function (ContainerInterface $container) {
+        $uri = Uri::createFromEnvironment($container->get('environment'))
+                  ->withPath('/api/')
+                  ->withPort(8080)
+                  ->withUserInfo('');
+
+        return $uri;
+    },
 ];
