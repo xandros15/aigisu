@@ -10,13 +10,13 @@ namespace Aigisu\Api\Exceptions;
 
 
 use Aigisu\Components\Http\Exceptions\BadRequestException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 
 class InvalidRecoveryHashException extends BadRequestException
 {
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         /** @var $response Response */
         $response = $response->withJson([

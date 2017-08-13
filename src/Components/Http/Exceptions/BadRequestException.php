@@ -9,8 +9,8 @@
 namespace Aigisu\Components\Http\Exceptions;
 
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class BadRequestException extends HttpException
 {
@@ -19,10 +19,10 @@ class BadRequestException extends HttpException
     /**
      * BadRequestException constructor.
      *
-     * @param ServerRequestInterface $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
      */
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         parent::__construct($request, $response->withStatus(self::BAD_REQUEST_STATUS_CODE));
     }
