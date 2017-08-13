@@ -45,6 +45,7 @@ class Users implements Table
         $table->string('recovery_hash', 255)->nullable();
         $table->string('remember_identifier', 255)->nullable();
         $table->string('remember_hash', 255)->nullable();
+        $table->string('refresh_token', 255)->nullable();
         $table->timestamps();
     }
 

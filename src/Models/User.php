@@ -21,6 +21,7 @@ use Aigisu\Core\Model;
  * @property string $recovery_hash
  * @property string $remember_identifier
  * @property string $remember_hash
+ * @property string $refresh_token
  */
 class User extends Model implements IdentInterface
 {
