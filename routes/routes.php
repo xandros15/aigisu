@@ -6,6 +6,7 @@
  * Time: 22:16
  */
 
+use Aigisu\Components\ApiHandlerMiddleware;
 use Aigisu\Components\Auth\IsGuestMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
 use Aigisu\Components\Auth\SessionAuthMiddleware;
@@ -23,6 +24,7 @@ $web = $main->group('', function () {
 
 $web->add(new TwigAuthMiddleware($main->getContainer()));
 $web->add(new SessionAuthMiddleware());
+$web->add(new ApiHandlerMiddleware());
 
 $api = $main->group('/api', function () {
     require __DIR__ . '/api.php';

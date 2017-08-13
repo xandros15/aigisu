@@ -10,19 +10,16 @@ namespace Aigisu\Components\Api;
 
 
 use Aigisu\Components\Http\Exceptions\ForbiddenException;
-use Aigisu\Components\Http\Exceptions\HttpException;
-use Aigisu\Components\Http\Exceptions\RuntimeException;
 use Aigisu\Web\Components\JwtAuth;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\RequestOptions;
 use Lcobucci\JWT\Signer\Key;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Slim\Exception\NotFoundException;
+use function GuzzleHttp\Psr7\stream_for;
 
 class Api
 {
@@ -48,15 +45,10 @@ class Api
 
     public function auth(string $email, string $password, Key $public)
     {
-        $response = $this->client->post('auth', [
-            RequestOptions::FORM_PARAMS => [
-                'email' => $email,
-                'password' => $password,
-            ],
+        $response = $this->request('/auth', 'POST', [
+            'email' => $email,
+            'password' => $password,
         ]);
-
-
-        $response = new ApiResponse($response);
 
         if (!$response->hasError()) {
             $this->auth->signIn($response->getArrayBody()['token'], $public);
@@ -88,17 +80,17 @@ class Api
 
         try {
             $response = $this->client->send($request, $options);
-        } catch (HttpException | ClientException | ServerException $e) {
-            //@todo exception handling
-            throw new RuntimeException($request, $e->getResponse());
-        } catch (NotFoundException $e) {
-            $request = $e->getRequest()->withHeader('Accept', 'text/html');
-            throw new NotFoundException($request, $e->getResponse());
+        } catch (ClientException $exception) {
+            $response = $exception->getResponse();
+            if ($response->getStatusCode() == 404) {
+                throw $exception;
+            }
         }
+
         $apiResponse = new ApiResponse($response);
 
         if ($apiResponse->isForbidden()) {
-            throw new ForbiddenException(ServerRequest::fromGlobals(), $response);
+            throw new ForbiddenException($response, $response);
         }
 
 
@@ -112,9 +104,19 @@ class Api
      *
      * @return ApiResponse
      */
-    public function request(string $path, string $method = 'GET', StreamInterface $body = null): ApiResponse
+    public function request(string $path, string $method = 'GET', $body = null): ApiResponse
     {
-        $request = new Request($method, ltrim($path, '/'), [], $method == 'GET' ? null : $body);
+        $headers = [];
+        if (is_array($body)) {
+            $body = stream_for(http_build_query($body));
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
+
+        if ($body !== null && !$body instanceof StreamInterface) {
+            throw new \InvalidArgumentException('Param body must be a instance of PSR-7 StreamInterface or array');
+        }
+
+        $request = new Request($method, ltrim($path, '/'), $headers, $method == 'GET' ? null : $body);
 
         return $this->send($request);
     }
