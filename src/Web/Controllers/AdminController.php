@@ -41,7 +41,7 @@ class AdminController extends AbstractController
     public function actionActivateUser(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
-        $this->api->request('/users/' . $id . '/active', 'POST');
+        $this->api->request('/users/' . $id . '/activate', 'POST');
 
         return $response->withRedirect('/admin/users');
     }
