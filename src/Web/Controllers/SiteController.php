@@ -28,7 +28,7 @@ class SiteController extends AbstractController
     public function actionRegister(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->api->request('/users', 'POST', $request->getBody());
+            $api = $this->api->request('/users', 'POST', new MultipartStream($request));
             if (!$api->hasError()) {
                 $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
 
