@@ -26,7 +26,7 @@ class AuthController extends AbstractController
      */
     public function actionCreate(Request $request, Response $response): Response
     {
-        $user = User::findByEmail($request->getParam('email'));
+        $user = User::findByEmail($request->getParam('email', ''));
         if (!$user || !$user->validatePassword($request->getParam('password', ''))) {
             throw new UnauthorizedException($request, $response);
         }

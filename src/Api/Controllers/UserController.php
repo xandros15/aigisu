@@ -124,7 +124,7 @@ class UserController extends AbstractController
      */
     public function actionResetPasswordRequest(Request $request, Response $response): Response
     {
-        $user = User::findByEmail($request->getParam('email'));
+        $user = User::findByEmail($request->getParam('email', ''));
         $user->generateRecoveryHash();
         $isSend = $this->get(Mailer::class)->send([
             'to' => $user->email,
@@ -149,7 +149,7 @@ class UserController extends AbstractController
      */
     public function actionResetPassword(Request $request, Response $response): Response
     {
-        $hash = $request->getAttribute('token');
+        $hash = $request->getAttribute('token', '');
         if (!User::isValidRecoveryHash($hash) || !$user = User::findByRecoveryHash($hash)) {
             throw new InvalidRecoveryHashException($request, $response);
         }
