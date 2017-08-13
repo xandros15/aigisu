@@ -81,7 +81,6 @@ class Api
                 'Accept' => 'application/json',
             ],
         ];
-        dd($request);
 
         if (!$this->auth->isGuest()) {
             $options[RequestOptions::HEADERS]['Authorization'] = 'Bearer ' . $this->auth->getToken();
