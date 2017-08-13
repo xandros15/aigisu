@@ -10,7 +10,6 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Form;
-use Aigisu\Web\Components\MultipartStream;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -72,7 +71,7 @@ class AdminController extends AbstractController
         $id = $request->getAttribute('id');
         $user = $this->api->request('/users/' . $id)->getArrayBody();
         if ($request->isPost()) {
-            $api = $this->api->request('/users/' . $id, 'POST', new MultipartStream($request));
+            $api = $this->api->request('/users/' . $id, 'POST', $request->getParams());
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {

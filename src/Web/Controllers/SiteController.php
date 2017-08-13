@@ -11,7 +11,6 @@ namespace Aigisu\Web\Controllers;
 
 use Aigisu\Components\Form;
 use Aigisu\Web\Components\JwtAuth;
-use Aigisu\Web\Components\MultipartStream;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -28,7 +27,7 @@ class SiteController extends AbstractController
     public function actionRegister(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->api->request('/users', 'POST', new MultipartStream($request));
+            $api = $this->api->request('/users', 'POST', $request->getParsedBody());
             if (!$api->hasError()) {
                 $this->flash->addSuccess('Successful sign up. Now you need to wait for accept your account by admin.');
 
@@ -107,7 +106,7 @@ class SiteController extends AbstractController
     {
         if ($request->isPost()) {
             $token = $request->getParam('token', '');
-            $api = $this->api->request('/users/password/reset/' . $token, 'POST', new MultipartStream($request));
+            $api = $this->api->request('/users/password/reset/' . $token, 'POST', $request->getParsedBody());
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
@@ -131,7 +130,7 @@ class SiteController extends AbstractController
     public function actionPasswordResetRequest(Request $request, Response $response): Response
     {
         if ($request->isPost()) {
-            $api = $this->api->request('/users/password/reset/send', 'POST', new MultipartStream($request));
+            $api = $this->api->request('/users/password/reset/send', 'POST', $request->getParsedBody());
             if ($api->hasError()) {
                 $request = $request->withAttribute('errors', $api->getErrors());
             } else {
