@@ -54,10 +54,10 @@ class Users implements Table
      */
     private function getEnumRoles(): array
     {
-        $accesses = (new Configuration())->get('access');
+        $accesses = (new Configuration())->settings['access'];
         $roles = [];
         foreach ($accesses as $access) {
-            $roles[$accesses['level']] = $access['role'];
+            $roles[$access['level']] = $access['role'];
         }
 
         if (!$roles) {
@@ -67,7 +67,7 @@ class Users implements Table
         return $roles;
     }
 
-    private function getDefaultRole(): string
+    public function getDefaultRole(): string
     {
         $enum = $this->getEnumRoles();
         ksort($enum);
