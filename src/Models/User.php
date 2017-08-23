@@ -49,6 +49,16 @@ class User extends Model implements IdentInterface
     }
 
     /**
+     * @param string $refreshToken
+     *
+     * @return static|null
+     */
+    public static function findByRefreshToken(string $refreshToken)
+    {
+        return static::where(['refresh_token' => $refreshToken, 'is_confirmed' => true])->get()->first();
+    }
+
+    /**
      * @param string $hash
      *
      * @return static|null
@@ -163,6 +173,12 @@ class User extends Model implements IdentInterface
     public function isOwner(): bool
     {
         return $this->role == 'owner';
+    }
+
+    public function generateRefreshToken()
+    {
+        $this->refresh_token = bin2hex(random_bytes(20));
+        $this->saveOrFail();
     }
 
     private function removeRecoveryHash(): void

@@ -6,16 +6,15 @@
  * Time: 22:16
  */
 
-use Aigisu\Components\ApiHandlerMiddleware;
 use Aigisu\Components\Auth\IsGuestMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
-use Aigisu\Components\Auth\SessionAuthMiddleware;
-use Aigisu\Components\Auth\TwigAuthMiddleware;
 use Aigisu\Components\Http\MiddlewareHandler;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
 use Aigisu\Middlewares\AccessControlAllowMiddleware;
 use Aigisu\Middlewares\Base64FileMiddleware;
 use Aigisu\Middlewares\ModelNotFoundHandlerMiddleware;
+use Aigisu\Web\Components\ApiHandlerMiddleware;
+use Aigisu\Web\Components\Auth\TwigAuthMiddleware;
 
 /** @var $main \Slim\App */
 $web = $main->group('', function () {
@@ -23,7 +22,6 @@ $web = $main->group('', function () {
 });
 
 $web->add(new TwigAuthMiddleware($main->getContainer()));
-$web->add(new SessionAuthMiddleware());
 $web->add(new ApiHandlerMiddleware());
 
 $api = $main->group('/api', function () {

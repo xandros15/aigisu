@@ -7,7 +7,7 @@
  */
 
 use Aigisu\Components\{
-    Google\GoogleClientManager, Google\GoogleDriveManager, Imgur\Client, Imgur\Imgur, Mailer, TokenSack
+    Api\Api, Google\GoogleClientManager, Google\GoogleDriveManager, Imgur\Client, Imgur\Imgur, Mailer, TokenSack
 };
 use Aigisu\Components\ACL\{
     AccessManager, AdminAccessMiddleware, ModeratorAccessMiddleware, OwnerAccessMiddleware
@@ -127,6 +127,9 @@ return [
         ]);
 
         return $mailer;
+    },
+    Api::class => function (ContainerInterface $container) {
+        return new Api($container->get('api.uri'));
     },
     'api.uri' => function (ContainerInterface $container) {
         $uri = Uri::createFromEnvironment($container->get('environment'))

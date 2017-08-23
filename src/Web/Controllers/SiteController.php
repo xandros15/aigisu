@@ -10,7 +10,7 @@ namespace Aigisu\Web\Controllers;
 
 
 use Aigisu\Components\Form;
-use Aigisu\Web\Components\JwtAuth;
+use Aigisu\Web\Components\Auth\JWTAuth;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -52,17 +52,13 @@ class SiteController extends AbstractController
      */
     public function actionSignin(Request $request, Response $response): Response
     {
-        $auth = new JwtAuth();
+        $auth = new JWTAuth();
         if (!$auth->isGuest()) {
             throw new NotFoundException($request, $response);
         }
 
         if ($request->isPost()) {
-            if ($this->api->auth(
-                $request->getParam('email', ''),
-                $request->getParam('password', ''),
-                $this->get('settings')->get('auth')['public']
-            )) {
+            if ($this->api->auth($request->getParam('email', ''), $request->getParam('password', ''))) {
                 $this->flash->addSuccess('Successful login.');
 
                 return $this->goHome($response);
@@ -86,7 +82,7 @@ class SiteController extends AbstractController
      */
     public function actionSignout(Request $request, Response $response): Response
     {
-        $auth = new JwtAuth();
+        $auth = new JWTAuth();
         if ($auth->isGuest()) {
             throw new NotFoundException($request, $response);
         }

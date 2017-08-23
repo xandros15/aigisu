@@ -6,12 +6,12 @@
  * Time: 17:56
  */
 
-namespace Aigisu\Components\Auth;
+namespace Aigisu\Web\Components\Auth;
 
 
+use Aigisu\Components\Api\Api;
 use Aigisu\Core\ActiveContainer;
 use Aigisu\Core\MiddlewareInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -28,21 +28,15 @@ class TwigAuthMiddleware extends ActiveContainer implements MiddlewareInterface
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        $this->replaceTwigCallback($request);
+        $this->addIdentToEnvironment();
 
         return $next($request, $response);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     */
-    private function replaceTwigCallback(ServerRequestInterface $request)
+    private function addIdentToEnvironment()
     {
-        /** @var $twig Twig */
-        $twig = $this->get(Twig::class);
-        $twig->getEnvironment()->addGlobal('ident', [
-            'is_guest' => $request->getAttribute('is_guest', true),
-            'user' => $request->getAttribute('user', []),
-        ]);
+        $this->get(Twig::class)
+             ->getEnvironment()
+             ->addGlobal('ident', new Ident($this->get(Api::class), new JWTAuth()));
     }
 }

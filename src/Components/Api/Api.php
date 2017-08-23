@@ -10,12 +10,11 @@ namespace Aigisu\Components\Api;
 
 
 use Aigisu\Components\Http\Exceptions\ForbiddenException;
-use Aigisu\Web\Components\JwtAuth;
+use Aigisu\Web\Components\Auth\JWTAuth;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
-use Lcobucci\JWT\Signer\Key;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Slim\Exception\NotFoundException;
@@ -25,7 +24,7 @@ class Api
 {
     /** @var Client */
     private $client;
-    /** @var JwtAuth */
+    /** @var JWTAuth */
     private $auth;
 
     /**
@@ -35,7 +34,7 @@ class Api
      */
     public function __construct(string $baseUri)
     {
-        $this->auth = new JwtAuth();
+        $this->auth = new JWTAuth();
         $this->client = new Client([
             'base_uri' => $baseUri,
             RequestOptions::COOKIES => true,
@@ -43,15 +42,50 @@ class Api
         ]);
     }
 
-    public function auth(string $email, string $password, Key $public)
+    /**
+     * @param string $email
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function auth(string $email, string $password)
     {
-        $response = $this->request('/auth', 'POST', [
-            'email' => $email,
-            'password' => $password,
-        ]);
+        try {
+            $response = $this->client->send($this->prepareRequest('/auth', 'POST', [
+                'email' => $email,
+                'password' => $password,
+                'grant_type' => 'password',
+            ]));
+        } catch (ClientException $exception) {
+            $response = $exception->getResponse();
+        }
+
+        $response = new ApiResponse($response);
 
         if (!$response->hasError()) {
-            $this->auth->signIn($response->getArrayBody()['token'], $public);
+            $this->auth->signIn($response->getArrayBody());
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function refresh()
+    {
+        try {
+            $response = $this->client->send($this->prepareRequest('/auth', 'POST', [
+                'refresh_token' => $this->auth->getRefreshToken(),
+                'grant_type' => 'refresh_token',
+            ]));
+        } catch (ClientException $exception) {
+            $response = $exception->getResponse();
+        }
+
+        $response = new ApiResponse($response);
+
+        if (!$response->hasError()) {
+            $this->auth->signIn($response->getArrayBody());
 
             return true;
         } else {
@@ -68,33 +102,45 @@ class Api
      */
     public function send(RequestInterface $request): ApiResponse
     {
-        $options = [
-            RequestOptions::HEADERS => [
-                'Accept' => 'application/json',
-            ],
-        ];
-
         if (!$this->auth->isGuest()) {
+            if ($this->auth->isExpired()) {
+                $this->refresh();
+            }
             $options[RequestOptions::HEADERS]['Authorization'] = 'Bearer ' . $this->auth->getToken();
         }
 
         try {
-            $response = $this->client->send($request, $options);
+            $response = $this->client->send($request, $options ?? []);
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
-            if ($response->getStatusCode() == 404) {
+            if ($response->getStatusCode() != 400) {
                 throw $exception;
             }
         }
 
-        $apiResponse = new ApiResponse($response);
+        return new ApiResponse($response);
+    }
 
-        if ($apiResponse->isForbidden()) {
-            throw new ForbiddenException($response, $response);
+    /**
+     * @param string $path
+     * @param string $method
+     * @param null $body
+     *
+     * @return Request
+     */
+    private function prepareRequest(string $path, string $method, $body = null)
+    {
+        $headers = ['Accept' => 'application/json',];
+        if (is_array($body)) {
+            $body = stream_for(http_build_query($body));
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
         }
 
+        if ($body !== null && !$body instanceof StreamInterface) {
+            throw new \InvalidArgumentException('Param body must be a instance of PSR-7 StreamInterface or array');
+        }
 
-        return $apiResponse;
+        return new Request($method, ltrim($path, '/'), $headers, $method == 'GET' ? null : $body);
     }
 
     /**
@@ -106,18 +152,6 @@ class Api
      */
     public function request(string $path, string $method = 'GET', $body = null): ApiResponse
     {
-        $headers = [];
-        if (is_array($body)) {
-            $body = stream_for(http_build_query($body));
-            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        }
-
-        if ($body !== null && !$body instanceof StreamInterface) {
-            throw new \InvalidArgumentException('Param body must be a instance of PSR-7 StreamInterface or array');
-        }
-
-        $request = new Request($method, ltrim($path, '/'), $headers, $method == 'GET' ? null : $body);
-
-        return $this->send($request);
+        return $this->send($this->prepareRequest($path, $method, $body));
     }
 }

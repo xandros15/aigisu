@@ -34,7 +34,7 @@ abstract class AbstractController extends ActiveContainer
     {
         parent::__construct($container);
         $this->flash = new Flash($this->get(Messages::class));
-        $this->api = new Api($this->get('api.uri'));
+        $this->api = $this->get(Api::class);
     }
 
     /**
