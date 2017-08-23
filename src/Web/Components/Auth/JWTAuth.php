@@ -13,6 +13,16 @@ class JWTAuth
     private const REFRESH_TOKEN = 'ref';
 
     /**
+     * JWTAuth constructor.
+     */
+    public function __construct()
+    {
+        if ($this->isExpired() && !$this->getRefreshToken()) {
+            $this->singOut();
+        }
+    }
+
+    /**
      * @return int
      */
     public function getAuthId(): int
@@ -35,7 +45,7 @@ class JWTAuth
      */
     public function signIn(array $payload): bool
     {
-        $_SESSION[self::AUTH_KEY][self::REFRESH_TOKEN] = $payload['refresh_token'] ?? $_SESSION[self::REFRESH_TOKEN];
+        $_SESSION[self::AUTH_KEY][self::REFRESH_TOKEN] = $payload['refresh_token'] ?? ($_SESSION[self::AUTH_KEY][self::REFRESH_TOKEN] ?? null);
         $_SESSION[self::AUTH_KEY][self::JWT] = $payload['access_token'];
         $_SESSION[self::AUTH_KEY][self::EXPIRED] = $payload['expires_at'];
         $_SESSION[self::AUTH_KEY][self::USER_KEY] = $payload['user_id'];
