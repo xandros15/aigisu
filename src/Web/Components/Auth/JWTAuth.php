@@ -4,7 +4,7 @@
 namespace Aigisu\Web\Components\Auth;
 
 
-class JWTAuth
+class JWTAuth implements AuthInterface
 {
     private const AUTH_KEY = 'auth';
     private const USER_KEY = 'user_id';

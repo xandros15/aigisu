@@ -5,7 +5,10 @@ namespace Aigisu\Web\Components\Auth;
 
 
 use Aigisu\Components\Api\Api;
+use Aigisu\Web\Components\Auth\Ident\Guest;
 use Aigisu\Web\Components\Auth\Ident\User;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Pimple\Container;
 
 class Ident extends Container
@@ -15,7 +18,13 @@ class Ident extends Container
     /** @var JWTAuth */
     private $auth;
 
-    public function __construct(Api $api, JWTAuth $auth)
+    /**
+     * Ident constructor.
+     *
+     * @param Api $api
+     * @param AuthInterface $auth
+     */
+    public function __construct(Api $api, AuthInterface $auth)
     {
         $this->api = $api;
         $this->auth = $auth;
@@ -23,14 +32,23 @@ class Ident extends Container
         parent::__construct();
     }
 
+    /**
+     * Prepare env
+     */
     private function prepare()
     {
         $this['user'] = function (Ident $ident) {
             if (!$ident['is_guest']) {
-                return new User($this->api->request('/users/' . $this->auth->getAuthId())->getArrayBody());
+                try {
+                    $user = new User($this->api->request('/users/current')->getArrayBody());
+                } catch (ClientException|ServerException $exception) {
+                    $user = new Guest();
+                }
             } else {
-                return new User();
+                $user = new Guest();
             }
+
+            return $user;
         };
 
         $this['is_guest'] = function () {
