@@ -8,7 +8,6 @@
 
 namespace Aigisu\Api\Controllers\Unit\CG;
 
-use Aigisu\Components\Google\GoogleDriveFilesystem;
 use Aigisu\Components\Google\GoogleDriveManager;
 use Aigisu\Models\Unit\CG;
 use Slim\Exception\NotFoundException;
