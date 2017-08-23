@@ -150,7 +150,7 @@ class UserController extends AbstractController
     public function actionResetPassword(Request $request, Response $response): Response
     {
         $hash = $request->getAttribute('token', '');
-        if (!User::isValidRecoveryHash($hash) || !$user = User::findByRecoveryHash($hash)) {
+        if (!($user = User::findByRecoveryHash($hash)) || !User::isValidRecoveryHash($hash)) {
             throw new InvalidRecoveryHashException($request, $response);
         }
 

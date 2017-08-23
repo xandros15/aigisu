@@ -75,7 +75,7 @@ class User extends Model implements IdentInterface
      */
     public static function isValidRecoveryHash(string $hash): bool
     {
-        list(, $timestamp) = explode('_', $hash);
+        list(, $timestamp) = explode('_', $hash, 2);
 
         return time() - $timestamp < 0;
     }
