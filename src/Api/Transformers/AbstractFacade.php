@@ -9,50 +9,35 @@
 namespace Aigisu\Api\Transformers;
 
 
+use Aigisu\Components\Serializers\SimplyArraySerializer;
 use Aigisu\Core\Model;
-use Slim\Http\Request;
-use Slim\Interfaces\RouterInterface;
+use League\Fractal\Manager as Fractal;
+use League\Fractal\Resource\ResourceInterface;
 
 abstract class AbstractFacade
 {
-    const EXPAND_PARAM = 'expand';
-
-    /** @var RouterInterface */
-    protected $router;
-    /** @var Request */
-    private $request;
-
-    /**
-     * AbstractFacade constructor.
-     *
-     * @param RouterInterface $router
-     * @param Request $request
-     */
-    public function __construct(RouterInterface $router, Request $request)
-    {
-        $this->router = $router;
-        $this->request = $request;
-    }
-
     /**
      * @param iterable $models
+     * @param string $expand
      *
      * @return array
      */
-    public abstract function transformAll(iterable $models): array;
+    public abstract function transformAll(iterable $models, string $expand = ''): array;
 
     /**
      * @param Model $model
+     * @param string $expand
      *
      * @return array
      */
-    public abstract function transformOne(Model $model): array;
+    public abstract function transformOne(Model $model, string $expand = ''): array;
 
-    /**
-     * @return mixed
-     */
-    protected function getExpandParam()
+    protected function parse(ResourceInterface $data, string $expand)
     {
-        return $this->request->getQueryParam(self::EXPAND_PARAM, '');
+        $fractal = new Fractal();
+        $fractal->setSerializer(new SimplyArraySerializer());
+
+        return $fractal->parseIncludes($expand)->createData($data)->toArray();
     }
+
 }

@@ -27,9 +27,10 @@ class CGController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = $this->getTransformer($request);
+        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->read($response, $transformer->transformAll($this->findCGOrFail($request)));
+        return $this->read($response,
+            $transformer->transformAll($this->findCGOrFail($request), $this->getExpandParam($request)));
     }
 
     /**
@@ -40,9 +41,10 @@ class CGController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $transformer = $this->getTransformer($request);
+        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->read($response, $transformer->transformOne($this->findCGOrFail($request)));
+        return $this->read($response,
+            $transformer->transformOne($this->findCGOrFail($request), $this->getExpandParam($request)));
     }
 
     /**
@@ -55,12 +57,12 @@ class CGController extends AbstractController
     {
         $cg = new CG();
         $cg->saveOrFailCG($request);
-        $transformer = $this->getTransformer($request);
         $location = $this->get('router')->pathFor('api.unit.cg.view', [
             'id' => $cg->getKey(),
         ]);
+        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->create($response, $location, $transformer->transformOne($cg));
+        return $this->create($response, $location, $transformer->transformOne($cg, $this->getExpandParam($request)));
     }
 
     /**
@@ -72,10 +74,10 @@ class CGController extends AbstractController
     public function actionUpdate(Request $request, Response $response): Response
     {
         $cg = $this->findCGOrFail($request);
-        $transformer = $this->getTransformer($request);
         $cg->saveOrFailCG($request);
+        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->update($response, $transformer->transformOne($cg));
+        return $this->update($response, $transformer->transformOne($cg, $this->getExpandParam($request)));
     }
 
     /**
@@ -111,15 +113,5 @@ class CGController extends AbstractController
         }
 
         return $cg;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return CGTransformerFacade
-     */
-    private function getTransformer(Request $request): CGTransformerFacade
-    {
-        return new CGTransformerFacade($this->get('router'), $request);
     }
 }

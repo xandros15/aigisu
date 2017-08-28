@@ -9,41 +9,31 @@
 namespace Aigisu\Api\Transformers;
 
 
-use Aigisu\Components\Serializers\SimplyArraySerializer;
 use Aigisu\Core\Model;
-use League\Fractal\Manager as Fractal;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 class UserTransformerFacade extends AbstractFacade
 {
     /**
-     * @param iterable $users
+     * @param iterable $models
+     * @param string $expand
      *
      * @return array
      */
-    public function transformAll(iterable $users): array
+    public function transformAll(iterable $models, string $expand = ''): array
     {
-        $fractal = new Fractal();
-        $fractal->setSerializer(new SimplyArraySerializer());
-        $collection = new Collection($users, new UserTransformer());
-        $fractal->parseIncludes($this->getExpandParam());
-
-        return $fractal->createData($collection)->toArray();
+        return $this->parse(new Collection($models, new UserTransformer()), $expand);
     }
 
     /**
-     * @param Model $unit
+     * @param Model $model
+     * @param string $expand
      *
      * @return array
      */
-    public function transformOne(Model $unit): array
+    public function transformOne(Model $model, string $expand = ''): array
     {
-        $fractal = new Fractal();
-        $fractal->setSerializer(new SimplyArraySerializer());
-        $item = new Item($unit, new UserTransformer());
-        $fractal->parseIncludes($this->getExpandParam());
-
-        return $fractal->createData($item)->toArray();
+        return $this->parse(new Item($model, new UserTransformer()), $expand);
     }
 }

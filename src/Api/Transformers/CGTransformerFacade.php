@@ -9,41 +9,48 @@
 namespace Aigisu\Api\Transformers;
 
 
-use Aigisu\Components\Serializers\SimplyArraySerializer;
 use Aigisu\Core\Model;
-use League\Fractal\Manager as Fractal;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use Slim\Interfaces\RouterInterface;
 
 class CGTransformerFacade extends AbstractFacade
 {
+    private $router;
+
+    /**
+     * CGTransformerFacade constructor.
+     *
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * @param iterable $cgs
+     * @param string $expand
      *
      * @return array
      */
-    public function transformAll(iterable $cgs): array
+    public function transformAll(iterable $cgs, string $expand = ''): array
     {
-        $fractal = new Fractal();
-        $fractal->setSerializer(new SimplyArraySerializer());
         $collection = new Collection($cgs, new CGTransformer($this->router));
-        $fractal->parseIncludes($this->getExpandParam());
 
-        return $fractal->createData($collection)->toArray();
+        return $this->parse($collection, $expand);
     }
 
     /**
      * @param Model $cg
+     * @param string $expand
      *
      * @return array
      */
-    public function transformOne(Model $cg): array
+    public function transformOne(Model $cg, string $expand = ''): array
     {
-        $fractal = new Fractal();
-        $fractal->setSerializer(new SimplyArraySerializer());
         $item = new Item($cg, new CGTransformer($this->router));
-        $fractal->parseIncludes($this->getExpandParam());
 
-        return $fractal->createData($item)->toArray();
+        return $this->parse($item, $expand);
     }
 }

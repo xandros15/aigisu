@@ -30,7 +30,7 @@ abstract class AbstractController extends ActiveContainer
      */
     protected function getExpandParam(Request $request)
     {
-        return $request->getQueryParam(self::EXPAND, []);
+        return $request->getQueryParam(self::EXPAND, '');
     }
 
     /**

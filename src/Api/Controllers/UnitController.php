@@ -19,9 +19,9 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = $this->getTransformer($request);
+        $transformer = new UnitTransformerFacade($this->get('router'));
 
-        return $this->read($response, $transformer->transformAll($this->findOrFailUnit($request)));
+        return $this->read($response, $transformer->transformAll(Unit::all(), $this->getExpandParam($request)));
     }
 
     /**
@@ -32,9 +32,10 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $transformer = $this->getTransformer($request);
+        $transformer = new UnitTransformerFacade($this->get('router'));
 
-        return $this->read($response, $transformer->transformOne($this->findOrFailUnit($request)));
+        return $this->read($response,
+            $transformer->transformOne($this->findOrFailUnit($request), $this->getExpandParam($request)));
     }
 
     /**
@@ -47,12 +48,13 @@ class UnitController extends AbstractController
     {
         $unit = new Unit();
         $unit->saveUnitModel($request);
-        $transformer = $this->getTransformer($request);
         $location = $this->get('router')->pathFor('api.unit.view', [
             'id' => $unit->getKey(),
         ]);
 
-        return $this->create($response, $location, $transformer->transformOne($unit));
+        $transformer = new UnitTransformerFacade($this->get('router'));
+
+        return $this->create($response, $location, $transformer->transformOne($unit, $this->getExpandParam($request)));
     }
 
     /**
@@ -65,9 +67,9 @@ class UnitController extends AbstractController
     {
         $unit = $this->findOrFailUnit($request);
         $unit->saveUnitModel($request);
-        $transformer = $this->getTransformer($request);
+        $transformer = new UnitTransformerFacade($this->get('router'));
 
-        return $this->update($response, $transformer->transformOne($unit));
+        return $this->update($response, $transformer->transformOne($unit, $this->getExpandParam($request)));
     }
 
     /**
@@ -115,15 +117,5 @@ class UnitController extends AbstractController
         }
 
         return $unit;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return UnitTransformerFacade
-     */
-    private function getTransformer(Request $request): UnitTransformerFacade
-    {
-        return new UnitTransformerFacade($this->get('router'), $request);
     }
 }

@@ -29,7 +29,7 @@ class UserController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = new UserTransformerFacade($this->get('router'), $request);
+        $transformer = new UserTransformerFacade();
 
         return $this->read($response, $transformer->transformAll(User::all()));
     }
@@ -42,7 +42,9 @@ class UserController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        return $this->read($response, $this->transformOne($request));
+        $transformer = new UserTransformerFacade();
+
+        return $this->read($response, $transformer->transformOne($this->findUserOrFail($request)));
     }
 
     /**
@@ -68,8 +70,9 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request);
         $user->changeRole($request->getParam('role'));
+        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $this->transformOne($request));
+        return $this->update($response, $transformer->transformOne($user));
     }
 
     /**
@@ -82,8 +85,9 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request);
         $user->deactivate();
+        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $this->transformOne($request));
+        return $this->update($response, $transformer->transformOne($user));
     }
 
     /**
@@ -96,8 +100,9 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request)->fill($request->getParams());
         $user->saveOrFail();
+        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $this->transformOne($request));
+        return $this->update($response, $transformer->transformOne($user));
     }
 
     /**
@@ -112,8 +117,9 @@ class UserController extends AbstractController
         $user->setPassword($request->getParam('password'));
         $user->saveOrFail();
         $location = $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]);
+        $transformer = new UserTransformerFacade();
 
-        return $this->create($response, $location, $this->transformOne($request));
+        return $this->create($response, $location, $transformer->transformOne($user));
     }
 
     /**
@@ -186,8 +192,9 @@ class UserController extends AbstractController
         if ($request->getAttribute('is_guest')) {
             throw new ForbiddenException($request, $response);
         }
+        $transformer = new UserTransformerFacade();
 
-        return $this->read($response, $request->getAttribute('user')->toArray());
+        return $this->read($response, $transformer->transformOne($request->getAttribute('user')));
     }
 
     /**
@@ -199,12 +206,5 @@ class UserController extends AbstractController
     private function findUserOrFail(Request $request)
     {
         return User::findOrFail($this->getID($request));
-    }
-
-    private function transformOne(Request $request)
-    {
-        $transformer = new UserTransformerFacade($this->get('router'), $request);
-
-        return $transformer->transformOne($this->findUserOrFail($request));
     }
 }
