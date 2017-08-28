@@ -4,10 +4,12 @@
 namespace Aigisu\Web\Components;
 
 
+use Aigisu\Components\Http\Exceptions\ApiException;
 use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Components\Http\Exceptions\RuntimeException;
 use Aigisu\Components\Http\Exceptions\UnauthorizedException;
 use Aigisu\Core\MiddlewareInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Slim\Exception\NotFoundException;
@@ -16,8 +18,6 @@ use Slim\Http\Response;
 
 class ApiHandlerMiddleware implements MiddlewareInterface
 {
-    private const SERVER_DEFAULT_ERROR_CODE = 500;
-
     /**
      * @param Request $request
      * @param Response $response
@@ -28,14 +28,14 @@ class ApiHandlerMiddleware implements MiddlewareInterface
      * @throws NotFoundException
      * @throws UnauthorizedException
      * @throws ForbiddenException
+     * @throws ApiException
      */
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
         try {
             return $next($request, $response);
         } catch (ServerException $exception) {
-            throw new RuntimeException('Api server exception: ' . $exception->getResponse()->getReasonPhrase(),
-                self::SERVER_DEFAULT_ERROR_CODE);
+            throw $this->createApiException($exception);
         } catch (ClientException $exception) {
             $apiResponse = $exception->getResponse();
             switch ($apiResponse->getStatusCode()) {
@@ -46,9 +46,28 @@ class ApiHandlerMiddleware implements MiddlewareInterface
                 case 403:
                     throw new ForbiddenException($request, $response);
                 default:
-                    throw new RuntimeException('Api server exception:' . $apiResponse->getReasonPhrase(),
-                        $apiResponse->getStatusCode());
+                    throw $this->createApiException($exception);
             }
         }
+    }
+
+    /**
+     * @param BadResponseException $exception
+     *
+     * @return ApiException|RuntimeException
+     */
+    private function createApiException(BadResponseException $exception)
+    {
+        $json = json_decode((string) $exception->getResponse()->getBody(), true);
+
+        if (!empty($json['error'])) {
+            return new ApiException(reset($json['error']));
+        }
+
+        if (!empty($json['exception'])) {
+            return new ApiException(reset($json['exception']));
+        }
+
+        return new RuntimeException('Api server exception: Server exception');
     }
 }
