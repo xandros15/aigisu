@@ -11,6 +11,7 @@ namespace Aigisu\Web\Controllers;
 
 use Aigisu\Components\Form;
 use Aigisu\Web\Components\Auth\JWTAuth;
+use GuzzleHttp\Exception\ClientException;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -102,13 +103,19 @@ class SiteController extends AbstractController
     {
         if ($request->isPost()) {
             $token = $request->getParam('token', '');
-            $api = $this->api->request('/users/password/reset/' . $token, 'POST', $request->getParsedBody());
-            if ($api->hasError()) {
-                $request = $request->withAttribute('errors', $api->getErrors());
-            } else {
-                $this->flash->addSuccess('Successful change password.');
+            try {
+                $api = $this->api->request('/users/password/reset/' . $token, 'POST', $request->getParsedBody());
+                if ($api->hasError()) {
+                    $request = $request->withAttribute('errors', $api->getErrors());
+                } else {
+                    $this->flash->addSuccess('Successful change password.');
 
-                return $this->goHome($response);
+                    return $this->goHome($response);
+                }
+            } catch (ClientException $exception) {
+                if ($exception->getResponse()->getStatusCode() != 404) {
+                    throw $exception;
+                }
             }
         }
 
