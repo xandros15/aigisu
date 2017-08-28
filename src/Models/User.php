@@ -13,6 +13,8 @@ use Aigisu\Components\Auth\IdentInterface;
 use Aigisu\Core\Model;
 
 /**
+ *
+ * @property string $id
  * @property string $name
  * @property string $password
  * @property string $email
