@@ -45,7 +45,9 @@ class AuthController extends AbstractController
                 $payload = [];
                 break;
             default:
-                throw new BadRequestException($request, $response);
+                throw new BadRequestException($request, $response->withJson([
+                    'message' => 'missing grant_type param',
+                ]));
         }
 
         $auth = new JWTAuth($this->get('settings')->get('auth'));
