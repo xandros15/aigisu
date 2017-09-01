@@ -63,6 +63,8 @@ $this->group('', function () use ($validators) {
          ->setName('api.unit.update')
          ->add($validators->get('unit.update'))
          ->add($tagsParser);
+    $this->put('/units/{id:\d+}/icon', UnitController::class . ':actionUploadIcon')
+         ->setName('api.unit.update');
     $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
          ->setName('api.unit.delete');
 })->add($acl->get('admin'));

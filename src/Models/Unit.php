@@ -3,13 +3,14 @@
 namespace Aigisu\Models;
 
 
-use Aigisu\Components\Http\UploadedFile;
 use Aigisu\Core\Model;
 use Aigisu\Models\Handlers\UnitTagsHandler;
 use Aigisu\Models\Unit\CG;
 use Aigisu\Models\Unit\Tag;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use League\Flysystem\FilesystemInterface;
+use Psr\Http\Message\StreamInterface;
 use Slim\Http\Request;
 
 /**
@@ -104,27 +105,25 @@ class Unit extends Model
     public function saveUnitModel(Request $request)
     {
         $this->fill($request->getParams());
-        $this->uploadIcon($request);
-        $this->saveOrFail();
         $this->syncTags();
     }
 
     /**
-     * @param Request $request
+     * @param StreamInterface $stream
+     * @param FilesystemInterface $filesystem
      *
      * @return bool
      */
-    public function uploadIcon(Request $request)
+    public function uploadIcon(StreamInterface $stream, FilesystemInterface $filesystem)
     {
-        /** @var $icon UploadedFile */
-        $icon = $request->getUploadedFiles()['icon'] ?? null;
-        if ($icon) {
-            $this->setAttribute('icon', $icon->storeAsPublic(self::ICON_UPLOAD_CATALOG));
-
-            return true;
+        if (!$filesystem->writeStream($icon = self::ICON_UPLOAD_CATALOG . '/' . $this->id, $stream->detach())) {
+            return false;
         }
 
-        return false;
+        $this->setAttribute('icon', $icon);
+
+        return $this->saveOrFail();
+
     }
 
     public function syncTags()

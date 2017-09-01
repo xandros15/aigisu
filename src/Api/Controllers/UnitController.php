@@ -3,8 +3,10 @@
 namespace Aigisu\Api\Controllers;
 
 use Aigisu\Api\Transformers\UnitTransformerFacade;
+use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Models\Unit;
 use Illuminate\Support\Collection;
+use League\Flysystem\Filesystem;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -55,6 +57,25 @@ class UnitController extends AbstractController
         $transformer = new UnitTransformerFacade($this->get('router'));
 
         return $this->create($response, $location, $transformer->transformOne($unit, $this->getExpandParam($request)));
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws BadRequestException
+     */
+    public function actionUploadIcon(Request $request, Response $response): Response
+    {
+        $unit = $this->findOrFailUnit($request);
+        if (!$unit->uploadIcon($request->getBody(), $this->get(Filesystem::class))) {
+            throw new BadRequestException($request, $response->withJson([
+                'message' => 'error with upload icon',
+            ]));
+        }
+
+        return $this->update($response);
     }
 
     /**
