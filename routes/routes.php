@@ -6,35 +6,22 @@
  * Time: 22:16
  */
 
+use Aigisu\Components\AccessControlAllowMiddleware;
 use Aigisu\Components\Auth\IsGuestMiddleware;
 use Aigisu\Components\Auth\JWTAuthMiddleware;
+use Aigisu\Components\Base64FileMiddleware;
 use Aigisu\Components\Http\MiddlewareHandler;
 use Aigisu\Components\Http\UploadedFilesMiddleware;
-use Aigisu\Middlewares\AccessControlAllowMiddleware;
-use Aigisu\Middlewares\Base64FileMiddleware;
-use Aigisu\Middlewares\ModelNotFoundHandlerMiddleware;
-use Aigisu\Web\Components\ApiHandlerMiddleware;
-use Aigisu\Web\Components\Auth\TwigAuthMiddleware;
+use Aigisu\Components\ModelNotFoundHandlerMiddleware;
 
 /** @var $main \Slim\App */
-$web = $main->group('', function () {
-    require __DIR__ . '/web.php';
-});
-
-$web->add(new TwigAuthMiddleware($main->getContainer()));
-$web->add(new ApiHandlerMiddleware());
-
-$api = $main->group('/api', function () {
+$api = $main->group('', function () {
     require __DIR__ . '/api.php';
 });
 
 $api->add(new Base64FileMiddleware());
 $api->add(new JWTAuthMiddleware($main->getContainer()));
 $api->add(new AccessControlAllowMiddleware());
-
-$main->group('/storage', function () {
-    require __DIR__ . '/storage.php';
-});
 
 $main->add(new ModelNotFoundHandlerMiddleware());
 $main->add(new UploadedFilesMiddleware($main->getContainer()));

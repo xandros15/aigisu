@@ -6,27 +6,37 @@
  * Time: 22:26
  */
 
-use Aigisu\Components\{
-    Api\Api, Google\GoogleClientManager, Google\GoogleDriveManager, Imgur\Client, Imgur\Imgur, Mailer, TokenSack
-};
-use Aigisu\Components\ACL\{
-    AccessManager, AdminAccessMiddleware, ModeratorAccessMiddleware, OwnerAccessMiddleware
-};
-use Aigisu\Components\Validators\{
-    ChangeRoleValidator, CreateCGValidator, CreateUnitValidator, CreateUserValidator, PasswordResetRequestValidator, PasswordResetValidator, UpdateCGValidator, UpdateUnitValidator, UpdateUserValidator, ValidatorManager
-};
+use Aigisu\Components\ACL\AccessManager;
+use Aigisu\Components\ACL\AdminAccessMiddleware;
+use Aigisu\Components\ACL\ModeratorAccessMiddleware;
+use Aigisu\Components\ACL\OwnerAccessMiddleware;
+use Aigisu\Components\Google\GoogleClientManager;
+use Aigisu\Components\Google\GoogleDriveManager;
+use Aigisu\Components\Imgur\Client;
+use Aigisu\Components\Imgur\Imgur;
+use Aigisu\Components\Mailer;
+use Aigisu\Components\TokenSack;
+use Aigisu\Components\Validators\ChangeRoleValidator;
+use Aigisu\Components\Validators\CreateCGValidator;
+use Aigisu\Components\Validators\CreateUnitValidator;
+use Aigisu\Components\Validators\CreateUserValidator;
+use Aigisu\Components\Validators\PasswordResetRequestValidator;
+use Aigisu\Components\Validators\PasswordResetValidator;
+use Aigisu\Components\Validators\UpdateCGValidator;
+use Aigisu\Components\Validators\UpdateUnitValidator;
+use Aigisu\Components\Validators\UpdateUserValidator;
+use Aigisu\Components\Validators\ValidatorManager;
 use Aigisu\Core\Response;
-use Illuminate\{
-    Container\Container as LaravelContainer, Database\Capsule\Manager as CapsuleManager, Database\Connection, Database\Connectors\ConnectionFactory
-};
+use Illuminate\Container\Container as LaravelContainer;
+use Illuminate\Database\Capsule\Manager as CapsuleManager;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Connectors\ConnectionFactory;
 use Interop\Container\ContainerInterface;
-use Knlv\Slim\Views\TwigMessages;
-use League\Flysystem\{
-    Adapter\Local, Filesystem
-};
-use Slim\{
-    Flash\Messages, Http\Uri, Views\Twig, Views\TwigExtension
-};
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use Slim\Http\Uri;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 return [
     Connection::class => function (ContainerInterface $container) {
@@ -71,7 +81,6 @@ return [
 
         $view = new Twig($settings['templates'], $settings);
 
-        $view->addExtension(new TwigMessages($container->get(Messages::class)));
         $view->addExtension(new TwigExtension($container->get('router'), $siteUrl));
 
         if ($container->get('debug')) {
@@ -109,9 +118,6 @@ return [
             'owner' => new OwnerAccessMiddleware($container),
         ]);
     },
-    Messages::class => function () {
-        return new Messages();
-    },
     Mailer::class => function (ContainerInterface $container) {
         $params = $container->get('settings')->get('mailer');
         $transporter = new Swift_SmtpTransport($params['host'], $params['port'], $params['encryption']);
@@ -127,16 +133,5 @@ return [
         ]);
 
         return $mailer;
-    },
-    Api::class => function (ContainerInterface $container) {
-        return new Api($container->get('api.uri'));
-    },
-    'api.uri' => function (ContainerInterface $container) {
-        $uri = Uri::createFromEnvironment($container->get('environment'))
-                  ->withPath('/api/')
-                  ->withPort(8080)
-                  ->withUserInfo('');
-
-        return $uri;
     },
 ];

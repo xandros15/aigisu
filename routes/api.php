@@ -5,6 +5,7 @@
  * Date: 2016-09-07
  * Time: 23:36
  */
+
 use Aigisu\Api\Controllers\AuthController;
 use Aigisu\Api\Controllers\Unit\CG\GoogleUploader;
 use Aigisu\Api\Controllers\Unit\CG\ImgurUploader;
@@ -12,10 +13,10 @@ use Aigisu\Api\Controllers\Unit\CGController;
 use Aigisu\Api\Controllers\UnitController;
 use Aigisu\Api\Controllers\UserController;
 use Aigisu\Components\ACL\AccessManager;
+use Aigisu\Components\ExtendedServerExceptionHandler;
+use Aigisu\Components\ParserUnitTagsMiddleware;
+use Aigisu\Components\Validators\MissingCGValidatorMiddleware;
 use Aigisu\Components\Validators\ValidatorManager;
-use Aigisu\Middlewares\CG\ExtendedServerExceptionHandler;
-use Aigisu\Middlewares\MissingCGValidatorMiddleware;
-use Aigisu\Middlewares\ParserUnitTagsMiddleware;
 
 /** @var $this \Slim\App */
 /** @var $acl AccessManager */

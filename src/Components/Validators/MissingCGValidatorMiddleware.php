@@ -6,7 +6,7 @@
  * Time: 14:48
  */
 
-namespace Aigisu\Middlewares;
+namespace Aigisu\Components\Validators;
 
 
 use Aigisu\Components\Http\Exceptions\BadRequestException;

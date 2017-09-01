@@ -47,7 +47,7 @@ class CGTransformer extends TransformerAbstract
             'server' => (string) $cg->server,
             'archival' => (bool) $cg->archival,
             'links' => [
-                'local' => $this->router->pathFor('storage.images', ['path' => $cg->local]),
+                'local' => $cg->local,
                 'google' => $this->getGoogleAttribute($cg->google_id),
                 'imgur' => $this->getImgurAttribute($cg->imgur_id),
             ],

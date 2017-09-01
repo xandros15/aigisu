@@ -6,7 +6,7 @@
  * Time: 18:52
  */
 
-namespace Aigisu\Middlewares\CG;
+namespace Aigisu\Components;
 
 
 use Aigisu\Core\MiddlewareInterface;

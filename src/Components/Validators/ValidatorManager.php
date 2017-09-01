@@ -9,7 +9,6 @@
 namespace Aigisu\Components\Validators;
 
 
-use Aigisu\Middlewares\ValidatorMiddleware;
 use Slim\Collection;
 
 class ValidatorManager extends Collection

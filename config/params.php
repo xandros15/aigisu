@@ -22,7 +22,6 @@ return [
         'google' => require ROOT . '/config/google.php',
         'auth' => require ROOT . '/config/auth.php',
         'database' => require ROOT . '/config/db/params.php',
-        'bedroom' => require ROOT . '/config/bedroom/params.php',
         'mailer' => require ROOT . '/config/mailer/mailer.php',
         'flysystem' => [
             'local' => ROOT . '/storage/app',
@@ -32,7 +31,6 @@ return [
             'templates' => ROOT . '/templates',
             'debug' => DEBUG,
         ],
-
         'routerCacheFile' => DEBUG ? false : ROOT . '/cache/route.cache.php',
         'displayErrorDetails' => DEBUG,
         'addContentLengthHeader' => true,

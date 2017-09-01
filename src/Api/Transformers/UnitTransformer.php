@@ -75,7 +75,7 @@ class UnitTransformer extends TransformerAbstract
             'name' => $unit->name,
             'japanese_name' => $unit->japanese_name,
             'rarity' => $unit->rarity,
-            'icon' => $unit->icon ? $this->router->pathFor('storage.images', ['path' => $unit->icon]) : null,
+            'icon' => $unit->icon,
             'gender' => $unit->gender,
             'dmm' => (bool) $unit->dmm,
             'nutaku' => (bool) $unit->nutaku,

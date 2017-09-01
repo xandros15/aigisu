@@ -6,12 +6,11 @@
  * Time: 10:31
  */
 
-namespace Aigisu\Middlewares;
+namespace Aigisu\Components\Validators;
 
 
 use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Components\Http\UploadedFile;
-use Aigisu\Components\Validators\ValidatorInterface;
 use Aigisu\Core\MiddlewareInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
