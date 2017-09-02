@@ -115,7 +115,7 @@ class Unit extends Model
      */
     public function uploadIcon(StreamInterface $stream, FilesystemInterface $filesystem)
     {
-        if (!$filesystem->writeStream($icon = self::ICON_UPLOAD_CATALOG . '/' . $this->id, $stream->detach())) {
+        if (!$filesystem->putStream($icon = self::ICON_UPLOAD_CATALOG . '/' . $this->id, $stream->detach())) {
             return false;
         }
 
