@@ -9,13 +9,14 @@
 namespace Aigisu\Components\Imgur;
 
 
-use Aigisu\Components\Configure\Configurable;
 use Psr\Http\Message\ResponseInterface;
 
-class Imgur extends Configurable
+final class Imgur
 {
     /** @var ClientInterface */
     private $client;
+    /** @var array */
+    private $config;
 
     /**
      * Imgur constructor.
@@ -26,7 +27,7 @@ class Imgur extends Configurable
     public function __construct(ClientInterface $client, array $params = [])
     {
         $this->client = $client;
-        parent::__construct($params);
+        $this->config = $params;
     }
 
     /**
