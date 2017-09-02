@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use League\Flysystem\FilesystemInterface;
 use Psr\Http\Message\StreamInterface;
-use Slim\Http\Request;
 
 /**
  * @property string $name
@@ -100,11 +99,11 @@ class Unit extends Model
     }
 
     /**
-     * @param Request $request
+     * @param array $params
      */
-    public function saveUnitModel(Request $request)
+    public function saveUnitModel(array $params)
     {
-        $this->fill($request->getParams());
+        $this->fill($params);
         $this->syncTags();
     }
 
