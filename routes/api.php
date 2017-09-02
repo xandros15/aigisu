@@ -15,7 +15,9 @@ use Aigisu\Api\Controllers\UserController;
 use Aigisu\Components\ACL\AccessManager;
 use Aigisu\Components\ExtendedServerExceptionHandler;
 use Aigisu\Components\ParserUnitTagsMiddleware;
+use Aigisu\Components\ReadOnlyRequestBodyMiddleware;
 use Aigisu\Components\Validators\MissingCGValidatorMiddleware;
+use Aigisu\Components\Validators\UploadIconValidatorMiddleware;
 use Aigisu\Components\Validators\ValidatorManager;
 
 /** @var $this \Slim\App */
@@ -64,7 +66,7 @@ $this->group('', function () use ($validators) {
          ->add($validators->get('unit.update'))
          ->add($tagsParser);
     $this->put('/units/{id:\d+}/icon', UnitController::class . ':actionUploadIcon')
-         ->setName('api.unit.update');
+         ->add(new UploadIconValidatorMiddleware());
     $this->delete('/units/{id:\d+}', UnitController::class . ':actionDelete')
          ->setName('api.unit.delete');
 })->add($acl->get('admin'));

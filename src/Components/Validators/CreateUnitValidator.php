@@ -9,7 +9,6 @@
 namespace Aigisu\Components\Validators;
 
 
-use Aigisu\Components\Validators\Rules\ImageSize;
 use Aigisu\Components\Validators\Rules\Optional;
 use Aigisu\Models\Unit;
 use Respect\Validation\Validator as v;
@@ -33,7 +32,6 @@ class CreateUnitValidator extends AbstractValidator
             'nutaku' => v::boolVal(),
             'special_cg' => v::boolVal(),
             'tags' => new Optional(v::arrayType()),
-            'icon' => v::size('1KB', '50KB')->addRule(new ImageSize(80, 150)),
         ];
     }
 }

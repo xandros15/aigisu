@@ -10,6 +10,7 @@ namespace Aigisu\Components\Validators\Rules;
 
 
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validator as v;
 use SplFileInfo;
@@ -54,10 +55,18 @@ class ImageSize extends AbstractRule
                 $input = $input->getPathname();
             }
 
-            if ($imageSize = getimagesize($input)) {
+            if ($input instanceof StreamInterface) {
+                $imageSize = getimagesizefromstring($input);
+            } else {
+                $imageSize = getimagesize($input);
+            }
+
+            if ($imageSize) {
                 list($width, $height) = $imageSize;
                 $passed = $this->isCorrectResolution($width, $height);
             }
+
+            return $passed;
         }
 
         return $passed;
