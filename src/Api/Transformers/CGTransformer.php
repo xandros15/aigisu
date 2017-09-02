@@ -37,9 +37,9 @@ class CGTransformer extends TransformerAbstract
             'server' => (string) $cg->server,
             'archival' => (bool) $cg->archival,
             'links' => [
-                'local' => $this->getLocalAttribute($cg->local),
-                'google' => $this->getGoogleAttribute($cg->google_id),
-                'imgur' => $this->getImgurAttribute($cg->imgur_id),
+                'local' => $this->getLocalAttribute($cg),
+                'google' => $this->getGoogleAttribute($cg),
+                'imgur' => $this->getImgurAttribute($cg),
             ],
             'created_at' => $this->createTimestamp($cg->created_at),
             'updated_at' => $this->createTimestamp($cg->updated_at),
@@ -62,47 +62,46 @@ class CGTransformer extends TransformerAbstract
     }
 
     /**
-     * @param $id
+     * @param $cg
      *
      * @return null|string
      */
-    private function getGoogleAttribute($id)
+    private function getGoogleAttribute(CG $cg)
     {
-        $url = null;
-        if ($id) {
-            $url = sprintf('https://drive.google.com/uc?export=view&id=%s', $id);
+        if (!$cg->google_id) {
+            return null;
         }
 
-        return $url;
+        return sprintf('https://drive.google.com/uc?export=view&id=%s', $cg->google_id);
     }
 
     /**
-     * @param $id
+     * @param $cg
      *
      * @return null|string
      */
-    private function getImgurAttribute($id)
+    private function getImgurAttribute(CG $cg)
     {
-        $url = null;
-        if ($id) {
-            $url = sprintf('https://i.imgur.com/%s.png', $id);
+        if (!$cg->imgur_id) {
+            return null;
         }
 
-        return $url;
+        return sprintf('https://i.imgur.com/%s.png', $cg->imgur_id);
+
     }
 
     /**
-     * @param string $local
+     * @param CG $cg
      *
      * @return string
      */
-    private function getLocalAttribute(string $local): string
+    private function getLocalAttribute(CG $cg): string
     {
         $storageUri = $this->getStorageUri();
         if ($storageUri instanceof UriInterface) {
-            return $storageUri->withPath($local);
+            return $storageUri->withPath($cg->local);
         }
 
-        return $local;
+        return $cg->local;
     }
 }
