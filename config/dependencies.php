@@ -47,8 +47,6 @@ return [
     CapsuleManager::class => function (ContainerInterface $container) {
         $database = new CapsuleManager();
         $database->addConnection($container->get('settings')->get('database'));
-        $database->setAsGlobal();
-        $database->bootEloquent();
 
         return $database;
     },
