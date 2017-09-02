@@ -10,12 +10,17 @@ namespace Aigisu\Api\Controllers;
 
 
 use Aigisu\Api\Exceptions\InvalidRecoveryHashException;
-use Aigisu\Api\Transformers\UserTransformerFacade;
+use Aigisu\Api\Transformers\UserTransformer;
 use Aigisu\Components\Http\Exceptions\BadRequestException;
 use Aigisu\Components\Http\Exceptions\ForbiddenException;
 use Aigisu\Components\Http\Exceptions\RuntimeException;
 use Aigisu\Components\Mailer;
+use Aigisu\Components\Serializers\SimplyArraySerializer;
+use Aigisu\Core\Model;
 use Aigisu\Models\User;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -29,9 +34,7 @@ class UserController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = new UserTransformerFacade();
-
-        return $this->read($response, $transformer->transformAll(User::all()));
+        return $this->read($response, $this->transformUser(User::all()));
     }
 
     /**
@@ -42,9 +45,7 @@ class UserController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $transformer = new UserTransformerFacade();
-
-        return $this->read($response, $transformer->transformOne($this->findUserOrFail($request)));
+        return $this->read($response, $this->transformUser($this->findUserOrFail($request)));
     }
 
     /**
@@ -70,9 +71,8 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request);
         $user->changeRole($request->getParam('role'));
-        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $transformer->transformOne($user));
+        return $this->update($response, $this->transformUser($user));
     }
 
     /**
@@ -85,9 +85,8 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request);
         $user->deactivate();
-        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $transformer->transformOne($user));
+        return $this->update($response, $this->transformUser($user));
     }
 
     /**
@@ -100,9 +99,8 @@ class UserController extends AbstractController
     {
         $user = $this->findUserOrFail($request)->fill($request->getParams());
         $user->saveOrFail();
-        $transformer = new UserTransformerFacade();
 
-        return $this->update($response, $transformer->transformOne($user));
+        return $this->update($response, $this->transformUser($user));
     }
 
     /**
@@ -117,9 +115,8 @@ class UserController extends AbstractController
         $user->setPassword($request->getParam('password'));
         $user->saveOrFail();
         $location = $this->get('router')->pathFor('api.user.view', ['id' => $user->getKey()]);
-        $transformer = new UserTransformerFacade();
 
-        return $this->create($response, $location, $transformer->transformOne($user));
+        return $this->create($response, $location, $this->transformUser($user));
     }
 
     /**
@@ -192,9 +189,8 @@ class UserController extends AbstractController
         if ($request->getAttribute('is_guest')) {
             throw new ForbiddenException($request, $response);
         }
-        $transformer = new UserTransformerFacade();
 
-        return $this->read($response, $transformer->transformOne($request->getAttribute('user')));
+        return $this->read($response, $this->transformUser($request->getAttribute('user')));
     }
 
     /**
@@ -206,5 +202,26 @@ class UserController extends AbstractController
     private function findUserOrFail(Request $request)
     {
         return User::findOrFail($this->getID($request));
+    }
+
+    /**
+     * @param \Traversable|array|Model $data
+     *
+     * @return array
+     */
+    private function transformUser($data)
+    {
+        $fractal = new Manager();
+        $transformer = new UserTransformer();
+
+        if ($data instanceof \Traversable || is_array($data)) {
+            $data = new Collection($data, $transformer);
+        } else {
+            $data = new Item($data, $transformer);
+        }
+
+        return $fractal->setSerializer(new SimplyArraySerializer())
+                       ->createData($data)
+                       ->toArray();
     }
 }

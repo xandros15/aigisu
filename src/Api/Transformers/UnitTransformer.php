@@ -9,34 +9,23 @@
 namespace Aigisu\Api\Transformers;
 
 
+use Aigisu\Components\Transformer\StorageProviderTrait;
+use Aigisu\Components\Transformer\TimestampTrait;
 use Aigisu\Models\Unit;
 use Aigisu\Models\Unit\MissingCG;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
-use Slim\Interfaces\RouterInterface;
+use Psr\Http\Message\UriInterface;
 
 class UnitTransformer extends TransformerAbstract
 {
-    use TimestampTrait;
+    use TimestampTrait, StorageProviderTrait;
 
     /** @var array */
     protected $availableIncludes = [
         'cg',
         'missing_cg',
     ];
-
-    /** @var RouterInterface */
-    private $router;
-
-    /**
-     * UnitTransformer constructor.
-     *
-     * @param RouterInterface $router
-     */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
 
     /**
      * @param Unit $unit
@@ -45,7 +34,12 @@ class UnitTransformer extends TransformerAbstract
      */
     public function includeCg(Unit $unit): Collection
     {
-        return $this->collection($unit->cg, new CGTransformer($this->router));
+        $transformer = new CGTransformer();
+        if ($uri = $this->getStorageUri()) {
+            $transformer->setStorageUri($uri);
+        }
+
+        return $this->collection($unit->cg, $transformer);
     }
 
     public function includeMissingCg(Unit $unit): Collection
@@ -58,7 +52,7 @@ class UnitTransformer extends TransformerAbstract
             'is_special_cg' => $unit['special_cg'],
         ]);
 
-        return new Collection($missing, function ($missing) {
+        return $this->collection($missing, function ($missing) {
             return $missing;
         });
     }
@@ -75,7 +69,7 @@ class UnitTransformer extends TransformerAbstract
             'name' => $unit->name,
             'japanese_name' => $unit->japanese_name,
             'rarity' => $unit->rarity,
-            'icon' => $unit->icon,
+            'icon' => $this->getIcon($unit),
             'gender' => $unit->gender,
             'dmm' => (bool) $unit->dmm,
             'nutaku' => (bool) $unit->nutaku,
@@ -87,5 +81,20 @@ class UnitTransformer extends TransformerAbstract
             'created_at' => $this->createTimestamp($unit->created_at),
             'updated_at' => $this->createTimestamp($unit->updated_at),
         ];
+    }
+
+    /**
+     * @param Unit $unit
+     *
+     * @return string
+     */
+    private function getIcon(Unit $unit):? string
+    {
+        $storageUri = $this->getStorageUri();
+        if ($unit->icon && $storageUri instanceof UriInterface) {
+            return $storageUri->withPath($unit->icon);
+        }
+
+        return $unit->icon;
     }
 }

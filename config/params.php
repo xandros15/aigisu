@@ -24,7 +24,8 @@ return [
         'database' => require ROOT . '/config/db/params.php',
         'mailer' => require ROOT . '/config/mailer/mailer.php',
         'flysystem' => [
-            'local' => ROOT . '/storage/app',
+            'host' => 'http://localhost:5556',
+            'local' => ROOT . '/../aigis-storage',
         ],
         'twig' => [
             'cache' => DEBUG ? false : ROOT . '/cache',

@@ -10,10 +10,15 @@ namespace Aigisu\Api\Controllers\Unit;
 
 
 use Aigisu\Api\Controllers\AbstractController;
-use Aigisu\Api\Transformers\CGTransformerFacade;
+use Aigisu\Api\Transformers\CGTransformer;
+use Aigisu\Components\Serializers\SimplyArraySerializer;
 use Aigisu\Models\Unit\CG;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Uri;
 
 class CGController extends AbstractController
 {
@@ -27,10 +32,9 @@ class CGController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = new CGTransformerFacade($this->get('router'));
+        $cgs = $this->findCGOrFail($request);
 
-        return $this->read($response,
-            $transformer->transformAll($this->findCGOrFail($request), $this->getExpandParam($request)));
+        return $this->read($response, $this->transformCg($cgs, $this->getExpandParam($request)));
     }
 
     /**
@@ -41,10 +45,9 @@ class CGController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $transformer = new CGTransformerFacade($this->get('router'));
+        $cg = $this->findCGOrFail($request);
 
-        return $this->read($response,
-            $transformer->transformOne($this->findCGOrFail($request), $this->getExpandParam($request)));
+        return $this->read($response, $this->transformCg($cg, $this->getExpandParam($request)));
     }
 
     /**
@@ -60,9 +63,8 @@ class CGController extends AbstractController
         $location = $this->get('router')->pathFor('api.unit.cg.view', [
             'id' => $cg->getKey(),
         ]);
-        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->create($response, $location, $transformer->transformOne($cg, $this->getExpandParam($request)));
+        return $this->create($response, $location, $this->transformCg($cg, $this->getExpandParam($request)));
     }
 
     /**
@@ -75,9 +77,8 @@ class CGController extends AbstractController
     {
         $cg = $this->findCGOrFail($request);
         $cg->saveOrFailCG($request);
-        $transformer = new CGTransformerFacade($this->get('router'));
 
-        return $this->update($response, $transformer->transformOne($cg, $this->getExpandParam($request)));
+        return $this->update($response, $this->transformCg($cg, $this->getExpandParam($request)));
     }
 
     /**
@@ -113,5 +114,30 @@ class CGController extends AbstractController
         }
 
         return $cg;
+    }
+
+    /**
+     * @param \Traversable|array|Model $data
+     * @param string|array $expand
+     *
+     * @return array
+     */
+    private function transformCg($data, $expand)
+    {
+        $storageHost = $this->get('settings')->get('flysystem')['host'];
+        $fractal = new Manager();
+        $transformer = new CGTransformer();
+        $transformer->setStorageUri(Uri::createFromString($storageHost));
+
+        if ($data instanceof \Traversable || is_array($data)) {
+            $data = new Collection($data, $transformer);
+        } else {
+            $data = new Item($data, $transformer);
+        }
+
+        return $fractal->setSerializer(new SimplyArraySerializer())
+                       ->parseIncludes($expand)
+                       ->createData($data)
+                       ->toArray();
     }
 }

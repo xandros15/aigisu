@@ -2,13 +2,17 @@
 
 namespace Aigisu\Api\Controllers;
 
-use Aigisu\Api\Transformers\UnitTransformerFacade;
+use Aigisu\Api\Transformers\UnitTransformer;
 use Aigisu\Components\Http\Exceptions\BadRequestException;
+use Aigisu\Components\Serializers\SimplyArraySerializer;
 use Aigisu\Models\Unit;
 use Illuminate\Support\Collection;
 use League\Flysystem\Filesystem;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Uri;
 
 class UnitController extends AbstractController
 {
@@ -21,9 +25,9 @@ class UnitController extends AbstractController
      */
     public function actionIndex(Request $request, Response $response): Response
     {
-        $transformer = new UnitTransformerFacade($this->get('router'));
+        $units = Unit::all();
 
-        return $this->read($response, $transformer->transformAll(Unit::all(), $this->getExpandParam($request)));
+        return $this->read($response, $this->transformUnit($units, $this->getExpandParam($request)));
     }
 
     /**
@@ -34,10 +38,9 @@ class UnitController extends AbstractController
      */
     public function actionView(Request $request, Response $response): Response
     {
-        $transformer = new UnitTransformerFacade($this->get('router'));
+        $unit = $this->findOrFailUnit($request);
 
-        return $this->read($response,
-            $transformer->transformOne($this->findOrFailUnit($request), $this->getExpandParam($request)));
+        return $this->read($response, $this->transformUnit($unit, $this->getExpandParam($request)));
     }
 
     /**
@@ -54,9 +57,7 @@ class UnitController extends AbstractController
             'id' => $unit->getKey(),
         ]);
 
-        $transformer = new UnitTransformerFacade($this->get('router'));
-
-        return $this->create($response, $location, $transformer->transformOne($unit, $this->getExpandParam($request)));
+        return $this->create($response, $location, $this->transformUnit($unit, $this->getExpandParam($request)));
     }
 
     /**
@@ -88,9 +89,8 @@ class UnitController extends AbstractController
     {
         $unit = $this->findOrFailUnit($request);
         $unit->saveUnitModel($request->getParams());
-        $transformer = new UnitTransformerFacade($this->get('router'));
 
-        return $this->update($response, $transformer->transformOne($unit, $this->getExpandParam($request)));
+        return $this->update($response, $this->transformUnit($unit, $this->getExpandParam($request)));
     }
 
     /**
@@ -138,5 +138,30 @@ class UnitController extends AbstractController
         }
 
         return $unit;
+    }
+
+    /**
+     * @param \Traversable|array|Model $data
+     * @param string|array $expand
+     *
+     * @return array
+     */
+    private function transformUnit($data, $expand)
+    {
+        $storageHost = $this->get('settings')->get('flysystem')['host'];
+        $fractal = new Manager();
+        $transformer = new UnitTransformer();
+        $transformer->setStorageUri(Uri::createFromString($storageHost));
+
+        if ($data instanceof \Traversable || is_array($data)) {
+            $data = new \League\Fractal\Resource\Collection($data, $transformer);
+        } else {
+            $data = new Item($data, $transformer);
+        }
+
+        return $fractal->setSerializer(new SimplyArraySerializer())
+                       ->parseIncludes($expand)
+                       ->createData($data)
+                       ->toArray();
     }
 }

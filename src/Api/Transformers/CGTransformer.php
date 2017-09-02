@@ -9,30 +9,20 @@
 namespace Aigisu\Api\Transformers;
 
 
+use Aigisu\Components\Transformer\StorageProviderTrait;
+use Aigisu\Components\Transformer\TimestampTrait;
 use Aigisu\Models\Unit\CG;
 use League\Fractal\TransformerAbstract;
-use Slim\Interfaces\RouterInterface;
+use Psr\Http\Message\UriInterface;
 
 class CGTransformer extends TransformerAbstract
 {
-    use TimestampTrait;
+    use TimestampTrait, StorageProviderTrait;
 
     /** @var array */
     protected $availableIncludes = [
         'unit',
     ];
-    /** @var RouterInterface */
-    private $router;
-
-    /**
-     * UnitTransformer constructor.
-     *
-     * @param RouterInterface $router
-     */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
 
     /**
      * @param CG $cg
@@ -47,7 +37,7 @@ class CGTransformer extends TransformerAbstract
             'server' => (string) $cg->server,
             'archival' => (bool) $cg->archival,
             'links' => [
-                'local' => $cg->local,
+                'local' => $this->getLocalAttribute($cg->local),
                 'google' => $this->getGoogleAttribute($cg->google_id),
                 'imgur' => $this->getImgurAttribute($cg->imgur_id),
             ],
@@ -63,7 +53,12 @@ class CGTransformer extends TransformerAbstract
      */
     public function includeUnit(CG $cg)
     {
-        return $this->item($cg->unit, new UnitTransformer($this->router));
+        $transformer = new UnitTransformer();
+        if ($uri = $this->getStorageUri()) {
+            $transformer->setStorageUri($uri);
+        }
+
+        return $this->item($cg->unit, $transformer);
     }
 
     /**
@@ -94,5 +89,20 @@ class CGTransformer extends TransformerAbstract
         }
 
         return $url;
+    }
+
+    /**
+     * @param string $local
+     *
+     * @return string
+     */
+    private function getLocalAttribute(string $local): string
+    {
+        $storageUri = $this->getStorageUri();
+        if ($storageUri instanceof UriInterface) {
+            return $storageUri->withPath($local);
+        }
+
+        return $local;
     }
 }

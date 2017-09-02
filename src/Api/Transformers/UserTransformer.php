@@ -4,6 +4,7 @@
 namespace Aigisu\Api\Transformers;
 
 
+use Aigisu\Components\Transformer\TimestampTrait;
 use Aigisu\Models\User;
 use League\Fractal\TransformerAbstract;
 

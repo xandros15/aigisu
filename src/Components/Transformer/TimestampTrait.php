@@ -6,7 +6,7 @@
  * Time: 22:39
  */
 
-namespace Aigisu\Api\Transformers;
+namespace Aigisu\Components\Transformer;
 
 
 trait TimestampTrait
