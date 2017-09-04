@@ -99,7 +99,7 @@ class CGTransformer extends TransformerAbstract
     {
         $storageUri = $this->getStorageUri();
         if ($storageUri instanceof UriInterface) {
-            return $storageUri->withPath($cg->local);
+            return $storageUri->withPath($storageUri->getPath() . '/' . $cg->local);
         }
 
         return $cg->local;

@@ -92,7 +92,7 @@ class UnitTransformer extends TransformerAbstract
     {
         $storageUri = $this->getStorageUri();
         if ($unit->icon && $storageUri instanceof UriInterface) {
-            return $storageUri->withPath($unit->icon);
+            return $storageUri->withPath($storageUri->getPath() . '/' . $unit->icon);
         }
 
         return $unit->icon;
