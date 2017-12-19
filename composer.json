@@ -14,16 +14,16 @@
     "illuminate/database": "^5.3",
     "respect/validation": "^1.1",
     "league/flysystem": "^1.0",
-    "google/apiclient": "^2.1",
-    "xandros15/oauth2-imgur": "^1.0",
+    "google/apiclient": "^2.0",
+    "adam-paterson/oauth2-imgur": "^1.0",
     "slim/twig-view": "^2.1",
-    "league/fractal": "^0.15.0",
+    "league/fractal": "^0.17",
     "lcobucci/jwt": "^3.2",
     "psr/container": "^1.0",
     "swiftmailer/swiftmailer": "^6.0"
   },
   "require-dev": {
-    "symfony/var-dumper": "^3.0"
+    "symfony/var-dumper": "^4.0"
   },
   "autoload": {
     "psr-4": {
